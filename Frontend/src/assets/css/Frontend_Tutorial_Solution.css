@@ -81,9 +81,11 @@ h1, h3, h5 { color: #4b2b88; }
   box-sizing: border-box;
 }
 .video-description{
-  margin-top: 0.5rem;
+  margin: 0.5rem;
   font-size: 0.9rem;
   color: #555;
+  text-align: justify;   /* align text to both left and right */
+  text-justify: inter-word;   /* improve spacing between words */
 }
 
 /* header / tabs / copy button (no changes) */
