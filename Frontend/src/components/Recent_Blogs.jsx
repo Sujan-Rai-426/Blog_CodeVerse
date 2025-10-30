@@ -69,16 +69,18 @@ function Recent_Blogs() {
                             ) : (
                                 <img src="https://via.placeholder.com/400x200" className="card-img-top" alt={tutorial.title} style={{ height: "200px", objectFit: "cover" }} />
                             )}
-                            <div className="card-body">
+                            <div className="card-body py-2">
                                 <h5 className="card-title fw-bold">
-                                    {tutorial.title}
+                                    {/* &nbsp;&nbsp; = non breaking space */}
+                                    &nbsp; {tutorial.title}
                                 </h5>
                                 {/* <p className="card-text text-muted small mb-1">
                                     {tutorial.author}
                                 </p> */}
                                 <p className="card-text">
-                                    {tutorial.desc.slice(0, 25)}...
+                                    &nbsp;&nbsp; {tutorial.desc.slice(0, 25)}...
                                 </p>
+                                &nbsp;&nbsp;
                                 <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-primary btn-sm rounded-pill" >
                                     Read More →
                                 </Link>
