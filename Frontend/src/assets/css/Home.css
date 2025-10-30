@@ -33,7 +33,7 @@
 }
 
 /* === Carousel Section === */
-.carousel-section {
+/* .carousel-section {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -48,7 +48,7 @@
     border-radius: 16px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+} */
 
 .share-btn {
     background: #00bb48;
