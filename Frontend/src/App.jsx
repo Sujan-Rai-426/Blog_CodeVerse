@@ -11,7 +11,7 @@ import Frontend_Tutorial_Solution from './pages/Frontend_Tutorial_Solution.jsx';
 import Backend_Tutorial_Solution from './pages/Backend_Tutorial_Solution.jsx';
 import Frontend_Tutorial_Topic from './pages/Frontend_Tutorial_Topic.jsx';
 import Backend_Tutorial_Topic from './pages/Backend_Tutorial_Topic.jsx';
-import Admin_Dashboard from './pages/Admin_dashboard.jsx';
+import Admin_Dashboard from './pages/Admin_Dashboard.jsx';
 import Admin_Login from './pages/Admin_Login.jsx';
 import Protected_Route from './context/Protected_Route.jsx';
 
