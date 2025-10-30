@@ -58,43 +58,15 @@ const Frontend_Tutorial_Solution = () => {
 
     return (
         <div className="container py-1 px-1">
-            <h1 className="text-center mb-5 fw-bold text-primary">
-                🎓 Frontend Tutorial: {topic.name}
-            </h1>
+            <h4 className="text-center mb-3text-primary">
+                <b>🎬 Responsive Designs:</b><br /> <small>{topic.name}</small>
+            </h4>
 
-            
-
-            {/* Steps */}
-            {topic.steps?.length > 0 && (
-                <div className="mb-5">
-                    <h3 className="fw-bold mb-4">📝 Tutorial Steps</h3>
-                    {topic.steps.map((step) => (
-                        <div key={step.id} className="card step-card mb-4 p-4 shadow-lg rounded-4">
-                            <h5 className="fw-bold mb-3">
-                                Step {step.step_number}: {step.step_title}
-                            </h5>
-                            <p>{step.step_description}</p>
-                            {step.step_source_code && (
-                                <div className="card shadow-lg mb-3">
-                                    <div className="card-header bg-dark text-white d-flex justify-content-end">
-                                        <CopyButton code={step.step_source_code} />
-                                    </div>
-                                    <div className="card-body p-3 code-box">
-                                        <pre className="m-0">
-                                            <code className="language-js">{step.step_source_code}</code>
-                                        </pre>
-                                    </div>
-                                </div>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            )}
+<br />      
 
             {/* Videos */}
             {topic.videos?.length > 0 && (
                 <div>
-                    <h3 className="fw-bold mb-4">🎬 Tutorial Videos</h3>
                     {topic.videos.map((video) => (
                         <VideoCard key={video.id} video={video} />
                     ))}

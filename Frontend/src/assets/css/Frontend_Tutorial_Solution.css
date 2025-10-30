@@ -44,7 +44,7 @@ h1, h3, h5 { color: #4b2b88; }
 
 /* === Code box (scrolls both ways) === */
 .code-box {
-  background-color: #1e1e1e;
+  background-color: #131212;
   min-height: 200px;
   max-height: 350px;
   overflow: auto;       /* both vertical & horizontal */
@@ -166,6 +166,7 @@ h1, h3, h5 { color: #4b2b88; }
 
 /* Base code style */
 pre, code[class*="language-"] {
+  background-color: #131212 !important;
   font-size: 1rem; /* default for desktop */
   line-height: 1.5;
 }
