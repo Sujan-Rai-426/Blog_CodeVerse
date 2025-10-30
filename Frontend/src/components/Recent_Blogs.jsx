@@ -73,11 +73,11 @@ function Recent_Blogs() {
                                 <h5 className="card-title fw-bold">
                                     {tutorial.title}
                                 </h5>
-                                <p className="card-text text-muted small mb-1">
+                                {/* <p className="card-text text-muted small mb-1">
                                     {tutorial.author}
-                                </p>
+                                </p> */}
                                 <p className="card-text">
-                                    {tutorial.desc.slice(0, 100)}...
+                                    {tutorial.desc.slice(0, 25)}...
                                 </p>
                                 <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-primary btn-sm rounded-pill" >
                                     Read More →
