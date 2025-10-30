@@ -10,8 +10,6 @@ const Admin_Dashboard = () => {
     const [languages, setLanguages] = useState([]);
     const [icon, setIcon] = useState("");
 
-    const [topics, setTopics] = useState([]);
-
     const [activeTab, setActiveTab] = useState("language"); // language, topic, frontend, backend
 
     // ---------- Form States ----------
@@ -88,6 +86,7 @@ const Admin_Dashboard = () => {
     const handleAddLanguage = async (e) => {
         e.preventDefault();
         try {
+            setIsUploading(true);
             const sec = sections.find(s => s.name === sectionType);
             if (!sec) return alert("Section not selected");
             await api.post("/api/languages/", { section: sec.id, name: languageName, icon_class: icon });
@@ -99,8 +98,11 @@ const Admin_Dashboard = () => {
         } catch (err) {
             console.error(err.response ? err.response.data : err);
             alert("Error adding language!");
-        }
+        }   finally {
+        setIsUploading(false);
+    }
     };
+
 
 
     // ----FETCH AND HANDLE ADDITION OF TOPIC----
@@ -108,6 +110,7 @@ const Admin_Dashboard = () => {
         e.preventDefault();
         if (!topicLanguage) return alert("Please select a language");
         try {
+            setIsUploading(true);
             await api.post("/api/topics/", { language: topicLanguage, name: topicName });
             setTopicName("");
             fetchCategories();
@@ -115,11 +118,13 @@ const Admin_Dashboard = () => {
         } catch (err) {
             console.error(err.response ? err.response.data : err);
             alert(err.response?.data?.error || "Error adding topic!");
-        }
+        }   finally {
+        setIsUploading(false);
+    }
     };
 
 
-   // ----FETCH AND HANDLE ADDITION OF FRONTEND CONTENT----
+
     // ----FETCH AND HANDLE ADDITION OF FRONTEND CONTENT----
 const handleAddFrontend = async (e) => {
     e.preventDefault();
@@ -184,7 +189,6 @@ const handleAddFrontend = async (e) => {
 
 
 
-
     // ----FETCH AND HANDLE ADDITION OF BACKEND STEP----
     const handleAddBackend = async (e) => {
         e.preventDefault();
@@ -194,6 +198,8 @@ const handleAddFrontend = async (e) => {
         }
 
         try {
+            setIsUploading(true);
+
             // ----------  Create the backend step ----------
             const stepPayload = {
                 topic: parseInt(backendTopic),   // topic ID
@@ -229,9 +235,10 @@ const handleAddFrontend = async (e) => {
         } catch (err) {
             console.error("Backend add error:", err.response ? err.response.data : err);
             alert("Error! Step number already exists");
-        }
+        }   finally {
+        setIsUploading(false);
+    }
     };
-
 
 
 
@@ -257,7 +264,7 @@ const handleAddFrontend = async (e) => {
     
     return (
         <div className="admin-dashboard my-5 ">
-                <h2 className="mb-4">Admin Dashboard </h2>
+                <h4 className="mb-4">Admin Dashboard </h4>
 
             {/* Tabs */}
             <div className="btn-group mb-4">
@@ -288,7 +295,16 @@ const handleAddFrontend = async (e) => {
                     <input type="text" placeholder="Icon Class (e.g., devicon-python-plain colored)" value={icon} onChange={(e) => setIcon(e.target.value)} className="form-control mb-2" required />
 
                     <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button type="submit" className="btn btn-primary">Add Language</button>
+                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
+                            {isUploading ? (
+                                    <>
+                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
+                                        Uploading...
+                                    </>
+                                ) : (
+                                    "Add Language"
+                                )}
+                        </button>
                         <button className="btn btn-danger" onClick={handleLogout}>
                             Logout
                         </button>
@@ -308,7 +324,16 @@ const handleAddFrontend = async (e) => {
                     <input type="text" placeholder="Topic Name" value={topicName} onChange={(e) => setTopicName(e.target.value)} className="form-control mb-2" required />
                     
                     <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button type="submit" className="btn btn-primary">Add Topic</button>
+                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
+                            {isUploading ? (
+                                    <>
+                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
+                                        Uploading...
+                                    </>
+                                ) : (
+                                    "Add Topic"
+                                )}
+                        </button>
                         <button className="btn btn-danger" onClick={handleLogout}>
                             Logout
                         </button>
@@ -354,6 +379,7 @@ const handleAddFrontend = async (e) => {
 
                 </form>
             )}
+
 
             {/* ---------- BACKEND ---------- */}
             {activeTab === "backend" && (

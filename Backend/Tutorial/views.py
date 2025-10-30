@@ -1,11 +1,13 @@
+from django.db import IntegrityError
+import cloudinary.uploader
+from rest_framework.decorators import action
+
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
-from django.db import IntegrityError
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from rest_framework import status
-import cloudinary.uploader
+from rest_framework.views import APIView
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from .models import (
     Category, Topic, Language,
@@ -88,5 +90,33 @@ class BackendStepViewSet(viewsets.ModelViewSet):
 class BackendImageViewSet(viewsets.ModelViewSet):
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
+    
+
+
+# View for logging in as admin
+class AdminLoginAPIView(APIView):
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_superuser:
+            # Create the JWT token with the user as the subject
+            refresh = RefreshToken.for_user(user)
+            
+            # Add a custom claim indicating if the user is an admin
+            access_token = str(refresh.access_token)
+            refresh_token = str(refresh)
+            
+            # Attach the 'is_admin' claim manually
+            refresh.access_token["is_admin"] = True  # Custom claim indicating admin status
+            
+            # Return the tokens
+            return Response({
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+            }, status=status.HTTP_200_OK)
+        else:
+            return Response({"detail": "Invalid credentials or user is not admin."}, status=status.HTTP_401_UNAUTHORIZED)
 
 

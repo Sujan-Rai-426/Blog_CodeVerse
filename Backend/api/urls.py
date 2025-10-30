@@ -3,7 +3,7 @@ from rest_framework.routers import DefaultRouter
 from Tutorial.views import (
     CategoryViewSet, TopicViewSet, LanguageViewSet,
     FrontendVideoViewSet, FrontendSourceCodeViewSet, FrontendVideoInfoViewSet,
-    BackendStepViewSet, BackendImageViewSet
+    BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView
 )
 
 router = DefaultRouter()
@@ -18,6 +18,8 @@ router.register("backendsteps", BackendStepViewSet, basename="backendstep")
 router.register("backendimages", BackendImageViewSet, basename="backendimage")
 
 
+
 urlpatterns = [
+    path('admin-login/', AdminLoginAPIView.as_view(), name='admin-login'),
     path("", include(router.urls)),
 ]

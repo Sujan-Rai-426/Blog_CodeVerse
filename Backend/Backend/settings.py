@@ -26,10 +26,18 @@ INSTALLED_APPS = [
 
     # Third-party apps
     'rest_framework',
+    'rest_framework_simplejwt',
     'corsheaders',
     'cloudinary_storage',
     'cloudinary',
 ]
+
+# manually added for simple jwt token authentication
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+}
 
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
