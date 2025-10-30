@@ -49,6 +49,34 @@ function Home() {
                     <p className="hero-subtitle">
                         Your interactive coding platform — learn, share, and grow your skills in frontend, backend, and beyond.
                     </p>
+
+                    <div className="social-bar d-flex justify-content-center align-items-center gap-4 mt-4">
+                        {/* Website Globe Logo */}
+                        <a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" className="social-link globe" >
+                            <i className="fas fa-globe"></i>
+                        </a>
+
+                        {/* Facebook */}
+                        <a href="https://www.facebook.com/sujan.rai.1042" target="_blank" rel="noopener noreferrer" className="social-link facebook" >
+                            <i className="fab fa-facebook-f"></i>
+                        </a>
+
+                        {/* Instagram */}
+                        <a href="https://www.instagram.com/sujan_rai_140/" target="_blank" rel="noopener noreferrer" className="social-link instagram" >
+                            <i className="fab fa-instagram"></i>
+                        </a>
+
+                        {/* GitHub */}
+                        <a href="https://github.com/Sujan-Rai-426" target="_blank" rel="noopener noreferrer" className="social-link github" >
+                            <i className="fab fa-github"></i>
+                        </a>
+
+                        {/* LinkedIn */}
+                        <a href="https://www.linkedin.com/in/sujan-rai-18a07b2a6/" target="_blank" rel="noopener noreferrer" className="social-link linkedin" >
+                            <i className="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+
                     <button className="share-btn" 
                         onClick={() => {
                             const loggedIn = window.localStorage.getItem("loggedIn") === "true";
