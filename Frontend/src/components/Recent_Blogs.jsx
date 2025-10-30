@@ -65,7 +65,7 @@ function Recent_Blogs() {
                     <div className="col-12 col-md-6 col-lg-4" key={tutorial.id}>
                         <div className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card">
                             {tutorial.video_url ? (
-                                <video src={tutorial.video_url} className="w-100" style={{ height: "200px", objectFit: "cover" }} autoPlay loop muted controls />
+                                <video src={tutorial.video_url} autoPlay muted loop playsInline className="w-100" style={{ height: "200px", objectFit: "cover" }} />
                             ) : (
                                 <img src="https://via.placeholder.com/400x200" className="card-img-top" alt={tutorial.title} style={{ height: "200px", objectFit: "cover" }} />
                             )}

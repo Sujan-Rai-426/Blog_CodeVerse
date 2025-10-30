@@ -146,7 +146,7 @@ const VideoCard = ({ video }) => {
                 {/* Video */}
                 <div className="video-wrapper">
                     <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%" }}>
-                        <video src={video.video_url} autoPlay loop muted controls className="w-100 h-100" />
+                        <video src={video.video_url} autoPlay loop muted playsInline className="w-100 h-100" />
                     </div>
                 </div>
 

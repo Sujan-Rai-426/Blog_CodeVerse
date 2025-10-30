@@ -96,7 +96,7 @@ function Home() {
             {/* Frontend Section */}
             {frontendLangs.length > 0 && (
                 <section className="tutorial-section">
-                    <h6 className="section-title"> <small>- Frontend Tutorials -</small> </h6>
+                    <h6 className="section-title"> <small>- Frontend Designs -</small> </h6>
                     <div className="grid-container">
                         {frontendLangs.map((lang) => (
                             <Link key={lang.id} to={`/Frontend_Tutorial_Topic/${lang.id}`} className="grid-card" >
@@ -113,7 +113,7 @@ function Home() {
             {/* Backend Section */}
             {backendLangs.length > 0 && (
                 <section className="tutorial-section">
-                    <h6 className="section-title"> <small>- Backend Tutorials -</small> </h6>
+                    <h6 className="section-title"> <small>- Backend Guide -</small> </h6>
                     <div className="grid-container">
                         {backendLangs.map((lang) => (
                             <Link key={lang.id} to={`/Backend_Tutorial_Topic/${lang.id}`} className="grid-card" >
@@ -129,7 +129,7 @@ function Home() {
 
         {/* Recent Blogs */}
             <section className="recent-section">
-                <h6 className="section-title"> <small>- Recent Tutorials -</small> </h6>
+                <p className="section-title"> <small>- Recent Designs -</small> </p>
                 <div className="recent-wrapper">
                     <Recent_Blogs />
                 </div>
