@@ -1,0 +1,56 @@
+.code-container {
+  position: relative;
+}
+
+.copy-btn {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  background: rgba(79, 77, 77, 0.412);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+  padding: 4px 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.85rem;
+}
+
+.copy-btn:hover {
+  background: rgba(9, 9, 9, 0.25);
+  transform: scale(1.05);
+}
+
+.code-block {
+  border-radius: 10px;
+  background-color: #121111 !important;
+  color: #f8f8f2;
+  padding: 0.8rem 1rem;
+  font-family: "Fira Code", monospace;
+  font-size: 0.7rem;
+  min-height: 250px;
+  max-height: 450px;
+  overflow: auto;
+}
+
+/* Reorder columns on medium/small screens */
+@media (max-width: 992px) { /* Bootstrap lg breakpoint */
+    .row {
+        display: flex;
+        flex-direction: column; /* stack vertically */
+    }
+
+    .col-lg-5 { /* images column */
+        order: 1; /* comes first */
+    }
+
+    .col-lg-7 { /* steps column */
+        order: 2; /* comes second */
+    }
+    .card-body {
+      flex: 1 1 auto;
+      padding: 0 0 1rem 0;
+    }
+}
+

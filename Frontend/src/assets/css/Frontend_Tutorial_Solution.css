@@ -1,0 +1,144 @@
+/* === Layout basics / container === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 0 1rem;
+  box-sizing: border-box;
+}
+
+/* cards */
+.step-card, .video-card {
+  background: linear-gradient(135deg, #eef2f7, #ffffff);
+  padding: 1.5rem;
+  border-radius: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+  box-sizing: border-box;
+}
+.step-card:hover, .video-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 12px 25px rgba(0,0,0,0.1);
+}
+
+/* video defaults */
+.video-wrapper { width: 100%; box-sizing: border-box; }
+.video-wrapper video {
+  border-radius: 20px;
+  box-shadow: 0px 6px 15px rgba(0,0,0,0.08);
+  width: 100%;
+  height: auto;           /* let width control size; keeps aspect */
+  object-fit: cover;
+  display: block;
+}
+
+/* headings */
+h1, h3, h5 { color: #4b2b88; }
+
+/* === Code info wrapper defaults (mobile/tablet) === */
+.code-info-wrapper {
+  width: 100%;
+  box-sizing: border-box;
+  /* optional: set a min-width to avoid extreme squish on tiny screens */
+  min-width: 0;
+}
+
+/* === Code box (scrolls both ways) === */
+.code-box {
+  background-color: #1e1e1e;
+  min-height: 200px;
+  max-height: 350px;
+  overflow: auto;       /* both vertical & horizontal */
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+  font-family: "Fira Code", monospace;
+  color: #d1d1c9;
+  line-height: 1.5;
+  white-space: pre;     /* prevents wrapping so long lines scroll horizontally */
+  box-sizing: border-box;
+}
+
+/* ensure inner pre/code don't expand the parent */
+.code-box pre,
+.code-box code {
+  margin: 0;
+  display: block;
+  min-width: 100%;
+  white-space: pre;     /* keep long lines */
+  box-sizing: border-box;
+}
+
+/* scrollbars */
+.code-box::-webkit-scrollbar { width: 6px; height: 6px; }
+.code-box::-webkit-scrollbar-thumb { background: #666; border-radius: 3px; }
+.code-box::-webkit-scrollbar-track { background: #2e2e2e; border-radius: 3px; }
+.code-box { scrollbar-color: #666 #2e2e2e; scrollbar-width: thin; }
+
+/* video + code container default: stacked */
+.video-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  box-sizing: border-box;
+}
+
+/* header / tabs / copy button (no changes) */
+.card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 1rem;
+  background: #2c3e50;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  box-sizing: border-box;
+  flex-wrap: nowrap;
+}
+.btn-group {
+  margin-bottom: 20px;
+  display: flex !important;          /* ensure flex */
+  flex-direction: row !important;    /* always row */
+  flex-wrap: nowrap;                  /* prevent wrapping */
+  gap: 0.5rem;
+  overflow-x: auto;                   /* scroll horizontally if too wide */
+}
+
+.btn-tab { padding:5px 12px; border-radius:6px; border:none; background:#555; color:#fff; cursor:pointer; font-size:0.8rem; white-space:nowrap; }
+.active-tab { background:#4a90e2; color:#fff; }
+.copy-btn { display:flex; align-items:center; gap:5px; padding:5px 12px; border-radius:6px; background:#4a90e2; color:#fff; cursor:pointer; transition:.3s; }
+.copy-btn:hover { background:#357ab7; }
+
+/* responsive tweaks */
+@media (max-width: 768px) {
+  .container { padding: 1rem; }
+  .step-card { display:flex; flex-direction:column; }
+  .btn-group { 
+      margin-bottom: 10px;
+      display: flex; flex-direction: row;     
+      justify-content: flex-start;   /* align left */
+      gap: 0.5rem;                  /* space between buttons */
+    }
+  .code-box { max-height: 300px; } /* a bit smaller on mobile */
+  }
+
+/* === Desktop & large screens: side-by-side 50/50 split === */
+@media (min-width: 992px) {
+
+  /* make the container a horizontal flex row */
+  .video-container {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  /* force exactly 50% each using flex-basis and no growth */
+  .video-wrapper,
+  .code-info-wrapper {
+    flex: 0 0 50%;      /* flex-grow:0, flex-shrink:0, flex-basis:50% */
+    max-width: 50%;
+    box-sizing: border-box;
+    min-width: 0;       /* important to allow overflow inside children (pre/code) */
+  }
+  .btn-group { 
+      margin-bottom: 10px;
+    }
+}

@@ -1,0 +1,136 @@
+/* General Layout */
+.home-wrapper {
+    max-width: 1250px;
+}
+
+/* Hero Section */
+.hero {
+    position: relative;
+    background: linear-gradient(135deg, #f9fbff, #eef3ff);
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.hero-glass {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Gradient Title */
+.gradient-text {
+    background: linear-gradient(90deg, #0066ff, #00ccff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* CTA Button */
+.explore-btn {
+    background: linear-gradient(90deg, #0066ff, #00ccff);
+    border: none;
+    color: white;
+    font-weight: 600;
+    border-radius: 30px;
+    transition: all 0.3s ease;
+}
+.explore-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 102, 255, 0.3);
+}
+
+/* Section Headings */
+.section-heading {
+    font-weight: 700;
+    color: #111827;
+    position: relative;
+    display: inline-block;
+}
+.section-heading::after {
+    content: "";
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 70px;
+    height: 3px;
+    background: linear-gradient(90deg, #0066ff, #00ccff);
+    border-radius: 5px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .hero-glass {
+        padding: 40px 20px;
+    }
+}
+
+/* Social Bar Container */
+.social-bar {
+    margin-top: 1rem;
+}
+
+/* Base Style for All Social Icons */
+.social-link {
+    font-size: 1.4rem;
+    color: #555;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: #ffffffb3;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    text-decoration: none;
+}
+
+/* Hover Effects */
+.social-link:hover {
+    transform: translateY(-4px);
+    color: #fff;
+}
+
+/* Platform-Specific Hover Colors */
+.social-link.globe {
+    color: #555;
+}
+.social-link.globe:hover {
+    color: #fff;
+    background: #007bff;
+}
+.social-link.facebook:hover {
+    background: #1877f2;
+}
+.social-link.instagram:hover {
+    background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
+}
+.social-link.github:hover {
+    background: #171515;
+}
+.social-link.linkedin:hover {
+    background: #0077b5;
+}
+
+/* Circular Icon Container for Languages */
+.circle-hover {
+    width: 6rem;
+    height: 6rem;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Hover animation like old card */
+.circle-hover:hover {
+    transform: translateY(-6px) scale(1.05);
+    border-color: #999;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
