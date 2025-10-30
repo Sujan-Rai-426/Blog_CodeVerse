@@ -268,8 +268,8 @@ const handleAddFrontend = async (e) => {
 
             {/* Tabs */}
             <div className="btn-group mb-4">
-                <button className={`btn btn-outline-primary ${activeTab==="language" ? "active":""}`} onClick={() => setActiveTab("language")}>Add Language</button>
-                <button className={`btn btn-outline-primary ${activeTab==="topic" ? "active":""}`} onClick={() => setActiveTab("topic")}>Add Topic</button>
+                <button className={`btn btn-outline-primary ${activeTab==="language" ? "active":""}`} onClick={() => setActiveTab("language")}>Language</button>
+                <button className={`btn btn-outline-primary ${activeTab==="topic" ? "active":""}`} onClick={() => setActiveTab("topic")}>Topic</button>
                 <button className={`btn btn-outline-success ${activeTab==="frontend" ? "active":""}`} onClick={() => setActiveTab("frontend")}>Frontend</button>
                 <button className={`btn btn-outline-danger ${activeTab==="backend" ? "active":""}`} onClick={() => setActiveTab("backend")}>Backend</button>
             </div>

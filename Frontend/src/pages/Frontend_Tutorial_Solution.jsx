@@ -57,17 +57,12 @@ const Frontend_Tutorial_Solution = () => {
     };
 
     return (
-        <div className="container py-5">
+        <div className="container py-1 px-1">
             <h1 className="text-center mb-5 fw-bold text-primary">
                 🎓 Frontend Tutorial: {topic.name}
             </h1>
 
-            {topic.images?.length > 0 &&
-                topic.images.map((img) => (
-                    <img key={img.id} src={img.image.startsWith("http") ? img.image : `${import.meta.env.VITE_API_BASE_URL}${img.image}`} alt={topic.name} className="img-fluid rounded shadow-sm mb-4" />
-                ))}
-
-            <p className="mb-5">{topic.description || "No description available."}</p>
+            
 
             {/* Steps */}
             {topic.steps?.length > 0 && (
@@ -139,7 +134,7 @@ const VideoCard = ({ video }) => {
     }, [selectedTab]);
 
     return (
-        <div className="card video-card mb-5 p-4 shadow-lg rounded-4">
+        <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
             {/* <h4 className="fw-semibold mb-3"><b>{video.title}</b></h4> */}
 
             <div className="video-container">
