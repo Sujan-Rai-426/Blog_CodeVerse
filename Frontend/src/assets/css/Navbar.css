@@ -56,12 +56,12 @@
 
 /* Admin button */
 .navbar .btn-outline-light {
-    border-color: #14fb78;
-    color: #14fb78;
+    border-color: #ffffff;
+    color: #ffffff;
     transition: all 0.3s ease;
 }
 .navbar .btn-outline-light:hover {
-    background-color: #14fb78;
+    background-color: #fefffe;
     color: #182848;
 }
 
