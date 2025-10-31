@@ -1,56 +1,183 @@
-.code-container {
-  position: relative;
+/* === General Layout === */
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  font-family: "Poppins", "Fira Code", monospace;
+  color: #1e1e1e;
 }
 
+/* === Card Styles (Steps & Images) === */
+.card {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
+}
+
+.card-body {
+  padding: 1.5rem;
+}
+
+/* === Headings === */
+h2 {
+  text-align: center;
+  font-weight: 700;
+  color: #0d1117;
+  margin-bottom: 2rem;
+}
+
+h4 {
+  font-weight: 600;
+  color: #222;
+  margin-bottom: 1rem;
+}
+
+h5 {
+  color: #2563eb;
+  font-weight: 600;
+}
+
+/* === Code Container === */
+.code-container {
+  position: relative;
+  margin-top: 1rem;
+  border-radius: 14px;
+  overflow: hidden;
+  background: linear-gradient(145deg, #0d1117, #161b22);
+  border: 1px solid #1e293b;
+  box-shadow: 0 0 25px rgba(37, 99, 235, 0.12);
+}
+
+/* === Copy Button === */
 .copy-btn {
   position: absolute;
   top: 10px;
   right: 12px;
-  background: rgba(79, 77, 77, 0.412);
-  backdrop-filter: blur(6px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  padding: 4px 8px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #e2e8f0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 6px 10px;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
   font-size: 0.85rem;
+  backdrop-filter: blur(6px);
+  transition: all 0.3s ease;
+  z-index: 3;
 }
 
 .copy-btn:hover {
-  background: rgba(9, 9, 9, 0.25);
+  background: rgba(255, 255, 255, 0.15);
+  color: #fff;
   transform: scale(1.05);
 }
 
+/* === Code Block === */
 .code-block {
-  border-radius: 10px;
-  background-color: #121111 !important;
-  color: #f8f8f2;
-  padding: 0.8rem 1rem;
+  background: transparent !important;
+  color: #e5e7eb;
+  padding: 1rem 1.5rem;
   font-family: "Fira Code", monospace;
-  font-size: 0.7rem;
-  min-height: 250px;
-  max-height: 450px;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  border-radius: 12px;
   overflow: auto;
+  max-height: 480px;
+  min-height: 260px;
+  scrollbar-gutter: stable;
+  scroll-behavior: smooth;
+  transition: 0.3s ease;
 }
 
-/* Reorder columns on medium/small screens */
-@media (max-width: 992px) { /* Bootstrap lg breakpoint */
-    .row {
-        display: flex;
-        flex-direction: column; /* stack vertically */
-    }
-
-    .col-lg-5 { /* images column */
-        order: 1; /* comes first */
-    }
-
-    .col-lg-7 { /* steps column */
-        order: 2; /* comes second */
-    }
-    .card-body {
-      flex: 1 1 auto;
-      padding: 0 0 1rem 0;
-    }
+/* === Scrollbar (Visible Always) === */
+.code-block::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
 }
 
+.code-block::-webkit-scrollbar-thumb {
+  background-color: rgba(100, 116, 139, 0.5);
+  border-radius: 10px;
+  border: 2px solid #0d1117;
+}
+
+.code-block::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.7);
+}
+
+.code-block::-webkit-scrollbar-track {
+  background:#131212 !important;
+}
+
+/* === Line Wrapping === */
+.code-block code {
+  display: block;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* === Image Cards === */
+.card img {
+  border-radius: 10px;
+  object-fit: cover;
+  width: 100%;
+  height: 250px;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.card img:hover {
+  transform: scale(1.02);
+  filter: brightness(1.05);
+}
+
+/* === Responsive Layout === */
+@media (max-width: 992px) {
+  .row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .col-lg-5 {
+    order: 1;
+  }
+
+  .col-lg-7 {
+    order: 2;
+  }
+
+  .card-body {
+    padding: 1rem;
+  }
+
+  .code-block {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .copy-btn {
+    top: 8px;
+    right: 8px;
+    font-size: 0.75rem;
+    padding: 4px 6px;
+  }
+
+  .code-block {
+    max-height: 400px;
+    padding: 0.8rem 1rem;
+    font-size: 0.8rem;
+  }
+}
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+    background: #131212 !important;
+}
+code[class*="language-"], pre[class*="language-"] {
+    background: #131212 !important;
+}

@@ -21,7 +21,7 @@ const Backend_Tutorial_Solution = () => {
         const fetchBackendTopic = async () => {
             try {
                 const res = await api.get(`/api/topics/${topicID}/`);
-                const data = res.data;
+                const {data} = res;
                 if (data.images || data.steps) {
                     setTopic(data);
                     setTimeout(() => Prism.highlightAll(), 0);
