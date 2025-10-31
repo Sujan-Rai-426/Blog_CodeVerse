@@ -14,7 +14,7 @@
 .about-hero {
     background: linear-gradient(135deg, #34bdb0eb, #1b244b);
     color: #fff;
-    padding: 4rem 1rem 4rem 1rem;
+    padding: 6rem 1rem 6rem 1rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -51,7 +51,7 @@
     Mission & Vision Section
 ========================= */
 .mission-vision {
-    padding: 4rem 1rem;
+    padding: 6rem 1rem;
     background-color: #edfaee;
 }
 .mission-vision .container {
@@ -88,7 +88,7 @@
     Team Section
 ========================= */
 .team-section {
-    padding: 4rem 1rem;
+    padding: 6rem 1rem;
     text-align: center;
 }
 .team-section h2 {
@@ -164,7 +164,7 @@
         border-radius: 12px;
     }
     .about-hero h1 {
-        font-size: 2.4rem;
+        font-size: 2.6rem;
     }
     .about-hero p {
         font-size: 1.1rem;
@@ -189,7 +189,7 @@
 
 @media (max-width: 480px) {
     .about-hero {
-        padding: 1.9rem 1.4rem;
+        padding: 1.9rem 1.6rem;
     }
 
     .about-hero h1 {
