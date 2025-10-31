@@ -1,42 +1,109 @@
-.card-hoverable {
-    border: 2px solid black; /* default border */
-    box-shadow: 0 4px 8px rgba(0,0,0,0.15); /* default shadow */
-    transition: transform 0.3s, box-shadow 0.3s;
-    position: relative;
+/* === Page Layout === */
+.tutorial-topic-page {
+    padding: 4rem 2rem;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #eef2f7, #ffffff);
+    font-family: "Poppins", sans-serif;
+}
+
+/* === Title === */
+.page-title {
+    text-align: center;
+    font-size: 2.5rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+    color: #1f2937;
+}
+
+/* === Section Titles === */
+.language-title {
+    text-align: left;
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: #1e3a8a;
+    border-left: 4px solid #3b82f6;
+    padding-left: 10px;
+}
+
+/* === Topic Grid === */
+.topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+/* === Topic Card === */
+.topic-card {
+    text-decoration: none;
+    color: inherit;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
     overflow: hidden;
+    border: 1px solid #e5e7eb;
 }
 
-.card-hoverable::before {
-    content: "";
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 0%;
-    height: 100%;
-    background: linear-gradient(135deg, #8842c1e8, #155fcd56);
-    z-index: 0;
-    transition: width 0.5s ease;
+.topic-card:hover {
+    transform: translateY(-5px) scale(1.03);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border-color: #3b82f6;
 }
 
-.card-hoverable:hover::before {
-    width: 100%;
+/* === Card Content === */
+.topic-content {
+    padding: 1.5rem;
+    text-align: center;
 }
 
-.card-hoverable .card-body {
-    position: relative;
-    z-index: 1;
+.topic-content h3 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 0.5rem;
 }
 
-.card-hoverable:hover .card-body h5,
-.card-hoverable:hover .card-body p {
-    color: white !important; /* text color changes on hover */
-    transition: color 0.5s ease;
+.topic-content p {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0;
 }
 
-.card-hoverable:hover {
-    transform: scale(1.03);
-    box-shadow: 0 8px 20px rgba(0,0,0,0.25); /* stronger shadow on hover */
+/* === Loading / Empty State === */
+.loading,
+.no-topic {
+    text-align: center;
+    color: #6b7280;
+    margin-top: 2rem;
+    font-style: italic;
 }
 
+/* === Responsive Design === */
+@media (max-width: 768px) {
+    .tutorial-topic-page {
+        padding: 2rem 1rem;
+    }
 
+    .page-title {
+        font-size: 2rem;
+    }
 
+    .language-title {
+        font-size: 1.4rem;
+    }
+
+    .topic-content h3 {
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .page-title {
+        font-size: 1.7rem;
+    }
+
+    .topic-content p {
+        font-size: 0.9rem;
+    }
+}
