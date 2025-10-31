@@ -1,0 +1,168 @@
+/* =========================
+    Global Styles
+========================= */
+.about-page {
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: #333;
+    line-height: 1.6;
+    background-color: #f9fafe;
+}
+
+/* =========================
+    Hero Section
+========================= */
+.about-hero {
+    background: linear-gradient(135deg, #34bdb0eb, #1b244b);
+    color: #fff;
+    padding: 6rem 1rem 4rem 1rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.about-hero::before {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.15), transparent 70%);    
+    transform: rotate(45deg);
+    top: -50%;
+    left: -50%;
+}
+
+.about-hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.about-hero h1 span {
+    color: #ffffff;
+}
+.about-hero p {
+    font-size: 1.25rem;
+    margin-top: 0.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* =========================
+    Mission & Vision Section
+========================= */
+.mission-vision {
+    padding: 6rem 1rem;
+    background-color: #edfaee;
+}
+.mission-vision .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.mission-vision .card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2.5rem 2rem;
+    flex: 1 1 300px;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+    transition: transform 0.4s ease, box-shadow 0.4s ease;
+}
+.mission-vision .card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+}
+.mission-vision h2 {
+    color: #182848;
+    font-size: 1.6rem;
+    margin-bottom: 1rem;
+}
+.mission-vision p {
+    color: #555;
+    font-size: 1rem;
+}
+
+/* =========================
+    Team Section
+========================= */
+.team-section {
+    padding: 6rem 1rem;
+    text-align: center;
+}
+.team-section h2 {
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    color: #182848;
+    font-weight: 700;
+}
+.team-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+}
+.team-card {
+    background: #fff;
+    border-radius: 15px;
+    padding: 2rem 1.5rem;
+    max-width: 220px;
+    text-align: center;
+    transition: transform 0.4s ease, box-shadow 0.4s ease, background 0.3s ease;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+}
+.team-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0,0,0,0.12);
+    background: linear-gradient(145deg, #4b6cb7, #182848);
+    color: #fff;
+}
+.team-card img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    border: 3px solid #7a5dfe;
+    transition: transform 0.3s ease;
+}
+.team-card:hover img {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+}
+.team-card h3 {
+    margin: 0.5rem 0;
+    font-size: 1.2rem;
+    color: #182848; /* base dark blue for contrast */
+    transition: color 0.3s ease;
+    text-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+}
+/* Text color changes on hover */
+.team-card:hover h3 {
+    color: #d7fbf7; /* same gold accent */
+}
+.team-card p {
+    font-size: 0.95rem;
+    color: #777;
+}
+.team-card:hover p {
+    color: #f0e68c;
+}
+
+/* =========================
+    Responsive Adjustments
+========================= */
+@media (max-width: 992px) {
+    .mission-vision .container,
+    .team-cards {
+        flex-direction: column;
+        align-items: center;
+    }
+    .about-hero h1 {
+        font-size: 2.4rem;
+    }
+    .about-hero p {
+        font-size: 1.1rem;
+    }
+}

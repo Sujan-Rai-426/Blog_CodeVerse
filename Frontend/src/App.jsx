@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 
 import Navbar from './components/Navbar.jsx' 
 import Home from './pages/Home.jsx'
+import About from './pages/About.jsx'
 import Footer from './components/Footer.jsx'
 import Frontend_Tutorial_Solution from './pages/Frontend_Tutorial_Solution.jsx';
 import Backend_Tutorial_Solution from './pages/Backend_Tutorial_Solution.jsx';
@@ -25,6 +26,7 @@ function App() {
             <div className="container">
                   <Routes>
                       <Route exact path='/'  element={ <Home/> } />
+                      <Route exact path='/About'  element={ <About/> } />
                       
                       <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
                       <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />
