@@ -117,7 +117,7 @@ class BackendStep(models.Model):
         on_delete=models.CASCADE
     )
     step_number = models.PositiveIntegerField()
-    step_title = models.CharField(max_length=200)
+    step_file_name = models.CharField(max_length=200)
     step_description = models.TextField(blank=True, null=True)
     step_source_code = models.TextField(blank=True, null=True)
 
@@ -128,7 +128,7 @@ class BackendStep(models.Model):
         verbose_name_plural = "Backend Steps"
 
     def __str__(self):
-        return f"Step.{self.step_number}  of  Topic: [ {self.topic.name}  ] ---> {self.step_title} "
+        return f"Step.{self.step_number}  of  Topic: [ {self.topic.name}  ] ---> {self.step_file_name} "
     
         #  Custom validation to show your message or notification of duplicate step_number if someone tries to add it.
     def clean(self):

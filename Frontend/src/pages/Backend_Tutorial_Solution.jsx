@@ -61,12 +61,12 @@ const Backend_Tutorial_Solution = () => {
                     {topic.steps.map((step) => (
                         <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
                             <div className="card-body">
-                                <h5 className="fw-bold text-primary mb-2">
-                                    Step {step.step_number}: {step.step_title}
+                                <h5 className="fw-bold text-primary mb-0 mt-2">
+                                    Step {step.step_number}: {step.step_file_name}
                                 </h5>
 
                                 {step.step_description && (
-                                    <p className="text-muted mb-1">{step.step_description}</p>
+                                    <p className="text-muted m-0">{step.step_description}</p>
                                 )}
 
                                 {step.step_source_code && (

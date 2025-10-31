@@ -47,7 +47,7 @@ h5 {
 /* === Code Container === */
 .code-container {
   position: relative;
-  margin-top: 1rem;
+  margin-bottom: 1rem;
   border-radius: 14px;
   overflow: hidden;
   background: linear-gradient(145deg, #0d1117, #161b22);

@@ -37,7 +37,7 @@ const Admin_Dashboard = () => {
     const [backendTopic, setBackendTopic] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [stepNumber, setStepNumber] = useState(1);
-    const [stepTitle, setStepTitle] = useState("");
+    const [stepFileName, setStepTitle] = useState("");
     const [stepDescription, setStepDescription] = useState("");
     const [stepCode, setStepCode] = useState("");
 
@@ -204,7 +204,7 @@ const handleAddFrontend = async (e) => {
             const stepPayload = {
                 topic: parseInt(backendTopic),   // topic ID
                 step_number: parseInt(stepNumber),
-                step_title: stepTitle,
+                step_file_name: stepFileName,
                 step_description: stepDescription,
                 step_source_code: stepCode,
             };
@@ -413,7 +413,7 @@ const handleAddFrontend = async (e) => {
                         )}
                     </div>
 
-                    <input type="text" placeholder="Step Title" value={stepTitle} onChange={(e) => setStepTitle(e.target.value)} className="form-control mb-2" />
+                    <input type="text" placeholder="Step File Name" value={stepFileName} onChange={(e) => setStepTitle(e.target.value)} className="form-control mb-2" />
 
                     <textarea placeholder="Step Description" value={stepDescription} onChange={(e) => setStepDescription(e.target.value)} className="form-control mb-2" />
 

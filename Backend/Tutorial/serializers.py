@@ -47,7 +47,7 @@ class BackendImageSerializer(serializers.ModelSerializer):
 class BackendStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackendStep
-        fields = ['id', 'topic', 'step_number', 'step_title', 'step_description', 'step_source_code']
+        fields = ['id', 'topic', 'step_number', 'step_file_name', 'step_description', 'step_source_code']
         
     def validate(self, data): # Prevent duplicate step_number for the same topic
         topic = data.get("topic")
