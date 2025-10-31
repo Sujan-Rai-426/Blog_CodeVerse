@@ -51,13 +51,13 @@ const Backend_Tutorial_Solution = () => {
     if (!topic) return null;
 
     return (
-        <div className="container py-5" style={{ minHeight: "100vh" }}>
-            <h2 className="mb-5 fw-bold text-center">{topic.name}</h2>
+        <div className="container py-3" style={{ minHeight: "100vh" }}>
+            <h2 className="mb-3 mt-3 fw-bold text-center">{topic.name}</h2>
 
             <div className="row">
                 {/* Steps on left */}
-                <div className="col-lg-7 mb-4 mb-lg-0 code-steps">
-                    <h4 className="mb-4 fw-semibold">Steps</h4>
+                <div className="col-lg-7 mb-4 mb-lg-0 code-steps px-0">
+                    <h4 className="mb-2 mt-4 fw-semibold text-center"> <small>-Steps-</small> </h4>
                     {topic.steps.map((step) => (
                         <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
                             <div className="card-body">
@@ -66,7 +66,7 @@ const Backend_Tutorial_Solution = () => {
                                 </h5>
 
                                 {step.step_description && (
-                                    <p className="text-muted mb-3">{step.step_description}</p>
+                                    <p className="text-muted mb-1">{step.step_description}</p>
                                 )}
 
                                 {step.step_source_code && (
@@ -87,8 +87,8 @@ const Backend_Tutorial_Solution = () => {
                     
                 {/* Images on right */}
                 {topic.images?.length > 0 && (
-                    <div className="col-lg-5">
-                        <h4 className="mb-4 fw-semibold">Images</h4>
+                    <div className="col-lg-5 px-4">
+                        <h4 className="mb-2 mt-3 fw-semibold text-center"> <small> -File Formate- </small> </h4>
                         {topic.images.map((img) => (
                             <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden">
                                 <img src={`${CLOUDINARY_BASE_URL}${img.image}`} alt={`Backend step ${img.id}`} className="img-fluid" style={{ objectFit: "cover", width: "100%", height: "250px" }} />
@@ -100,7 +100,7 @@ const Backend_Tutorial_Solution = () => {
             </div>
 
                 {/* Back Button */}
-                <div className="text-center mt-5">
+                <div className="text-center mt-3">
                         <Link to='/' className="btn btn-outline-primary btn-lg">
                             ← Back to Home
                         </Link>
