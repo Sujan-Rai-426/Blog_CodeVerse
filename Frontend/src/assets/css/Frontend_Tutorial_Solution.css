@@ -124,6 +124,7 @@ h1, h3, h5 { color: #4b2b88; }
   }
   .video-wrapper{
     width: 90%;
+    height: 37vh;
     margin-top: 1vh;
   }
   .container { 
