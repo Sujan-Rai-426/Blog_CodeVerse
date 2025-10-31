@@ -40,7 +40,7 @@ function Navbar() {
                     </ul>
             </div>
 
-            {/* Overlay when sidebar is open */}
+                {/* Overlay when sidebar is open */}
             {sidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
         </>
     );
