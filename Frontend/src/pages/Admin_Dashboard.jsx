@@ -264,7 +264,7 @@ const handleAddFrontend = async (e) => {
     
     return (
         <div className="admin-dashboard my-5 ">
-                <h4 className="mb-4">Admin Dashboard </h4>
+                <h4 className="mb-4 text-center">Admin Dashboard 💡 </h4>
 
             {/* Tabs */}
             <div className="btn-group mb-4">

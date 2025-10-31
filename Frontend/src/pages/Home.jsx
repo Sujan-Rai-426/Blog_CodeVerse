@@ -91,7 +91,7 @@ function Home() {
 
             {/* Frontend Section */}
             <section className="tutorial-section">
-                <h6 className="section-title"> <small>- Frontend Designs -</small> </h6>
+                <h6 className="section-title"> <small> 🎨 <sup><u>Frontend Designs</u></sup> </small> </h6>
                 <div className="grid-container">
                     {loading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
@@ -115,7 +115,7 @@ function Home() {
 
             {/* Backend Section */}
             <section className="tutorial-section">
-                <h6 className="section-title"> <small>- Coding Guide -</small> </h6>
+                <h6 className="section-title"> <small> 🖥️ <sup><u>Coding Guide</u></sup> </small> </h6>
                 <div className="grid-container">
                     {loading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
@@ -139,7 +139,7 @@ function Home() {
 
             {/* Recent Blogs Section */}
             <section className="recent-section">
-                <p className="section-title"> <small>- Recent Designs -</small> </p>
+                <p className="section-title"> <small> 🕒 <sup><u>Recent Designs</u></sup> </small> </p>
                 <div className="recent-wrapper">
                     {loading ? (
                         Array.from({ length: 3 }).map((_, idx) => (
