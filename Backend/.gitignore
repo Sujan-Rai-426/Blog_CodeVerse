@@ -1,5 +1,8 @@
 # Environment files
 .env
 
+# sqlite database  i.e. Production database
+db.sqlite3
+
 # Static files collected
 staticfiles/

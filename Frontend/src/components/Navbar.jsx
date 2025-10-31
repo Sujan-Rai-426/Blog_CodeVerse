@@ -26,7 +26,7 @@ function Navbar() {
                     <Link to="/About" className="nav-link">About</Link>
                     <Link to="/" className="nav-link">Pricing</Link>
                     <a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" className="nav-link">Developer</a>
-                    <Link to="http://127.0.0.1:8000/admin/" className="btn btn-outline-light btn-sm ms-3">Admin 💻</Link>
+                    <Link to="https://blog-codeverse.onrender.com/" className="btn btn-outline-light btn-sm ms-3">Admin 💻</Link>
                 </div>
             </nav>
 

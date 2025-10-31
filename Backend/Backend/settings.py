@@ -42,8 +42,8 @@ REST_FRAMEWORK = {
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",  # CORS
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files
     'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -84,11 +84,11 @@ if DEBUG: #debug is true
     }
 else:  #  Production configuration (PostgreSQL via railway) 
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
-        # 'default': dj_database_url.parse(config('DATABASE_URL'))
+        # 'default': {
+        #     'ENGINE': 'django.db.backends.sqlite3',
+        #     'NAME': BASE_DIR / 'db.sqlite3',
+        # }
+        'default': dj_database_url.parse(config('DATABASE_URL'))
     }
 
 
