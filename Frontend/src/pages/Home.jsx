@@ -115,7 +115,7 @@ function Home() {
 
             {/* Backend Section */}
             <section className="tutorial-section">
-                <h6 className="section-title"> <small>- Backend Guide -</small> </h6>
+                <h6 className="section-title"> <small>- Coding Guide -</small> </h6>
                 <div className="grid-container">
                     {loading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
