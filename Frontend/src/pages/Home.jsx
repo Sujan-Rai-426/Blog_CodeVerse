@@ -44,7 +44,7 @@ function Home() {
             <section className="hero">
                 <div className="hero-content">
                     <h1 className="hero-title">
-                        CodeVerse <span>💻</span>
+                        <b>Code</b><sup><u><small>Verse</small>💻</u></sup>
                     </h1>
                     <p className="hero-subtitle">
                         Your interactive coding platform — learn, share, and grow your skills in frontend, backend, and beyond.

@@ -12,7 +12,7 @@ function Navbar() {
             {/* Top Desktop Navbar */}
             <nav className="navbar navbar-dark navbar-custom sticky-top d-flex justify-content-between px-3">
                 <Link className="navbar-brand fw-bold px-4" to="/">
-                    Code <sup><u>Verse</u></sup>
+                    <b>Code</b><sup><u><small>Verse</small>💻</u></sup>
                 </Link>
 
                 {/* Hamburger button for mobile */}

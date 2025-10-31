@@ -11,8 +11,8 @@ function About() {
             {/* Hero Section */}
             <section className="about-hero">
                 <div className="hero-content">
-                    <h1>About &nbsp; <span> Code<sup><u><small>Verse</small>💻</u></sup></span></h1>
-                    <p>Your ultimate destination for learning and building modern web applications.</p>
+                    <h1> <span> <b>Code</b><sup><u><small>Verse</small>💻</u></sup> </span>  </h1>
+                    <p>  Your ultimate destination for learning and building modern web applications. </p>
                 </div>
             </section>
 
