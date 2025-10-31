@@ -80,7 +80,7 @@ const Frontend_Tutorial_Solution = () => {
 
 // VIDEO CARD COMPONENT
 const VideoCard = ({ video }) => {
-    const [selectedTab, setSelectedTab] = useState("js");
+    const [selectedTab, setSelectedTab] = useState("html"); //default start should be on css
 
     const getCodeByTab = (codeObj, tab) => {
         switch (tab) {
@@ -120,7 +120,7 @@ const VideoCard = ({ video }) => {
                 {/* Code Box */}
                 <div className="code-info-wrapper">
                     {video.source_codes?.length > 0 && video.source_codes.map((codeObj, idx) => (
-                        <div key={idx} className="card shadow-lg mb-3 d-flex flex-column h-100">
+                        <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
                             <div className="card-header">
                                 <div className="btn-group">
                                     {["html","css","js"].map(tab => (
