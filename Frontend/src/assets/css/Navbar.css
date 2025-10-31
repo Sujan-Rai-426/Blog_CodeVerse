@@ -1,0 +1,77 @@
+/* Navbar */
+.navbar-custom {
+    background: linear-gradient(90deg, #4b6cb7, #182848);
+    padding: 0.5rem 1rem;
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 0;
+    right: -300px; /* hidden by default on the right */
+    width: 40vw;
+    height: 100%;
+    background: rgba(24, 40, 72, 0.7); /* glass background */
+    backdrop-filter: blur(10px); /* frosted glass effect */
+    color: #fff;
+    padding-top: 60px;
+    transition: all 0.3s ease;
+    z-index: 1000;
+    box-shadow: -4px 0 15px rgba(0,0,0,0.2);
+    border-left: 1px solid rgba(255,255,255,0.1);
+}
+
+.sidebar.open {
+    right: 0;
+}
+
+.sidebar .close-btn {
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    font-size: 2rem;
+    background: none;
+    border: none;
+    color: #ffd700;
+    cursor: pointer;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.sidebar-nav li {
+    margin: 2rem 0;
+    text-align: center;
+}
+
+.sidebar-nav li a {
+    color: #fff;
+    text-decoration: none;
+    font-size: 1.2rem;
+    transition: color 0.3s ease;
+}
+
+.sidebar-nav li a:hover {
+    color: #ffd700;
+}
+
+/* Overlay */
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    z-index: 900;
+}
+
+/* Hide sidebar in large screens */
+@media (min-width: 992px) {
+    .sidebar {
+        display: none;
+    }
+}

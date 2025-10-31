@@ -1,35 +1,49 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import '../assets/css/Navbar.css';
 
 function Navbar() {
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+
+    const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+
     return (
+        <>
+            {/* Top Navbar */}
+            <nav className="navbar navbar-dark navbar-custom sticky-top d-flex justify-content-between px-3">
+                <Link className="navbar-brand fw-bold px-4" to="/">
+                    Code <sup><u>Verse</u></sup>
+                </Link>
 
-    <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-top">
-        <div className="container-fluid">
-            <Link className="navbar-brand" to="/"> Home </Link>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span className="navbar-toggler-icon"></span>
-            </button>
-            <div className="collapse navbar-collapse" id="navbarText">
-                <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-                    <li className="nav-item">
-                        <Link className="nav-link active" aria-current="page" to="/">Home</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/Backend_Tutorial_Solution/:topicID">Features</Link>
-                    </li>
-                    <li className="nav-item">
-                        <Link className="nav-link" to="/Frontend_Tutorial_Solution/:topicID">Pricing</Link>
-                    </li>
-                </ul>
-                <span className="navbar-text">
-                    CodeVerse 💻
-                </span>
+                <button className="btn btn-outline-light d-lg-none" onClick={toggleSidebar}>
+                    ☰
+                </button>
+
+                <div className="d-none d-lg-flex align-items-center">
+                    <Link to="/" className="nav-link text-light me-3">Home</Link>
+                    <Link to="/" className="nav-link text-light me-3">About</Link>
+                    <Link to="/" className="nav-link text-light me-3">Pricing</Link>
+                    <Link to="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" className="nav-link text-light me-3">Developer</Link>
+                    <Link to="http://127.0.0.1:8000/admin/" className="btn btn-outline-light btn-sm">Admin 💻</Link>
+                </div>
+            </nav>
+
+            {/* Sidebar for small screens */}
+            <div className={`sidebar ${sidebarOpen ? 'open' : ''}`}>
+                <button className="close-btn" onClick={toggleSidebar}>×</button>
+                    <ul className="sidebar-nav">
+                        <li><Link to="/" onClick={toggleSidebar}>Home</Link></li>
+                        <li><Link to="/" onClick={toggleSidebar}>About</Link></li>
+                        <li><Link to="/" onClick={toggleSidebar}>Pricing</Link></li>
+                        <li><Link to="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</Link></li>
+                        <li><Link to="http://127.0.0.1:8000/admin/" onClick={toggleSidebar}>Admin 💻</Link></li>
+                    </ul>
             </div>
-        </div>
-    </nav>
 
-    )
+            {/* Overlay when sidebar is open */}
+            {sidebarOpen && <div className="overlay" onClick={toggleSidebar}></div>}
+        </>
+    );
 }
 
-export default Navbar
+export default Navbar;
