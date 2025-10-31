@@ -124,7 +124,7 @@
 
 /* Hover effect for sidebar links */
 .sidebar-nav li a:hover {
-    color: #ffd700;
+    color: #14fb78;
 }
 .sidebar-nav li a::after {
     content: '';
@@ -133,7 +133,7 @@
     bottom: -4px;
     width: 0%;
     height: 2px;
-    background-color: #ffd700;
+    background-color: #14fb78;
     transition: width 0.3s ease;
 }
 .sidebar-nav li a:hover::after,

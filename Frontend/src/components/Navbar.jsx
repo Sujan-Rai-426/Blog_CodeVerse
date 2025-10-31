@@ -35,7 +35,7 @@ function Navbar() {
                 <button className="close-btn" onClick={toggleSidebar}>×</button>
                 <ul className="sidebar-nav">
                     <li><Link to="/" onClick={toggleSidebar}>Home</Link></li>
-                    <li><Link to="/" onClick={toggleSidebar}>About</Link></li>
+                    <li><Link to="/About" onClick={toggleSidebar}>About</Link></li>
                     <li><Link to="/" onClick={toggleSidebar}>Pricing</Link></li>
                     <li><a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
                     <li><Link to="http://127.0.0.1:8000/admin/" onClick={toggleSidebar}>Admin 💻</Link></li>
