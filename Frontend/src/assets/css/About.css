@@ -14,7 +14,7 @@
 .about-hero {
     background: linear-gradient(135deg, #34bdb0eb, #1b244b);
     color: #fff;
-    padding: 6rem 1rem 4rem 1rem;
+    padding: 4rem 1rem 4rem 1rem;
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -51,7 +51,7 @@
     Mission & Vision Section
 ========================= */
 .mission-vision {
-    padding: 6rem 1rem;
+    padding: 4rem 1rem;
     background-color: #edfaee;
 }
 .mission-vision .container {
@@ -88,7 +88,7 @@
     Team Section
 ========================= */
 .team-section {
-    padding: 6rem 1rem;
+    padding: 4rem 1rem;
     text-align: center;
 }
 .team-section h2 {
@@ -159,10 +159,44 @@
         flex-direction: column;
         align-items: center;
     }
+    .about-hero {
+        padding: 2.6rem 1.1rem; /* smaller padding */
+        border-radius: 12px;
+    }
     .about-hero h1 {
         font-size: 2.4rem;
     }
     .about-hero p {
         font-size: 1.1rem;
+    }
+}
+
+/* 🌐 Responsive adjustments for mobile */
+@media (max-width: 768px) {
+    .about-hero {
+        padding: 2.3rem 1rem; /* smaller padding */
+        border-radius: 12px;
+    }
+
+    .about-hero h1 {
+        font-size: 2rem; /* smaller title */
+    }
+
+    .about-hero p {
+        font-size: 1rem; /* smaller paragraph text */
+    }
+}
+
+@media (max-width: 480px) {
+    .about-hero {
+        padding: 1.9rem 1.4rem;
+    }
+
+    .about-hero h1 {
+        font-size: 1.8rem;
+    }
+
+    .about-hero p {
+        font-size: 0.95rem;
     }
 }
