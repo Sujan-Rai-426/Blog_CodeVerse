@@ -2,6 +2,7 @@ import { useState } from 'react'
 // import ProtectedRoute from './context/ProtectedRoute';
 
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
+import Scroll_To_Top from './context/Scroll_To_Top.jsx';
 
 import Navbar from './components/Navbar.jsx' 
 import Home from './pages/Home.jsx'
@@ -19,7 +20,7 @@ function App() {
 
   return (
     <Router>
-        
+        <Scroll_To_Top />
         <Navbar />
 
             <div className="container">
