@@ -1,8 +1,10 @@
-import { useState } from 'react'
-// import ProtectedRoute from './context/ProtectedRoute';
+import { useState } from 'react';
 
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
 import Scroll_To_Top from './context/Scroll_To_Top.jsx';
+
+// For Vercel analytics
+import { Analytics } from "@vercel/analytics/react"
 
 import Navbar from './components/Navbar.jsx' 
 import Home from './pages/Home.jsx'
@@ -19,38 +21,45 @@ import Protected_Route from './context/Protected_Route.jsx';
 function App() {
 
   return (
-    <Router>
-        <Scroll_To_Top />
-        <Navbar />
 
-            <div className="container">
-                  <Routes>
-                      <Route exact path='/'  element={ <Home/> } />
-                      <Route exact path='/About'  element={ <About/> } />
-                      
-                      <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
-                      <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
+    <>
+    
+        <Router>
+            <Scroll_To_Top />
+            <Navbar />
 
-                      {/* Frontend_Tutorial_Topic is Frontend Design */}
-                      <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
+                <div className="container">
+                      <Routes>
+                          <Route exact path='/'  element={ <Home/> } />
+                          <Route exact path='/About'  element={ <About/> } />
+                          
+                          <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
+                          <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
 
-                      {/* Backend_Tutorial_Topic is Coding Guide Topic */}
-                      <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
+                          {/* Frontend_Tutorial_Topic is Frontend Design */}
+                          <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
 
-                      <Route exact path="/Admin_Login" element={<Admin_Login />} />
+                          {/* Backend_Tutorial_Topic is Coding Guide Topic */}
+                          <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
+
+                          <Route exact path="/Admin_Login" element={<Admin_Login />} />
 
 
-                        {/* Protected Dashboard */}
-                      <Route element={<Protected_Route />}>
-                        <Route path="/Admin_Dashboard" element={<Admin_Dashboard />} />
-                      </Route>
+                            {/* Protected Dashboard */}
+                          <Route element={<Protected_Route />}>
+                            <Route path="/Admin_Dashboard" element={<Admin_Dashboard />} />
+                          </Route>
 
-                  </Routes>
-            </div>
-        
-        <Footer />
+                      </Routes>
+                </div>
+            
+            <Footer />
 
-    </Router>
+        </Router>
+
+      {/* Add Vercel Analytics at the bottom */}
+      <Analytics />
+    </>
   )
 }
 
