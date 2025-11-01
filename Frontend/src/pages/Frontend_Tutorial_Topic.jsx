@@ -62,7 +62,7 @@ const Frontend_Tutorial_Topic = () => {
                                                 </Link>
                                             ))
                                         ) : (
-                                            <p className="no-topic">No topics found for this language.</p>
+                                            <p className="no-topic"> Content Will be uploaded very soon... </p>
                                         )}
                                     </div>
                                 </div>
@@ -71,7 +71,7 @@ const Frontend_Tutorial_Topic = () => {
                     </div>
                 ))
             ) : (
-                <p className="loading">Loading topics...</p>
+                <p className="loading text-light">Loading topics...</p>
             )}
         </div>
     );

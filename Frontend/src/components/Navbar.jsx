@@ -36,7 +36,7 @@ function Navbar() {
                 <ul className="sidebar-nav">
                     <li><Link to="/" onClick={toggleSidebar}>Home</Link></li>
                     <li><Link to="/About" onClick={toggleSidebar}>About</Link></li>
-                    <li><Link to="/" onClick={toggleSidebar}>Pricing</Link></li>
+                    <li><Link to="/Privacy_Policy" onClick={toggleSidebar}>Privacy Policy</Link></li>
                     <li><a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
                     <li><Link to="https://blog-codeverse.onrender.com/" onClick={toggleSidebar}>Admin 💻</Link></li>
                 </ul>

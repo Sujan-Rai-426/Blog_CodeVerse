@@ -74,7 +74,7 @@ const Backend_Tutorial_Topic = () => {
                     </div>
                 ))
             ) : (
-                <p className="loading">Loading backend topics...</p>
+                <p className="loading">Content will be uploaded very soon...</p>
             )}
         </div>
     );

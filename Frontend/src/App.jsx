@@ -17,6 +17,7 @@ import Backend_Tutorial_Topic from './pages/Backend_Tutorial_Topic.jsx';
 import Admin_Dashboard from './pages/Admin_Dashboard.jsx';
 import Admin_Login from './pages/Admin_Login.jsx';
 import Protected_Route from './context/Protected_Route.jsx';
+import Privacy_Policy from './pages/Privacy_Policy.jsx';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
                       <Routes>
                           <Route exact path='/'  element={ <Home/> } />
                           <Route exact path='/About'  element={ <About/> } />
+                          <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
                           
                           <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
                           <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
