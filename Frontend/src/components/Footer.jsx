@@ -13,7 +13,7 @@ const Footer = () => {
                     
                     <Link to="/About">About</Link>
                     <Link to="https://www.sujan140.com.np/contact">Contact</Link>
-                    <Link to="/">Privacy Policy</Link>
+                    <Link to="/Privacy_Policy">Privacy Policy</Link>
                 </div>
             </div>
         </footer>
