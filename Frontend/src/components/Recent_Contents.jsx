@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
 
-function Recent_Blogs() {
+function Recent_Contents() {
     const [tutorials, setTutorials] = useState([]);
 
     useEffect(() => {
@@ -58,7 +58,7 @@ function Recent_Blogs() {
         <div className="row g-4">
             {tutorials.length === 0 ? (
                 <p className="text-center text-muted py-5">
-                    No recent blogs found.
+                    No recent tutorials found.
                 </p>
             ) : (
                 tutorials.map((tutorial) => (
@@ -82,7 +82,7 @@ function Recent_Blogs() {
                                 </p>
                                 &nbsp;&nbsp;
                                 <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-primary btn-sm rounded-pill" >
-                                    Read More →
+                                    View Code →
                                 </Link>
                             </div>
                         </div>
@@ -93,4 +93,4 @@ function Recent_Blogs() {
     );
 }
 
-export default Recent_Blogs;
+export default Recent_Contents;

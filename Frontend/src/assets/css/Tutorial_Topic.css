@@ -1,6 +1,6 @@
 /* === Page Layout === */
 .tutorial-topic-page {
-    padding: 4rem 2rem;
+    padding: 7rem 2rem 4rem;
     min-height: 100vh;
     background: linear-gradient(135deg, #eef2f7, #ffffff);
     font-family: "Poppins", sans-serif;

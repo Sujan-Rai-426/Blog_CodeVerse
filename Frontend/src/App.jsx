@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import './App.css'
 // import ProtectedRoute from './context/ProtectedRoute';
 
 import { BrowserRouter as Router, Routes, Route} from 'react-router-dom';
@@ -29,8 +28,12 @@ function App() {
                       <Route exact path='/About'  element={ <About/> } />
                       
                       <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
-                      <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />
+                      <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
+
+                      {/* Frontend_Tutorial_Topic is Frontend Design */}
                       <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
+
+                      {/* Backend_Tutorial_Topic is Coding Guide Topic */}
                       <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
 
                       <Route exact path="/Admin_Login" element={<Admin_Login />} />

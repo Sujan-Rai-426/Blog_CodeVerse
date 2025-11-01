@@ -11,7 +11,7 @@ const Footer = () => {
                 <div className="footer-links">
 
                     
-                    <Link to="/">About</Link>
+                    <Link to="/About">About</Link>
                     <Link to="https://www.sujan140.com.np/contact">Contact</Link>
                     <Link to="/">Privacy Policy</Link>
                 </div>

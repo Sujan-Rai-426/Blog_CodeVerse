@@ -42,7 +42,7 @@ const Frontend_Tutorial_Topic = () => {
 
     return (
         <div className="tutorial-topic-page">
-            <h1 className="page-title">Frontend Tutorials</h1>
+            <h1 className="page-title">🎨 <sup><u>Frontend Designs</u></sup></h1>
 
             {categories.length > 0 ? (
                 categories.map((category) => (

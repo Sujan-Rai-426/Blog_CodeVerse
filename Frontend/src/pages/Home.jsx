@@ -3,7 +3,7 @@ import "../assets/css/Home.css";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../api";
 import Carousel from "../components/Carousel";
-import Recent_Blogs from "../components/Recent_Blogs";
+import Recent_Contents from "../components/Recent_Contents";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
 
@@ -146,7 +146,7 @@ function Home() {
                             <Skeleton key={idx} height={120} borderRadius={12} style={{ marginBottom: '1rem' }} />
                         ))
                     ) : (
-                        <Recent_Blogs />
+                        <Recent_Contents />
                     )}
                 </div>
             </section>
