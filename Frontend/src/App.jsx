@@ -6,7 +6,7 @@ import Scroll_To_Top from './context/Scroll_To_Top.jsx';
 // For Vercel analytics
 import { Analytics } from "@vercel/analytics/react"
 
-import Navbar from './components/Navbar.jsx' 
+import Nav_Bar from './components/Nav_Bar.jsx' 
 import Home from './pages/Home.jsx'
 import About from './pages/About.jsx'
 import Footer from './components/Footer.jsx'
@@ -27,7 +27,7 @@ function App() {
     
         <Router>
             <Scroll_To_Top />
-            <Navbar />
+            <Nav_Bar />
 
                 <div className="container">
                       <Routes>
