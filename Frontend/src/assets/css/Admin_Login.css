@@ -1,8 +1,9 @@
 .admin-login {
-  background: #f8f9fa;
+  background: transparent;
 }
 
 .admin-login form {
+  background: rgb(178, 177, 177) !important;
   transition: all 0.3s ease;
 }
 

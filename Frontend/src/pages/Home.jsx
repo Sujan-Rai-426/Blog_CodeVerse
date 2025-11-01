@@ -48,10 +48,10 @@ function Home() {
             {/* Hero Section */}
             <section className="hero">
                 <div className="hero-content">
-                    <h1 className="hero-title">
+                    <h1 className="hero-title text-golden">
                         <b>Code</b><sup><u><small>Verse</small>💻</u></sup>
                     </h1>
-                    <p className="hero-subtitle">
+                    <p className="hero-subtitle text-gray">
                         Your interactive coding platform — learn, share, and grow your skills in frontend, backend, and beyond.
                     </p>
 
@@ -60,16 +60,16 @@ function Home() {
                             <i className="fas fa-globe"></i>
                         </a>
                         <a href="https://www.facebook.com/sujan.rai.1042" target="_blank" rel="noopener noreferrer" className="social-link facebook" >
-                            <i className="fab fa-facebook-f"></i>
+                            <i className=" fab fa-facebook-f"></i>
                         </a>
                         <a href="https://www.instagram.com/sujan_rai_140/" target="_blank" rel="noopener noreferrer" className="social-link instagram" >
-                            <i className="fab fa-instagram"></i>
+                            <i className=" fab fa-instagram"></i>
                         </a>
                         <a href="https://github.com/Sujan-Rai-426" target="_blank" rel="noopener noreferrer" className="social-link github" >
-                            <i className="fab fa-github"></i>
+                            <i className=" fab fa-github"></i>
                         </a>
                         <a href="https://www.linkedin.com/in/sujan-rai-18a07b2a6/" target="_blank" rel="noopener noreferrer" className="social-link linkedin" >
-                            <i className="fab fa-linkedin-in"></i>
+                            <i className=" fab fa-linkedin-in"></i>
                         </a>
                     </div>
 

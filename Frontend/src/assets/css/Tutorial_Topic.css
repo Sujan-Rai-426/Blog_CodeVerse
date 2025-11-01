@@ -2,7 +2,7 @@
 .tutorial-topic-page {
     padding: 7rem 2rem 4rem;
     min-height: 100vh;
-    background: linear-gradient(135deg, #eef2f7, #ffffff);
+    background: none;
     font-family: "Poppins", sans-serif;
 }
 
@@ -12,7 +12,7 @@
     font-size: 2.5rem;
     font-weight: 700;
     margin-bottom: 2rem;
-    color: #1f2937;
+    color: #cecece;
 }
 
 /* === Section Titles === */
@@ -21,8 +21,8 @@
     font-size: 1.8rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
-    color: #1e3a8a;
-    border-left: 4px solid #3b82f6;
+    color: #c4b144;
+    border-left: 4px solid #c4b144;
     padding-left: 10px;
 }
 

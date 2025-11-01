@@ -2,7 +2,7 @@
     Navbar Styles
 ========================= */
 .navbar-custom {
-    background: linear-gradient(90deg, #4b6cb7, #182848);
+    background: linear-gradient(145deg, #2c221bf7 0%, #6e5629 50%, #66593d 100%);
     padding: 0.5rem 1rem;
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
 }
@@ -15,7 +15,7 @@
     transition: color 0.3s ease;
 }
 .navbar-brand:hover {
-    color: #14fb78;
+    color: #ffa000;
 }
 
 /* Desktop navbar links row */
@@ -35,7 +35,7 @@
 
 /* Hover color + underline animation */
 .navbar-custom .navbar-nav .nav-link:hover {
-    color: #14fb78;
+    color: #ffa000;
     font-size: 1.04rem;
     transition: ease-in(0.1sec);
 }
@@ -46,7 +46,7 @@
     bottom: -4px;
     width: 0%;
     height: 2px;
-    background-color: #14fb78;
+    background-color: #ffa000;
     transition: width 0.3s ease;
 }
 .navbar-custom .navbar-nav .nav-link:hover::after,
@@ -75,7 +75,7 @@
     width: 40vw;
     max-width: 300px;
     height: 100%;
-    background: rgba(24, 40, 72, 0.7); /* glass effect */
+    background: linear-gradient(145deg, #2c221bde 0%, #6e5629b3 50%, #66593d59 100%); /* glass effect */
     backdrop-filter: blur(10px);
     color: #fff;
     padding-top: 60px;
@@ -124,7 +124,7 @@
 
 /* Hover effect for sidebar links */
 .sidebar-nav li a:hover {
-    color: #14fb78;
+    color: #C6A25D;
 }
 .sidebar-nav li a::after {
     content: '';
@@ -133,7 +133,7 @@
     bottom: -4px;
     width: 0%;
     height: 2px;
-    background-color: #14fb78;
+    background-color: #C6A25D;
     transition: width 0.3s ease;
 }
 .sidebar-nav li a:hover::after,

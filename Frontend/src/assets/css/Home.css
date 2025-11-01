@@ -7,15 +7,17 @@
     font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
     color: #1f1f1f;
 }
-
+.text-golden {
+    color: #C6A25D !important;
+}
 /* ===== Hero Section ===== */
 .hero {
-    background: #f8f9fa;
+    background: linear-gradient(145deg, #0000000d 0%, #0808087a 50%, #2a28286e 100%);
     border-radius: 16px;
     padding: 2rem 1.5rem;
     text-align: center;
     margin-bottom: 1rem;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+    box-shadow: 5px 1px 5px rgb(182 126 69 / 15%);;
 }
 
 .hero-title {
@@ -27,7 +29,7 @@
 .hero-subtitle {
     max-width: 700px;
     margin: 0.75rem auto 1.5rem;
-    color: #555;
+    color: #979797;
     font-size: clamp(1rem, 2.5vw, 1.15rem);
     line-height: 1.6;
 }
@@ -77,7 +79,7 @@
     background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4);
 }
 .social-link.github:hover {
-    background: #171515;
+    background: #060606;
 }
 .social-link.linkedin:hover {
     background: #0077b5;
@@ -85,8 +87,8 @@
 
 
 .share-btn {
-    background: #00bb48;
-    color: #fff;
+    background: #e1ab44;
+    color: black;
     border: none;
     padding: 0.7rem 2rem;
     margin-top: 1rem;
@@ -96,7 +98,7 @@
 }
 
 .share-btn:hover {
-    background: #00963a;
+    background: #C6A25D;
     transform: translateY(-3px);
     box-shadow: 0 5px 15px rgba(0, 187, 72, 0.3);
 }
@@ -106,7 +108,7 @@
 .section-title {
     font-size: clamp(1.4rem, 4vw, 1.9rem);
     font-weight: 700;
-    color: #00bb48;
+    color: #C6A25D;
     margin: 1rem 0 .5rem 0;
     text-align: center;
 }
@@ -116,8 +118,8 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
     gap: 1rem;
-    justify-content: center; /* ✅ Center the whole grid */
-    justify-items: center;   /* ✅ Center each card */
+    justify-content: center; /*Center the whole grid */
+    justify-items: center;   /*Center each card */
 }
 
 
@@ -136,13 +138,13 @@
 
 .grid-card:hover {
     transform: translateY(-5px);
-    border-color: #00bb48;
-    box-shadow: 0 6px 18px rgba(0, 187, 72, 0.15);
+    border-color: #e1ab44;
+    box-shadow: 0 6px 18px #c6a15d37;
 }
 
 .card-icon {
     font-size: 2rem;
-    color: #00bb48;
+    color: #e1ab44;
     margin-bottom: 0.4rem;
 }
 
@@ -198,7 +200,7 @@
     }
 
     .recent-wrapper > * {
-        justify-content: center; /* ✅ fixes misalignment */
+        justify-content: center; /* fixes misalignment */
     }
     .section-title {
         margin: 1.5rem 0 .5rem 0;

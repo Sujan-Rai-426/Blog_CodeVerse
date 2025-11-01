@@ -13,7 +13,6 @@ function Recent_Contents() {
                 console.log("All topics from API:", topics);
 
                 const frontendLanguageIds = [1, 11]; // frontend (HTML, JS, React)
-                const backendLanguageIds = [2, 3, 4, 5]; // backend (Python, Django, etc.)
 
                 // Collect all videos across all topics
                 const allVideos = [];
@@ -77,11 +76,11 @@ function Recent_Contents() {
                                 {/* <p className="card-text text-muted small mb-1">
                                     {tutorial.author}
                                 </p> */}
-                                <p className="card-text">
+                                <p className="card-text text-white">
                                     &nbsp;&nbsp; {tutorial.desc.slice(0, 25)}...
                                 </p>
                                 &nbsp;&nbsp;
-                                <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-primary btn-sm rounded-pill" >
+                                <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-warning btn-sm rounded-pill" >
                                     View Code →
                                 </Link>
                             </div>

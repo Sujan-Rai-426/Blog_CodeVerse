@@ -6,10 +6,12 @@
   padding: 0 1rem;
   box-sizing: border-box;
 }
-
+.card{
+  background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%) !important;
+}
 /* cards */
 .step-card, .video-card {
-  background: linear-gradient(135deg, #eef2f7, #ffffff);
+  background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%);
   padding: 1.5rem;
   border-radius: 20px;
   transition: transform 0.3s, box-shadow 0.3s;
@@ -83,13 +85,12 @@ h1, h3, h5 { color: #4b2b88; }
 .video-description{
   margin: 0.5rem;
   font-size: 0.9rem;
-  color: #555;
+  color: #e1e1e1;
   text-align: justify;   /* align text to both left and right */
   text-justify: inter-word;   /* improve spacing between words */
 }
 
-/* header / tabs / copy button (no changes) */
-.card-header {
+/* header / tabs / copy button (no changes) */-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -152,7 +153,6 @@ h1, h3, h5 { color: #4b2b88; }
     align-items: flex-start;
     gap: 1rem;
   }
-
   /* force exactly 50% each using flex-basis and no growth */
   .video-wrapper,
   .code-info-wrapper {

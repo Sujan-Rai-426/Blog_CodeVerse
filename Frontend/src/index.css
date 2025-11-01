@@ -1,4 +1,10 @@
 body{
     /* Cloudy stromy Background */
-    background: linear-gradient(145deg, #f8f9fa 0%, #fbfbfbcf 50%, #182848 100%);
+    background: linear-gradient(145deg, #0c0c0c 0%, #181818 50% 50%, #272525 100%);
 }
+
+
+/* Cloudy stromy Background */
+/* body{
+    background: linear-gradient(145deg, #f8f9fa 0%, #fbfbfbcf 50%, #182848 100%);
+} */

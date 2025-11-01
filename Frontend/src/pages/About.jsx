@@ -33,7 +33,7 @@ function About() {
             {/* Team Section */}
             <section className="team-section">
                 <div className="container">
-                    <h2> <small>👥<sup><b>Our Team</b></sup></small> </h2>
+                    <h2> <small>👥 Our Team Members</small> </h2>
                     <div className="team-cards">
                         <div className="team-card">
                             <img src={sujanImg} alt="Er. Sujan Rai" />

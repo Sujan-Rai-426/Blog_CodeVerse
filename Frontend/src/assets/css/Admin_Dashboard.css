@@ -2,11 +2,12 @@
 
 /* Container */
 .admin-dashboard {
+  color: white;
   max-width: 900px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: #f9f9f9;
+  background: linear-gradient(145deg, #4e4b4b 0%, #473e3e 50% 50%, #000000 100%);
   border-radius: 12px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
 }
@@ -15,7 +16,7 @@
 .admin-dashboard h2 {
   text-align: center;
   font-size: 2rem;
-  color: #333;
+  color: #bcac4c;
   margin-bottom: 30px;
 }
 
@@ -41,7 +42,7 @@
 
 /* Forms */
 form {
-  background: #fff;
+  background: transparent;
   padding: 25px 20px;
   border-radius: 12px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
@@ -49,7 +50,7 @@ form {
 
 form h4 {
   margin-bottom: 20px;
-  color: #444;
+  color: #cbc1c1;
   font-size: 1.4rem;
   border-bottom: 1px solid #eee;
   padding-bottom: 8px;
