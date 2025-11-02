@@ -27,7 +27,7 @@
 .video-wrapper video {
   border-radius: 20px;
   box-shadow: 0px 6px 15px rgba(0,0,0,0.08);
-  width: 80%;
+  height: 52vh !important;
   height: auto;           /* let width control size; keeps aspect */
   object-fit: cover;
   display: block;
