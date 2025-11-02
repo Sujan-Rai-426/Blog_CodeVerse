@@ -29,7 +29,6 @@
 //     </div>
 //   );
 // }
-
 import { useEffect, useState, useRef } from "react";
 
 export default function Ads_Container({ onComplete, client, slot, style }) {
@@ -38,9 +37,7 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
 
   // Countdown timer
   useEffect(() => {
-    const countdown = setInterval(() => {
-      setTimer(prev => prev - 1);
-    }, 1000);
+    const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
     return () => clearInterval(countdown);
   }, []);
 
@@ -49,20 +46,42 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
     if (timer <= 0) onComplete();
   }, [timer, onComplete]);
 
-  // Initialize AdSense after element mounts
-  useEffect(() => {
-    try {
-      if (window.adsbygoogle && adRef.current) {
+  // Function to safely push ad
+  const pushAd = () => {
+    if (window.adsbygoogle && adRef.current && adRef.current.offsetWidth > 0) {
+      try {
         window.adsbygoogle.push({});
+      } catch (e) {
+        console.error("Adsense error:", e);
       }
-    } catch (e) {
-      console.error("Adsense error:", e);
     }
+  };
+
+  // Push ad on mount and on window resize
+  useEffect(() => {
+    const handleResize = () => pushAd();
+
+    // Retry until ad has width
+    const interval = setInterval(() => {
+      if (adRef.current && adRef.current.offsetWidth > 0) {
+        pushAd();
+        clearInterval(interval);
+      }
+    }, 200);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", handleResize);
+    };
   }, []);
 
   return (
     <div
       style={{
+        width: "100%",
+        minWidth: "300px",
         border: "1px solid #ccc",
         padding: "12px",
         textAlign: "center",
@@ -77,13 +96,21 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
         ...style
       }}
     >
-      <div style={{ position: "absolute", top: "5px", right: "10px", fontWeight: "bold", color: "#111" }}>
+      <div
+        style={{
+          position: "absolute",
+          top: "5px",
+          right: "10px",
+          fontWeight: "bold",
+          color: "#111",
+        }}
+      >
         {timer > 0 ? `${timer}s` : "Done"}
       </div>
 
       <ins
         className="adsbygoogle"
-        style={{ display:"block", textAlign:"center" }}
+        style={{ display: "block", textAlign: "center" }}
         data-ad-layout="in-article"
         data-ad-format="fluid"
         data-ad-client={client || "ca-pub-6317483086789968"}
@@ -93,6 +120,7 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
     </div>
   );
 }
+
 
 
 
