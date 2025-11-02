@@ -29,8 +29,8 @@ function App() {
             <Scroll_To_Top />
             <Nav_Bar />
 
-                <div className="container">
-                      <Routes>
+                <div className="container" style={{minHeight: "100vh"}}>
+                      <Routes >
                           <Route exact path='/'  element={ <Home/> } />
                           <Route exact path='/About'  element={ <About/> } />
                           <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
