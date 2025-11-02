@@ -96,8 +96,8 @@ function Home() {
                     {loading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
-                                <Skeleton circle height={40} width={40} style={{ marginBottom: 8 }} />
-                                <Skeleton width={60} />
+                                <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
+                                <Skeleton width={60 } baseColor="#2b2b2b" highlightColor="#3b3b3b" />
                             </div>
                         ))
                     ) : (
@@ -120,8 +120,8 @@ function Home() {
                     {loading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
-                                <Skeleton circle height={40} width={40} style={{ marginBottom: 8 }} />
-                                <Skeleton width={60} />
+                                <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
+                                <Skeleton width={60 } baseColor="#2b2b2b" highlightColor="#3b3b3b" />
                             </div>
                         ))
                     ) : (
@@ -141,13 +141,7 @@ function Home() {
             <section className="recent-section">
                 <p className="section-title"> <small> 🕒 <sup><u>Recent Designs</u></sup> </small> </p>
                 <div className="recent-wrapper">
-                    {loading ? (
-                        Array.from({ length: 3 }).map((_, idx) => (
-                            <Skeleton key={idx} height={120} borderRadius={12} style={{ marginBottom: '1rem' }} />
-                        ))
-                    ) : (
-                        <Recent_Contents />
-                    )}
+                    <Recent_Contents />
                 </div>
             </section>
         </div>

@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import api from "../api";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function Recent_Contents() {
     const [tutorials, setTutorials] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchBlogs = async () => {
@@ -14,9 +17,7 @@ function Recent_Contents() {
 
                 const frontendLanguageIds = [1, 11]; // frontend (HTML, JS, React)
 
-                // Collect all videos across all topics
                 const allVideos = [];
-
                 topics.forEach((topic) => {
                     if (topic.videos && topic.videos.length > 0) {
                         const isFrontend = frontendLanguageIds.includes(topic.language);
@@ -24,13 +25,11 @@ function Recent_Contents() {
 
                         topic.videos.forEach((video) => {
                             allVideos.push({
-                                id: video.id, // unique per video
+                                id: video.id,
                                 topicId: topic.id,
                                 title: topic.name,
                                 author: type.charAt(0).toUpperCase() + type.slice(1),
-                                desc:
-                                    video.info?.description ||
-                                    "No description available",
+                                desc: video.info?.description || "No description available",
                                 video_url: video.video_url,
                                 type,
                             });
@@ -38,20 +37,40 @@ function Recent_Contents() {
                     }
                 });
 
-                // Sort by video ID (most recent first)
                 const sortedVideos = allVideos.sort((a, b) => b.id - a.id);
-
-                // Pick latest 3 videos
                 const latestThree = sortedVideos.slice(0, 3);
-
                 setTutorials(latestThree);
             } catch (error) {
                 console.error("Error fetching tutorials:", error);
+            } finally {
+                setLoading(false);
             }
         };
 
         fetchBlogs();
     }, []);
+
+    if (loading) {
+        // Skeleton loader layout
+        return (
+            <SkeletonTheme baseColor="#1c1c1c" highlightColor="#2a2a2a">
+                <div className="row g-4">
+                    {[1, 2, 3].map((i) => (
+                        <div className="col-12 col-md-6 col-lg-4" key={i}>
+                            <div className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card p-2">
+                                <Skeleton height={200} borderRadius={10} />
+                                <div className="card-body py-2">
+                                    <Skeleton width="70%" height={20} className="mb-2 mt-3" />
+                                    <Skeleton width="90%" height={14} count={2} />
+                                    <Skeleton width={100} height={30} borderRadius={20} className="mt-3" />
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            </SkeletonTheme>
+        );
+    }
 
     return (
         <div className="row g-4">
@@ -70,17 +89,13 @@ function Recent_Contents() {
                             )}
                             <div className="card-body py-2">
                                 <h5 className="card-title fw-bold">
-                                    {/* &nbsp;&nbsp; = non breaking space */}
                                     &nbsp; {tutorial.title}
                                 </h5>
-                                {/* <p className="card-text text-muted small mb-1">
-                                    {tutorial.author}
-                                </p> */}
                                 <p className="card-text text-white">
                                     &nbsp;&nbsp; {tutorial.desc.slice(0, 25)}...
                                 </p>
                                 &nbsp;&nbsp;
-                                <Link to={ `/Frontend_Tutorial_Solution/${tutorial.topicId}` } className="btn btn-outline-warning btn-sm rounded-pill" >
+                                <Link to={`/Frontend_Tutorial_Solution/${tutorial.topicId}`} className="btn btn-outline-warning btn-sm rounded-pill" >
                                     View Code →
                                 </Link>
                             </div>
