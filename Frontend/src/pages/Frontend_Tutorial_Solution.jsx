@@ -100,30 +100,30 @@ const Frontend_Tutorial_Solution = () => {
 const VideoCard = ({ video }) => {
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
-  const [showAdTab] = useState(() => {
-    const tabs = ["html", "css", "js"];
-    return tabs[Math.floor(Math.random() * 3)];
-  });
+
+  // Only CSS and JS have ads
+  const showAdTabs = ["css", "js"];
 
   const [adCompleted, setAdCompleted] = useState({
-    html: false,
+    html: true,
     css: false,
     js: false,
   });
 
   const handleAdComplete = (tab) => {
-    setAdCompleted((prev) => {
-      if (prev[tab]) return prev;
-      return { ...prev, [tab]: true };
-    });
+    setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
 
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
-      case "html": return codeObj.html_code || "";
-      case "css": return codeObj.css_code || "";
-      case "js": return codeObj.js_code || "";
-      default: return "";
+      case "html":
+        return codeObj.html_code || "";
+      case "css":
+        return codeObj.css_code || "";
+      case "js":
+        return codeObj.js_code || "";
+      default:
+        return "";
     }
   };
 
@@ -131,21 +131,14 @@ const VideoCard = ({ video }) => {
     if (codeRef.current) {
       Prism.highlightElement(codeRef.current);
     }
-  }, [selectedTab]);
-
-  useEffect(() => {
-    if (Object.values(adCompleted).some((v) => v)) {
-      const timer = setTimeout(() => Prism.highlightAll(), 100);
-      return () => clearTimeout(timer);
-    }
-  }, [adCompleted]);
+  }, [selectedTab, adCompleted]);
 
   const CopyButton = ({ code, disabled }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
       if (disabled) {
-        alert("⚠️ Can't copy code until ads are completed!");
+        alert("⚠️ You can copy only after the ad finishes!");
         return;
       }
       navigator.clipboard.writeText(code);
@@ -154,7 +147,7 @@ const VideoCard = ({ video }) => {
     };
 
     return (
-      <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.6 : 1, cursor: disabled ? "not-allowed" : "pointer" }}>
+      <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer", }} >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
     );
@@ -164,31 +157,40 @@ const VideoCard = ({ video }) => {
     <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
       <div className="video-container">
         <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%" }}>
+          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", }} >
             <video src={video.video_url} autoPlay loop muted playsInline className="w-100 h-100" />
           </div>
         </div>
 
         <div className="code-info-wrapper">
           {video.source_codes?.map((codeObj, idx) => (
-            <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
+            <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100" >
               <div className="card-header d-flex justify-content-between align-items-center">
                 <div className="btn-group">
                   {["html", "css", "js"].map((tab) => (
-                    <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)}>
+                    <button key={tab} className={`btn-tab ${ selectedTab === tab ? "active-tab" : "" }`} onClick={() => setSelectedTab(tab)} >
                       {tab.toUpperCase()}
                     </button>
                   ))}
                 </div>
-                <CopyButton code={getCodeByTab(codeObj, selectedTab)} disabled={selectedTab === showAdTab && !adCompleted[selectedTab]} />
+
+                {/* Disable Copy while ad is active */}
+                <CopyButton
+                  code={getCodeByTab(codeObj, selectedTab)}
+                  disabled={
+                    showAdTabs.includes(selectedTab) &&
+                    !adCompleted[selectedTab]
+                  }
+                />
               </div>
 
               <div className="card-body code-box">
-                {selectedTab === showAdTab && !adCompleted[selectedTab] ? (
-                  <Ads_Container onComplete={() => handleAdComplete(selectedTab)} />
+                {/* Hide code + show ad until completed */}
+                {showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
+                  <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
                 ) : (
                   <pre className="m-0">
-                    <code ref={codeRef} className={`language-${selectedTab}`}>
+                    <code ref={codeRef} className={`language-${selectedTab}`} >
                       {getCodeByTab(codeObj, selectedTab)}
                     </code>
                   </pre>

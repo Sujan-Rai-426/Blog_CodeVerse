@@ -86,7 +86,7 @@ function Home() {
 
             {/* Carousel Section */}
             <section className="carousel-section">
-                {loading ? <Skeleton height={200} borderRadius={16} /> : <Carousel />}
+                {loading ? <Skeleton height={220} borderRadius={16} baseColor="#2b2b2b" highlightColor="#3b3b3b" /> : <Carousel />}
             </section>
 
             {/* Frontend Section */}

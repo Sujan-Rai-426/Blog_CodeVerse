@@ -1,37 +1,18 @@
-// import { useEffect, useState } from "react";
+// <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6317483086789968"
+//      crossorigin="anonymous"></script>
+// <ins class="adsbygoogle"
+//      style="display:block; text-align:center;"
+//      data-ad-layout="in-article"
+//      data-ad-format="fluid"
+//      data-ad-client="ca-pub-6317483086789968"
+//      data-ad-slot="1762434579"></ins>
+// <script>
+//      (adsbygoogle = window.adsbygoogle || []).push({});
+// </script>
 
-// export default function Ads_Container({ onComplete }) {
-//   const [timer, setTimer] = useState(10);
-
-//   useEffect(() => {
-//     const countdown = setInterval(() => {
-//       setTimer(prev => prev - 1);
-//     }, 1000);
-
-//     return () => clearInterval(countdown);
-//   }, []);
-
-//   // Safe callback when timer reaches 0
-//   useEffect(() => {
-//     if (timer <= 0) {
-//       onComplete(); // notify parent
-//     }
-//   }, [timer, onComplete]);
-
-//   return (
-//     <div style={{ border: "1px solid #ccc", padding: "12px", textAlign: "center", background: "#f7f7f7", borderRadius: "8px", minHeight: "90px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", position: "relative" }}>
-//         <strong>DEMO AD</strong>
-//         <div>client: ca-pub-1234567890123456</div>
-//         <div>slot: 9876543210</div>
-//         <div style={{ position: "absolute", top: "5px", right: "10px", fontWeight: "bold" }}>
-//             {timer > 0 ? `${timer}s` : "Done"}
-//         </div>
-//     </div>
-//   );
-// }
 import { useEffect, useState, useRef } from "react";
 
-export default function Ads_Container({ onComplete, client, slot, style }) {
+export default function Ads_Container({ onComplete, client, slot, style, boxType }) {
   const [timer, setTimer] = useState(10);
   const adRef = useRef(null);
 
@@ -57,25 +38,24 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
     }
   };
 
-  // Push ad on mount and on window resize
+  // Push ad on mount and resize
   useEffect(() => {
     const handleResize = () => pushAd();
-
-    // Retry until ad has width
     const interval = setInterval(() => {
       if (adRef.current && adRef.current.offsetWidth > 0) {
         pushAd();
         clearInterval(interval);
       }
     }, 200);
-
     window.addEventListener("resize", handleResize);
-
     return () => {
       clearInterval(interval);
       window.removeEventListener("resize", handleResize);
     };
   }, []);
+
+  // 🔥 Skip rendering if boxType is "html"
+  if (boxType === "html") return null;
 
   return (
     <div
@@ -93,7 +73,7 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
         justifyContent: "center",
         alignItems: "center",
         position: "relative",
-        ...style
+        ...style,
       }}
     >
       <div
@@ -120,19 +100,3 @@ export default function Ads_Container({ onComplete, client, slot, style }) {
     </div>
   );
 }
-
-
-
-
-
-// <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6317483086789968"
-//      crossorigin="anonymous"></script>
-// <ins class="adsbygoogle"
-//      style="display:block; text-align:center;"
-//      data-ad-layout="in-article"
-//      data-ad-format="fluid"
-//      data-ad-client="ca-pub-6317483086789968"
-//      data-ad-slot="1762434579"></ins>
-// <script>
-//      (adsbygoogle = window.adsbygoogle || []).push({});
-// </script>
