@@ -4,38 +4,29 @@ import "../assets/css/Share_Btn.css";
 export default function Share_Btn() {
   const [expanded, setExpanded] = useState(false);
 
-  const toggleExpand = () => setExpanded(!expanded);
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
 
   const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent(window.location.href);
-    const pageTitle = encodeURIComponent(document.title);
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
-
+    const pageUrl = encodeURIComponent(window.location.href); // Current page URL
+    const pageTitle = encodeURIComponent(document.title); // Page title
     let shareUrl = "";
 
     switch (platform) {
       case "Facebook":
-        if (isMobile) {
-          // Open Facebook app if installed on mobile
-          shareUrl = `fb://facewebmodal/f?href=https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        } else {
-          // Fallback for desktop
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        }
-        break;
-
-      case "Messenger":
-        if (isMobile) {
-          shareUrl = `fb-messenger://share?link=${pageUrl}`;
-        } else {
-          // Desktop fallback
-          const appId = "YOUR_FB_APP_ID"; // Replace with your Facebook App ID
-          shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
-        }
+        // Standard web Facebook share (relies on OG tags)
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
         break;
 
       case "WhatsApp":
         shareUrl = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+        break;
+
+      case "Messenger":
+        // Messenger share using web dialog
+        const appId = "YOUR_FB_APP_ID"; // Optional: replace with your FB App ID
+        shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
         break;
 
       case "Telegram":
@@ -43,6 +34,7 @@ export default function Share_Btn() {
         break;
 
       case "Youtube":
+        // YouTube share via browser
         shareUrl = `https://www.youtube.com/share?url=${pageUrl}`;
         break;
 
@@ -50,19 +42,19 @@ export default function Share_Btn() {
         return;
     }
 
-    // Open share URL in new window (popup)
-    if (platform !== "Instagram") {
-      window.open(shareUrl, "_blank", "width=600,height=500");
-    }
+    // Open the share URL in a small popup window
+    window.open(shareUrl, "_blank", "width=600,height=500");
   };
 
   return (
     <div className={`share-button-wrapper ${expanded ? "expanded" : ""}`}>
       <div className="main-button">
         {!expanded && (
-          <i className="bi bi-share-fill toggle-button" onClick={toggleExpand}></i>
+          <i
+            className="bi bi-share-fill toggle-button"
+            onClick={toggleExpand}
+          ></i>
         )}
-
         {expanded && (
           <>
             <div className="social-icons">
@@ -82,8 +74,10 @@ export default function Share_Btn() {
                 <i className="bi bi-youtube"></i>
               </span>
             </div>
-
-            <i className="bi bi-x-lg toggle-button p-2" onClick={toggleExpand}></i>
+            <i
+              className="bi bi-x-lg toggle-button p-2"
+              onClick={toggleExpand}
+            ></i>
           </>
         )}
       </div>
