@@ -7,6 +7,8 @@
 
 /* Main pill */
 .main-button {
+    right: 2vw;
+    bottom: 1vh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,8 +16,8 @@
     box-shadow: 0 2px 8px rgba(0,0,0,0.2);
     color: white;
     border-radius: 50%;
-    width: 60px;
-    height: 60px;
+    width: 38px;
+    height: 38px;
     cursor: pointer;
     transition: all 0.4s ease-in-out;
     overflow: hidden;
@@ -24,7 +26,7 @@
 
 /* Expanded pill grows leftwards */
 .share-button-wrapper.expanded .main-button {
-    width: 333px; /* stretch width */
+    width: 310px; /* stretch width */
     border-radius: 40px;
     justify-content: space-between; /* social icons left, X right */
     padding-left: 20px;
@@ -34,13 +36,13 @@
 /* Social icons container */
 .social-icons {
     display: flex;
-    gap: 1.22rem;
+    gap: 1.3rem;
     align-items: center;
 }
 
 /* Each social icon */
 .social-icons span {
-    font-size: 1.22rem;
+    font-size: 1.3rem;
     cursor: pointer;
     transition: transform 0.2s;
 }
@@ -51,7 +53,7 @@
 
 /* Toggle button (share or X) */
 .toggle-button {
-    font-size: 24px;
+    font-size: 1.22rem;
     cursor: pointer;
     z-index: 10;
 }

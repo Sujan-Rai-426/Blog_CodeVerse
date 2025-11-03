@@ -28,16 +28,13 @@ export default function Share_Btn() {
         shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
         break;
 
-      case "Instagram":
-        // Instagram does NOT allow direct sharing from web
-        navigator.clipboard.writeText(window.location.href);
-        alert(
-          "Instagram does not support direct sharing from web. Link copied to clipboard!"
-        );
-        return;
-
       case "Telegram":
         shareUrl = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
+        break;
+
+      case "Youtube":
+        // Open YouTube share page with your URL
+        shareUrl = `https://www.youtube.com/share?url=${pageUrl}`;
         break;
 
       default:
@@ -69,9 +66,6 @@ export default function Share_Btn() {
               <span onClick={() => handleShareClick("Messenger")}>
                 <i className="bi bi-messenger"></i>
               </span>
-              <span onClick={() => handleShareClick("Instagram")}>
-                <i className="bi bi-instagram"></i>
-              </span>
               <span onClick={() => handleShareClick("Telegram")}>
                 <i className="bi bi-telegram"></i>
               </span>
@@ -79,7 +73,10 @@ export default function Share_Btn() {
                 <i className="bi bi-youtube"></i>
               </span>
             </div>
-            <i className="bi bi-x-lg toggle-button p-2" onClick={toggleExpand}></i>
+            <i
+              className="bi bi-x-lg toggle-button p-2"
+              onClick={toggleExpand}
+            ></i>
           </>
         )}
       </div>
