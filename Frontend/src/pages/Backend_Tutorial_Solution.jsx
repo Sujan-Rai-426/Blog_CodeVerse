@@ -16,6 +16,9 @@ const Backend_Tutorial_Solution = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
     const [copiedStep, setCopiedStep] = useState(null);
+    const [zoominImage, setZoominImage] = useState(null);
+    const [zoomoutImage, setZoomoutImage] = useState(false);
+
 
     const CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dusqlukhy/";
 
@@ -145,16 +148,34 @@ const Backend_Tutorial_Solution = () => {
                 {/* Images Section */}
                 {topic.images?.length > 0 && (
                     <div className="col-lg-5 px-4">
-                        <h4 className="mb-2 mt-3 fw-semibold text-center">
-                            <small>-File Formate-</small>
-                        </h4>
-                        {topic.images.map((img) => (
-                            <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden" >
-                                <img src={`${CLOUDINARY_BASE_URL}${img.image}`} alt={`Backend step ${img.id}`} className="img-fluid" style={{ objectFit: "cover", width: "100%", height: "250px", }} />
-                            </div>
-                        ))}
+                            <h4 className="mb-2 mt-3 fw-semibold text-center">
+                                <small>-File Format-</small>
+                            </h4>
+
+                            {topic.images.map((img) => (
+                                <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden">
+                                    <img src={`${CLOUDINARY_BASE_URL}${img.image}`} alt={`Backend step ${img.id}`} className="img-fluid preview-img" onClick={() => setZoominImage(`${CLOUDINARY_BASE_URL}${img.image}`)} />
+                                </div>
+                            ))}
+
+                                {/* === Popup Viewer === */}
+                            {zoominImage && (
+                                <div className={`image-popup ${zoomoutImage ? "zoomoutImage" : ""}`}
+                                    onClick={() => {
+                                        setZoomoutImage(true);
+                                        setTimeout(() => {
+                                            setZoominImage(null);
+                                            setZoomoutImage(false);
+                                        }, 300); // match animation duration
+                                    }}
+                                >
+                                    <img src={zoominImage} alt="Full preview" className={`${zoomoutImage ? "zoomoutImage" : ""}`} />
+                                </div>
+                            )}
+
                     </div>
                 )}
+
             </div>
 
             <div className="text-center mt-3">
