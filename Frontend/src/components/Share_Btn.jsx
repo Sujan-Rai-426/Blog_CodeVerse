@@ -9,13 +9,17 @@ export default function Share_Btn() {
   };
 
   const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent(window.location.href); // Current page URL
-    const pageTitle = encodeURIComponent(document.title); // Page title
+    const pageUrl = encodeURIComponent(window.location.href);
+    const pageTitle = encodeURIComponent(document.title);
     let shareUrl = "";
 
     switch (platform) {
       case "Facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+          shareUrl = `fb://facewebmodal/f?href=https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+        } else {
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
+        }
         break;
 
       case "WhatsApp":
@@ -23,9 +27,12 @@ export default function Share_Btn() {
         break;
 
       case "Messenger":
-        // Facebook Web Dialog for Messenger
-        const appId = "YOUR_FB_APP_ID"; // Replace with your FB App ID
-        shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
+        if (/Mobi|Android/i.test(navigator.userAgent)) {
+          shareUrl = `fb-messenger://share?link=${pageUrl}`;
+        } else {
+          const appId = "YOUR_FB_APP_ID"; // replace with your FB App ID
+          shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
+        }
         break;
 
       case "Telegram":
@@ -33,7 +40,7 @@ export default function Share_Btn() {
         break;
 
       case "Youtube":
-        // Open YouTube share page with your URL
+        // Open YouTube share page in browser
         shareUrl = `https://www.youtube.com/share?url=${pageUrl}`;
         break;
 
@@ -41,7 +48,6 @@ export default function Share_Btn() {
         return;
     }
 
-    // Open the share URL in a small popup window
     window.open(shareUrl, "_blank", "width=600,height=500");
   };
 
