@@ -6,36 +6,35 @@ export default function Share_Btn() {
 
   const toggleExpand = () => setExpanded(!expanded);
 
-  const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent(window.location.href);
-    const pageTitle = encodeURIComponent(document.title);
-    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
+  const handleShareClick = (platform) => {
+    const pageUrl = encodeURIComponent("https://blog-code-verse.vercel.app"); 
+    const pageTitle = encodeURIComponent(document.title);
     let shareUrl = "";
 
     switch (platform) {
       case "Facebook":
-        if (isMobile) {
-          // Open Facebook app if installed on mobile
+        if (isMobile()) {
+          // Open Facebook app with preview
           shareUrl = `fb://facewebmodal/f?href=https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
         } else {
-          // Fallback for desktop
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        }
-        break;
-
-      case "Messenger":
-        if (isMobile) {
-          shareUrl = `fb-messenger://share?link=${pageUrl}`;
-        } else {
           // Desktop fallback
-          const appId = "YOUR_FB_APP_ID"; // Replace with your Facebook App ID
-          shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
         }
         break;
 
       case "WhatsApp":
         shareUrl = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+        break;
+
+      case "Messenger":
+        if (isMobile()) {
+          shareUrl = `fb-messenger://share?link=${pageUrl}`;
+        } else {
+          const appId = "sujanrai426@gmail.com";
+          shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
+        }
         break;
 
       case "Telegram":
@@ -50,10 +49,7 @@ export default function Share_Btn() {
         return;
     }
 
-    // Open share URL in new window (popup)
-    if (platform !== "Instagram") {
-      window.open(shareUrl, "_blank", "width=600,height=500");
-    }
+    window.open(shareUrl, "_blank", "width=600,height=500");
   };
 
   return (
@@ -62,7 +58,6 @@ export default function Share_Btn() {
         {!expanded && (
           <i className="bi bi-share-fill toggle-button" onClick={toggleExpand}></i>
         )}
-
         {expanded && (
           <>
             <div className="social-icons">
@@ -82,7 +77,6 @@ export default function Share_Btn() {
                 <i className="bi bi-youtube"></i>
               </span>
             </div>
-
             <i className="bi bi-x-lg toggle-button p-2" onClick={toggleExpand}></i>
           </>
         )}
