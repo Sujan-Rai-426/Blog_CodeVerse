@@ -14,47 +14,42 @@ import { useEffect, useState, useRef } from "react";
 
 export default function Ads_Container({ onComplete, client, slot, style, boxType }) {
   const [timer, setTimer] = useState(10);
+  const [adLoaded, setAdLoaded] = useState(false);
   const adRef = useRef(null);
 
-  // Countdown timer
   useEffect(() => {
     const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
     return () => clearInterval(countdown);
   }, []);
 
-  // Notify parent when timer finishes
   useEffect(() => {
     if (timer <= 0) onComplete();
   }, [timer, onComplete]);
 
-  // Function to safely push ad
-  const pushAd = () => {
-    if (window.adsbygoogle && adRef.current && adRef.current.offsetWidth > 0) {
-      try {
-        window.adsbygoogle.push({});
-      } catch (e) {
-        console.error("Adsense error:", e);
-      }
-    }
-  };
-
-  // Push ad on mount and resize
   useEffect(() => {
-    const handleResize = () => pushAd();
-    const interval = setInterval(() => {
-      if (adRef.current && adRef.current.offsetWidth > 0) {
-        pushAd();
-        clearInterval(interval);
+    const tryPushAd = () => {
+      if (window.adsbygoogle && adRef.current) {
+        try {
+          window.adsbygoogle.push({});
+        } catch (e) {
+          console.warn("AdSense push error:", e);
+        }
       }
-    }, 200);
-    window.addEventListener("resize", handleResize);
-    return () => {
-      clearInterval(interval);
-      window.removeEventListener("resize", handleResize);
     };
+
+    tryPushAd();
+
+    // Watch if ad loaded
+    const checkAd = setInterval(() => {
+      if (adRef.current && adRef.current.children.length > 0) {
+        setAdLoaded(true);
+        clearInterval(checkAd);
+      }
+    }, 500);
+
+    return () => clearInterval(checkAd);
   }, []);
 
-  // 🔥 Skip rendering if boxType is "html"
   if (boxType === "html") return null;
 
   return (
@@ -88,15 +83,22 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
         {timer > 0 ? `${timer}s` : "Done"}
       </div>
 
-      <ins
-        className="adsbygoogle"
-        style={{ display: "block", textAlign: "center" }}
-        data-ad-layout="in-article"
-        data-ad-format="fluid"
-        data-ad-client={client || "ca-pub-6317483086789968"}
-        data-ad-slot={slot || "1762434579"}
-        ref={adRef}
-      ></ins>
+      {adLoaded ? (
+          <ins
+              className="adsbygoogle"
+              style={{ display: "block", textAlign: "center" }}
+              data-ad-layout="in-article"
+              data-ad-format="fluid"
+              data-ad-client={client || "ca-pub-6317483086789968"}
+              data-ad-slot={slot || "1762434579"}
+              ref={adRef}
+          ></ins>
+      ) : (
+        <div className="CodeBox-Ads-Placeholder" >
+            <h1> <b>Code<sup><u>Verse💻</u></sup></b> </h1 >
+            <p> Visit our social site for more updates </p>
+        </div>
+      )}
     </div>
   );
 }
