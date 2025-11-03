@@ -112,7 +112,7 @@ const Backend_Tutorial_Solution = () => {
 
     return (
         <div className="container py-3" style={{ minHeight: "100vh" }}>
-            <h2 className="mb-3 mt-3 fw-bold text-center">{topic.name}</h2>
+            <h2 className="mb-3 mt-3 fw-bold text-center text-warning">{topic.name}</h2>
 
             <div className="row">
                 {/* Steps Section */}

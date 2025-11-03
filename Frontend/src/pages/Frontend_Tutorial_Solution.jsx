@@ -81,9 +81,9 @@ const Frontend_Tutorial_Solution = () => {
 
   return (
     <div className="container py-1 px-1">
-      <h4 className="text-center mb-3 text-primary">
+      <h4 className="text-center py-3 text-warning">
         <b>🎬 Responsive Designs:</b>
-        <br /> <small>{topic.name}</small>
+        <br /> <p className="mt-2"> <small>{topic.name}</small> </p>
       </h4>
 
       {topic.videos?.length > 0 && (

@@ -13,8 +13,6 @@ function Recent_Contents() {
             try {
                 const response = await api.get("/api/topics/");
                 const topics = response.data;
-                console.log("All topics from API:", topics);
-
                 const frontendLanguageIds = [1, 11]; // frontend (HTML, JS, React)
 
                 const allVideos = [];

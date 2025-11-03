@@ -18,6 +18,7 @@ import Admin_Dashboard from './pages/Admin_Dashboard.jsx';
 import Admin_Login from './pages/Admin_Login.jsx';
 import Protected_Route from './context/Protected_Route.jsx';
 import Privacy_Policy from './pages/Privacy_Policy.jsx';
+import Share_Btn from './components/Share_Btn.jsx';
 
 function App() {
 
@@ -26,7 +27,13 @@ function App() {
     <>
     
         <Router>
+            {/* Sticky share button visible on all pages */}
+            <Share_Btn />
+
+            {/* Auto Scroll top component */}
             <Scroll_To_Top />
+
+            {/* Navbar */}
             <Nav_Bar />
 
                 <div className="container" style={{minHeight: "100vh"}}>
