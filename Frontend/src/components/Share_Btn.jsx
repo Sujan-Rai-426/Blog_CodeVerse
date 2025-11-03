@@ -4,24 +4,19 @@ import "../assets/css/Share_Btn.css";
 export default function Share_Btn() {
   const [expanded, setExpanded] = useState(false);
 
-  const toggleExpand = () => setExpanded(!expanded);
-
-  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  const toggleExpand = () => {
+    setExpanded(!expanded);
+  };
 
   const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent("https://blog-code-verse.vercel.app"); 
-    const pageTitle = encodeURIComponent(document.title);
+    const pageUrl = encodeURIComponent(window.location.href); // Current page URL
+    const pageTitle = encodeURIComponent(document.title); // Page title
     let shareUrl = "";
 
     switch (platform) {
       case "Facebook":
-        if (isMobile()) {
-          // Open Facebook app with preview
-          shareUrl = `fb://facewebmodal/f?href=https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        } else {
-          // Desktop fallback
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        }
+        // Open Facebook share dialog directly to post your link
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
         break;
 
       case "WhatsApp":
@@ -29,19 +24,16 @@ export default function Share_Btn() {
         break;
 
       case "Messenger":
-        if (isMobile()) {
-          shareUrl = `fb-messenger://share?link=${pageUrl}`;
-        } else {
-          const appId = "sujanrai426@gmail.com";
-          shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=${appId}&redirect_uri=${pageUrl}`;
-        }
+        shareUrl = `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=1949440582581236&redirect_uri=${pageUrl}`;
         break;
+
 
       case "Telegram":
         shareUrl = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
         break;
 
       case "Youtube":
+        // Opens YouTube share page in web browser
         shareUrl = `https://www.youtube.com/share?url=${pageUrl}`;
         break;
 
@@ -49,6 +41,7 @@ export default function Share_Btn() {
         return;
     }
 
+    // Open the share URL in a small popup window
     window.open(shareUrl, "_blank", "width=600,height=500");
   };
 
@@ -56,7 +49,10 @@ export default function Share_Btn() {
     <div className={`share-button-wrapper ${expanded ? "expanded" : ""}`}>
       <div className="main-button">
         {!expanded && (
-          <i className="bi bi-share-fill toggle-button" onClick={toggleExpand}></i>
+          <i
+            className="bi bi-share-fill toggle-button"
+            onClick={toggleExpand}
+          ></i>
         )}
         {expanded && (
           <>
@@ -77,7 +73,10 @@ export default function Share_Btn() {
                 <i className="bi bi-youtube"></i>
               </span>
             </div>
-            <i className="bi bi-x-lg toggle-button p-2" onClick={toggleExpand}></i>
+            <i
+              className="bi bi-x-lg toggle-button p-2"
+              onClick={toggleExpand}
+            ></i>
           </>
         )}
       </div>
