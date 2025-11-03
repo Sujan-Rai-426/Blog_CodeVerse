@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://blog-code-verse.vercel.app/sitemap.xml
