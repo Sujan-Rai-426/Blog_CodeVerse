@@ -7,6 +7,15 @@
   color: #1e1e1e;
 }
 
+
+/* ===For breaking line effect workable === */
+.text-content {
+  white-space: pre-line;
+}
+.text-muted{
+  color: #bbbcbc !important;
+}
+
 /* === Card Styles (Steps & Images) === */
 .card {
   background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%);

@@ -202,7 +202,7 @@ const VideoCard = ({ video }) => {
       </div>
 
       {video.info?.description && (
-        <p className="video-description">
+        <p className="video-description text-content">
           <b>NOTE:</b> {video.info.description}
         </p>
       )}

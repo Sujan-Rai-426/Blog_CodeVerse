@@ -114,12 +114,15 @@ const Backend_Tutorial_Solution = () => {
                     {topic.steps.map((step) => (
                         <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4" >
                             <div className="card-body">
-                                <h5 className="fw-bold text-primary mb-0 mt-2">
-                                    Step {step.step_number}: {step.step_file_name}
+                                
+                                <h5 className="fw-bold text-warning mb-0 mt-3 px-1">
+                                    Step {step.step_number}: &nbsp; 
+                                    <small>{step.step_file_name}</small>
                                 </h5>
+                                
 
                                 {step.step_description && (
-                                    <p className="text-muted m-0">{step.step_description}</p>
+                                    <p className="text-muted m-0 text-content py-2 px-2">{step.step_description}</p>
                                 )}
 
                                 {step.step_source_code && (
@@ -155,7 +158,7 @@ const Backend_Tutorial_Solution = () => {
             </div>
 
             <div className="text-center mt-3">
-                <Link to="/" className="btn btn-outline-primary btn-lg">
+                <Link to="/" className="btn btn-outline-danger btn-lg">
                     ← Back to Home
                 </Link>
             </div>
