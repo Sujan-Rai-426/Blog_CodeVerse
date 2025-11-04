@@ -20,55 +20,80 @@ import Protected_Route from './context/Protected_Route.jsx';
 import Privacy_Policy from './pages/Privacy_Policy.jsx';
 import Share_Btn from './components/Share_Btn.jsx';
 
+// For Payment Handle
+import { Payment_Provider } from './payment/payment_status/Payment_Context.jsx';
+import Payment_Success from "./payment/payment_status/Payment_Success.jsx";
+import Payment_Fail from "./payment/payment_status/Payment_Fail.jsx";
+import Payment_Page from "./payment/payment_status/Payment_Page.jsx";
+
+
+// For Unavailable and in Development phase
+import Developing_Phase from './components/Developing_Phase.jsx';
+
+
+
+
+
 function App() {
 
   return (
-
-    <>
+    <Payment_Provider> 
     
-        <Router>
-            {/* Sticky share button visible on all pages */}
-            <Share_Btn />
+        <>
+            <Router>
+                {/* Sticky share button visible on all pages */}
+                <Share_Btn />
 
-            {/* Auto Scroll top component */}
-            <Scroll_To_Top />
+                {/* Auto Scroll top component */}
+                <Scroll_To_Top />
 
-            {/* Navbar */}
-            <Nav_Bar />
+                {/* Navbar */}
+                <Nav_Bar />
 
-                <div className="container" style={{minHeight: "100vh"}}>
-                      <Routes >
-                          <Route exact path='/'  element={ <Home/> } />
-                          <Route exact path='/About'  element={ <About/> } />
-                          <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
-                          
-                          <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
-                          <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
+                    <div className="container" style={{minHeight: "100vh"}}>
+                          <Routes >
+                              <Route exact path='/'  element={ <Home/> } />
+                              <Route exact path='/About'  element={ <About/> } />
+                              <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
+                              
+                              <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
+                              <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
 
-                          {/* Frontend_Tutorial_Topic is Frontend Design */}
-                          <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
+                              {/* Frontend_Tutorial_Topic is Frontend Design */}
+                              <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
 
-                          {/* Backend_Tutorial_Topic is Coding Guide Topic */}
-                          <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
+                              {/* Backend_Tutorial_Topic is Coding Guide Topic */}
+                              <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
 
-                          <Route exact path="/Admin_Login" element={<Admin_Login />} />
+                              <Route exact path="/Admin_Login" element={<Admin_Login />} />
 
 
-                            {/* Protected Dashboard */}
-                          <Route element={<Protected_Route />}>
-                            <Route path="/Admin_Dashboard" element={<Admin_Dashboard />} />
-                          </Route>
+                                {/* Protected Dashboard */}
+                              <Route element={<Protected_Route />}>
+                                <Route  exact path="/Admin_Dashboard" element={<Admin_Dashboard />} />
+                              </Route>
 
-                      </Routes>
-                </div>
-            
-            <Footer />
+                                {/* Payment */}
+                              <Route  exact path="/payment-success" element={<Payment_Success />} />
+                              <Route  exact path="/payment-fail" element={<Payment_Fail />} />
+                              <Route  exact path="/Payment_Page" element={<Payment_Page />} />
 
-        </Router>
 
-      {/* Add Vercel Analytics at the bottom */}
-      <Analytics />
-    </>
+                              {/* Unavailable and in development phase */}
+                              <Route exact path='/Unavailable' element={<Developing_Phase />} />
+
+                          </Routes>
+                    </div>
+                
+                <Footer />
+
+            </Router>
+
+            {/* Add Vercel Analytics at the bottom */}
+            <Analytics />
+        </>
+
+    </ Payment_Provider>
   )
 }
 

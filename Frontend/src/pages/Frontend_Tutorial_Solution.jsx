@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-javascript";
@@ -9,6 +9,7 @@ import { FaCopy } from "react-icons/fa";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Ads_Container from "../context/Ads_Container";
+
 
 const Frontend_Tutorial_Solution = () => {
   const { topicID } = useParams();
@@ -98,43 +99,33 @@ const Frontend_Tutorial_Solution = () => {
 };
 
 const VideoCard = ({ video }) => {
-
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
 
   const showAdTabs = ["css", "js"];
-  const [adCompleted, setAdCompleted] = useState({
-    html: true,
-    css: false,
-    js: false,
-  });
-
-  // Premium access for this video
-  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
+  const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false, });
 
   const handleAdComplete = (tab) => {
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
-
+  
+  
+  // Premium access for this video
+  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
+  const navigate = useNavigate();
   const handleBuyPremium = () => {
-    setHasPremiumAccess(true);
-    alert("✅ Premium unlocked for this video!");
+    // Navigate to Payment Page After clicking Buy Premium Bu
+    navigate("/Payment_Page", {
+      state: {
+        videoId: video.id,
+        amount: 100, // Set your actual price here
+      },
+    });
+    // setHasPremiumAccess(true);
   };
 
 
-  const videoRef = useRef(null);
-  useEffect(() => {
-    if (videoRef.current) {
-      // mute first
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(err => {
-        console.log("Autoplay blocked:", err);
-      });
-    }
-  }, [hasPremiumAccess]); // run when premium is unlocked
-
-
-
+  // Shoe code in code box 
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
       case "html": return codeObj.html_code || "";
@@ -144,6 +135,7 @@ const VideoCard = ({ video }) => {
     }
   };
 
+  // Syntax highlightingn of code inside the box
   useEffect(() => {
     if (codeRef.current) {
       Prism.highlightElement(codeRef.current);
@@ -183,28 +175,23 @@ const VideoCard = ({ video }) => {
       <div className="video-container">
         {/* Video */}
         <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
-            <video
-              ref={videoRef}          // attach ref
-              src={video.video_url}
-              autoPlay       // starts playing automatically
-              loop           // repeats after ending
-              muted          // mutes audio (required for autoplay on mobile)
-              playsInline    // ensures it plays inline on iOS instead of fullscreen
-              className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}
-              controls       // show play/pause button
-            />
-
-            {/* Show overlay ONLY if Premium and NOT unlocked */}
-            {video.access_type === "Premium" && !hasPremiumAccess && (
+          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }} >
+            <video src={video.video_url} autoPlay loop muted playsInline className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} />
+            {video.access_type === "Premium" && (
               <div className="premium-video-overlay">
+                {/* Dollor sign */}
                 <div className="premium-badge">
-                  <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
+                  {hasPremiumAccess ? (
+                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
+                    ) : (
+                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
+                    )}
                 </div>
               </div>
+
+              
             )}
           </div>
-
         </div>
 
 

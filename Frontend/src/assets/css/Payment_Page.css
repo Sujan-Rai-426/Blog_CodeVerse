@@ -1,0 +1,137 @@
+.payment-page-container {
+    position: relative;
+    min-height: 100vh;
+    background: #121212;
+    color: #fff;
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    overflow-x: hidden;
+}
+
+.background-content {
+    transition: filter 0.4s ease, opacity 0.4s ease;
+    padding: 2rem;
+}
+
+.blurred-background {
+    filter: blur(6px) brightness(0.5);
+    pointer-events: none;
+    user-select: none;
+}
+
+.page-header { text-align: center; margin-bottom: 2rem; }
+.page-header h1 { font-size: 2rem; color: #ffd700; }
+
+.page-main { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
+.video-preview .sample-video { width: 90%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+
+.page-info { max-width: 700px; text-align: center; }
+.page-info h2 { font-size: 1.5rem; color: #4caf50; margin-bottom: 0.5rem; }
+.page-info p { font-size: 1rem; color: #ddd; }
+
+.payment-overlay {
+    position: fixed;
+    top: 0; left: 0; width: 100vw; height: 100vh;
+    backdrop-filter: blur(6px);
+    background: rgba(0,0,0,0.8);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+}
+
+.payment-box {
+    position: relative;
+    background: rgba(25,25,25,0.95);
+    padding: 2rem; border-radius: 20px; width: 90%; max-width: 500px;
+    text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    animation: fadeIn 0.3s ease;
+}
+
+.payment-box h3 { font-size: 1.4rem; color: #ffd700; margin-bottom: 1rem; }
+.payment-box p { font-size: 1rem; color: #ccc; margin-bottom: 1.5rem; }
+
+.payment-methods { display: flex; flex-direction: column; gap: 1rem; }
+.payment-card {
+    display: flex; justify-content: space-between; align-items: center;
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    padding: 0.8rem 1rem; border-radius: 12px; cursor: pointer;
+    transition: all 0.3s ease;
+}
+.payment-card {
+    flex: 1; /* equal width */
+    display: flex;
+    flex-direction: column; /* stack logo + text + button */
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
+    padding: 1rem;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.payment-card img {
+    height: 50px;
+}
+
+.payment-card span {
+    font-weight: bold;
+    color: #fff;
+}
+
+.payment-card .bank-payment-btn {
+    width: 100%; /* full width of card */
+    background: #e7830d;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+.esewa-payment-btn{
+    width: 100%; /* full width of card */
+    background: #0de747;
+    color: black;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.payment-card .bank-payment-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+.esewa-payment-btn:hover{
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+}
+
+.bank-pay-btn {
+    background-color: #27ae60; color: #fff;
+    padding: 6px 12px; border-radius: 8px; border: none;
+    cursor: pointer; font-weight: bold;
+}
+.bank-pay-btn:hover { background-color: #2ecc71; }
+
+.cancel-btn {
+    margin-top: 1.5rem; background: #c0392b; color: #fff;
+    padding: 8px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;
+    transition: all 0.3s ease;
+}
+.cancel-btn:hover { 
+    transform: translateY(-2px);
+    background: #e74c3c; 
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+    .payment-box { padding: 1.5rem; }
+    .payment-card { flex-direction: column; gap: 0.5rem; }
+}
