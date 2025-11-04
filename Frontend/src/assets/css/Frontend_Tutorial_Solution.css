@@ -271,9 +271,9 @@ pre, code[class*="language-"] {
   display: flex;
   align-items: center;
   justify-content: center;
-
   border-radius: 20px;
 }
+
 
 .premium-video-overlay .premium-badge {
   background-color: #e7830d;
