@@ -216,7 +216,7 @@ pre, code[class*="language-"] {
 
 .blurred-code {
   filter: blur(6px);
-  pointer-events: none;
+  pointer-events: none; 
   user-select: none;
   position: relative;
 }
