@@ -169,24 +169,25 @@ const VideoCard = ({ video }) => {
         {/* Video */}
         <div className="video-wrapper">
           <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
-  <video 
-    src={video.video_url} 
-    autoPlay 
-    loop 
-    muted 
-    playsInline 
-    className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} 
-    controls
-  />
-  {/* Show overlay ONLY if Premium and NOT unlocked */}
-  {video.access_type === "Premium" && !hasPremiumAccess && (
-    <div className="premium-video-overlay">
-      <div className="premium-badge">
-        <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
-      </div>
-    </div>
-  )}
-</div>
+            <video
+              src={video.video_url}
+              autoPlay       // starts playing automatically
+              loop           // repeats after ending
+              muted          // mutes audio (required for autoplay on mobile)
+              playsInline    // ensures it plays inline on iOS instead of fullscreen
+              className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}
+              controls       // show play/pause button
+            />
+
+            {/* Show overlay ONLY if Premium and NOT unlocked */}
+            {video.access_type === "Premium" && !hasPremiumAccess && (
+              <div className="premium-video-overlay">
+                <div className="premium-badge">
+                  <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
+                </div>
+              </div>
+            )}
+          </div>
 
         </div>
 
