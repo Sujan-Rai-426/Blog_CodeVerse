@@ -1,3 +1,11 @@
+# Python cache
+__pycache__/
+*.py[cod]
+
+# Virtual environment
+myenv/
+
+
 # Environment files
 .env
 
