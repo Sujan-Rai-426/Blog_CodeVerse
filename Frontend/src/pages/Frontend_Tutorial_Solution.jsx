@@ -206,9 +206,9 @@ const VideoCard = ({ video }) => {
                   // Dollor sign
                   <div className="premium-code-badge">
                     {hasPremiumAccess ? (
-                      <> <i className="bi bi-currency-dollar"></i> </>
+                      <> <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i> </>
                     ) : (
-                      <> <i className="bi bi-currency-dollar"></i></>
+                      <> <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i></>
                     )}
                   </div>
                 )}
@@ -218,7 +218,7 @@ const VideoCard = ({ video }) => {
 
 
               <div className="card-body code-box">
-                {/* ✅ For Free Videos */}
+                {/* ✅ For Free Videos code */}
                 {video.access_type === "Free" ? (
                   showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
                     <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
@@ -230,7 +230,7 @@ const VideoCard = ({ video }) => {
                     </pre>
                   )
                 ) : (
-                  /* ✅ For Premium Videos */
+                  /* ✅ For Premium Videos code */
                   <>
                     {hasPremiumAccess ? (
                       <pre>
