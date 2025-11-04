@@ -168,23 +168,26 @@ const VideoCard = ({ video }) => {
       <div className="video-container">
         {/* Video */}
         <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }} >
-            <video src={video.video_url} autoPlay loop muted playsInline className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} />
-            {video.access_type === "Premium" && (
-              <div className="premium-video-overlay">
-                {/* Dollor sign */}
-                <div className="premium-badge">
-                  {hasPremiumAccess ? (
-                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
-                    ) : (
-                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
-                    )}
-                </div>
-              </div>
+          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
+  <video 
+    src={video.video_url} 
+    autoPlay 
+    loop 
+    muted 
+    playsInline 
+    className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} 
+    controls
+  />
+  {/* Show overlay ONLY if Premium and NOT unlocked */}
+  {video.access_type === "Premium" && !hasPremiumAccess && (
+    <div className="premium-video-overlay">
+      <div className="premium-badge">
+        <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
+      </div>
+    </div>
+  )}
+</div>
 
-              
-            )}
-          </div>
         </div>
 
 

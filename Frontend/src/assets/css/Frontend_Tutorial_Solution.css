@@ -258,8 +258,9 @@ pre, code[class*="language-"] {
 }
 .blurred-video {
   filter: blur(8px);
-  pointer-events: none;
+  pointer-events: none; /* keep this only when locked */
 }
+
 
 .premium-video-overlay {
   position: absolute;
