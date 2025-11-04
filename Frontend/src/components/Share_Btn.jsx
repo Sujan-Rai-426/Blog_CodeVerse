@@ -15,13 +15,7 @@ export default function Share_Btn() {
 
     switch (platform) {
       case "Facebook":
-        if (isMobile()) {
-          // Open Facebook app with preview
-          shareUrl = `fb://facewebmodal/f?href=https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        } else {
-          // Desktop fallback
-          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`;
-        }
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${pageTitle}`;
         break;
 
       case "WhatsApp":
@@ -41,9 +35,7 @@ export default function Share_Btn() {
         shareUrl = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
         break;
 
-      case "Youtube":
-        shareUrl = `https://www.youtube.com/share?url=${pageUrl}`;
-        break;
+
 
       default:
         return;
@@ -72,9 +64,6 @@ export default function Share_Btn() {
               </span>
               <span onClick={() => handleShareClick("Telegram")}>
                 <i className="bi bi-telegram"></i>
-              </span>
-              <span onClick={() => handleShareClick("Youtube")}>
-                <i className="bi bi-youtube"></i>
               </span>
             </div>
             <i className="bi bi-x-lg toggle-button p-2" onClick={toggleExpand}></i>
