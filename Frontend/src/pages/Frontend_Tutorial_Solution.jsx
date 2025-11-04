@@ -98,6 +98,19 @@ const Frontend_Tutorial_Solution = () => {
 };
 
 const VideoCard = ({ video }) => {
+
+  const videoRef = useRef(null);
+  useEffect(() => {
+    if (videoRef.current) {
+      // mute first
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(err => {
+        console.log("Autoplay blocked:", err);
+      });
+    }
+  }, [hasPremiumAccess]); // run when premium is unlocked
+
+
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
 
@@ -170,6 +183,7 @@ const VideoCard = ({ video }) => {
         <div className="video-wrapper">
           <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
             <video
+              ref={videoRef}          // attach ref
               src={video.video_url}
               autoPlay       // starts playing automatically
               loop           // repeats after ending
