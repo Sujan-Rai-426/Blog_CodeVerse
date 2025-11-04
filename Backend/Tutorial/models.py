@@ -101,6 +101,8 @@ class FrontendVideoInfo(models.Model):
             return "FrontendVideoInfo object"
 
 
+class Sujan(models.Model):
+    name=models.CharField(max_length=100)
 # -------------------- FRONTEND SOURCE CODE --------------------
 class FrontendSourceCode(models.Model):
     video = models.ForeignKey(FrontendVideo, related_name="source_codes", on_delete=models.CASCADE)
