@@ -99,18 +99,6 @@ const Frontend_Tutorial_Solution = () => {
 
 const VideoCard = ({ video }) => {
 
-  const videoRef = useRef(null);
-  useEffect(() => {
-    if (videoRef.current) {
-      // mute first
-      videoRef.current.muted = true;
-      videoRef.current.play().catch(err => {
-        console.log("Autoplay blocked:", err);
-      });
-    }
-  }, [hasPremiumAccess]); // run when premium is unlocked
-
-
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
 
@@ -132,6 +120,20 @@ const VideoCard = ({ video }) => {
     setHasPremiumAccess(true);
     alert("✅ Premium unlocked for this video!");
   };
+
+
+  const videoRef = useRef(null);
+  useEffect(() => {
+    if (videoRef.current) {
+      // mute first
+      videoRef.current.muted = true;
+      videoRef.current.play().catch(err => {
+        console.log("Autoplay blocked:", err);
+      });
+    }
+  }, [hasPremiumAccess]); // run when premium is unlocked
+
+
 
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
