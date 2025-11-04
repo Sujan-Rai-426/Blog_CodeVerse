@@ -5,45 +5,14 @@ from Tutorial.models import (
     BackendImage, BackendStep
 )
 
-# -------------------- FRONTEND INLINES --------------------
 
-class FrontendVideoInfoInline(admin.StackedInline):
-    model = FrontendVideoInfo
-    extra = 0
-    can_delete = True
-    classes = ['collapse']  # Collapsible
-
-class FrontendSourceCodeInline(admin.StackedInline):
-    model = FrontendSourceCode
-    extra = 0
-    can_delete = True
-    classes = ['collapse']  # Collapsible
-
-class FrontendVideoInline(admin.StackedInline):
-    model = FrontendVideo
+# =============TOPIC ADMIN===============
+class TopicInline(admin.TabularInline):
+    model = Topic
     extra = 1
     show_change_link = True
-    can_delete = True
     classes = ['collapse']
-    inlines = [FrontendVideoInfoInline, FrontendSourceCodeInline]  # Nested inlines not native
-
-# -------------------- BACKEND INLINES --------------------
-
-class BackendStepInline(admin.StackedInline):
-    model = BackendStep
-    extra = 1
-    show_change_link = True
-    can_delete = True
-    classes = ['collapse']
-
-class BackendImageInline(admin.TabularInline):
-    model = BackendImage
-    extra = 1
-    can_delete = True
-    classes = ['collapse']
-
-# -------------------- TOPIC ADMIN --------------------
-
+    
 @admin.register(Topic)
 class TopicAdmin(admin.ModelAdmin):
     list_display = ("name", "language", "section_type")
@@ -62,14 +31,15 @@ class TopicAdmin(admin.ModelAdmin):
     def section_type(self, obj):
         return obj.language.section.name
     section_type.short_description = "Section"
-
-# -------------------- LANGUAGE ADMIN --------------------
-
-class TopicInline(admin.TabularInline):
-    model = Topic
+    
+    
+    
+# ===========LANGUAGE ADMIN=============
+class LanguageInline(admin.TabularInline):
+    model = Language
     extra = 1
     show_change_link = True
-    classes = ['collapse']
+    classes = ['collapse']\
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
@@ -77,43 +47,75 @@ class LanguageAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     inlines = [TopicInline]
 
-# -------------------- SECTION ADMIN --------------------
 
-class LanguageInline(admin.TabularInline):
-    model = Language
-    extra = 1
-    show_change_link = True
-    classes = ['collapse']
-
-@admin.register(Section)
-class SectionAdmin(admin.ModelAdmin):
-    list_display = ("name", "category")
-    list_filter = ("name",)
-    inlines = [LanguageInline]
-
-# -------------------- CATEGORY ADMIN --------------------
-
+# ==================== SECTION ADMIN ====================
 class SectionInline(admin.TabularInline):
     model = Section
     extra = 1
     show_change_link = True
     classes = ['collapse']
-
+    
+@admin.register(Section)
+class SectionAdmin(admin.ModelAdmin):
+    list_display = ("name", "category")
+    list_filter = ("name",)
+    inlines = [LanguageInline]
+    
+    
+# ==================== CATEGORY ADMIN ====================
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ("name",)
     search_fields = ("name",)
     inlines = [SectionInline]
 
-# -------------------- FRONTEND VIDEO ADMIN --------------------
 
+
+#===============FRONTEND ADMIN===============
+from django.contrib import admin
+from .models import FrontendVideo, FrontendVideoInfo, FrontendSourceCode
+
+# Inline for Video Info
+class FrontendVideoInfoInline(admin.StackedInline):
+    model = FrontendVideoInfo
+    extra = 0
+    can_delete = True
+    classes = ['collapse']
+
+
+# Inline for Source Code
+class FrontendSourceCodeInline(admin.StackedInline):
+    model = FrontendSourceCode
+    extra = 0
+    can_delete = True
+    classes = ['collapse']
+
+
+# Frontend Video Admin
 @admin.register(FrontendVideo)
 class FrontendVideoAdmin(admin.ModelAdmin):
-    list_display = ("title", "topic", "video_url")
-    inlines = [FrontendVideoInfoInline, FrontendSourceCodeInline]  # Full info + code here
-    search_fields = ("title", "topic__name")
+    list_display = ('title', 'topic', 'access_type')
+    inlines = [FrontendVideoInfoInline, FrontendSourceCodeInline]
+    search_fields = ('title', 'topic__name')
+    list_filter = ('access_type', 'topic__language__section__name')
 
-# -------------------- BACKEND ADMIN --------------------
+
+
+
+
+# ================ BACKEND INLINES ====================
+class BackendStepInline(admin.StackedInline):
+    model = BackendStep
+    extra = 1
+    show_change_link = True
+    can_delete = True
+    classes = ['collapse']
+
+class BackendImageInline(admin.TabularInline):
+    model = BackendImage
+    extra = 1
+    can_delete = True
+    classes = ['collapse']
 
 @admin.register(BackendStep)
 class BackendStepAdmin(admin.ModelAdmin):
@@ -130,3 +132,20 @@ class BackendImageAdmin(admin.ModelAdmin):
 admin.site.site_header = "CodeVerse Tutorial Admin"
 admin.site.site_title = "CodeVerse Admin Portal"
 admin.site.index_title = "Manage Frontend & Backend Tutorials"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

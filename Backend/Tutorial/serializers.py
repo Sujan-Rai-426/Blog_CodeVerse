@@ -10,7 +10,7 @@ from .models import (
 class FrontendSourceCodeSerializer(serializers.ModelSerializer):
     class Meta:
         model = FrontendSourceCode
-        fields = ['id', 'video', 'html_code', 'css_code', 'js_code']
+        fields = ['id', 'video', 'html_code', 'css_code', 'js_code', 'access_type']
 
 
 class FrontendVideoInfoSerializer(serializers.ModelSerializer):
@@ -25,7 +25,7 @@ class FrontendVideoSerializer(serializers.ModelSerializer):
     source_codes = FrontendSourceCodeSerializer(many=True, read_only=True)
     class Meta:
         model = FrontendVideo
-        fields = ['id', 'topic', 'title', 'video_url', 'info', 'source_codes']
+        fields = ['id', 'topic', 'title', 'video_url', 'info', 'source_codes', 'access_type']
 
     def get_video_url(self, obj):
         if obj.video_url:
@@ -60,7 +60,6 @@ class BackendStepSerializer(serializers.ModelSerializer):
 
 
 # -------------------- COMMON TOPIC SERIALIZER --------------------
-
 class TopicSerializer(serializers.ModelSerializer):
     videos = FrontendVideoSerializer(many=True, read_only=True)
     images = BackendImageSerializer(many=True, read_only=True)

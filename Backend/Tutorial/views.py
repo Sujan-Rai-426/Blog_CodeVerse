@@ -55,8 +55,7 @@ class FrontendVideoViewSet(viewsets.ModelViewSet):
     serializer_class = FrontendVideoSerializer
     
     def perform_create(self, serializer):
-        video_file = self.request.FILES.get('video_url')
-        if video_file:
+        if video_file := self.request.FILES.get('video_url'):
             upload_result = cloudinary.uploader.upload(
                 video_file,
                 resource_type='video',

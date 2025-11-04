@@ -30,6 +30,9 @@ const Admin_Dashboard = () => {
     const [jsCode, setJsCode] = useState("");
     const [frontendDesc, setFrontendDesc] = useState("");
     const [isUploading, setIsUploading] = useState(false);
+    const [videoAccessType, setVideoAccessType] = useState("");
+    const [sourceCodeAccessType, setSourceCodeAccessType] = useState("");
+
 
     
     // Backend
@@ -126,66 +129,75 @@ const Admin_Dashboard = () => {
 
 
     // ----FETCH AND HANDLE ADDITION OF FRONTEND CONTENT----
-const handleAddFrontend = async (e) => {
-    e.preventDefault();
+    const handleAddFrontend = async (e) => {
+        e.preventDefault();
 
-    if (!frontendLanguage || !frontendTopic || !videoFile) {
-        return alert("Please select language, topic, and upload a video file");
-    }
-
-    try {
-        setIsUploading(true);
-
-        // -----------------  Upload Video -----------------
-        const videoFormData = new FormData();
-        videoFormData.append("topic", frontendTopic);  // topic ID
-        videoFormData.append("title", String(frontendDesc || "Untitled Video")); // ensure string
-        videoFormData.append("video_url", videoFile);
-
-        const videoRes = await api.post("/api/frontendvideos/", videoFormData, {
-            headers: { "Content-Type": "multipart/form-data" },
-        });
-
-        const videoId = videoRes.data.id;  // ID of the uploaded video
-        console.log("Video uploaded with ID:", videoId);
-
-        // ----------------- Add Video Info (description) -----------------
-        if (frontendDesc) {
-            const infoRes = await api.post("/api/frontendvideoinfo/", {
-                video: videoId,
-                description: String(frontendDesc),
-            });
-            console.log("Video description saved:", infoRes.data);
+        if (!frontendLanguage || !frontendTopic || !videoFile) {
+            return alert("Please select language, topic, and upload a video file");
         }
 
-        // -----------------  Add Source Codes -----------------
-        if (htmlCode || cssCode || jsCode) {
-            const codeRes = await api.post("/api/frontendsourcecodes/", {
-                video: videoId,
-                html_code: String(htmlCode || ""),
-                css_code: String(cssCode || ""),
-                js_code: String(jsCode || ""),
-            });
-            console.log("Source code saved:", codeRes.data);
+        if (!videoAccessType || !sourceCodeAccessType) {
+            return alert("Please select access types for video and source code");
         }
 
-        // -----------------  Reset Fields -----------------
-        setVideoFile(null);
-        setHtmlCode("");
-        setCssCode("");
-        setJsCode("");
-        setFrontendDesc("");
-        setFrontendTopic("");
-        setFrontendLanguage("");
+        try {
+            setIsUploading(true);
 
-        alert("✅ Frontend content added successfully!");
-    } catch (err) {
-        console.error("Error adding frontend content:", err.response ? err.response.data : err);
-        alert("❌ Error adding frontend content! Check console for details.");
-    } finally {
-        setIsUploading(false);
-    }
-};
+            // ----------------- Upload Video -----------------
+            const videoFormData = new FormData();
+            videoFormData.append("topic", frontendTopic);  // topic ID
+            videoFormData.append("title", String(frontendDesc || "Untitled Video")); // ensure string
+            videoFormData.append("video_url", videoFile);
+            videoFormData.append("access_type", videoAccessType); // NEW FIELD
+
+            const videoRes = await api.post("/api/frontendvideos/", videoFormData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            const videoId = videoRes.data.id;  // ID of the uploaded video
+            console.log("Video uploaded with ID:", videoId);
+
+            // ----------------- Add Video Info (description) -----------------
+            if (frontendDesc) {
+                const infoRes = await api.post("/api/frontendvideoinfo/", {
+                    video: videoId,
+                    description: String(frontendDesc),
+                });
+                console.log("Video description saved:", infoRes.data);
+            }
+
+            // ----------------- Add Source Codes -----------------
+            if (htmlCode || cssCode || jsCode) {
+                const codeRes = await api.post("/api/frontendsourcecodes/", {
+                    video: videoId,
+                    html_code: String(htmlCode || ""),
+                    css_code: String(cssCode || ""),
+                    js_code: String(jsCode || ""),
+                    access_type: sourceCodeAccessType, // NEW FIELD
+                });
+                console.log("Source code saved:", codeRes.data);
+            }
+
+            // ----------------- Reset Fields -----------------
+            setVideoFile(null);
+            setHtmlCode("");
+            setCssCode("");
+            setJsCode("");
+            setFrontendDesc("");
+            setFrontendTopic("");
+            setFrontendLanguage("");
+            setVideoAccessType("");
+            setSourceCodeAccessType("");
+
+            alert("✅ Frontend content added successfully!");
+        } catch (err) {
+            console.error("Error adding frontend content:", err.response ? err.response.data : err);
+            alert("❌ Error adding frontend content! Check console for details.");
+        } finally {
+            setIsUploading(false);
+        }
+    };
+
 
 
 
@@ -275,7 +287,7 @@ const handleAddFrontend = async (e) => {
             </div>
 
 
-            {/* ---------- LANGUAGE ---------- */}
+            {/* ---------- LANGUAGE FORM FIELD---------- */}
             {activeTab === "language" && (
                 <form onSubmit={handleAddLanguage} className="mb-4">
                     <h4>Add Language</h4>
@@ -313,7 +325,8 @@ const handleAddFrontend = async (e) => {
             )}
 
 
-            {/* ---------- TOPIC ---------- */}
+
+            {/* ---------- TOPIC FORM FIELD---------- */}
             {activeTab === "topic" && (
                 <form onSubmit={handleAddTopic} className="mb-4">
                     <h4>Add Topic</h4>
@@ -342,7 +355,8 @@ const handleAddFrontend = async (e) => {
             )}
 
 
-            {/* ---------- FRONTEND ---------- */}
+
+            {/* ---------- FRONTEND FORM FIELD -------- */}
             {activeTab === "frontend" && (
                 <form onSubmit={handleAddFrontend} className="mb-4">
                     <h4>Add Frontend Content</h4>
@@ -355,11 +369,27 @@ const handleAddFrontend = async (e) => {
                         {frontendTopics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                     </select>
                     <input type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files[0])} className="form-control mb-2" required />
+
+                    {/* NEW ROW: Video Access Type + Source Code Access Type */}
+                    <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
+                        <select className="form-control" value={videoAccessType} onChange={(e) => setVideoAccessType(e.target.value)}required>
+                            <option value="">Video Access Type</option>
+                            <option value="Free">Free</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+
+                        <select className="form-control" value={sourceCodeAccessType} onChange={(e) => setSourceCodeAccessType(e.target.value)}required>
+                            <option value="">Source Code Access Type</option>
+                            <option value="Free">Free</option>
+                            <option value="Premium">Premium</option>
+                        </select>
+                    </div>
+
                     <textarea placeholder="HTML Code" value={htmlCode} onChange={(e) => setHtmlCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="CSS Code" value={cssCode} onChange={(e) => setCssCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="JS Code" value={jsCode} onChange={(e) => setJsCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="Description" value={frontendDesc} onChange={(e) => setFrontendDesc(e.target.value)} className="form-control mb-2" />
-                    
+
                     <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
                         <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
                             {isUploading ? (
@@ -381,7 +411,9 @@ const handleAddFrontend = async (e) => {
             )}
 
 
-            {/* ---------- BACKEND ---------- */}
+
+
+            {/* ---------- BACKEND FORM FIELD---------- */}
             {activeTab === "backend" && (
                 <form onSubmit={handleAddBackend} className="mb-4">
                     <h4>Add Backend Step</h4>

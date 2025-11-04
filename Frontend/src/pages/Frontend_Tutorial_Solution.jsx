@@ -101,29 +101,31 @@ const VideoCard = ({ video }) => {
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
 
-  // Only CSS and JS have ads
   const showAdTabs = ["css", "js"];
-
   const [adCompleted, setAdCompleted] = useState({
     html: true,
     css: false,
     js: false,
   });
 
+  // Premium access for this video
+  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
+
   const handleAdComplete = (tab) => {
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
 
+  const handleBuyPremium = () => {
+    setHasPremiumAccess(true);
+    alert("✅ Premium unlocked for this video!");
+  };
+
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
-      case "html":
-        return codeObj.html_code || "";
-      case "css":
-        return codeObj.css_code || "";
-      case "js":
-        return codeObj.js_code || "";
-      default:
-        return "";
+      case "html": return codeObj.html_code || "";
+      case "css": return codeObj.css_code || "";
+      case "js": return codeObj.js_code || "";
+      default: return "";
     }
   };
 
@@ -131,13 +133,17 @@ const VideoCard = ({ video }) => {
     if (codeRef.current) {
       Prism.highlightElement(codeRef.current);
     }
-  }, [selectedTab, adCompleted]);
+  }, [selectedTab, adCompleted, hasPremiumAccess]);
 
-  const CopyButton = ({ code, disabled }) => {
+  const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
-      if (disabled) {
+      if (video.access_type === "Premium" && !hasPremiumAccess) {
+        alert("⚠️ You need to buy Premium to copy this code!");
+        return;
+      }
+      if (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]) {
         alert("⚠️ You can copy only after the ad finishes!");
         return;
       }
@@ -145,6 +151,10 @@ const VideoCard = ({ video }) => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
+
+    const disabled =
+      (video.access_type === "Premium" && !hasPremiumAccess) ||
+      (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]);
 
     return (
       <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer", }} >
@@ -156,41 +166,70 @@ const VideoCard = ({ video }) => {
   return (
     <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
       <div className="video-container">
+        {/* Video */}
         <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", }} >
-            <video src={video.video_url} autoPlay loop muted playsInline className="w-100 h-100" />
+          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }} >
+            <video src={video.video_url} autoPlay loop muted playsInline className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} />
+            {video.access_type === "Premium" && (
+              <div className="premium-video-overlay">
+                <div className="premium-badge">
+                  {hasPremiumAccess ? "💰 PREMIUM" : "🔒 PREMIUM"}
+                </div>
+              </div>
+            )}
           </div>
         </div>
 
+
+        {/* Source code */}
         <div className="code-info-wrapper">
           {video.source_codes?.map((codeObj, idx) => (
-            <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100" >
-              <div className="card-header d-flex justify-content-between align-items-center">
+            <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
+              <div className="card-header d-flex justify-content-between align-items-center position-relative">
                 <div className="btn-group">
                   {["html", "css", "js"].map((tab) => (
-                    <button key={tab} className={`btn-tab ${ selectedTab === tab ? "active-tab" : "" }`} onClick={() => setSelectedTab(tab)} >
+                    <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)} >
                       {tab.toUpperCase()}
                     </button>
                   ))}
                 </div>
 
-                {/* Disable Copy while ad is active */}
-                <CopyButton
-                  code={getCodeByTab(codeObj, selectedTab)}
-                  disabled={
-                    showAdTabs.includes(selectedTab) &&
-                    !adCompleted[selectedTab]
-                  }
-                />
+                {/* Premium badge for code */}
+                {video.access_type === "Premium" && (
+                  <div className="premium-code-badge">
+                    {hasPremiumAccess ? "💰 PREMIUM" : "🔒 PREMIUM"}
+                  </div>
+                )}
+
+                <CopyButton code={getCodeByTab(codeObj, selectedTab)} />
               </div>
 
+
               <div className="card-body code-box">
-                {/* Hide code + show ad until completed */}
-                {showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
-                  <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
+                {video.access_type === "Free" ? (
+                  showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
+                    <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
+                  ) : (
+                    <pre>
+                      <code ref={codeRef} className={`language-${selectedTab}`}>
+                        {getCodeByTab(codeObj, selectedTab)}
+                      </code>
+                    </pre>
+                  )
+                ) : !hasPremiumAccess ? (
+                  <div>
+                    <pre className="blurred-code">
+                      <code ref={codeRef} className={`language-${selectedTab}`}>
+                        {getCodeByTab(codeObj, selectedTab)}
+                      </code>
+                    </pre>
+                    <button className="buy-premium-btn mt-2" onClick={handleBuyPremium}>
+                      💳 Buy Premium to Unlock
+                    </button>
+                  </div>
                 ) : (
-                  <pre className="m-0">
-                    <code ref={codeRef} className={`language-${selectedTab}`} >
+                  <pre>
+                    <code ref={codeRef} className={`language-${selectedTab}`}>
                       {getCodeByTab(codeObj, selectedTab)}
                     </code>
                   </pre>
@@ -210,161 +249,7 @@ const VideoCard = ({ video }) => {
   );
 };
 
+
+
+
 export default Frontend_Tutorial_Solution;
-
-
-
-
-
-
-
-
-// import React, { useEffect, useState } from "react";
-// import { useParams } from "react-router-dom";
-// import Prism from "prismjs";
-// import "prismjs/themes/prism-tomorrow.css";
-// import "prismjs/components/prism-javascript";
-// import api from "../api";
-// import "../assets/css/Frontend_Tutorial_Solution.css";
-// import { FaCopy } from "react-icons/fa";
-
-
-// // FRONTEND TUTORIAL SOLUTION PAGE COMPONENT
-// const Frontend_Tutorial_Solution = () => {
-//     const { topicID } = useParams();
-//     const topicId = parseInt(topicID);
-//     const [topic, setTopic] = useState(null);
-//     const [loading, setLoading] = useState(true);
-
-//     useEffect(() => {
-//         if (!topicID || isNaN(topicId)) {
-//             console.error("❌ Invalid topic ID:", topicID);
-//             setLoading(false);
-//             return;
-//         }
-
-//         const fetchTopic = async () => {
-//             try {
-//                 const res = await api.get(`/api/topics/${topicId}/`);
-//                 setTopic(res.data);
-//             } catch (error) {
-//                 console.error("❌ Error fetching topic:", error);
-//             } finally {
-//                 setLoading(false);
-//             }
-//         };
-//         fetchTopic();
-//     }, [topicID]);
-
-//     useEffect(() => {
-//         Prism.highlightAll();
-//     }, [topic]);
-
-//     if (loading) return <p className="text-center mt-5">Loading topic...</p>;
-//     if (!topic) return <p className="text-center mt-5">❌ Topic not found</p>;
-
-//     const CopyButton = ({ code }) => {
-//         const [copied, setCopied] = useState(false);
-//         const handleCopy = () => {
-//             navigator.clipboard.writeText(code);
-//             setCopied(true);
-//             setTimeout(() => setCopied(false), 2000);
-//         };
-//         return (
-//             <button className="copy-btn" onClick={handleCopy}>
-//                 <FaCopy /> {copied ? "Copied!" : "Copy"}
-//             </button>
-//         );
-//     };
-
-//     return (
-//         <div className="container py-1 px-1">
-//             <h4 className="text-center mb-3text-primary">
-//                 <b>🎬 Responsive Designs:</b><br /> <small>{topic.name}</small>
-//             </h4>
-
-// <br />      
-
-//             {/* Videos */}
-//             {topic.videos?.length > 0 && (
-//                 <div>
-//                     {topic.videos.map((video) => (
-//                         <VideoCard key={video.id} video={video} />
-//                     ))}
-//                 </div>
-//             )}
-//         </div>
-//     );
-// };
-
-
-
-// // VIDEO CARD COMPONENT
-// const VideoCard = ({ video }) => {
-//     const [selectedTab, setSelectedTab] = useState("html"); //default start should be on css
-
-//     const getCodeByTab = (codeObj, tab) => {
-//         switch (tab) {
-//             case "html": return codeObj.html_code || "";
-//             case "css": return codeObj.css_code || "";
-//             case "js": return codeObj.js_code || "";
-//             default: return "";
-//         }
-//     };
-
-//     const CopyButton = ({ code }) => {
-//         const [copied, setCopied] = useState(false);
-//         const handleCopy = () => {
-//             navigator.clipboard.writeText(code);
-//             setCopied(true);
-//             setTimeout(() => setCopied(false), 2000);
-//         };
-//         return <button className="copy-btn" onClick={handleCopy}><FaCopy /> {copied ? "Copied!" : "Copy"}</button>;
-//     };
-
-//     useEffect(() => {
-//         Prism.highlightAll();
-//     }, [selectedTab]);
-
-//     return (
-//         <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
-//             {/* <h4 className="fw-semibold mb-3"><b>{video.title}</b></h4> */}
-
-//             <div className="video-container">
-//                 {/* Video */}
-//                 <div className="video-wrapper">
-//                     <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%" }}>
-//                         <video src={video.video_url} autoPlay loop muted playsInline className="w-100 h-100" />
-//                     </div>
-//                 </div>
-
-//                 {/* Code Box */}
-//                 <div className="code-info-wrapper">
-//                     {video.source_codes?.length > 0 && video.source_codes.map((codeObj, idx) => (
-//                         <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
-//                             <div className="card-header">
-//                                 <div className="btn-group">
-//                                     {["html","css","js"].map(tab => (
-//                                         <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)}>
-//                                             {tab.toUpperCase()}
-//                                         </button>
-//                                     ))}
-//                                 </div>
-//                                 <CopyButton code={getCodeByTab(codeObj, selectedTab)} />
-//                             </div>
-//                             <div className="card-body code-box">
-//                                 <pre className="m-0">
-//                                     <code className={`language-${selectedTab}`}>{getCodeByTab(codeObj, selectedTab)}</code>
-//                                 </pre>
-//                             </div>
-//                         </div>
-//                     ))}
-//                 </div>
-//             </div>
-
-//             {video.info?.description && <p className="video-description"><b> NOTE : </b> {video.info.description}</p>}
-//         </div>
-//     );
-// };
-
-// export default Frontend_Tutorial_Solution;
