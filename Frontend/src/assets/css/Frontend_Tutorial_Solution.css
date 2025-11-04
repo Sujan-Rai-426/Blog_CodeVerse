@@ -266,24 +266,6 @@ pre, code[class*="language-"] {
   pointer-events: none;
 }
 
-.blurred-code {
-  filter: blur(6px);
-  pointer-events: none;
-  user-select: none;
-  position: relative;
-}
-
-.blurred-code::after {
-  content: "🔒 PREMIUM CODE";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: yellow;
-  font-weight: bold;
-  font-size: 1.2rem;
-  pointer-events: none;
-}
 
 .premium-video-overlay {
   position: absolute;
@@ -303,25 +285,12 @@ pre, code[class*="language-"] {
   background-color: yellow;
   color: black;
   font-weight: bold;
-  padding: 10px 15px;
+  padding: 5px 10px;
   border-radius: 8px;
-  font-size: 1.2rem;
+  font-size: 1rem;
   z-index: 10;
 }
 
-.buy-premium-btn {
-  background-color: #f1c40f;
-  color: #000;
-  padding: 6px 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.buy-premium-btn:hover {
-  background-color: #d4ac0d;
-}
 .premium-code-badge {
   position: absolute;
   right: 80px; /* a little left of the copy button */
@@ -336,4 +305,43 @@ pre, code[class*="language-"] {
   font-size: 0.9rem;
   z-index: 10;
 }
+
+.blurred-code {
+  filter: blur(6px);
+  user-select: none;
+  position: relative;
+}
+
+.blurred-code::after {
+  content: "🔒 PREMIUM CODE";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: yellow;
+  font-weight: bold;
+  font-size: 1.2rem;
+  pointer-events: none; /* only the overlay is non-clickable */
+  z-index: 5;
+}
+
+.buy-premium-btn {
+  background-color: #f1c40f;
+  color: #000;
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); 
+  z-index: 20;
+}
+
+.buy-premium-btn:hover {
+  background-color: #d4ac0d;
+}
+
 

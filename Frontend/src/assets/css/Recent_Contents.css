@@ -1,0 +1,27 @@
+.blurred-video {
+    filter: blur(6px);
+    pointer-events: none;
+}
+
+.premium-badge-center {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255, 215, 0, 0.9);
+    color: #000;
+    padding: 6px 14px;
+    font-weight: bold;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    z-index: 5;
+    backdrop-filter: blur(3px);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.premium-badge-center i {
+    font-size: 1.2rem;
+}

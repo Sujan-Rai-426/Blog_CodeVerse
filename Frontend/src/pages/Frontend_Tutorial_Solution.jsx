@@ -172,10 +172,17 @@ const VideoCard = ({ video }) => {
             <video src={video.video_url} autoPlay loop muted playsInline className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} />
             {video.access_type === "Premium" && (
               <div className="premium-video-overlay">
+                {/* Dollor sign */}
                 <div className="premium-badge">
-                  {hasPremiumAccess ? "💰 PREMIUM" : "🔒 PREMIUM"}
+                  {hasPremiumAccess ? (
+                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
+                    ) : (
+                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
+                    )}
                 </div>
               </div>
+
+              
             )}
           </div>
         </div>
@@ -196,8 +203,13 @@ const VideoCard = ({ video }) => {
 
                 {/* Premium badge for code */}
                 {video.access_type === "Premium" && (
+                  // Dollor sign
                   <div className="premium-code-badge">
-                    {hasPremiumAccess ? "💰 PREMIUM" : "🔒 PREMIUM"}
+                    {hasPremiumAccess ? (
+                      <> <i className="bi bi-currency-dollar"></i> </>
+                    ) : (
+                      <> <i className="bi bi-currency-dollar"></i></>
+                    )}
                   </div>
                 )}
 
@@ -206,6 +218,7 @@ const VideoCard = ({ video }) => {
 
 
               <div className="card-body code-box">
+                {/* ✅ For Free Videos */}
                 {video.access_type === "Free" ? (
                   showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
                     <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
@@ -216,25 +229,33 @@ const VideoCard = ({ video }) => {
                       </code>
                     </pre>
                   )
-                ) : !hasPremiumAccess ? (
-                  <div>
-                    <pre className="blurred-code">
-                      <code ref={codeRef} className={`language-${selectedTab}`}>
-                        {getCodeByTab(codeObj, selectedTab)}
-                      </code>
-                    </pre>
-                    <button className="buy-premium-btn mt-2" onClick={handleBuyPremium}>
-                      💳 Buy Premium to Unlock
-                    </button>
-                  </div>
                 ) : (
-                  <pre>
-                    <code ref={codeRef} className={`language-${selectedTab}`}>
-                      {getCodeByTab(codeObj, selectedTab)}
-                    </code>
-                  </pre>
+                  /* ✅ For Premium Videos */
+                  <>
+                    {hasPremiumAccess ? (
+                      <pre>
+                        <code ref={codeRef} className={`language-${selectedTab}`}>
+                          {getCodeByTab(codeObj, selectedTab)}
+                        </code>
+                      </pre>
+                    ) : (
+                      <>
+                        <div className="buy-premium-overlay">
+                          <button className="buy-premium-btn" onClick={handleBuyPremium}>
+                            💳 Buy Premium to Unlock
+                          </button>
+                        </div>
+                        <pre className="blurred-code">
+                          <code ref={codeRef} className={`language-${selectedTab}`}>
+                            {getCodeByTab(codeObj, selectedTab)}
+                          </code>
+                        </pre>
+                      </>
+                    )}
+                  </>
                 )}
               </div>
+
             </div>
           ))}
         </div>
