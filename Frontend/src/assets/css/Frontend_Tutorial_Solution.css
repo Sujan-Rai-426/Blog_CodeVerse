@@ -65,7 +65,7 @@ h1, h3, h5 { color: #4b2b88; }
   width: 100%;
   box-sizing: border-box;
   /* optional: set a min-width to avoid extreme squish on tiny screens */
-  min-width: 0;
+  min-width: 0; /* allow children to scroll inside */
 }
 
 /* === Code box (scrolls both ways) === */
@@ -73,7 +73,7 @@ h1, h3, h5 { color: #4b2b88; }
   background-color: #131212;
   min-height: 200px;
   max-height: 350px;
-  overflow: auto;       /* both vertical & horizontal */
+  overflow: auto;       /* both vertical & horizontal scrollable */
   border-radius: 0 0 3px 3px;
   padding: 0.8rem 1rem;
   font-family: "Fira Code", monospace;

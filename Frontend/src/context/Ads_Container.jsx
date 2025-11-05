@@ -54,23 +54,24 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
 
   return (
     <div
-      style={{
-        width: "100%",
-        minWidth: "300px",
-        border: "1px solid #ccc",
-        padding: "12px",
-        textAlign: "center",
-        background: "#f7f7f7",
-        borderRadius: "8px",
-        minHeight: "90px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        position: "relative",
-        ...style,
-      }}
-    >
+  style={{
+    width: "100%",
+    border: "1px solid #ccc",
+    padding: "0",
+    textAlign: "center",
+    background: "#f7f7f7",
+    borderRadius: "8px",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    position: "relative",
+    ...style,
+  }}
+>
+
+
+
+
       <div
         style={{
           position: "absolute",

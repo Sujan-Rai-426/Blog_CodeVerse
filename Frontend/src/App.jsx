@@ -22,7 +22,7 @@ import Privacy_Policy from './pages/Privacy_Policy.jsx';
 
 // For Helping Button
 import Floating_Share_Btn from './components/Floating_Share_Btn.jsx';
-import Floating_Go_Back from './components/Floating_Go_Back.jsx';
+import Floating_Go_Back_Btn from './components/Floating_Go_Back_Btn.jsx';
 
 
 // For Payment Handle
@@ -49,7 +49,7 @@ function App() {
 
                 {/* Sticky Floating share and Go back button visible on all pages */}
                 <Floating_Share_Btn />
-                <Floating_Go_Back />
+                <Floating_Go_Back_Btn />
 
                 {/* Auto Scroll top component */}
                 <Scroll_To_Top />
