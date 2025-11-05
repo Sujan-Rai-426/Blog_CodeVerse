@@ -18,7 +18,12 @@ import Admin_Dashboard from './pages/Admin_Dashboard.jsx';
 import Admin_Login from './pages/Admin_Login.jsx';
 import Protected_Route from './context/Protected_Route.jsx';
 import Privacy_Policy from './pages/Privacy_Policy.jsx';
-import Share_Btn from './components/Share_Btn.jsx';
+
+
+// For Helping Button
+import Floating_Share_Btn from './components/Floating_Share_Btn.jsx';
+import Floating_Go_Back from './components/Floating_Go_Back.jsx';
+
 
 // For Payment Handle
 import { Payment_Provider } from './payment/payment_status/Payment_Context.jsx';
@@ -28,7 +33,7 @@ import Payment_Page from "./payment/payment_status/Payment_Page.jsx";
 
 
 // For Unavailable and in Development phase
-import Developing_Phase from './components/Developing_Phase.jsx';
+import Unavailable_Page from './components/Unavailable_Page.jsx';
 
 
 
@@ -41,8 +46,10 @@ function App() {
     
         <>
             <Router>
-                {/* Sticky share button visible on all pages */}
-                <Share_Btn />
+
+                {/* Sticky Floating share and Go back button visible on all pages */}
+                <Floating_Share_Btn />
+                <Floating_Go_Back />
 
                 {/* Auto Scroll top component */}
                 <Scroll_To_Top />
@@ -51,12 +58,14 @@ function App() {
                 <Nav_Bar />
 
                     <div className="container" style={{minHeight: "100vh"}}>
+                          
+                          
                           <Routes >
                               <Route exact path='/'  element={ <Home/> } />
                               <Route exact path='/About'  element={ <About/> } />
                               <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
                               
-                              <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution/> } />
+                              <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution  />  } />
                               <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
 
                               {/* Frontend_Tutorial_Topic is Frontend Design */}
@@ -80,7 +89,7 @@ function App() {
 
 
                               {/* Unavailable and in development phase */}
-                              <Route exact path='/Unavailable' element={<Developing_Phase />} />
+                              <Route exact path='/Unavailable' element={<Unavailable_Page />} />
 
                           </Routes>
                     </div>

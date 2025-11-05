@@ -1,0 +1,48 @@
+/* === Floating Go Back Button === */
+.floating-go-back {
+    position: fixed;
+    bottom: 24px; /* unified with share button */
+    left: 24px;
+    z-index: 10;
+    background: linear-gradient(145deg, #2c221bf7 0%, #6e5629 50%, #66593d 100%);
+    color: #ffffff;
+    border: none;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.floating-go-back.disabled {
+    opacity: 0.5;          /* semi-transparent */
+    cursor: not-allowed;   /* unclickable look */
+    pointer-events: none;  /* actually prevents clicks */
+}
+
+
+/* Hover pulse animation (Go Back) */
+.floating-go-back:hover {
+    background: linear-gradient(145deg, #674c39f7 0%, #8c6d33 50%, #b2965b 100%);
+    color: #000;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(198, 162, 93, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(198, 162, 93, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(198, 162, 93, 0);
+    }
+}

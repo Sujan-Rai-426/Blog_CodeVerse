@@ -1,0 +1,116 @@
+/* === Share Button Wrapper === */
+.share-button-wrapper {
+    position: fixed;
+    bottom: 25px;
+    right: 25px;
+    z-index: 9999;
+}
+
+/* === Main Share Button === */
+.main-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(145deg, #2c221bf7 0%, #6e5629 50%, #66593d 100%);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    color: white;
+    border-radius: 50%;
+    width: 52px;
+    height: 52px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+    z-index: 10;
+}
+
+
+/* Pulse animation or Echo effect (hover + tap)*/
+@keyframes buttonEcho {
+    0% {
+        box-shadow: 0 0 0 0 rgba(198, 162, 93, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 14px rgba(198, 162, 93, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(198, 162, 93, 0);
+    }
+}
+
+/* Normal hover effect (desktop) */
+.main-button:hover {
+    transform: scale(1.1);
+    animation: buttonEcho 1.4s ease-out infinite;
+    background: linear-gradient(145deg, #674c39f7 0%, #8c6d33 50%, #b2965b 100%);
+    box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+}
+
+/* Continuous echo while expanded (desktop + mobile) */
+.share-button-wrapper.expanded .main-button {
+    animation: buttonEcho 1.4s ease-out infinite;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+}
+
+/* Active or programmatically triggered pulse */
+.main-button.echo-active {
+    animation: buttonEcho 1.4s ease-out infinite;
+    transform: scale(1.1);
+    box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+}
+
+.main-button:active {
+    transform: scale(1.1);
+    animation: buttonEcho 1.4s ease-out infinite;
+    box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+}
+
+/* Expanded pill grows leftwards */
+.share-button-wrapper.expanded .main-button {
+    width: 310px;
+    border-radius: 40px;
+    justify-content: space-between;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+/* Social icons */
+.social-icons {
+    display: flex;
+    gap: 1.5rem;
+    align-items: center;
+}
+
+.social-icons span {
+    font-size: 1.3rem;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.social-icons span:hover {
+    transform: scale(1.3);
+}
+
+/* Toggle button (share or X) */
+.toggle-button {
+    font-size: 1.22rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* === Keep both buttons level on all screens === */
+@media (max-width: 768px) {
+    .floating-go-back,
+    .share-button-wrapper {
+        bottom: 20px; /* same distance for perfect alignment */
+    }
+
+    .floating-go-back {
+        left: 20px;
+    }
+
+    .share-button-wrapper {
+        right: 20px;
+    }
+}

@@ -1,28 +1,34 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; // import navigate
 import Esewa_Payment from "../esewa/Esewa_Payment.jsx";
 import Bank_Payment from "../bank/Bank_Payment.jsx";
 import '../../assets/css/Payment_Page.css';
 
+/**
+ * Payment_Page Component
+ * Shows a floating payment overlay for premium videos.
+ * Users can choose payment method or cancel.
+ */
 const Payment_Page = ({ unlockVideo, videoId, amount }) => {
-    const [isPaying, setIsPaying] = useState(true);
-    const navigate = useNavigate(); // ✅ Initialize navigation
+    const [isPaying, setIsPaying] = useState(true); // track if overlay is visible
+    const navigate = useNavigate(); // react-router navigation
 
+    // === Cancel Payment Overlay ===
     const handleCancel = () => {
-        setIsPaying(false);
-        // Navigate back to the video page
-        navigate(`/Frontend_Tutorial_Solution/${videoId}`); // Adjust route according to your route setup
+        navigate(-1); // Go back in browser history
     };
+
 
     return (
         <div className="payment-page-container">
-            {/* === Background content (blurred while payment active) === */}
+            {/* === Background content === */}
             <div className={`background-content ${isPaying ? "blurred-background" : ""}`}>
                 <header className="page-header">
-                    <h1>🎬 CodeVerse Tutorials</h1>
+                    <h1>🎬 CodeVerse Tutorials</h1> {/* page title */}
                 </header>
 
                 <main className="page-main">
+                    {/* === Video Preview Section === */}
                     <section className="video-preview">
                         <video
                             src="/path-to-sample-video.mp4"
@@ -33,6 +39,7 @@ const Payment_Page = ({ unlockVideo, videoId, amount }) => {
                         ></video>
                     </section>
 
+                    {/* === Page Info Section === */}
                     <section className="page-info">
                         <h2>Unlock Premium Content</h2>
                         <p>
@@ -49,23 +56,24 @@ const Payment_Page = ({ unlockVideo, videoId, amount }) => {
                         <h3>💳 Complete Your Payment</h3>
                         <p>Select a payment method to unlock premium content:</p>
 
-                        {/* === Payment Methods Side by Side === */}
+                        {/* === Payment Methods Section === */}
                         <div className="payment-methods">
                             <div className="payment-card">
-                                <img src="/path-to-esewa-logo.png" alt="Esewa" />
-                                <span>ESEWA</span>
-                                <Esewa_Payment videoId={videoId} amount={amount} unlockVideo={unlockVideo} />
+                                <img src="/path-to-esewa-logo.png" alt="Esewa" /> {/* logo */}
+                                <span>ESEWA</span> {/* label */}
+                                <Esewa_Payment videoId={videoId} amount={amount} unlockVideo={unlockVideo} /> {/* Esewa component */}
                             </div>
 
                             <div className="payment-card">
-                                <img src="/path-to-bank-logo.png" alt="Bank" />
-                                <span>BANK</span>
-                                <Bank_Payment videoId={videoId} amount={amount} unlockVideo={unlockVideo} />
+                                <img src="/path-to-bank-logo.png" alt="Bank" /> {/* logo */}
+                                <span>BANK</span> {/* label */}
+                                <Bank_Payment videoId={videoId} amount={amount} unlockVideo={unlockVideo} /> {/* Bank component */}
                             </div>
                         </div>
 
+                        {/* === Cancel Button === */}
                         <button className="cancel-btn" onClick={handleCancel}>
-                            ❌ Cancel Payment
+                            ❌ Cancel Payment {/* hides overlay & navigate back */}
                         </button>
                     </div>
                 </div>

@@ -10,13 +10,18 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Ads_Container from "../context/Ads_Container";
 
-
+/**
+ * Main component for displaying a tutorial topic
+ * Fetches topic data using topicID from URL
+ * Shows videos with source code and handles premium access
+ */
 const Frontend_Tutorial_Solution = () => {
-  const { topicID } = useParams();
-  const topicId = parseInt(topicID);
-  const [topic, setTopic] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { topicID } = useParams(); // Get topicID from URL
+  const topicId = parseInt(topicID); // Convert to number
+  const [topic, setTopic] = useState(null); // Store topic data
+  const [loading, setLoading] = useState(true); // Loading state for skeleton
 
+  // Fetch topic from API when component mounts
   useEffect(() => {
     if (!topicID || isNaN(topicId)) {
       console.error("❌ Invalid topic ID:", topicID);
@@ -27,20 +32,22 @@ const Frontend_Tutorial_Solution = () => {
     const fetchTopic = async () => {
       try {
         const res = await api.get(`/api/topics/${topicId}/`);
-        setTopic(res.data);
+        setTopic(res.data); // Save topic data
       } catch (error) {
         console.error("❌ Error fetching topic:", error);
       } finally {
-        setLoading(false);
+        setLoading(false); // Stop loading
       }
     };
     fetchTopic();
   }, [topicID]);
 
+  // Highlight code syntax after loading
   useEffect(() => {
     Prism.highlightAll();
   }, [topic]);
 
+  // Show skeleton loaders while fetching
   if (loading) {
     return (
       <div className="container py-4">
@@ -78,6 +85,7 @@ const Frontend_Tutorial_Solution = () => {
     );
   }
 
+  // Show message if topic not found
   if (!topic) return <p className="text-center mt-5">❌ Topic not found</p>;
 
   return (
@@ -87,6 +95,7 @@ const Frontend_Tutorial_Solution = () => {
         <br /> <p className="mt-2"> <small>{topic.name}</small> </p>
       </h4>
 
+      {/* Map through videos of this topic */}
       {topic.videos?.length > 0 && (
         <div>
           {topic.videos.map((video) => (
@@ -98,34 +107,36 @@ const Frontend_Tutorial_Solution = () => {
   );
 };
 
+/**
+ * VideoCard component
+ * Shows video preview, source code, premium overlays, and copy button
+ */
 const VideoCard = ({ video }) => {
   const codeRef = useRef(null);
-  const [selectedTab, setSelectedTab] = useState("html");
+  const [selectedTab, setSelectedTab] = useState("html"); // Current tab: html/css/js
 
-  const showAdTabs = ["css", "js"];
-  const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false, });
+  const showAdTabs = ["css", "js"]; // Tabs that require ads for free users
+  const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false }); // Track ad completion
 
   const handleAdComplete = (tab) => {
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
-  
-  
+
   // Premium access for this video
   const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
   const navigate = useNavigate();
+
+  // Buy premium button navigates to payment page
   const handleBuyPremium = () => {
-    // Navigate to Payment Page After clicking Buy Premium Bu
     navigate("/Payment_Page", {
       state: {
         videoId: video.id,
         amount: 100, // Set your actual price here
       },
     });
-    // setHasPremiumAccess(true);
   };
 
-
-  // Shoe code in code box 
+  // Get code string by tab
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
       case "html": return codeObj.html_code || "";
@@ -135,21 +146,27 @@ const VideoCard = ({ video }) => {
     }
   };
 
-  // Syntax highlightingn of code inside the box
+  // Highlight syntax when tab or access changes
   useEffect(() => {
     if (codeRef.current) {
       Prism.highlightElement(codeRef.current);
     }
   }, [selectedTab, adCompleted, hasPremiumAccess]);
 
+  /**
+   * CopyButton component
+   * Copies code to clipboard with premium/ad restrictions
+   */
   const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
+      // Check premium access for premium videos
       if (video.access_type === "Premium" && !hasPremiumAccess) {
         alert("⚠️ You need to buy Premium to copy this code!");
         return;
       }
+      // Check ad completion for free videos
       if (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]) {
         alert("⚠️ You can copy only after the ad finishes!");
         return;
@@ -164,7 +181,7 @@ const VideoCard = ({ video }) => {
       (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]);
 
     return (
-      <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer", }} >
+      <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer" }} >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
     );
@@ -173,33 +190,37 @@ const VideoCard = ({ video }) => {
   return (
     <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
       <div className="video-container">
-        {/* Video */}
+        {/* Video preview */}
         <div className="video-wrapper">
           <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }} >
-            <video src={video.video_url} autoPlay loop muted playsInline className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`} />
-            {video.access_type === "Premium" && (
-              <div className="premium-video-overlay">
-                {/* Dollor sign */}
+            {/* Always render video, even for premium */}
+            <video
+              src={video.video_url}
+              autoPlay
+              loop
+              muted
+              playsInline
+              className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}
+            />
+
+            {/* Premium overlay */}
+            {video.access_type === "Premium" && !hasPremiumAccess && (
+              <div className="premium-video-overlay" style={{ pointerEvents: "none" }}>
                 <div className="premium-badge">
-                  {hasPremiumAccess ? (
-                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
-                    ) : (
-                      <> <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small> </>
-                    )}
+                  <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
                 </div>
               </div>
-
-              
             )}
           </div>
         </div>
 
 
-        {/* Source code */}
+        {/* Source code section */}
         <div className="code-info-wrapper">
           {video.source_codes?.map((codeObj, idx) => (
             <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
               <div className="card-header d-flex justify-content-between align-items-center position-relative">
+                {/* Tab buttons */}
                 <div className="btn-group">
                   {["html", "css", "js"].map((tab) => (
                     <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)} >
@@ -210,22 +231,16 @@ const VideoCard = ({ video }) => {
 
                 {/* Premium badge for code */}
                 {video.access_type === "Premium" && (
-                  // Dollor sign
                   <div className="premium-code-badge">
-                    {hasPremiumAccess ? (
-                      <> <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i> </>
-                    ) : (
-                      <> <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i></>
-                    )}
+                    <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i>
                   </div>
                 )}
 
                 <CopyButton code={getCodeByTab(codeObj, selectedTab)} />
               </div>
 
-
               <div className="card-body code-box">
-                {/* ✅ For Free Videos code */}
+                {/* Show code based on access type */}
                 {video.access_type === "Free" ? (
                   showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
                     <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
@@ -237,37 +252,27 @@ const VideoCard = ({ video }) => {
                     </pre>
                   )
                 ) : (
-                  /* ✅ For Premium Videos code */
-                  <>
-                    {hasPremiumAccess ? (
-                      <pre>
-                        <code ref={codeRef} className={`language-${selectedTab}`}>
-                          {getCodeByTab(codeObj, selectedTab)}
-                        </code>
-                      </pre>
-                    ) : (
-                      <>
-                        <div className="buy-premium-overlay">
-                          <button className="buy-premium-btn" onClick={handleBuyPremium}>
-                            💳 Buy Premium to Unlock
-                          </button>
-                        </div>
-                        <pre className="blurred-code">
-                          <code ref={codeRef} className={`language-${selectedTab}`}>
-                            {getCodeByTab(codeObj, selectedTab)}
-                          </code>
-                        </pre>
-                      </>
-                    )}
-                  </>
+                  hasPremiumAccess ? (
+                    <pre>
+                      <code ref={codeRef} className={`language-${selectedTab}`}>
+                        {getCodeByTab(codeObj, selectedTab)}
+                      </code>
+                    </pre>
+                  ) : (
+                    <div className="buy-premium-overlay">
+                      <button className="buy-premium-btn" onClick={handleBuyPremium}>
+                        💳 Buy Premium to Unlock
+                      </button>
+                    </div>
+                  )
                 )}
               </div>
-
             </div>
           ))}
         </div>
       </div>
 
+      {/* Video description */}
       {video.info?.description && (
         <p className="video-description text-content">
           <b>NOTE:</b> {video.info.description}
@@ -276,8 +281,5 @@ const VideoCard = ({ video }) => {
     </div>
   );
 };
-
-
-
 
 export default Frontend_Tutorial_Solution;
