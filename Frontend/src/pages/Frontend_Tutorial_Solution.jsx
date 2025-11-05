@@ -113,30 +113,25 @@ const Frontend_Tutorial_Solution = () => {
  */
 const VideoCard = ({ video }) => {
   const codeRef = useRef(null);
-  const [selectedTab, setSelectedTab] = useState("html"); // Current tab: html/css/js
+  const [selectedTab, setSelectedTab] = useState("html");
+  const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false });
+  const navigate = useNavigate();
 
-  const showAdTabs = ["css", "js"]; // Tabs that require ads for free users
-  const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false }); // Track ad completion
-
+  // Get from API if the user bought the source code (backend should send this flag)
+  // Example: codeObj.hasBought === true means user purchased that code.
   const handleAdComplete = (tab) => {
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
 
-  // Premium access for this video
-  const [hasPremiumAccess, setHasPremiumAccess] = useState(false);
-  const navigate = useNavigate();
-
-  // Buy premium button navigates to payment page
-  const handleBuyPremium = () => {
+  const handleBuySource = (sourceId) => {
     navigate("/Payment_Page", {
       state: {
-        videoId: video.id,
-        amount: 100, // Set your actual price here
+        sourceId,
+        amount: 100, // Replace with your actual price
       },
     });
   };
 
-  // Get code string by tab
   const getCodeByTab = (codeObj, tab) => {
     switch (tab) {
       case "html": return codeObj.html_code || "";
@@ -146,28 +141,26 @@ const VideoCard = ({ video }) => {
     }
   };
 
-  // Highlight syntax when tab or access changes
   useEffect(() => {
-    if (codeRef.current) {
-      Prism.highlightElement(codeRef.current);
-    }
-  }, [selectedTab, adCompleted, hasPremiumAccess]);
+    if (codeRef.current) Prism.highlightElement(codeRef.current);
+  }, [selectedTab, adCompleted]);
 
-  /**
-   * CopyButton component
-   * Copies code to clipboard with premium/ad restrictions
-   */
-  const CopyButton = ({ code }) => {
+  // Copy Button logic — depends on source access, not video access
+  const CopyButton = ({ codeObj, code }) => {
     const [copied, setCopied] = useState(false);
+    const isSourceFree = codeObj.access_type === "Free";
+    const hasBoughtSource = codeObj.hasBought === true;
+
+    const disabled =
+      (!isSourceFree && !hasBoughtSource) ||
+      (isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab]);
 
     const handleCopy = () => {
-      // Check premium access for premium videos
-      if (video.access_type === "Premium" && !hasPremiumAccess) {
-        alert("⚠️ You need to buy Premium to copy this code!");
+      if (!isSourceFree && !hasBoughtSource) {
+        alert("⚠️ You need to buy this source code to copy it!");
         return;
       }
-      // Check ad completion for free videos
-      if (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]) {
+      if (isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab]) {
         alert("⚠️ You can copy only after the ad finishes!");
         return;
       }
@@ -176,95 +169,85 @@ const VideoCard = ({ video }) => {
       setTimeout(() => setCopied(false), 2000);
     };
 
-    const disabled =
-      (video.access_type === "Premium" && !hasPremiumAccess) ||
-      (video.access_type === "Free" && showAdTabs.includes(selectedTab) && !adCompleted[selectedTab]);
-
     return (
       <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer" }} >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
     );
-  };
+  }   
 
   return (
     <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
+      {/* === Video Section (no change) === */}
       <div className="video-container">
-        {/* Video preview */}
         <div className="video-wrapper">
           <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
-            {/* Always render video, even for premium */}
-            <div className={`video-container-inner ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}>
+            <div className="video-container-inner">
               <video src={video.video_url} autoPlay loop muted playsInline />
             </div>
-
-            {/* Premium overlay */}
-            {video.access_type === "Premium" && !hasPremiumAccess && (
-              <div className="premium-video-overlay" style={{ pointerEvents: "none" }}>
-                <div className="premium-badge">
-                  <i className="bi bi-currency-dollar"></i> <small>PREMIUM</small>
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
-
-
-        {/* Source code section */}
+        {/* === Source Code Section (logic fixed here) === */}
         <div className="code-info-wrapper">
-          {video.source_codes?.map((codeObj, idx) => (
-            <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
-              <div className="card-header d-flex justify-content-between align-items-center position-relative">
-                {/* Tab buttons */}
-                <div className="btn-group">
-                  {["html", "css", "js"].map((tab) => (
-                    <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)} >
-                      {tab.toUpperCase()}
-                    </button>
-                  ))}
+          {video.source_codes?.map((codeObj, idx) => {
+            const isSourceFree = codeObj.access_type === "Free";
+            const hasBoughtSource = codeObj.hasBought === true;
+            const canViewCode = isSourceFree || hasBoughtSource;
+
+            return (
+              <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
+                <div className="card-header d-flex justify-content-between align-items-center position-relative">
+                  <div className="btn-group">
+                    {["html", "css", "js"].map((tab) => (
+                      <button
+                        key={tab}
+                        className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`}
+                        onClick={() => setSelectedTab(tab)}
+                      >
+                        {tab.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Premium badge (only for premium source codes) */}
+                  {codeObj.access_type === "Premium" && (
+                    <div className="premium-code-badge">
+                      <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i>
+                    </div>
+                  )}
+
+                  <CopyButton codeObj={codeObj} code={getCodeByTab(codeObj, selectedTab)} />
                 </div>
 
-                {/* Premium badge for code */}
-                {video.access_type === "Premium" && (
-                  <div className="premium-code-badge">
-                    <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i>
-                  </div>
-                )}
-
-                <CopyButton code={getCodeByTab(codeObj, selectedTab)} />
-              </div>
-
-              <div className="card-body code-box">
-                {/* Show code based on access type */}
-                {video.access_type === "Free" ? (
-                  showAdTabs.includes(selectedTab) && !adCompleted[selectedTab] ? (
-                    <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
+                <div className="card-body code-box">
+                  {/* Show code only if free or bought */}
+                  {canViewCode ? (
+                    isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab] ? (
+                      <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
+                    ) : (
+                      <pre>
+                        <code ref={codeRef} className={`language-${selectedTab}`}>
+                          {getCodeByTab(codeObj, selectedTab)}
+                        </code>
+                      </pre>
+                    )
                   ) : (
-                    <pre>
-                      <code ref={codeRef} className={`language-${selectedTab}`}>
-                        {getCodeByTab(codeObj, selectedTab)}
-                      </code>
-                    </pre>
-                  )
-                ) : (
-                  <pre className={hasPremiumAccess ? "" : "blurred-code"}>
-                    <code ref={codeRef} className={`language-${selectedTab}`}>
-                      {getCodeByTab(codeObj, selectedTab)}
-                    </code>
-                  </pre>
-                )}
-
-                {/* Show buy button only if premium and no access */}
-                {!hasPremiumAccess && video.access_type === "Premium" && (
-                  <button className="buy-premium-btn" onClick={handleBuyPremium}>
-                    💳 Buy Premium to Unlock
-                  </button>
-                )}
+                    <>
+                      <pre className="blurred-code">
+                        <code ref={codeRef} className={`language-${selectedTab}`}>
+                          {getCodeByTab(codeObj, selectedTab)}
+                        </code>
+                      </pre>
+                      <button className="buy-premium-btn" onClick={() => handleBuySource(codeObj.id)}>
+                        💳 Buy Source Code to Unlock
+                      </button>
+                    </>
+                  )}
+                </div>
               </div>
-
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -277,5 +260,6 @@ const VideoCard = ({ video }) => {
     </div>
   );
 };
+
 
 export default Frontend_Tutorial_Solution;

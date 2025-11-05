@@ -30,7 +30,7 @@ function Recent_Contents() {
                             author: type.charAt(0).toUpperCase() + type.slice(1),
                             desc: video.info?.description || "No description available",
                             video_url: video.video_url,
-                            access_type: video.access_type, // 👈 added for premium check
+                            access_type: video.source_codes?.some((code) => code.access_type === "Premium")  ? "Premium" : "Free",
                             type,
                         });
                         });
@@ -59,9 +59,9 @@ function Recent_Contents() {
                             <div className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card p-2">
                                 <Skeleton height={200} borderRadius={10} />
                                 <div className="card-body py-2">
-                                <Skeleton width="70%" height={20} className="mb-2 mt-3" />
-                                <Skeleton width="90%" height={14} count={2} />
-                                <Skeleton width={100} height={30} borderRadius={20} className="mt-3" />
+                                    <Skeleton width="70%" height={20} className="mb-2 mt-3" />
+                                    <Skeleton width="90%" height={14} count={2} />
+                                    <Skeleton width={100} height={30} borderRadius={20} className="mt-3" />
                                 </div>
                             </div>
                         </div>
@@ -89,7 +89,7 @@ function Recent_Contents() {
                                 {/* 💰 Center Premium Badge */}
                                 {tutorial.access_type === "Premium" && (
                                     <div className="premium-badge-center">
-                                        <i className="bi bi-currency-dollar"></i> PREMIUM
+                                        <div className="dollor-box"><i className="bi bi-currency-dollar"></i></div> PREMIUM
                                     </div>
                                 )}
                             </div>

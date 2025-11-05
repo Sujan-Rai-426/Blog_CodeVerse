@@ -155,17 +155,18 @@ h1, h3, h5 { color: #4b2b88; }
 
 .btn-tab { 
   padding:5px 12px; 
-  border-radius:6px; 
-  border:none; 
+  border-radius:6px;  
   background:#555; 
   color:#fff; 
   cursor:pointer; 
   font-size:0.8rem; 
   white-space:nowrap; 
+  border: 1px solid rgb(255, 255, 255);
 }
 .active-tab { 
   background:#4a90e2; 
   color:#fff; 
+  border: 1px solid #fff;
 }
 .copy-btn { 
   top: none !important;
@@ -263,16 +264,18 @@ pre, code[class*="language-"] {
 }
 
 /* =====PREMIUM SECTION====== */
-.premium-badge {
+.premium-code-badge {
   position: absolute;
   top: 10px;
   right: 10px;
-  background-color: #e7830d;
+  margin: 3px 5px !important;
   color: black;
   font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 5px;
+  padding: 0px 0px;
+  border-radius: 50%;
   z-index: 10;
+  background: rgb(255 215 0 / 90%);
+  border: 3px solid #fefefe;
 }
 
 .blurred-code {
@@ -395,8 +398,6 @@ pre, code[class*="language-"] {
 .buy-premium-btn {
   background-color: #f1c40f;
   color: #000;
-  padding: 6px 12px;
-  border-radius: 6px;
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -405,6 +406,8 @@ pre, code[class*="language-"] {
   left: 50%;
   transform: translate(-50%, -50%); 
   z-index: 20;
+  padding: 8px 12px;
+  border-radius: 16px;
 }
 
 .buy-premium-btn:hover {

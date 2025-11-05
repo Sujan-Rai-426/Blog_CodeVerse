@@ -10,9 +10,9 @@
     transform: translate(-50%, -50%);
     background: rgba(255, 215, 0, 0.9);
     color: #000;
-    padding: 6px 14px;
+    padding: 4px 8px;
     font-weight: bold;
-    border-radius: 8px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -24,4 +24,11 @@
 
 .premium-badge-center i {
     font-size: 1.2rem;
+}
+.dollor-box{
+    padding: 0px 3px;
+    border-radius: 50%;
+    color: black;
+    background: rgb(255 215 0 / 90%);
+    border: 3px solid #fefefe;
 }
