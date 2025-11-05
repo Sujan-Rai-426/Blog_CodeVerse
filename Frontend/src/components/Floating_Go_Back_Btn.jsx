@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { ArrowLeftCircle } from "lucide-react";
 import '../assets/css/Floating_Go_Back_Btn.css';
@@ -6,20 +6,15 @@ import '../assets/css/Floating_Go_Back_Btn.css';
 const Floating_Go_Back_Btn = ({ isShareExpanded }) => {
     const navigate = useNavigate();
     const location = useLocation();
-    const [canGoBack, setCanGoBack] = useState(false);
 
-    useEffect(() => {
-        // If window.history.length > 1, we can go back
-        setCanGoBack(window.history.length > 1);
-    }, [location]);
-
-    const isDisabled = !canGoBack || isShareExpanded;
+    // Disable only on homepage or when share is expanded
+    const isDisabled = location.pathname === "/" || isShareExpanded;
 
     return (
         <button
             onClick={() => !isDisabled && navigate(-1)}
             className={`floating-go-back ${isDisabled ? "disabled" : ""}`}
-            disabled={isDisabled}
+            disabled={isDisabled} // actually disables button
         >
             <ArrowLeftCircle size={28} />
         </button>
