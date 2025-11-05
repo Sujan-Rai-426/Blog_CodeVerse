@@ -32,3 +32,33 @@
     background: rgb(255 215 0 / 90%);
     border: 3px solid #fefefe;
 }
+/* Premium badge in top-right corner */
+.premium-badge-top-right {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 215, 0, 0.9);
+    color: #000;
+    padding: 4px 8px;
+    font-weight: bold;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.9rem;
+    z-index: 5;
+    backdrop-filter: blur(3px);
+    box-shadow: 0 0 10px rgba(255, 215, 0, 0.4);
+}
+
+.premium-badge-top-right i {
+    font-size: 1.2rem;
+}
+
+.dollor-box-top-right {
+    padding: 0px 3px;
+    border-radius: 50%;
+    color: black;
+    background: rgb(255 215 0 / 90%);
+    border: 3px solid #fefefe;
+}

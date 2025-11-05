@@ -98,11 +98,15 @@ const Frontend_Tutorial_Solution = () => {
       {/* Map through videos of this topic */}
       {topic.videos?.length > 0 && (
         <div>
-          {topic.videos.map((video) => (
-            <VideoCard key={video.id} video={video} />
-          ))}
+          {topic.videos
+            .slice() // create a copy to avoid mutating state
+            .sort((a, b) => b.id - a.id) // descending order: recent first
+            .map((video) => (
+              <VideoCard key={video.id} video={video} />
+            ))}
         </div>
-      )}
+      )}  
+
     </div>
   );
 };

@@ -106,7 +106,7 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
             </b>
           </h1>
           <p>Visit our social site for more updates</p>
-          <p>We are here to provide you best designs for free.</p>
+          <p>We are here to provide you best resources for free.</p>
         </div>
       )}
     </div>
