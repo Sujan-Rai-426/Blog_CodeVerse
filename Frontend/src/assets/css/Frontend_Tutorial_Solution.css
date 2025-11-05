@@ -7,367 +7,260 @@
   box-sizing: border-box;
 }
 
-/* ===Bleakable Line showing=== */
+/* === Bleakable Line showing === */
 .text-content {
   white-space: pre-line;
 }
 
-.card{
-  background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%) !important;
+/* === Cards === */
+.card {
+  background: linear-gradient(145deg, #101010 0%, #252525 50%, #5c5c5c 100%);
 }
-.frontend-card{
-  border: 1px solid white !important;
+.frontend-card {
+  border: 1px solid white;
 }
-
-/* cards */
-.step-card, .video-card {
-  background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%);
+.step-card,
+.video-card {
+  background: linear-gradient(145deg, #101010 0%, #252525 50%, #5c5c5c 100%);
   padding: 1.5rem;
   border-radius: 20px;
   transition: transform 0.3s, box-shadow 0.3s;
   box-sizing: border-box;
 }
-.step-card:hover, .video-card:hover {
+.step-card:hover,
+.video-card:hover {
   transform: translateY(-5px);
-  box-shadow: 0px 12px 25px rgba(0,0,0,0.1);
+  box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.1);
 }
 
-/* Outer video wrapper */
+/* === Video wrapper (YouTube-style height) === */
 .video-wrapper {
   width: 100%;
-  height: 52vh;         /* fixed height */
-  overflow: hidden;     /* crop overflow */
+  height: 56.25vw;   /* 16:9 aspect ratio */
+  max-height: 52vh;  /* max height limit */
+  overflow: hidden;  /* crop overflow */
   border-radius: 20px;
   position: relative;
 }
 
-/* Inner video container for blur & centering */
+/* Inner container for video centering */
 .video-container-inner {
-  width: auto;          /* let width scale automatically */
-  height: 100%;         /* full height visible */
+  width: 100%;
+  height: 100%;
   display: flex;
-  justify-content: center; /* horizontally center video */
-  align-items: center;     /* vertically center (redundant, height 100%) */
-  object-fit: cover;       /* crop width if needed */
+  justify-content: center; /* center horizontally */
+  align-items: center;     /* center vertically */
   overflow: hidden;
+  position: relative;
 }
 
 /* actual video element */
 .video-container-inner video {
-  height: 100%;          /* full container height */
-  width: auto;           /* width scales naturally */
-  object-fit: cover;     /* crop sides if necessary */
+  width: auto;        /* natural width */
+  height: 100%;       /* fill container height */
+  object-fit: cover;  /* crop sides if needed */
   display: block;
 }
 
+/* === Headings === */
+h1,
+h3,
+h5 {
+  color: #4b2b88;
+}
 
-/* headings */
-h1, h3, h5 { color: #4b2b88; }
-
-/* === Code info wrapper defaults (mobile/tablet) === */
+/* === Code info wrapper === */
 .code-info-wrapper {
   width: 100%;
   box-sizing: border-box;
-  /* optional: set a min-width to avoid extreme squish on tiny screens */
   min-width: 0; /* allow children to scroll inside */
 }
 
-/* === Code box (scrolls both ways) === */
+/* === Code box === */
 .code-box {
-  padding: 0;
+  padding: 0.8rem 1rem;
   background-color: #131212;
   min-height: 200px;
   max-height: 350px;
-  overflow: auto;       /* both vertical & horizontal scrollable */
+  overflow: auto;
   border-radius: 0 0 3px 3px;
-  padding: 0.8rem 1rem;
   font-family: "Fira Code", monospace;
   color: #d1d1c9;
   line-height: 1.5;
-  white-space: pre;     /* prevents wrapping so long lines scroll horizontally */
+  white-space: pre;
   box-sizing: border-box;
   scrollbar-gutter: stable;
   scroll-behavior: smooth;
   transition: 0.3s ease;
 }
-
-/* ensure inner pre/code don't expand the parent */
 .code-box pre,
 .code-box code {
   margin: 0;
   display: block;
   min-width: 100%;
-  white-space: pre;     /* keep long lines */
+  white-space: pre;
   box-sizing: border-box;
 }
 
-/* === Scrollbar (Visible Always) === */
+/* Scrollbar styling */
 .code-block::-webkit-scrollbar {
   width: 10px;
   height: 10px;
 }
-
 .code-block::-webkit-scrollbar-thumb {
   background-color: rgba(100, 116, 139, 0.5);
   border-radius: 10px;
   border: 2px solid #0d1117;
 }
-
 .code-block::-webkit-scrollbar-thumb:hover {
   background-color: rgba(148, 163, 184, 0.7);
 }
-
 .code-block::-webkit-scrollbar-track {
-  background:#131212 !important;
+  background: #131212 !important;
 }
 
-
-/* video + code container default: stacked */
+/* video + code container defaults */
 .video-container {
   display: flex;
   flex-direction: column;
   gap: 1rem;
   box-sizing: border-box;
 }
-.video-description{
+.video-description {
   margin: 0.5rem;
   font-size: 0.9rem;
   color: #e1e1e1;
-  text-align: justify;   /* align text to both left and right */
-  text-justify: inter-word;   /* improve spacing between words */
+  text-align: justify;
+  text-justify: inter-word;
 }
 
-/* header / tabs / copy button (no changes) */
+/* header / tabs / copy button */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 1rem;
   background: #2c3e50;
-  border-radius: 15px 15px 0 0 !important;
+  border-radius: 15px 15px 0 0;
   box-sizing: border-box;
   flex-wrap: nowrap;
 }
 .btn-group {
-  margin:0;
-  display: flex !important;          /* ensure flex */
-  flex-direction: row !important;    /* always row */
-  flex-wrap: nowrap;                  /* prevent wrapping */
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
   gap: 0.5rem;
-  overflow-x: auto;                   /* scroll horizontally if too wide */
+  overflow-x: auto;
 }
-
-.btn-tab { 
-  padding:5px 12px; 
-  border-radius:6px;  
-  background:#555; 
-  color:#fff; 
-  cursor:pointer; 
-  font-size:0.8rem; 
-  white-space:nowrap; 
-  border: 1px solid rgb(255, 255, 255);
-}
-.active-tab { 
-  background:#4a90e2; 
-  color:#fff; 
+.btn-tab {
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: #555;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.8rem;
+  white-space: nowrap;
   border: 1px solid #fff;
 }
-.copy-btn { 
-  top: none !important;
-  display:flex; 
-  align-items:center; 
-  gap:5px;
-  padding:5px 12px; 
-  border-radius:6px; 
-  background:#4a90e2; 
-  color:#fff; 
-  cursor:pointer; 
-  transition:.3s; 
+.active-tab {
+  background: #4a90e2;
+  color: #fff;
+  border: 1px solid #fff;
 }
-.copy-btn:hover { background:#357ab7; }
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  border-radius: 6px;
+  background: #4a90e2;
+  color: #fff;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.copy-btn:hover {
+  background: #357ab7;
+}
 
 /* responsive tweaks */
 @media (max-width: 768px) {
   .video-container {
-    display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
-    box-sizing: border-box;
   }
-  .video-wrapper{
-    width: 90%;
-    height: 37vh;
+  .video-wrapper {
+    width: 100%;
+    height: 56.25vw; /* YouTube-style 16:9 aspect ratio on mobile */
+    max-height: 45vh;
     margin-top: 1vh;
   }
-  .container { 
-    padding: 1rem; 
+  .container {
+    padding: 1rem;
   }
-  .step-card { 
-    display:flex; 
-    flex-direction:column; 
+  .step-card {
+    display: flex;
+    flex-direction: column;
   }
-  .btn-group { 
-      margin: 0px !important;;
-      display: flex; flex-direction: row;     
-      justify-content: flex-start;   /* align left */
-      gap: 0.5rem;                  /* space between buttons */
-    }
-  .code-box { max-height: 300px; } /* a bit smaller on mobile */
+  .btn-group {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: flex-start;
+    align-items: stretch;
+    margin: 0 !important;
   }
+  .code-box {
+    max-height: 300px;
+  }
+}
 
-/* === Desktop & large screens: side-by-side 50/50 split === */
+/* desktop / large screens */
 @media (min-width: 992px) {
-
-  /* make the container a horizontal flex row */
   .video-container {
     flex-direction: row;
     align-items: flex-start;
     gap: 1rem;
   }
-  /* force exactly 50% each using flex-basis and no growth */
   .video-wrapper,
   .code-info-wrapper {
-    flex: 0 0 50%;      /* flex-grow:0, flex-shrink:0, flex-basis:50% */
+    flex: 0 0 50%;
     max-width: 49%;
     box-sizing: border-box;
-    min-width: 0;       /* important to allow overflow inside children (pre/code) */
+    min-width: 0;
   }
-  .btn-group { 
-      margin: 0 !important;
-    }
 }
-
 
 /* Base code style */
-pre, code[class*="language-"] {
+pre,
+code[class*="language-"] {
   background-color: #131212 !important;
-  font-size: 1rem; /* default for desktop */
+  font-size: 1rem;
   line-height: 1.5;
 }
-
-/* Tablets */
 @media (max-width: 1024px) {
-  pre, code[class*="language-"] {
+  pre,
+  code[class*="language-"] {
     font-size: 0.85rem !important;
   }
 }
-
-/* Mobile */
 @media (max-width: 768px) {
-  pre, code[class*="language-"] {
+  pre,
+  code[class*="language-"] {
     font-size: 0.75rem !important;
   }
 }
-
-/* Small phones */
 @media (max-width: 480px) {
-  pre, code[class*="language-"] {
+  pre,
+  code[class*="language-"] {
     font-size: 0.7rem !important;
   }
 }
 
-/* =====PREMIUM SECTION====== */
+/* ===== PREMIUM SECTION ===== */
 .premium-code-badge {
   position: absolute;
-  top: 10px;
-  right: 10px;
-  margin: 3px 5px !important;
-  color: black;
-  font-weight: bold;
-  padding: 0px 0px;
-  border-radius: 50%;
-  z-index: 10;
-  background: rgb(255 215 0 / 90%);
-  border: 3px solid #fefefe;
-}
-
-.blurred-code {
-  filter: blur(6px);
-  pointer-events: none; 
-  user-select: none;
-  position: relative;
-}
-
-.blurred-code::after {
-  content: "🔒 PREMIUM CODE";
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #e7830d;
-  font-weight: bold;
-  font-size: 1.2rem;
-  pointer-events: none;
-}
-.blurred-video {
-  filter: blur(8px);
-  pointer-events: none; /* keep this only when locked */
-  backface-visibility: hidden; 
-  -webkit-backface-visibility: hidden; /* Safari fix */
-  -webkit-transform: translateZ(0);    /* Force hardware acceleration */
-  transform: translateZ(0);            /* Force hardware acceleration */
-  will-change: filter;                  /* Hint browser to optimize blur */
-}
-
-
-.premium-video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: none !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 20px;
-}
-
-
-.premium-video-overlay .premium-badge {
-  background-color: #e7830d;
-  color: black;
-  font-weight: bold;
-  padding: 10px 15px;
-  border-radius: 8px;
-  font-size: 1.2rem;
-  z-index: 10;
-  text-align: center;
-}
-.blurred-video {
-  filter: blur(8px);
-  pointer-events: none;
-}
-
-
-.premium-video-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 5;
-  border-radius: 20px;
-}
-
-.premium-video-overlay .premium-badge {
-  background-color: #e7830d;
-  color: black;
-  font-weight: bold;
-  padding: 5px 10px;
-  border-radius: 8px;
-  font-size: 1rem;
-  z-index: 10;
-}
-
-.premium-code-badge {
-  position: absolute;
-  right: 80px; /* a little left of the copy button */
+  right: 80px;
   top: 50%;
   margin: 0 7px;
   transform: translateY(-50%);
@@ -385,7 +278,6 @@ pre, code[class*="language-"] {
   user-select: none;
   position: relative;
 }
-
 .blurred-code::after {
   content: "🔒 PREMIUM CODE";
   position: absolute;
@@ -395,7 +287,7 @@ pre, code[class*="language-"] {
   color: yellow;
   font-weight: bold;
   font-size: 1.2rem;
-  pointer-events: none; /* only the overlay is non-clickable */
+  pointer-events: none;
   z-index: 5;
 }
 
@@ -408,14 +300,11 @@ pre, code[class*="language-"] {
   position: absolute;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%); 
+  transform: translate(-50%, -50%);
   z-index: 20;
   padding: 8px 12px;
   border-radius: 16px;
 }
-
 .buy-premium-btn:hover {
   background-color: #d4ac0d;
 }
-
-
