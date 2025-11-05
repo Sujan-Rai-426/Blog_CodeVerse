@@ -28,16 +28,34 @@
   box-shadow: 0px 12px 25px rgba(0,0,0,0.1);
 }
 
-/* video defaults */
-.video-wrapper { width: 100%; box-sizing: border-box; }
-.video-wrapper video {
+/* Outer video wrapper */
+.video-wrapper {
+  width: 100%;
+  height: 52vh;         /* fixed height */
+  overflow: hidden;     /* crop overflow */
   border-radius: 20px;
-  box-shadow: 0px 6px 15px rgba(0,0,0,0.08);
-  height: 52vh !important;
-  height: auto;           /* let width control size; keeps aspect */
-  object-fit: cover;
+  position: relative;
+}
+
+/* Inner video container for blur & centering */
+.video-container-inner {
+  width: auto;          /* let width scale automatically */
+  height: 100%;         /* full height visible */
+  display: flex;
+  justify-content: center; /* horizontally center video */
+  align-items: center;     /* vertically center (redundant, height 100%) */
+  object-fit: cover;       /* crop width if needed */
+  overflow: hidden;
+}
+
+/* actual video element */
+.video-container-inner video {
+  height: 100%;          /* full container height */
+  width: auto;           /* width scales naturally */
+  object-fit: cover;     /* crop sides if necessary */
   display: block;
 }
+
 
 /* headings */
 h1, h3, h5 { color: #4b2b88; }
@@ -259,6 +277,11 @@ pre, code[class*="language-"] {
 .blurred-video {
   filter: blur(8px);
   pointer-events: none; /* keep this only when locked */
+  backface-visibility: hidden; 
+  -webkit-backface-visibility: hidden; /* Safari fix */
+  -webkit-transform: translateZ(0);    /* Force hardware acceleration */
+  transform: translateZ(0);            /* Force hardware acceleration */
+  will-change: filter;                  /* Hint browser to optimize blur */
 }
 
 

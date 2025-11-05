@@ -90,9 +90,9 @@ const Frontend_Tutorial_Solution = () => {
 
   return (
     <div className="container py-1 px-1">
-      <h4 className="text-center py-3 text-warning">
+      <h4 className="text-center pt-3 text-warning">
         <b>🎬 Responsive Designs:</b>
-        <br /> <p className="mt-2"> <small>{topic.name}</small> </p>
+        <br /> <p className="mt-3 mb-2 text-light"> <small> - {topic.name} - </small> </p>
       </h4>
 
       {/* Map through videos of this topic */}
@@ -192,16 +192,11 @@ const VideoCard = ({ video }) => {
       <div className="video-container">
         {/* Video preview */}
         <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }} >
+          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
             {/* Always render video, even for premium */}
-            <video
-              src={video.video_url}
-              autoPlay
-              loop
-              muted
-              playsInline
-              className={`w-100 h-100 ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}
-            />
+            <div className={`video-container-inner ${video.access_type === "Premium" && !hasPremiumAccess ? "blurred-video" : ""}`}>
+              <video src={video.video_url} autoPlay loop muted playsInline />
+            </div>
 
             {/* Premium overlay */}
             {video.access_type === "Premium" && !hasPremiumAccess && (
@@ -213,6 +208,7 @@ const VideoCard = ({ video }) => {
             )}
           </div>
         </div>
+
 
 
         {/* Source code section */}
@@ -252,21 +248,21 @@ const VideoCard = ({ video }) => {
                     </pre>
                   )
                 ) : (
-                  hasPremiumAccess ? (
-                    <pre>
-                      <code ref={codeRef} className={`language-${selectedTab}`}>
-                        {getCodeByTab(codeObj, selectedTab)}
-                      </code>
-                    </pre>
-                  ) : (
-                    <div className="buy-premium-overlay">
-                      <button className="buy-premium-btn" onClick={handleBuyPremium}>
-                        💳 Buy Premium to Unlock
-                      </button>
-                    </div>
-                  )
+                  <pre className={hasPremiumAccess ? "" : "blurred-code"}>
+                    <code ref={codeRef} className={`language-${selectedTab}`}>
+                      {getCodeByTab(codeObj, selectedTab)}
+                    </code>
+                  </pre>
+                )}
+
+                {/* Show buy button only if premium and no access */}
+                {!hasPremiumAccess && video.access_type === "Premium" && (
+                  <button className="buy-premium-btn" onClick={handleBuyPremium}>
+                    💳 Buy Premium to Unlock
+                  </button>
                 )}
               </div>
+
             </div>
           ))}
         </div>
