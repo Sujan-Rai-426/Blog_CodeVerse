@@ -11,6 +11,7 @@
 // </script>
 
 import { useEffect, useState, useRef } from "react";
+import '../assets/css/Ads_Container.css'
 
 export default function Ads_Container({ onComplete, client, slot, style, boxType }) {
   const [timer, setTimer] = useState(10);
@@ -36,10 +37,8 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
         }
       }
     };
-
     tryPushAd();
 
-    // Watch if ad loaded
     const checkAd = setInterval(() => {
       if (adRef.current && adRef.current.children.length > 0) {
         setAdLoaded(true);
@@ -54,24 +53,22 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
 
   return (
     <div
-  style={{
-    width: "100%",
-    border: "1px solid #ccc",
-    padding: "0",
-    textAlign: "center",
-    background: "#f7f7f7",
-    borderRadius: "8px",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
-    position: "relative",
-    ...style,
-  }}
->
-
-
-
-
+      className="Ads-Wrapper"
+      style={{
+        width: "100%",
+        border: "1px solid #ccc",
+        padding: "0",
+        textAlign: "center",
+        background: "#f7f7f7",
+        borderRadius: "8px",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        position: "relative",
+        overflow: "hidden",              // 🚫 Prevent any overflow
+        ...style,
+      }}
+    >
       <div
         style={{
           position: "absolute",
@@ -79,25 +76,37 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
           right: "10px",
           fontWeight: "bold",
           color: "#111",
+          fontSize: "0.8rem",
+          zIndex: 2,
         }}
       >
         {timer > 0 ? `${timer}s` : "Done"}
       </div>
 
       {adLoaded ? (
-          <ins
-              className="adsbygoogle"
-              style={{ display: "block", textAlign: "center" }}
-              data-ad-layout="in-article"
-              data-ad-format="fluid"
-              data-ad-client={client || "ca-pub-6317483086789968"}
-              data-ad-slot={slot || "1762434579"}
-              ref={adRef}
-          ></ins>
+        <ins
+          className="adsbygoogle"
+          style={{
+            display: "block",
+            textAlign: "center",
+            width: "100%",
+            height: "100%",
+          }}
+          data-ad-layout="in-article"
+          data-ad-format="fluid"
+          data-ad-client={client || "ca-pub-6317483086789968"}
+          data-ad-slot={slot || "1762434579"}
+          ref={adRef}
+        ></ins>
       ) : (
-        <div className="CodeBox-Ads-Placeholder" >
-            <h1> <b>Code<sup><u>Verse💻</u></sup></b> </h1 >
-            <p> Visit our social site for more updates </p>
+        <div className="CodeBox-Ads-Placeholder">
+          <h1>
+            <b>
+              Code<sup><u>Verse💻</u></sup>
+            </b>
+          </h1>
+          <p>Visit our social site for more updates</p>
+          <p>We are here to provide you best designs for free.</p>
         </div>
       )}
     </div>
