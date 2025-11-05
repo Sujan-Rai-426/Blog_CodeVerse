@@ -128,7 +128,6 @@ h1, h3, h5 { color: #4b2b88; }
   flex-direction: column;
   gap: 1rem;
   box-sizing: border-box;
-  height: 350px;
 }
 .video-description{
   margin: 0.5rem;
@@ -198,7 +197,7 @@ h1, h3, h5 { color: #4b2b88; }
   }
   .video-wrapper{
     width: 90%;
-    height: 220px;
+    height: 37vh;
     margin-top: 1vh;
   }
   .container { 
