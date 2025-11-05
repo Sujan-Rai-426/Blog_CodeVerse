@@ -15,6 +15,10 @@
 .card{
   background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%) !important;
 }
+.frontend-card{
+  border: 1px solid white !important;
+}
+
 /* cards */
 .step-card, .video-card {
   background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%);

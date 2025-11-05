@@ -125,7 +125,7 @@ const Backend_Tutorial_Solution = () => {
                         const prismLang = getPrismLang(step.step_language);
                         return (
                             <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
-                                <div className="card-body">
+                                <div className="card-body backend-card">
                                     <h5 className="fw-bold text-warning mb-0 mt-3 px-1">
                                         Step {step.step_number}: <small>{step.step_file_name}</small>
                                     </h5>

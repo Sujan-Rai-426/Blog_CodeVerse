@@ -177,7 +177,7 @@ const VideoCard = ({ video }) => {
   }   
 
   return (
-    <div className="card video-card mb-5 p-1 shadow-lg rounded-4">
+    <div className="card frontend-card video-card mb-5 p-1 shadow-lg rounded-4">
       {/* === Video Section (no change) === */}
       <div className="video-container">
         <div className="video-wrapper">
