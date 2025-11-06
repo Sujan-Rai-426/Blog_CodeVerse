@@ -83,7 +83,9 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
         {timer > 0 ? `${timer}s` : "Done"}
       </div>
 
-      {adLoaded ? (
+
+{/* Uncomment after Adsence Site Verification and also script in index.html should be uncommented */}
+      {/* {adLoaded ? (
         <ins
           className="adsbygoogle"
           style={{
@@ -108,7 +110,20 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
           <p>Visit our social site for more updates</p>
           <p>We are here to provide you best resources for free.</p>
         </div>
-      )}
+      )} */}
+
+
+{/* Remove it after adsense site verifiaction */}
+        <div className="CodeBox-Ads-Placeholder">
+          <h1>
+            <b>
+              Code<sup><u>Verse💻</u></sup>
+            </b>
+          </h1>
+          <p>Visit our social site for more updates</p>
+          <p>We are here to provide you best resources for free.</p>
+        </div>
+
     </div>
   );
 }
