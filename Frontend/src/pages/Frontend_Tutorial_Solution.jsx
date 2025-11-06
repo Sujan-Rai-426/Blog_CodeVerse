@@ -16,12 +16,11 @@ import Ads_Container from "../context/Ads_Container";
  * Shows videos with source code and handles premium access
  */
 const Frontend_Tutorial_Solution = () => {
-  const { topicID } = useParams(); // Get topicID from URL
-  const topicId = parseInt(topicID); // Convert to number
-  const [topic, setTopic] = useState(null); // Store topic data
-  const [loading, setLoading] = useState(true); // Loading state for skeleton
+  const { topicID } = useParams();
+  const topicId = parseInt(topicID);
+  const [topic, setTopic] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Fetch topic from API when component mounts
   useEffect(() => {
     if (!topicID || isNaN(topicId)) {
       console.error("❌ Invalid topic ID:", topicID);
@@ -32,22 +31,20 @@ const Frontend_Tutorial_Solution = () => {
     const fetchTopic = async () => {
       try {
         const res = await api.get(`/api/topics/${topicId}/`);
-        setTopic(res.data); // Save topic data
+        setTopic(res.data);
       } catch (error) {
         console.error("❌ Error fetching topic:", error);
       } finally {
-        setLoading(false); // Stop loading
+        setLoading(false);
       }
     };
     fetchTopic();
   }, [topicID]);
 
-  // Highlight code syntax after loading
   useEffect(() => {
     Prism.highlightAll();
   }, [topic]);
 
-  // Show skeleton loaders while fetching
   if (loading) {
     return (
       <div className="container py-4">
@@ -85,28 +82,25 @@ const Frontend_Tutorial_Solution = () => {
     );
   }
 
-  // Show message if topic not found
   if (!topic) return <p className="text-center mt-5">❌ Topic not found</p>;
 
   return (
     <div className="container py-1 px-1">
       <h4 className="text-center pt-3 text-warning">
         <b>🎬 Responsive Designs:</b>
-        <br /> <p className="mt-3 mb-2 text-light"> <small> - {topic.name} - </small> </p>
+        <br /> <p className="mt-3 mb-2 text-light"><small> - {topic.name} - </small></p>
       </h4>
 
-      {/* Map through videos of this topic */}
       {topic.videos?.length > 0 && (
         <div>
           {topic.videos
-            .slice() // create a copy to avoid mutating state
-            .sort((a, b) => b.id - a.id) // descending order: recent first
+            .slice()
+            .sort((a, b) => b.id - a.id)
             .map((video) => (
               <VideoCard key={video.id} video={video} />
             ))}
         </div>
-      )}  
-
+      )}
     </div>
   );
 };
@@ -121,18 +115,13 @@ const VideoCard = ({ video }) => {
   const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false });
   const navigate = useNavigate();
 
-  // Get from API if the user bought the source code (backend should send this flag)
-  // Example: codeObj.hasBought === true means user purchased that code.
   const handleAdComplete = (tab) => {
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
   };
 
   const handleBuySource = (sourceId) => {
     navigate("/Payment_Page", {
-      state: {
-        sourceId,
-        amount: 100, // Replace with your actual price
-      },
+      state: { sourceId, amount: 100 },
     });
   };
 
@@ -149,7 +138,7 @@ const VideoCard = ({ video }) => {
     if (codeRef.current) Prism.highlightElement(codeRef.current);
   }, [selectedTab, adCompleted]);
 
-  // Copy Button logic — depends on source access, not video access
+  // ✅ Updated Copy Button — includes CodeVerse comments for free code
   const CopyButton = ({ codeObj, code }) => {
     const [copied, setCopied] = useState(false);
     const isSourceFree = codeObj.access_type === "Free";
@@ -158,6 +147,24 @@ const VideoCard = ({ video }) => {
     const disabled =
       (!isSourceFree && !hasBoughtSource) ||
       (isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab]);
+
+    // Pre & post comment text
+    const commentText =
+      "Free Code By CodeVerse💻 :-- 'https://blog-code-verse.vercel.app'\nVisit official site for more free components and designs with complete code";
+
+    // Function to wrap code with proper comment syntax
+    const attachComment = (code, fileType) => {
+      switch (fileType) {
+        case "html":
+          return `<!-- ${commentText} -->\n\n${code}\n\n<!-- ${commentText} -->`;
+        case "css":
+          return `/* ${commentText} */\n\n${code}\n\n/* ${commentText} */`;
+        case "js":
+          return `// ${commentText.replace(/\n/g, "\n// ")}\n\n${code}\n\n// ${commentText.replace(/\n/g, "\n// ")}`;
+        default:
+          return code;
+      }
+    };
 
     const handleCopy = () => {
       if (!isSourceFree && !hasBoughtSource) {
@@ -168,21 +175,29 @@ const VideoCard = ({ video }) => {
         alert("⚠️ You can copy only after the ad finishes!");
         return;
       }
-      navigator.clipboard.writeText(code);
+
+      // ✅ Add CodeVerse comments only for free source
+      const finalCode = isSourceFree ? attachComment(code, selectedTab) : code;
+
+      navigator.clipboard.writeText(finalCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
 
     return (
-      <button className="copy-btn" onClick={handleCopy} disabled={disabled} style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer" }} >
+      <button
+        className="copy-btn"
+        onClick={handleCopy}
+        disabled={disabled}
+        style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer" }}
+      >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
     );
-  }   
+  };
 
   return (
     <div className="card frontend-card video-card mb-5 p-1 shadow-lg rounded-4">
-      {/* === Video Section (no change) === */}
       <div className="video-container">
         <div className="video-wrapper">
           <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
@@ -192,7 +207,6 @@ const VideoCard = ({ video }) => {
           </div>
         </div>
 
-        {/* === Source Code Section (logic fixed here) === */}
         <div className="code-info-wrapper">
           {video.source_codes?.map((codeObj, idx) => {
             const isSourceFree = codeObj.access_type === "Free";
@@ -214,7 +228,6 @@ const VideoCard = ({ video }) => {
                     ))}
                   </div>
 
-                  {/* Premium badge (only for premium source codes) */}
                   {codeObj.access_type === "Premium" && (
                     <div className="premium-code-badge">
                       <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i>
@@ -225,7 +238,6 @@ const VideoCard = ({ video }) => {
                 </div>
 
                 <div className="card-body code-box">
-                  {/* Show code only if free or bought */}
                   {canViewCode ? (
                     isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab] ? (
                       <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
@@ -255,7 +267,6 @@ const VideoCard = ({ video }) => {
         </div>
       </div>
 
-      {/* Video description */}
       {video.info?.description && (
         <p className="video-description text-content">
           <b>NOTE:</b> {video.info.description}
@@ -264,6 +275,5 @@ const VideoCard = ({ video }) => {
     </div>
   );
 };
-
 
 export default Frontend_Tutorial_Solution;

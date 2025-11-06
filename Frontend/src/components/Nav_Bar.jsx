@@ -23,7 +23,7 @@ function Nav_Bar() {
           <a href="https://www.sujan140.com.np/contact" className="nav-link">Contact</a>
           <Link to="/Privacy_Policy" className="nav-link">Privacy Policy</Link>
           <a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" className="nav-link">Developer</a>
-          <a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light btn-sm ms-3">Admin 💻</a>
+          {/* <a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light btn-sm ms-3">Admin 💻</a> */}
         </div>
       </nav>
 
@@ -35,7 +35,7 @@ function Nav_Bar() {
           <li><a href="https://www.sujan140.com.np/contact" onClick={toggleSidebar}>Contact</a></li>
           <li><Link to="/Privacy_Policy" onClick={toggleSidebar}>Privacy Policy</Link></li>
           <li><a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
-          <li><a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Admin 💻</a></li>
+          {/* <li><a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Admin 💻</a></li> */}
         </ul>
       </div>
 

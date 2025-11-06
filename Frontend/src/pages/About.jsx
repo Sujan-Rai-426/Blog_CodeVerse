@@ -10,11 +10,34 @@ function About() {
         <div className="about-page">
             {/* Hero Section */}
             <section className="about-hero">
-                <div className="hero-content">
-                    <h1> <span> <b>Code</b><sup><u><small>Verse</small>💻</u></sup> </span>  </h1>
-                    <p>  Your ultimate destination for learning and building modern web applications. </p>
+                <div className="hero-content" style={{ textAlign: "justify" }}>
+                    <h1 className="text-center">
+                        <span>
+                            <b>Code</b>
+                            <sup>
+                                <u><small>Verse</small>💻</u>
+                            </sup>
+                        </span>
+                    </h1>
+                    <p>
+                        Welcome to <strong>CodeVerse</strong> — your ultimate destination for learning, exploring, 
+                        and building modern web applications. Whether you’re a beginner taking your first steps into 
+                        coding or an experienced developer looking to polish your skills, CodeVerse is here to guide 
+                        you every step of the way.
+                    </p>
+                    <p>
+                        Our mission is to simplify coding education by blending practical projects with real-world 
+                        examples. From interactive tutorials and problem-solving sessions to full-stack project 
+                        walkthroughs, we aim to make coding not just a skill but a creative experience.
+                    </p>
+                    <p>
+                        We believe that learning to code should be <strong>accessible, engaging, and rewarding</strong>. 
+                        That’s why at CodeVerse, we focus on clear explanations, hands-on practice, and community-driven 
+                        growth — helping you turn your ideas into powerful digital solutions.
+                    </p>
                 </div>
             </section>
+
 
             {/* Mission & Vision */}
             <section className="mission-vision">
