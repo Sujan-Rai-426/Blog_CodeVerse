@@ -1,0 +1,133 @@
+.buymecoffee-container {
+  position: fixed;
+  top: 90px !important; /* below navbar */
+  left: 20px !important;
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.coffee-btn {
+  background: linear-gradient(145deg, #2c221bf7 0%, #6e5629 50%, #66593d 100%);
+  color: #ffffff;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  border: 1px solid white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  transition: all 0.3s ease;
+  overflow: hidden;
+}
+
+/* Hover effect */
+.coffee-btn:hover {
+  background: linear-gradient(145deg, #674c39f7 0%, #8c6d33 50%, #b2965b 100%);
+  color: #000;
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(198, 162, 93, 0.5);
+  animation: pulse 1.5s infinite;
+}
+
+/* When expanded (active) — slightly larger & constant pulse */
+.coffee-btn.expanded {
+  transform: scale(1.15);
+  color: wheat;
+  background: linear-gradient(145deg, #a47351f7 0%, #b68e45 50%, #e7b54a 100%);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(198, 162, 93, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(198, 162, 93, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(198, 162, 93, 0);
+  }
+}
+
+/* Shaking effect of coffee button */
+@keyframes shake {
+  0% { transform: translateX(0); }
+  20% { transform: translateX(-4.5px); }
+  40% { transform: translateX(4.5px); }
+  60% { transform: translateX(-4.5px); }
+  80% { transform: translateX(4.5px); }
+  100% { transform: translateX(0); }
+}
+
+.coffee-btn.shake {
+  animation: shake 0.45s;
+}
+
+.coffee-options {
+  margin-top: 10px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 220px;
+}
+
+.coffee-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.coffee-option input {
+  flex: 1;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+
+.coffee-option button {
+  background: #ff813f;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.coffee-option button:hover {
+  background: #e67232;
+}
+
+.option-icon {
+  color: #ff813f;
+}
+
+@media (max-width: 768px) {
+  .buymecoffee-container {
+    top: 80px !important;
+    left: 18px !important;
+  }
+
+  .coffee-options {
+    min-width: 180px;
+    padding: 8px;
+  }
+
+  .coffee-option input {
+    padding: 5px 6px;
+  }
+
+  .coffee-option button {
+    padding: 5px 8px;
+  }
+}

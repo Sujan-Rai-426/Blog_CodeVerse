@@ -34,6 +34,7 @@ import Payment_Page from "./payment/payment_status/Payment_Page.jsx";
 
 // For Unavailable and in Development phase
 import Unavailable_Page from './components/Unavailable_Page.jsx';
+import Floating_Donate_Me from './payment/donation/Floating_Donate_Me.jsx';
 
 
 
@@ -50,6 +51,7 @@ function App() {
                 {/* Sticky Floating share and Go back button visible on all pages */}
                 <Floating_Share_Btn />
                 <Floating_Go_Back_Btn />
+                <Floating_Donate_Me />
 
                 {/* Auto Scroll top component */}
                 <Scroll_To_Top />
