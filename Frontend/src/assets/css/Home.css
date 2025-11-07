@@ -70,7 +70,7 @@
 }
 .social-link.globe:hover {
     color: #fff;
-    background: #c3c32c;
+    background: red;
 }
 .social-link.facebook:hover {
     background: #1877f2;
@@ -100,7 +100,7 @@
 .share-btn:hover {
     background: #C6A25D;
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0, 187, 72, 0.3);
+    box-shadow: 0 5px 15px rgba(215, 204, 56, 0.3);
 }
 
 
