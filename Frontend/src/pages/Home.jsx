@@ -68,7 +68,7 @@ function Home() {
                         <a href="https://github.com/Sujan-Rai-426" target="_blank" rel="noopener noreferrer" className="social-link github" >
                             <i className=" fab fa-github"></i>
                         </a>
-                        <a href="https://www.linkedin.com/in/sujan-rai-18a07b2a6/" target="_blank" rel="noopener noreferrer" className="social-link linkedin" >
+                        <a href="https://www.linkedin.com/company/109567566/admin/dashboard/" target="_blank" rel="noopener noreferrer" className="social-link linkedin" >
                             <i className=" fab fa-linkedin-in"></i>
                         </a>
                     </div>
