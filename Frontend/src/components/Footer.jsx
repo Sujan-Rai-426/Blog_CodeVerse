@@ -12,8 +12,9 @@ const Footer = () => {
 
                     
                     <Link to="/About">About</Link>
-                    <Link to="https://www.sujan140.com.np/contact">Contact</Link>
+                    <a href="https://www.sujan140.com.np/contact">Contact</a>
                     <Link to="/Privacy_Policy">Privacy Policy</Link>
+                    <a href="https://dev.to/sujanrai426">Dev.to</a>
                 </div>
             </div>
         </footer>
