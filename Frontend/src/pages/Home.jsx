@@ -103,9 +103,9 @@ function Home() {
             </section>
 
             {/* Carousel Section */}
-            <section className="carousel-section">
+            {/* <section className="carousel-section">
                 {loading ? <Skeleton height={220} borderRadius={16} baseColor="#2b2b2b" highlightColor="#3b3b3b" /> : <Carousel />}
-            </section>
+            </section> */}
 
             {/* Frontend Section */}
             <section className="tutorial-section">
@@ -157,7 +157,7 @@ function Home() {
 
             {/* Recent Blogs Section */}
             <section className="recent-section">
-                <p className="section-title"> <small> 🕒 <sup><u>Recent Designs</u></sup> </small> </p>
+                <p className="section-title"> <small> 🕒 <sup><u>Recently uploaded Designs</u></sup> </small> </p>
                 <div className="recent-wrapper">
                     <Recent_Contents />
                 </div>
