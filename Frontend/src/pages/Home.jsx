@@ -11,9 +11,15 @@ function Home() {
     const [frontendLangs, setFrontendLangs] = useState([]);
     const [backendLangs, setBackendLangs] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [showLoadingMessage, setShowLoadingMessage] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
+        // Timer for showing loading message if it takes more than 3s
+        const timer = setTimeout(() => {
+            if (loading) setShowLoadingMessage(true);
+        }, 3000);
+
         const fetchCategories = async () => {
             try {
                 const res = await api.get("/api/categories/");
@@ -37,13 +43,25 @@ function Home() {
                 console.error("❌ Error fetching categories:", err);
             } finally {
                 setLoading(false);
+                clearTimeout(timer);
             }
         };
         fetchCategories();
-    }, []);
+
+        return () => clearTimeout(timer);
+    }, [loading]);
 
     return (
         <div className="home-container">
+            {/* Loading Message Overlay */}
+            {showLoadingMessage && loading && (
+                <div className="loading-overlay">
+                    <div className="loading-message">
+                        <h2>Good things take time...</h2>
+                        <p>Almost there! Hold tight! Loading the magic ✨</p>
+                    </div>
+                </div>
+            )}
 
             {/* Hero Section */}
             <section className="hero">
@@ -73,7 +91,7 @@ function Home() {
                         </a>
                     </div>
 
-                    <button className="share-btn" 
+                    <button className="share-btn"
                         onClick={() => {
                             const loggedIn = window.localStorage.getItem("loggedIn") === "true";
                             navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
@@ -97,7 +115,7 @@ function Home() {
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
-                                <Skeleton width={60 } baseColor="#2b2b2b" highlightColor="#3b3b3b" />
+                                <Skeleton width={60} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
                             </div>
                         ))
                     ) : (
@@ -121,7 +139,7 @@ function Home() {
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
-                                <Skeleton width={60 } baseColor="#2b2b2b" highlightColor="#3b3b3b" />
+                                <Skeleton width={60} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
                             </div>
                         ))
                     ) : (
