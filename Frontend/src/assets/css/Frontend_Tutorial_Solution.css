@@ -272,7 +272,7 @@
   top: 50vh;
   left: 12px;
   z-index: 20; /* ensure it's above video but below overlay tags */
-  background: rgba(0, 0, 0, 0.147);
+  background: linear-gradient(145deg, #0c0c0c 0%, #181818 50% 50%, #272525 100%);;
   color: #ffc107; /* gold tone for visibility */
   border: .5px solid #ffc107;
   border-radius: 10px;
