@@ -1,9 +1,9 @@
 // ============================================================
 // === Frontend_Tutorial_Solution.jsx
 // ============================================================
-// Shows tutorial videos with code viewer (HTML, CSS, JS tabs)
-// Each video can be free (after ad) or premium (after payment)
-// Includes copy button with CodeVerse credit message
+// Full tutorial page with skeleton loader, code viewer, copy button, premium/free logic
+// Desktop: smooth scroll to code when View Code → clicked
+// Mobile: unchanged
 // ============================================================
 
 import React, { useEffect, useRef, useState } from "react";
@@ -23,20 +23,30 @@ const Frontend_Tutorial_Solution = () => {
   const topicId = parseInt(topicID);
   const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showMessage, setShowMessage] = useState(false);
   const [showCode, setShowCode] = useState({});
   const [currentVideo, setCurrentVideo] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
   const mainVideoRef = useRef(null);
+  const codeRefs = useRef({}); // ← ref for desktop code scroll
   const navigate = useNavigate();
 
-  // === Detect screen resize for mobile/desktop layout ===
+  // === Detect screen resize ===
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 992);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // === Fetch topic & videos ===
+  // === Show message after 3 seconds if still loading ===
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (loading) setShowMessage(true);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  // === Fetch topic ===
   useEffect(() => {
     if (!topicID || isNaN(topicId)) {
       console.error("❌ Invalid topic ID:", topicID);
@@ -57,23 +67,46 @@ const Frontend_Tutorial_Solution = () => {
     fetchTopic();
   }, [topicID]);
 
-  // === Highlight code after video change ===
+  // === Highlight code ===
   useEffect(() => {
     Prism.highlightAll();
   }, [currentVideo, isMobile]);
 
-  // === Loading skeleton while fetching data ===
+  // ============================================================
+  // === Loading Skeleton with Delayed Message ===
+  // ============================================================
   if (loading) {
     return (
-      <div className="container py-4">
+      <div className="container py-4 position-relative text-center">
         <h4 className="text-center mb-4">
           <Skeleton width={250} height={25} />
         </h4>
+
         {[...Array(2)].map((_, i) => (
-          <div key={i} className="card video-card mb-5 p-2 shadow-lg rounded-4">
-            <Skeleton height={250} borderRadius={20} />
+          <div
+            key={i}
+            className="card video-card mb-5 p-2 shadow-lg rounded-4 skeleton-card"
+          >
+            <Skeleton height={isMobile ? 180 : 250} borderRadius={20} />
+            <div className="card-body mt-3">
+              <Skeleton width="70%" height={20} className="mb-2" />
+              <Skeleton width="90%" height={14} count={2} />
+              <Skeleton
+                width={110}
+                height={32}
+                borderRadius={20}
+                className="mt-3"
+              />
+            </div>
           </div>
         ))}
+
+        {showMessage && (
+          <div className="loading-message fade-in">
+            <h2>Good things take time</h2>
+            <p>Almost there! Hold tight! Loading the magic ✨...</p>
+          </div>
+        )}
       </div>
     );
   }
@@ -91,13 +124,11 @@ const Frontend_Tutorial_Solution = () => {
         <div className="video-main-wrapper">
           {topic.videos.map((video) => (
             <div className="video-wrapper mb-4 position-relative" key={video.id}>
-              {/* Premium tag */}
               {(video.access_type === "Premium" ||
                 video.source_codes.some((code) => code.access_type === "Premium")) && (
                 <div className="video-price-tag">$</div>
               )}
 
-              {/* Video Player */}
               <div className="video-container-inner">
                 <video
                   key={video.id}
@@ -109,12 +140,10 @@ const Frontend_Tutorial_Solution = () => {
                 />
               </div>
 
-              {/* Description */}
               <div className="video-description text-white">
                 <p className="mb-0 mt-2 mx-2">{video.info.description}</p>
               </div>
 
-              {/* View Code Button */}
               <div className="d-flex justify-content-center m-0">
                 <button
                   className="view-hide-code-btn"
@@ -122,11 +151,10 @@ const Frontend_Tutorial_Solution = () => {
                     setShowCode((prev) => ({ ...prev, [video.id]: !prev[video.id] }))
                   }
                 >
-                  {showCode[video.id] ? "Hide Code" : "View Code"}
+                  {showCode[video.id] ? "<- Hide Code" : "View Code →"}
                 </button>
               </div>
 
-              {/* Code Viewer */}
               {showCode[video.id] && (
                 <div className="code-info-wrapper mt-3">
                   {video.source_codes.map((codeObj, idx) => (
@@ -148,7 +176,6 @@ const Frontend_Tutorial_Solution = () => {
     <div className="container py-4">
       <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
       <div className="video-main-wrapper">
-        {/* === Main Selected Video === */}
         <div className="video-wrapper" ref={mainVideoRef}>
           {(currentVideo.access_type === "Premium" ||
             currentVideo.source_codes.some((code) => code.access_type === "Premium")) && (
@@ -166,29 +193,38 @@ const Frontend_Tutorial_Solution = () => {
             />
           </div>
 
-          {/* Description */}
           <div className="video-description text-white">
             <p className="mb-0 mt-2 mx-2 py-2">{currentVideo?.info.description}</p>
           </div>
 
-          {/* View Code Button */}
           <div className="d-flex justify-content-center m-0">
             <button
               className="view-hide-code-btn"
-              onClick={() =>
-                setShowCode((prev) => ({
-                  ...prev,
-                  [currentVideo.id]: !prev[currentVideo.id],
-                }))
-              }
+              onClick={() => {
+                setShowCode((prev) => {
+                  const newState = { ...prev, [currentVideo.id]: !prev[currentVideo.id] };
+                  // Scroll smoothly to code when opening
+                  if (!prev[currentVideo.id]) {
+                    setTimeout(() => {
+                      codeRefs.current[currentVideo.id]?.scrollIntoView({
+                        behavior: "smooth",
+                        block: "start",
+                      });
+                    }, 100);
+                  }
+                  return newState;
+                });
+              }}
             >
-              {showCode[currentVideo.id] ? "Hide Code" : "View Code"}
+              {showCode[currentVideo.id] ? "<- Hide Code" : "View Code →"}
             </button>
           </div>
 
-          {/* Code Viewer */}
           {showCode[currentVideo.id] && (
-            <div className="code-info-wrapper mt-2">
+            <div
+              className="code-info-wrapper mt-2"
+              ref={(el) => (codeRefs.current[currentVideo.id] = el)}
+            >
               {currentVideo.source_codes.map((codeObj, idx) => (
                 <VideoCodeBox key={idx} codeObj={codeObj} />
               ))}
@@ -196,7 +232,6 @@ const Frontend_Tutorial_Solution = () => {
           )}
         </div>
 
-        {/* === Related Videos Sidebar === */}
         <div className="related-videos">
           {topic.videos
             .filter((v) => v.id !== currentVideo.id)
@@ -207,22 +242,18 @@ const Frontend_Tutorial_Solution = () => {
                 onClick={() => {
                   setCurrentVideo(video);
                   setShowCode({});
-                  // ✅ FIX: Scroll to top instead of bottom
                   window.scrollTo({ top: 0, behavior: "smooth" });
                 }}
               >
-                {/* Premium tag */}
                 {(video.access_type === "Premium" ||
                   video.source_codes.some((code) => code.access_type === "Premium")) && (
                   <div className="video-price-tag">$</div>
                 )}
 
-                {/* Thumbnail */}
                 <div className="video-card-thumb">
                   <video src={video.video_url} muted playsInline />
                 </div>
 
-                {/* Title */}
                 <div className="video-card-info">
                   <h5>{video.title}</h5>
                 </div>
@@ -251,11 +282,9 @@ const VideoCodeBox = ({ codeObj }) => {
     if (codeRef.current) Prism.highlightElement(codeRef.current);
   }, [selectedTab, adCompleted]);
 
-  // === Handle ad completion ===
   const handleAdComplete = (tab) =>
     setAdCompleted((prev) => ({ ...prev, [tab]: true }));
 
-  // === Return code for selected tab ===
   const getCodeByTab = (tab) => {
     switch (tab) {
       case "html":
@@ -275,16 +304,12 @@ const VideoCodeBox = ({ codeObj }) => {
   const canViewCode =
     (isFree && adCompleted[selectedTab]) || (isPremium && hasBought);
 
-  // ============================================================
-  // === Copy Button (with CodeVerse message) ===
-  // ============================================================
   const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
 
     const handleCopy = () => {
       if (!canViewCode) return;
 
-      // Add CodeVerse promo comment
       const commentStart =
         selectedTab === "html" ? "<!-- " : selectedTab === "css" ? "/* " : "// ";
       const commentEnd =
@@ -308,12 +333,8 @@ const VideoCodeBox = ({ codeObj }) => {
     );
   };
 
-  // ============================================================
-  // === Code Box Layout ===
-  // ============================================================
   return (
     <div className="card shadow-lg mb-1 d-flex flex-column h-100 position-relative">
-      {/* === Tabs and Copy === */}
       <div className="card-header d-flex justify-content-between align-items-center position-relative">
         <div className="btn-group">
           {["html", "css", "js"].map((tab) => (
@@ -334,10 +355,8 @@ const VideoCodeBox = ({ codeObj }) => {
         </div>
       </div>
 
-      {/* === Code Body === */}
       <div className="card-body position-relative">
         {isPremium && !hasBought ? (
-          // === Premium Code Locked ===
           <div className="code-wrapper">
             <pre className="scrollable-code">
               <code ref={codeRef} className={`language-${selectedTab}`}>
@@ -361,13 +380,11 @@ const VideoCodeBox = ({ codeObj }) => {
             </div>
           </div>
         ) : isFree && !adCompleted[selectedTab] ? (
-          // === Free Code (Show Ad First) ===
           <Ads_Container
             onComplete={() => handleAdComplete(selectedTab)}
             boxType={selectedTab}
           />
         ) : (
-          // === Show Code ===
           <div className="code-wrapper">
             <pre>
               <code ref={codeRef} className={`language-${selectedTab}`}>
