@@ -57,8 +57,8 @@ function Home() {
             {showLoadingMessage && loading && (
                 <div className="loading-overlay">
                     <div className="loading-message">
-                        <h2>Good things take time...</h2>
-                        <p>Almost there! Hold tight! Loading the magic ✨</p>
+                        <h2>Good things take time</h2>
+                        <p>Almost there! Hold tight! Loading the magic ✨...</p>
                     </div>
                 </div>
             )}
