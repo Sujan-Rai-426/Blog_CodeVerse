@@ -1,5 +1,6 @@
-/* ========================= */
-/* === Container === */
+/* ============================================================ */
+/* ====================== GLOBAL CONTAINER ===================== */
+/* ============================================================ */
 .container {
   max-width: 1300px;
   margin: 0 auto;
@@ -8,8 +9,11 @@
   box-sizing: border-box;
 }
 
-/* ========================= */
-/* === Video + Related Section === */
+/* ============================================================ */
+/* ===================== VIDEO PAGE LAYOUT ===================== */
+/* ============================================================ */
+
+/* === Main Wrapper: Video + Related Section === */
 .video-main-wrapper {
   display: flex;
   flex-direction: column;
@@ -23,27 +27,36 @@
   }
 }
 
-/* ========================= */
-/* === Main Video Player === */
+/* ============================================================ */
+/* ==================== MAIN VIDEO PLAYER ====================== */
+/* ============================================================ */
 .video-wrapper {
   flex: 2;
+  position: relative;
   border-radius: 20px;
   overflow: hidden;
-  position: relative;
-  background-color: #101010;
-  box-shadow: 0px 8px 20px rgba(0,0,0,0.3);
+  background: linear-gradient(145deg, #0c0c0c 0%, #181818 50%, #272525 100%);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.3);
 }
-
+.video-container-inner{
+  height: 55vh;
+}
 .video-container-inner video {
   width: 100%;
   height: 100%;
-  object-fit: cover;
   display: block;
+  object-fit: cover;
   border-radius: 20px;
 }
+@media (max-width: 991px) {
+  .video-container-inner{
+    height: auto;
+  }
+}
 
-/* ========================= */
-/* === Related Videos Scroll === */
+/* ============================================================ */
+/* ==================== RELATED VIDEOS LIST ==================== */
+/* ============================================================ */
 .related-videos {
   flex: 1;
   max-height: 80vh;
@@ -54,35 +67,33 @@
   padding-right: 5px;
 }
 
-.video-card-info p {
-  display: none;
-}
-
+/* Scrollbar Styling */
 .related-videos::-webkit-scrollbar {
   width: 8px;
 }
 .related-videos::-webkit-scrollbar-thumb {
-  background: rgba(148,163,184,0.7);
+  background: rgba(148, 163, 184, 0.7);
   border-radius: 4px;
 }
 .related-videos::-webkit-scrollbar-track {
   background: #131212;
 }
 
-/* ========================= */
-/* === Video Cards (Related) === */
+/* ============================================================ */
+/* =================== RELATED VIDEO CARDS ===================== */
+/* ============================================================ */
 .video-card {
   display: flex;
   flex-direction: column;
   background: linear-gradient(145deg, #101010 0%, #252525 50%, #5c5c5c 100%);
   border-radius: 12px;
   overflow: hidden;
-  transition: transform 0.3s, box-shadow 0.3s;
   cursor: pointer;
+  transition: transform 0.3s, box-shadow 0.3s;
 }
 .video-card:hover {
   transform: scale(1.02);
-  box-shadow: 0px 12px 30px rgba(0,0,0,0.2);
+  box-shadow: 0px 12px 30px rgba(0, 0, 0, 0.2);
 }
 
 .video-card-thumb {
@@ -92,7 +103,6 @@
   border-radius: 8px;
   position: relative;
 }
-
 .video-card-thumb video {
   width: 100%;
   height: 100%;
@@ -105,7 +115,6 @@
   flex-direction: column;
   justify-content: center;
 }
-
 .video-card-info h5 {
   color: #fff;
   font-size: 0.95rem;
@@ -115,21 +124,65 @@
   color: #ccc;
   font-size: 0.8rem;
   line-height: 1.2;
+  display: none;
 }
 
-/* ========================= */
-/* === Code Section (View Code) === */
+/* ============================================================ */
+/* =================== CODE VIEWER SECTIONS ==================== */
+/* ============================================================ */
+
+/* === Code Wrapper (Outer Container) === */
+.code-wrapper {
+  max-height: 320px;
+  height: 320px;
+  overflow: hidden;
+  font-size: 0.95rem;
+  border-radius: 0 0 10px 10px;
+  background-color: #131212;
+  position: relative;
+}
+
+/* === Scrollable Code Area === */
+.code-wrapper pre {
+  margin: 0;
+  padding: 1rem;
+  font-family: "Fira Code", monospace;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  height: 100%;
+  overflow: auto;
+  white-space: pre;
+  box-sizing: border-box;
+}
+
+/* === Blurred Premium Code (Locked) === */
+.scrollable-code {
+  max-height: 100%;
+  overflow: auto;
+  padding: 10px;
+  filter: blur(6px);
+  pointer-events: none;
+  box-sizing: border-box;
+}
+@media (max-width: 991px) {
+  .code-wrapper {
+  max-height: 220px;}
+}
+
+/* ============================================================ */
+/* ====================== CODE BOX AREA ======================== */
+/* ============================================================ */
 .code-box {
-  max-height: 220px;   /* fixed height */
-  height: 220px;       /* ensure fixed height */
-  overflow: hidden;    /* hide anything outside */
+  max-height: 220px;
+  height: 220px;
+  overflow: hidden;
   border-radius: 0 0 10px 10px;
   background-color: #131212;
   padding: 1rem;
   font-family: "Fira Code", monospace;
   color: #d1d1c9;
   line-height: 1.5;
-  box-shadow: inset 0 0 10px rgba(0,0,0,0.2);
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.2);
   position: relative;
 }
 
@@ -138,43 +191,47 @@
   white-space: pre;
   font-size: 0.95rem;
   max-height: 100%;
-  height: 100%;            /* take full height of container */
-  overflow: auto;          /* scroll vertically & horizontally */
-  padding-right: 10px;     /* avoid scrollbar overlap */
+  height: 100%;
+  overflow: auto;
+  padding-right: 10px;
   box-sizing: content-box;
 }
 
-
-/* Custom scrollbar for code box */
+/* === Code Scrollbar === */
 .code-box::-webkit-scrollbar {
   width: 10px;
 }
 .code-box::-webkit-scrollbar-thumb {
-  background: rgba(100,116,139,0.5);
+  background: rgba(100, 116, 139, 0.5);
   border-radius: 10px;
 }
 .code-box::-webkit-scrollbar-thumb:hover {
-  background: rgba(148,163,184,0.7);
+  background: rgba(148, 163, 184, 0.7);
 }
 .code-box::-webkit-scrollbar-track {
   background: #131212;
 }
 
-/* ========================= */
-/* === Tabs and Copy Button === */
+/* ============================================================ */
+/* ==================== HEADER / TABS AREA ==================== */
+/* ============================================================ */
 .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   padding: 0.5rem 1rem;
   background: #2c3e50;
   border-radius: 15px 15px 0 0;
-  flex-wrap: wrap;
+}
+
+.btn-group {
+  margin: 0 !important;
 }
 
 .btn-tab {
   padding: 5px 14px;
-  margin: 0px 5px;
+  margin: 0 5px;
   border-radius: 6px;
   background: #555;
   color: #fff;
@@ -184,9 +241,6 @@
   white-space: nowrap;
   transition: 0.3s;
 }
-.btn-group{
-  margin: 0px !important;
-}
 .btn-tab:hover {
   background: #4a90e2;
 }
@@ -194,52 +248,101 @@
   background: #4a90e2;
   color: #fff;
 }
+
 .copy-price-wrapper {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
 
-/* ========================= */
-/* === Responsive Layout === */
-@media (max-width: 991px) {
-  .video-main-wrapper {
-    flex-direction: column;
-  }
-  .video-wrapper {
-    padding-bottom: 5px;
-  }
-  .related-videos {
-    max-height: none;
-    flex-direction: row;
-    overflow-x: auto;
-  }
-  .related-videos::-webkit-scrollbar {
-    height: 6px;
-  }
-  .video-description{
-    font-size: .7rem;
-  }
-  .btn-group {
-    font-size: .7rem;
-    display: flex;
-    flex-direction: row !important;
-  }
-  .code-box{
-    max-height: 250px;
-    font-size: .8rem;
-    overflow: hidden;
-  }
-}
+/* ============================================================ */
+/* ==================== PREMIUM / BUY SECTION ================= */
+/* ============================================================ */
 
-/* Buy button container (premium only) */
+/* === Buy and View code Button Container === */
 .buy-btn-container {
   display: flex;
   justify-content: center;
   margin-bottom: 8px;
 }
+.view-hide-code-btn {
+  position: absolute;
+  top: 48vh;
+  left: 12px;
+  z-index: 20; /* ensure it's above video but below overlay tags */
+  background: rgba(0, 0, 0, 0.284);
+  color: #ffc107; /* gold tone for visibility */
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-weight: 500;
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
 
-/* Price tag for premium only */
+.view-hide-code-btn:hover {
+  background: rgba(0, 0, 0, 0.297);
+  color: #ffc107;
+  transform: scale(1.05);
+}
+
+/* === Smaller screens (mobile) === */
+@media (max-width: 991px) {
+  .view-hide-code-btn {
+    top: 8px;
+    left: 8px;
+    padding: 5px 10px;
+    font-size: 0.9rem;
+  }
+}
+
+
+/* === Buy Button Overlay (covers blurred code) === */
+.buy-btn-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 10;
+  width: 100%;
+  text-align: center;
+  pointer-events: auto;
+}
+
+/* === Buy Premium Button === */
+.buy-premium-btn {
+  background: #ff6b6b;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  font-size: 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.buy-premium-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+}
+
+/* === Price Tag on Video === */
+.video-price-tag {
+  position: absolute;
+  top: 10px;
+  left: 12px;
+  background-color: #ffcc00;
+  color: #000;
+  font-weight: bold;
+  padding: 4px 10px;
+  border-radius: 10px;
+  font-size: 0.9rem;
+  z-index: 10;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* === Price Tag on Code Box (optional) === */
 .price-tag {
   position: absolute;
   top: 10px;
@@ -253,89 +356,57 @@
   z-index: 10;
 }
 
-/* Disable copy button styling */
+/* === Disabled Copy Button === */
 .disabled-copy-btn {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-/* Premium video price tag */
-.video-price-tag {
-  position: absolute;
-  top: 10px;
-  left: 12px;  /* Top-left corner */
-  background-color: #ffcc00;
-  color: #000;
-  font-weight: bold;
-  padding: 4px 10px;
-  border-radius: 10px;
-  font-size: 0.9rem;
-  z-index: 10;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+/* ============================================================ */
+/* ===================== RESPONSIVE DESIGN ===================== */
+/* ============================================================ */
+@media (max-width: 768px) {
+  .video-main-wrapper {
+    flex-direction: column;
+  }
+
+  .video-wrapper {
+    padding-bottom: 5px;
+  }
+
+  .related-videos {
+    max-height: none;
+    flex-direction: row;
+    overflow-x: auto;
+  }
+
+  .related-videos::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .video-description {
+    font-size: 0.7rem;
+  }
+
+  .btn-group {
+    font-size: 0.7rem;
+    display: flex;
+    flex-direction: row !important;
+  }
+
+  .code-wrapper {
+    font-size: 0.7rem;
+  }
+
+  .code-box {
+    max-height: 250px;
+    font-size: 0.8rem;
+    overflow: hidden;
+  }
 }
 
-/* Blurred premium code inside code-box */
-
-/* Buy button overlay for premium code */
-.buy-btn-overlay {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 10;
-  width: 100%;
-  text-align: center;
-  pointer-events: auto;
-}
-
-.buy-premium-btn {
-  background: #ff6b6b;
-  color: white;
-  border: none;
-  padding: 12px 25px;
-  font-size: 1rem;
-  border-radius: 8px;
-  cursor: pointer;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-  transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.buy-premium-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(0,0,0,0.35);
-}
-/* ========================= */
-/* === Code Section (View Code) === */
-
-/* Outer wrapper to fix height and allow scrolling inside */
-.code-wrapper {
-  max-height: 220px;          /* fixed max height */
-  height: 220px;              /* fixed height */
-  overflow: hidden;           /* hide overflow outside */
-  border-radius: 0 0 10px 10px;
-  background-color: #131212;
-  position: relative;
-}
-
-/* Scrollable pre inside the fixed wrapper */
-.code-wrapper pre {
-  margin: 0;
-  padding: 1rem;
-  font-family: "Fira Code", monospace;
-  font-size: 0.95rem;
-  line-height: 1.5;
-  height: 100%;              /* take full wrapper height */
-  overflow: auto;            /* scroll vertically & horizontally */
-  white-space: pre;
-  box-sizing: border-box;
-}
-
-/* Blurred premium code inside scrollable wrapper */
-.scrollable-code {
-  max-height: 100%;
-  overflow: auto;
-  padding: 10px;
-  filter: blur(6px);
-  pointer-events: none;
-  box-sizing: border-box;
-}
+/* ============================================================ */
+/* === End of File — Code by CodeVerse                        === */
+/* === Visit official site for more designs & tutorials:      === */
+/* === --> https://blog-code-verse.vercel.app                 === */
+/* ============================================================ */
