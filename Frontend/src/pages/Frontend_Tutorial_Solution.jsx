@@ -10,16 +10,22 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import Ads_Container from "../context/Ads_Container";
 
-/**
- * Main component for displaying a tutorial topic
- * Fetches topic data using topicID from URL
- * Shows videos with source code and handles premium access
- */
 const Frontend_Tutorial_Solution = () => {
   const { topicID } = useParams();
   const topicId = parseInt(topicID);
   const [topic, setTopic] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showCode, setShowCode] = useState({});
+  const [currentVideo, setCurrentVideo] = useState(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
+  const mainVideoRef = useRef(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 992);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (!topicID || isNaN(topicId)) {
@@ -27,11 +33,11 @@ const Frontend_Tutorial_Solution = () => {
       setLoading(false);
       return;
     }
-
     const fetchTopic = async () => {
       try {
         const res = await api.get(`/api/topics/${topicId}/`);
         setTopic(res.data);
+        setCurrentVideo(res.data.videos[0]);
       } catch (error) {
         console.error("❌ Error fetching topic:", error);
       } finally {
@@ -43,39 +49,17 @@ const Frontend_Tutorial_Solution = () => {
 
   useEffect(() => {
     Prism.highlightAll();
-  }, [topic]);
+  }, [currentVideo, isMobile]);
 
   if (loading) {
     return (
       <div className="container py-4">
         <h4 className="text-center mb-4">
-          <Skeleton width={250} height={25} baseColor="#2b2b2b" highlightColor="#444" />
+          <Skeleton width={250} height={25} />
         </h4>
         {[...Array(2)].map((_, i) => (
           <div key={i} className="card video-card mb-5 p-2 shadow-lg rounded-4">
-            <div className="video-container">
-              <div className="video-wrapper">
-                <Skeleton height={250} borderRadius={20} baseColor="#2b2b2b" highlightColor="#444" />
-              </div>
-              <div className="code-info-wrapper">
-                <div className="card shadow-lg mb-1 d-flex flex-column h-100">
-                  <div className="card-header d-flex justify-content-between align-items-center">
-                    <div className="d-flex gap-2">
-                      <Skeleton width={50} height={20} baseColor="#3a3a3a" highlightColor="#555" />
-                      <Skeleton width={50} height={20} baseColor="#3a3a3a" highlightColor="#555" />
-                      <Skeleton width={50} height={20} baseColor="#3a3a3a" highlightColor="#555" />
-                    </div>
-                    <Skeleton width={70} height={25} baseColor="#3a3a3a" highlightColor="#555" />
-                  </div>
-                  <div className="card-body code-box">
-                    <Skeleton count={6} height={18} baseColor="#2b2b2b" highlightColor="#444" style={{ marginBottom: "5px" }} />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="video-description mt-2">
-              <Skeleton width={`60%`} baseColor="#2b2b2b" highlightColor="#444" />
-            </div>
+            <Skeleton height={250} borderRadius={20} />
           </div>
         ))}
       </div>
@@ -84,48 +68,151 @@ const Frontend_Tutorial_Solution = () => {
 
   if (!topic) return <p className="text-center mt-5">❌ Topic not found</p>;
 
-  return (
-    <div className="container py-1 px-1">
-      <h4 className="text-center pt-3 text-warning">
-        <b>🎬 Responsive Designs:</b>
-        <br /> <p className="mt-3 mb-2 text-light"><small> - {topic.name} - </small></p>
-      </h4>
+  if (isMobile) {
+    return (
+      <div className="container py-4">
+        <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
+        <div className="video-main-wrapper">
+          {topic.videos.map((video) => (
+            <div className="video-wrapper mb-4 position-relative" key={video.id}>
+              {(video.access_type === "Premium" ||
+                video.source_codes.some(code => code.access_type === "Premium")) && (
+                <div className="video-price-tag">$</div>
+              )}
 
-      {topic.videos?.length > 0 && (
-        <div>
+              <div className="video-container-inner">
+                <video
+                  key={video.id}
+                  src={video.video_url}
+                  controls
+                  autoPlay
+                  loop
+                  muted
+                  playsInline
+                />
+              </div>
+
+              <div className="video-description text-white">
+                <p className="mb-0 mt-2 mx-2">{video.info.description}</p>
+              </div>
+
+              <div className="d-flex justify-content-center m-0">
+                <button
+                  className="copy-btn"
+                  onClick={() =>
+                    setShowCode((prev) => ({ ...prev, [video.id]: !prev[video.id] }))
+                  }
+                >
+                  {showCode[video.id] ? "Hide Code" : "View Code"}
+                </button>
+              </div>
+
+              {showCode[video.id] && (
+                <div className="code-info-wrapper mt-3">
+                  {video.source_codes.map((codeObj, idx) => (
+                    <VideoCodeBox key={idx} codeObj={codeObj} />
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="container py-4">
+      <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
+      <div className="video-main-wrapper">
+        <div className="video-wrapper" ref={mainVideoRef}>
+          {(currentVideo.access_type === "Premium" || 
+            currentVideo.source_codes.some(code => code.access_type === "Premium")) && (
+            <div className="video-price-tag">$</div>
+          )}
+
+          <div className="video-container-inner">
+            <video
+              key={currentVideo?.id}
+              src={currentVideo?.video_url}
+              controls
+              autoPlay
+              loop
+              muted
+              playsInline
+            />
+          </div>
+
+          <div className="video-description text-white">
+            <p className="mb-0 mt-2 mx-2 py-2">{currentVideo?.info.description}</p>
+          </div>
+
+          <div className="d-flex justify-content-center m-0">
+            <button
+              className="copy-btn"
+              onClick={() =>
+                setShowCode((prev) => ({ ...prev, [currentVideo.id]: !prev[currentVideo.id] }))
+              }
+            >
+              {showCode[currentVideo.id] ? "Hide Code" : "View Code"}
+            </button>
+          </div>
+
+          {showCode[currentVideo.id] && (
+            <div className="code-info-wrapper mt-2">
+              {currentVideo.source_codes.map((codeObj, idx) => (
+                <VideoCodeBox key={idx} codeObj={codeObj} />
+              ))}
+            </div>
+          )}
+        </div>
+
+        <div className="related-videos">
           {topic.videos
-            .slice()
-            .sort((a, b) => b.id - a.id)
+            .filter((v) => v.id !== currentVideo.id)
             .map((video) => (
-              <VideoCard key={video.id} video={video} />
+              <div
+                key={video.id}
+                className="video-card"
+                onClick={() => {
+                  setCurrentVideo(video);
+                  setShowCode({});
+                  mainVideoRef.current.scrollIntoView({ behavior: "smooth" });
+                }}
+              >
+                {(video.access_type === "Premium" ||
+                  video.source_codes.some(code => code.access_type === "Premium")) && (
+                  <div className="video-price-tag">$</div>
+                )}
+
+                <div className="video-card-thumb">
+                  <video src={video.video_url} muted playsInline />
+                </div>
+
+                <div className="video-card-info">
+                  <h5>{video.title}</h5>
+                </div>
+              </div>
             ))}
         </div>
-      )}
+      </div>
     </div>
   );
 };
 
-/**
- * VideoCard component
- * Shows video preview, source code, premium overlays, and copy button
- */
-const VideoCard = ({ video }) => {
+const VideoCodeBox = ({ codeObj }) => {
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
   const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false });
   const navigate = useNavigate();
 
-  const handleAdComplete = (tab) => {
-    setAdCompleted((prev) => ({ ...prev, [tab]: true }));
-  };
+  useEffect(() => {
+    if (codeRef.current) Prism.highlightElement(codeRef.current);
+  }, [selectedTab, adCompleted]);
 
-  const handleBuySource = (sourceId) => {
-    navigate("/Payment_Page", {
-      state: { sourceId, amount: 100 },
-    });
-  };
+  const handleAdComplete = (tab) => setAdCompleted((prev) => ({ ...prev, [tab]: true }));
 
-  const getCodeByTab = (codeObj, tab) => {
+  const getCodeByTab = (tab) => {
     switch (tab) {
       case "html": return codeObj.html_code || "";
       case "css": return codeObj.css_code || "";
@@ -134,51 +221,26 @@ const VideoCard = ({ video }) => {
     }
   };
 
-  useEffect(() => {
-    if (codeRef.current) Prism.highlightElement(codeRef.current);
-  }, [selectedTab, adCompleted]);
+  const isFree = codeObj.access_type === "Free";
+  const isPremium = codeObj.access_type === "Premium";
+  const hasBought = codeObj.hasBought === true;
+  const canViewCode = (isFree && adCompleted[selectedTab]) || (isPremium && hasBought);
 
-  // ✅ Updated Copy Button — includes CodeVerse comments for free code
-  const CopyButton = ({ codeObj, code }) => {
+  const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
-    const isSourceFree = codeObj.access_type === "Free";
-    const hasBoughtSource = codeObj.hasBought === true;
-
-    const disabled =
-      (!isSourceFree && !hasBoughtSource) ||
-      (isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab]);
-
-    // Pre & post comment text
-    const commentText =
-      "Free Code By CodeVerse💻 :-- 'https://blog-code-verse.vercel.app'\nVisit official site for more free components and designs with complete code";
-
-    // Function to wrap code with proper comment syntax
-    const attachComment = (code, fileType) => {
-      switch (fileType) {
-        case "html":
-          return `<!-- ${commentText} -->\n\n${code}\n\n<!-- ${commentText} -->`;
-        case "css":
-          return `/* ${commentText} */\n\n${code}\n\n/* ${commentText} */`;
-        case "js":
-          return `// ${commentText.replace(/\n/g, "\n// ")}\n\n${code}\n\n// ${commentText.replace(/\n/g, "\n// ")}`;
-        default:
-          return code;
-      }
-    };
 
     const handleCopy = () => {
-      if (!isSourceFree && !hasBoughtSource) {
-        alert("⚠️ You need to buy this source code to copy it!");
-        return;
-      }
-      if (isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab]) {
-        alert("⚠️ You can copy only after the ad finishes!");
-        return;
-      }
+      if (!canViewCode) return;
 
-      // ✅ Add CodeVerse comments only for free source
-      const finalCode = isSourceFree ? attachComment(code, selectedTab) : code;
+      // Add comment message depending on language
+      const commentStart = selectedTab === "html" ? "<!-- " :
+                          selectedTab === "css" ? "/* " : "// ";
+      const commentEnd = selectedTab === "html" ? " -->" :
+                         selectedTab === "css" ? " */" : "";
 
+      const promoMessage = `${commentStart}Code by CodeVerse.\nvisit official site for more free designs and tutorial :\n :--- ' https://blog-code-verse.vercel.app ' ${commentEnd}\n`;
+
+      const finalCode = `${promoMessage}${code}\n${promoMessage}`;
       navigator.clipboard.writeText(finalCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
@@ -186,10 +248,9 @@ const VideoCard = ({ video }) => {
 
     return (
       <button
-        className="copy-btn"
+        className={`copy-btn ${canViewCode ? "" : "disabled-copy-btn"}`}
         onClick={handleCopy}
-        disabled={disabled}
-        style={{ opacity: disabled ? 0.5 : 1, cursor: disabled ? "not-allowed" : "pointer" }}
+        disabled={!canViewCode}
       >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
@@ -197,81 +258,58 @@ const VideoCard = ({ video }) => {
   };
 
   return (
-    <div className="card frontend-card video-card mb-5 p-1 shadow-lg rounded-4">
-      <div className="video-container">
-        <div className="video-wrapper">
-          <div className="card shadow border-0" style={{ borderRadius: "20px", overflow: "hidden", height: "100%", position: "relative" }}>
-            <div className="video-container-inner">
-              <video src={video.video_url} autoPlay loop muted playsInline />
-            </div>
-          </div>
+    <div className="card shadow-lg mb-1 d-flex flex-column h-100 position-relative">
+      {/* Tabs + Copy */}
+      <div className="card-header d-flex justify-content-between align-items-center position-relative">
+        <div className="btn-group">
+          {["html", "css", "js"].map((tab) => (
+            <button
+              key={tab}
+              className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`}
+              onClick={() => setSelectedTab(tab)}
+            >
+              {tab.toUpperCase()}
+            </button>
+          ))}
         </div>
-
-        <div className="code-info-wrapper">
-          {video.source_codes?.map((codeObj, idx) => {
-            const isSourceFree = codeObj.access_type === "Free";
-            const hasBoughtSource = codeObj.hasBought === true;
-            const canViewCode = isSourceFree || hasBoughtSource;
-
-            return (
-              <div key={idx} className="card shadow-lg mb-1 d-flex flex-column h-100">
-                <div className="card-header d-flex justify-content-between align-items-center position-relative">
-                  <div className="btn-group">
-                    {["html", "css", "js"].map((tab) => (
-                      <button
-                        key={tab}
-                        className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`}
-                        onClick={() => setSelectedTab(tab)}
-                      >
-                        {tab.toUpperCase()}
-                      </button>
-                    ))}
-                  </div>
-
-                  {codeObj.access_type === "Premium" && (
-                    <div className="premium-code-badge">
-                      <i className="bi bi-currency-dollar" style={{ fontSize: "1.1rem" }}></i>
-                    </div>
-                  )}
-
-                  <CopyButton codeObj={codeObj} code={getCodeByTab(codeObj, selectedTab)} />
-                </div>
-
-                <div className="card-body code-box">
-                  {canViewCode ? (
-                    isSourceFree && ["css", "js"].includes(selectedTab) && !adCompleted[selectedTab] ? (
-                      <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
-                    ) : (
-                      <pre>
-                        <code ref={codeRef} className={`language-${selectedTab}`}>
-                          {getCodeByTab(codeObj, selectedTab)}
-                        </code>
-                      </pre>
-                    )
-                  ) : (
-                    <>
-                      <pre className="blurred-code">
-                        <code ref={codeRef} className={`language-${selectedTab}`}>
-                          {getCodeByTab(codeObj, selectedTab)}
-                        </code>
-                      </pre>
-                      <button className="buy-premium-btn" onClick={() => handleBuySource(codeObj.id)}>
-                        💳 Buy Source Code to Unlock
-                      </button>
-                    </>
-                  )}
-                </div>
-              </div>
-            );
-          })}
+        <div className="copy-price-wrapper">
+          {isPremium && !hasBought && <div className="price-tag">${codeObj.price || 100}</div>}
+          <CopyButton code={getCodeByTab(selectedTab)} />
         </div>
       </div>
 
-      {video.info?.description && (
-        <p className="video-description text-content">
-          <b>NOTE:</b> {video.info.description}
-        </p>
-      )}
+      {/* Code Box */}
+      <div className="card-body position-relative">
+        {isPremium && !hasBought ? (
+          <div className="code-wrapper">
+            <pre className="scrollable-code">
+              <code ref={codeRef} className={`language-${selectedTab}`}>
+                {getCodeByTab(selectedTab)}
+              </code>
+            </pre>
+            <div className="buy-btn-overlay">
+              <button
+                className="buy-premium-btn"
+                onClick={() =>
+                  navigate("/Payment_Page", { state: { sourceId: codeObj.id, amount: codeObj.price || 100 } })
+                }
+              >
+                💳 Buy Premium Code
+              </button>
+            </div>
+          </div>
+        ) : isFree && !adCompleted[selectedTab] ? (
+          <Ads_Container onComplete={() => handleAdComplete(selectedTab)} boxType={selectedTab} />
+        ) : (
+          <div className="code-wrapper">
+            <pre>
+              <code ref={codeRef} className={`language-${selectedTab}`}>
+                {getCodeByTab(selectedTab)}
+              </code>
+            </pre>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
