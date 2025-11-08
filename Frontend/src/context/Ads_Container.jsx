@@ -14,12 +14,12 @@ import { useEffect, useState, useRef } from "react";
 import '../assets/css/Ads_Container.css'
 
 export default function Ads_Container({ onComplete, client, slot, style, boxType }) {
-  const [timer, setTimer] = useState(10);
+  const [timer, setTimer] = useState(5);
   const [adLoaded, setAdLoaded] = useState(false);
   const adRef = useRef(null);
 
   useEffect(() => {
-    const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
+    const countdown = setInterval(() => setTimer(prev => prev - 1), 1000); //timer count in ms [ i.e 500ms = 5s ]
     return () => clearInterval(countdown);
   }, []);
 
