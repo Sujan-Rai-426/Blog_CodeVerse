@@ -53,7 +53,7 @@ function Home() {
 
     return (
         <div className="home-container">
-            {/* Loading Message Overlay */}
+            {/* Loading Message Overlay if loading skeleton is more than 3 sec */}
             {showLoadingMessage && loading && (
                 <div className="loading-overlay">
                     <div className="loading-message">
