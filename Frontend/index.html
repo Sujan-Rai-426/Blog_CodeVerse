@@ -8,12 +8,44 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-        <!-- Open Graph tags for sharing -->
+    <!-- ✅ Basic SEO Meta Tags -->
+    <meta name="title" content="CodeVerse💻 | Frontend Designs, Backend Guides & Complete Source Codes">
+    <meta name="description" content="CodeVerse💻 — Explore amazing frontend components, backend guides, and full projects with complete code examples for developers.">
+    <meta name="keywords" content="CodeVerse, frontend designs, source code, web development, HTML CSS JS, React components, backend tutorials, free code, codeverse vercel, codeverse blog, web dev">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="CodeVerse Team">
+    <link rel="canonical" href="https://blog-code-verse.vercel.app/">
+
+    <!-- Open Graph tags for sharing -->
     <meta property="og:title" content="CodeVerse💻 - Frontend designs and Backend Guide with complete code." />
     <meta property="og:description" content="CodeVerse💻: Amazing Frontend  components designs with complete code." />
     <meta property="og:url" content="https://blog-code-verse.vercel.app/" />
     <meta property="og:image" content="https://blog-code-verse.vercel.app/og-image.png" />
     <meta property="og:type" content="website" />
+
+    <!-- ✅ Twitter Card (for better sharing on X / Twitter) -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="CodeVerse💻 - Frontend & Backend with Complete Source Codes" />
+    <meta name="twitter:description" content="Get free frontend designs, backend tutorials, and full source codes on CodeVerse💻. Learn, build, and grow your skills." />
+    <meta name="twitter:image" content="https://blog-code-verse.vercel.app/og-image.png" />
+
+    <!-- ✅ Structured Data (helps Google understand your brand) -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "CodeVerse💻",
+        "alternateName": "CodeVerse",
+        "url": "https://blog-code-verse.vercel.app/",
+        "logo": "https://blog-code-verse.vercel.app/CodeVerse_Favicon.ico",
+        "description": "CodeVerse💻 provides free frontend components, backend tutorials, and fullstack examples with complete code.",
+        "sameAs": [
+          "https://github.com/CodeVerse",
+          "https://www.linkedin.com/company/codeverse",
+          "https://twitter.com/codeverse_dev"
+        ]
+      }
+    </script>
 
     <!-- Font awesome link -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
@@ -31,8 +63,30 @@
     <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6317483086789968"
      crossorigin="anonymous"></script> -->
 
+    <title>CodeVerse</title>
 
-    <title> CodeVerse💻 </title>
+    <!-- ✅ Auto-add 💻 emoji dynamically if missing -->
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const brand = "CodeVerse";
+        const emoji = "💻";
+        if (!document.title.includes(emoji)) {
+          document.title = `${brand}${emoji}`;
+        }
+
+        // Also adjust OG and Twitter tags dynamically
+        const ogTitle = document.querySelector('meta[property="og:title"]');
+        const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+
+        if (ogTitle && !ogTitle.content.includes(emoji)) {
+          ogTitle.content = `${brand}${emoji} - Frontend designs and Backend Guide with complete code.`;
+        }
+
+        if (twitterTitle && !twitterTitle.content.includes(emoji)) {
+          twitterTitle.content = `${brand}${emoji} - Frontend & Backend with Complete Source Codes`;
+        }
+      });
+    </script>
   </head>
   <body>
     <div id="root"></div>
