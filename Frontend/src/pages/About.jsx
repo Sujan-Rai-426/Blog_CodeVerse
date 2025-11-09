@@ -15,14 +15,14 @@ function About() {
                         <span>
                             <b>Code</b>
                             <sup>
-                                <u><small>Verse</small>💻</u>
+                                <u><small>Vora</small>💻</u>
                             </sup>
                         </span>
                     </h1>
                     <p>
-                        Welcome to <strong>CodeVerse</strong> — your ultimate destination for learning, exploring, 
+                        Welcome to <strong>CodeVora</strong> — your ultimate destination for learning, exploring, 
                         and building modern web applications. Whether you’re a beginner taking your first steps into 
-                        coding or an experienced developer looking to polish your skills, CodeVerse is here to guide 
+                        coding or an experienced developer looking to polish your skills, CodeVora is here to guide 
                         you every step of the way.
                     </p>
                     <p>
@@ -32,7 +32,7 @@ function About() {
                     </p>
                     <p>
                         We believe that learning to code should be <strong>accessible, engaging, and rewarding</strong>. 
-                        That’s why at CodeVerse, we focus on clear explanations, hands-on practice, and community-driven 
+                        That’s why at CodeVora, we focus on clear explanations, hands-on practice, and community-driven 
                         growth — helping you turn your ideas into powerful digital solutions.
                     </p>
                 </div>

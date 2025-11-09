@@ -10,7 +10,7 @@ function Nav_Bar() {
     <>
       <nav className="navbar navbar-dark navbar-custom sticky-top d-flex justify-content-between px-3">
         <Link className="navbar-brand fw-bold px-4" to="/">
-          <b>Code</b><sup><u><small>Verse</small>💻</u></sup>
+          <b>Code</b><sup><u><small>Vora</small>💻</u></sup>
         </Link>
 
         <button className="btn btn-outline-light d-lg-none" onClick={toggleSidebar}>
