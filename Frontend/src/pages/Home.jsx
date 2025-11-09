@@ -80,7 +80,7 @@ function Home() {
                         <a href="https://www.facebook.com/profile.php?id=61583606692743" target="_blank" rel="noopener noreferrer" className="social-link facebook" >
                             <i className=" fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/codeverse140/" target="_blank" rel="noopener noreferrer" className="social-link instagram" >
+                        <a href="https://www.instagram.com/codevora140/" target="_blank" rel="noopener noreferrer" className="social-link instagram" >
                             <i className=" fab fa-instagram"></i>
                         </a>
                         <a href="https://github.com/Sujan-Rai-426" target="_blank" rel="noopener noreferrer" className="social-link github" >
