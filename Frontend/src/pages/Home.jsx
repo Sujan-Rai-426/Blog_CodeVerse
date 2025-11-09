@@ -74,7 +74,7 @@ function Home() {
                     </p>
 
                     <div className="social-bar d-flex justify-content-center align-items-center gap-4 mt-4">
-                        <a href="https://www.youtube.com/@CodeVerse140" target="_blank" rel="noopener noreferrer" className="social-link globe" >
+                        <a href="https://www.youtube.com/@CodeVora140" target="_blank" rel="noopener noreferrer" className="social-link globe" >
                             <i className="fab fa-youtube"></i>
                         </a>
                         <a href="https://www.facebook.com/profile.php?id=61583606692743" target="_blank" rel="noopener noreferrer" className="social-link facebook" >
