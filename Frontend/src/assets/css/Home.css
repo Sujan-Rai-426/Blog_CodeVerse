@@ -203,7 +203,7 @@
         justify-content: center; /* fixes misalignment */
     }
     .section-title {
-        margin: 1.5rem 0 .5rem 0;
+        margin: 1rem 0 .5rem 0;
     }
 }
 
@@ -212,7 +212,7 @@
         grid-template-columns: repeat(4, 1fr);
     }
     .section-title {
-        margin: 1.5rem 0 .5rem 0;
+        margin: 1.25rem 0 .5rem 0;
     }
 }
 
@@ -221,7 +221,7 @@
         grid-template-columns: repeat(5, 1fr);
     }
     .section-title {
-        margin: 1.5rem 0 .5rem 0;
+        margin: 1.4rem 0 .5rem 0;
     }
 }
 

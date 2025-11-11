@@ -6,6 +6,7 @@ import Carousel from "../components/Carousel";
 import Recent_Contents from "../components/Recent_Contents";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
+import Services from "../components/Services";
 
 function Home() {
     const [frontendLangs, setFrontendLangs] = useState([]);
@@ -69,9 +70,10 @@ function Home() {
                     <h1 className="hero-title text-golden">
                         <b>Code</b><sup><u><small>Vora</small>💻</u></sup>
                     </h1>
-                    <p className="hero-subtitle text-gray">
+                    <h5 className="hero-subtitle text-gray">
                         Your interactive coding platform — learn, share, and grow your skills in frontend, backend, and beyond.
-                    </p>
+                        <p className="text-warning m-0 p-0">📢 <small><u>More Content Will Be Added on Weekly Basis...</u></small></p>
+                    </h5>
 
                     <div className="social-bar d-flex justify-content-center align-items-center gap-4 mt-4">
                         <a href="https://www.youtube.com/@CodeVora140" target="_blank" rel="noopener noreferrer" className="social-link globe" >
@@ -106,6 +108,13 @@ function Home() {
             {/* <section className="carousel-section">
                 {loading ? <Skeleton height={220} borderRadius={16} baseColor="#2b2b2b" highlightColor="#3b3b3b" /> : <Carousel />}
             </section> */}
+
+
+{/* Service Section Carousel Style */}
+<section className="service">
+    <Services />
+</section>
+
 
             {/* Frontend Section */}
             <section className="tutorial-section">
