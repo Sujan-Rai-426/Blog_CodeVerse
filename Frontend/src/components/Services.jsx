@@ -15,26 +15,37 @@ const Services = () => {
     let autoScrollSpeed = 1.2;
     let scrollDirection = 1;
     let rafId;
+    let intervalId;
 
-    const atEnd = () => Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
+    const atEnd = () =>
+      Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
     const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
-    const autoScroll = () => {
+    // ✅ Hybrid method: RAF + fallback setInterval for iOS Safari
+    const smoothAutoScroll = () => {
       if (autoScrollEnabled && !isDragging) {
         carousel.scrollLeft += autoScrollSpeed * scrollDirection;
         if (atEnd()) scrollDirection = -1;
         else if (atStart()) scrollDirection = 1;
       }
-      rafId = requestAnimationFrame(autoScroll);
+      rafId = requestAnimationFrame(smoothAutoScroll);
     };
 
-    // For iOS: Start auto-scroll *after a short delay* to allow layout
+    // ✅ iOS sometimes blocks RAF, so we use both together
     const startAutoScroll = () => {
       cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(autoScroll);
+      clearInterval(intervalId);
+      rafId = requestAnimationFrame(smoothAutoScroll);
+      intervalId = setInterval(() => {
+        if (autoScrollEnabled && !isDragging) {
+          carousel.scrollLeft += autoScrollSpeed * scrollDirection;
+          if (atEnd()) scrollDirection = -1;
+          else if (atStart()) scrollDirection = 1;
+        }
+      }, 16); // ~60fps
     };
 
-    // Add a slight delay so iOS properly initializes layout
+    // Start scrolling after layout settles
     const startTimeout = setTimeout(startAutoScroll, 800);
 
     const startDrag = (x) => {
@@ -85,8 +96,10 @@ const Services = () => {
     return () => {
       cancelAnimationFrame(rafId);
       clearTimeout(startTimeout);
+      clearInterval(intervalId);
     };
   }, []);
+
 
 
   const services = [
