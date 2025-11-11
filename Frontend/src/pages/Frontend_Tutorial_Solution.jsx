@@ -126,7 +126,8 @@ const Frontend_Tutorial_Solution = () => {
             <div className="video-wrapper mb-4 position-relative" key={video.id}>
               {(video.access_type === "Premium" ||
                 video.source_codes.some((code) => code.access_type === "Premium")) && (
-                <div className="video-price-tag">$</div>
+                  // Dollor tag icon in video, mobile view
+                <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
               )}
 
               <div className="video-container-inner">
@@ -179,7 +180,8 @@ const Frontend_Tutorial_Solution = () => {
         <div className="video-wrapper" ref={mainVideoRef}>
           {(currentVideo.access_type === "Premium" ||
             currentVideo.source_codes.some((code) => code.access_type === "Premium")) && (
-            <div className="video-price-tag">$</div>
+              // Dollor tag icon in video
+            <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
           )}
 
           <div className="video-container-inner">
@@ -203,7 +205,7 @@ const Frontend_Tutorial_Solution = () => {
               onClick={() => {
                 setShowCode((prev) => {
                   const newState = { ...prev, [currentVideo.id]: !prev[currentVideo.id] };
-                  // Scroll smoothly to code when opening
+                  // Scroll smoothly to code when opening, desktop view
                   if (!prev[currentVideo.id]) {
                     setTimeout(() => {
                       codeRefs.current[currentVideo.id]?.scrollIntoView({

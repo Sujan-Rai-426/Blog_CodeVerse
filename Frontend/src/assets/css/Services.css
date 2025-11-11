@@ -1,9 +1,9 @@
 /* CodeVerse Services Section */
 .cv-carousel-main-container {
+    padding: 25px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 40px 0;
     background: transparent;
     color: #fff;
     overflow: hidden;
@@ -28,14 +28,14 @@ h2.cv-section-title {
     display: flex;
     gap: 18px;
     overflow-x: auto;
-    scroll-behavior: auto; /* ✅ use auto, not smooth — JS handles motion */
+    scroll-behavior: auto; /* use auto, not smooth — JS handles motion */
     cursor: grab;
     user-select: none;
     padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch; /* ✅ helps touch momentum when dragging */
+    -webkit-overflow-scrolling: touch; /* helps touch momentum when dragging */
     touch-action: pan-x;
     scroll-snap-type: none;
-    will-change: transform, scroll-position; /* ✅ improves iOS GPU rendering */
+    will-change: transform, scroll-position; /*  improves iOS GPU rendering */
 }
 
 
@@ -102,9 +102,12 @@ h2.cv-section-title {
 
 /* Tablet */
 @media (max-width: 1024px) {
+    .cv-carousel-main-container {
+        padding: 20px 0;
+    }
     .cv-card {
-        flex: 0 0 240px;
-        height: 160px;
+        flex: 0 0 250px;
+        height: 180px;
     }
     h2.cv-section-title {
         font-size: 1.6rem;
@@ -113,9 +116,12 @@ h2.cv-section-title {
 
 /* Mobile */
 @media (max-width: 768px) {
+    .cv-carousel-main-container {
+        padding: 15px 0;
+    }
     .cv-card {
-        flex: 0 0 180px;
-        height: 140px;
+        flex: 0 0 195px;
+        height: 145px;
     }
     h2.cv-section-title {
         font-size: 1.4rem;
@@ -130,9 +136,12 @@ h2.cv-section-title {
 
 /* Small Mobile */
 @media (max-width: 480px) {
+    .cv-carousel-main-container {
+        padding: 10px 0;
+    }
     .cv-card {
-        flex: 0 0 150px;
-        height: 120px;
+        flex: 0 0 190px;
+        height: 140px;
     }
     h2.cv-section-title {
         font-size: 1.2rem;
