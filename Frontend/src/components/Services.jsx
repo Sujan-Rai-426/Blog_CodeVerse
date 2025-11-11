@@ -1,141 +1,104 @@
 import React, { useEffect, useRef } from "react";
 import "../assets/css/Services.css";
-import { useNavigate } from "react-router-dom";
 
 const Services = () => {
   const carouselRef = useRef(null);
-  const navigate = useNavigate();
 
-useEffect(() => {
-  const carousel = carouselRef.current;
-  let isDragging = false;
-  let startX = 0;
-  let scrollLeftStart = 0;
-  let autoScrollEnabled = true;
-  let scrollDirection = 1;
-  let autoScrollSpeed = 0.6;
-  let intervalId;
+  useEffect(() => {
+    const carousel = carouselRef.current;
+    let isDragging = false;
+    let startX = 0;
+    let scrollLeftStart = 0;
+    let autoScrollEnabled = true;
+    let scrollDirection = 1;
+    const autoScrollSpeed = 0.5; // Adjust speed here
+    let rafId;
 
-  const atEnd = () =>
-    Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
-  const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
+    const atEnd = () =>
+      Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
+    const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
-  // ✅ Force Safari-friendly scrolling
-  carousel.style.webkitOverflowScrolling = "auto";
-  carousel.style.willChange = "transform, scroll-position";
-  carousel.style.scrollBehavior = "auto";
+    // Smooth auto scroll using requestAnimationFrame (works on iOS)
+    const smoothAutoScroll = () => {
+      if (autoScrollEnabled && !isDragging) {
+        carousel.scrollLeft += autoScrollSpeed * scrollDirection;
 
-  const smoothAutoScroll = () => {
-    if (autoScrollEnabled && !isDragging) {
-      carousel.scrollLeft += autoScrollSpeed * scrollDirection;
+        if (atEnd()) scrollDirection = -1;
+        else if (atStart()) scrollDirection = 1;
+      }
+      rafId = requestAnimationFrame(smoothAutoScroll);
+    };
 
-      // Trigger Safari repaint
-      carousel.style.transform = `translate3d(0,0,0)`;
+    // Delay start for layout to settle
+    const initTimeout = setTimeout(() => {
+      rafId = requestAnimationFrame(smoothAutoScroll);
+    }, 800);
 
-      if (atEnd()) scrollDirection = -1;
-      else if (atStart()) scrollDirection = 1;
-    }
-  };
+    // Drag controls
+    const startDrag = (x) => {
+      isDragging = true;
+      startX = x - carousel.getBoundingClientRect().left;
+      scrollLeftStart = carousel.scrollLeft;
+      autoScrollEnabled = false;
+      carousel.style.cursor = "grabbing";
+    };
 
-  const startAutoScroll = () => {
-    clearInterval(intervalId);
-    intervalId = setInterval(smoothAutoScroll, 16); // ~60fps
-  };
+    const dragMove = (x) => {
+      if (!isDragging) return;
+      const walk = x - carousel.getBoundingClientRect().left - startX;
+      carousel.scrollLeft = scrollLeftStart - walk;
+    };
 
-  // Delay start for layout stability
-  const initDelay = setTimeout(startAutoScroll, 1200);
+    const endDrag = () => {
+      isDragging = false;
+      carousel.style.cursor = "grab";
+      setTimeout(() => (autoScrollEnabled = true), 700);
+    };
 
-  // Drag controls remain the same...
-  const startDrag = (x) => {
-    isDragging = true;
-    startX = x - carousel.getBoundingClientRect().left;
-    scrollLeftStart = carousel.scrollLeft;
-    autoScrollEnabled = false;
-    carousel.style.cursor = "grabbing";
-  };
+    // Touch events (iOS)
+    carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), { passive: true });
+    carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), { passive: true });
+    carousel.addEventListener("touchend", endDrag);
 
-  const dragMove = (x) => {
-    if (!isDragging) return;
-    const walk = x - carousel.getBoundingClientRect().left - startX;
-    carousel.scrollLeft = scrollLeftStart - walk;
-    if (atEnd()) scrollDirection = -1;
-    else if (atStart()) scrollDirection = 1;
-  };
+    // Mouse events
+    carousel.addEventListener("mousedown", (e) => startDrag(e.pageX));
+    carousel.addEventListener("mousemove", (e) => dragMove(e.pageX));
+    window.addEventListener("mouseup", endDrag);
+    carousel.addEventListener("mouseleave", endDrag);
 
-  const endDrag = () => {
-    if (!isDragging) return;
-    isDragging = false;
-    carousel.style.cursor = "grab";
-    setTimeout(() => (autoScrollEnabled = true), 800);
-  };
+    // Pause auto scroll on manual wheel
+    const handleWheel = (e) => {
+      autoScrollEnabled = false;
+      carousel.scrollLeft += e.deltaY;
+      clearTimeout(carousel.wheelTimeout);
+      carousel.wheelTimeout = setTimeout(() => (autoScrollEnabled = true), 1000);
+    };
+    carousel.addEventListener("wheel", handleWheel);
 
-  // Mobile events (for iOS)
-  carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), { passive: true });
-  carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), { passive: true });
-  carousel.addEventListener("touchend", endDrag);
-
-  // Pause on manual scroll
-  const handleWheel = (e) => {
-    autoScrollEnabled = false;
-    carousel.scrollLeft += e.deltaY;
-    clearTimeout(carousel.wheelTimeout);
-    carousel.wheelTimeout = setTimeout(() => (autoScrollEnabled = true), 1000);
-  };
-  carousel.addEventListener("wheel", handleWheel);
-
-  return () => {
-    clearInterval(intervalId);
-    clearTimeout(initDelay);
-    carousel.removeEventListener("wheel", handleWheel);
-  };
-}, []);
-
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(initTimeout);
+      carousel.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
 
   const services = [
-    {
-      img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220804114400/Design-Components-For-Front-End-Developers.jpg",
-      title: "Frontend Design Components",
-      desc: "Free React, Tailwind, Bootstrap, Animation UI components for all",
-      link: "/frontend-design",
-    },
-    {
-      img: "https://themefisher.com/blog-thumb/free-responsive-website-templates-html5-css3.webp",
-      title: "Premium Website Templates",
-      desc: "Use pre-built templates for faster development",
-      link: "/premium-templates",
-    },
-    {
-      img: "https://sklc-tinymce-2021.s3.amazonaws.com/comp/2023/04/full-stack%20web%20development_1681290664.png",
-      title: "Full Stack Web Development",
-      desc: "For businesses, shops & content creators",
-      link: "/fullstack-development",
-    },
-    {
-      img: "https://softwaresindemand.com/assets/images/how_it_works_images/6780c93b22a5e1736493371.png",
-      title: "E-Commerce Platforms",
-      desc: "Power your online store with CodeVora",
-      link: "/ecommerce",
-    },
-    {
-      img: "https://communications.news.columbia.edu/sites/communications.news.columbia.edu/files/content/Communications%20Lab/Web%20SEO%20Analytics%20Research%20Image.jpg",
-      title: "SEO & Analytics",
-      desc: "Grow visibility and reach globally",
-      link: "/seo-analytics",
-    },
+    { 
+      img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220804114400/Design-Components-For-Front-End-Developers.jpg", 
+      title: "Frontend Design Components", 
+      desc: " React, Tailwind, Bootstrap, Animation UI components for all" },
+    { img: "https://themefisher.com/blog-thumb/free-responsive-website-templates-html5-css3.webp", title: "Premium Website Templates", desc: "Use pre-built templates for faster development" },
+    { img: "https://sklc-tinymce-2021.s3.amazonaws.com/comp/2023/04/full-stack%20web%20development_1681290664.png", title: "Full Stack Web Development", desc: "For businesses, shops & content creators" },
+    { img: "https://softwaresindemand.com/assets/images/how_it_works_images/6780c93b22a5e1736493371.png", title: "E-Commerce Platforms", desc: "Power your online store with CodeVora" },
+    { img: "https://communications.news.columbia.edu/sites/communications.news.columbia.edu/files/content/Communications%20Lab/Web%20SEO%20Analytics%20Research%20Image.jpg", title: "SEO & Analytics", desc: "Grow visibility and reach globally" },
   ];
 
   return (
     <div className="cv-carousel-main-container">
       <div className="cv-carousel-container">
         <h2 className="cv-section-title">
-          🚀{" "}
-          <sup>
-            <u>
-              <b>Our Top Services</b>
-            </u>
-          </sup>
+          🚀 <sup><u><b>Our Top Services</b></u></sup>
         </h2>
-
         <div className="cv-carousel" ref={carouselRef}>
           {services.map((service, idx) => (
             <div className="cv-card" key={idx}>
