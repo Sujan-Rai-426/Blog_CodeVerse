@@ -13,30 +13,34 @@ const Services = () => {
     let scrollLeftStart = 0;
     let autoScrollEnabled = true;
     let scrollDirection = 1;
-    let autoScrollSpeed = 1.2;
-    let frameId;
+    let autoScrollSpeed = 0.8;
+    let rafId;
 
     const atEnd = () =>
       Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
     const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
-    // Smooth auto scroll that works on iOS
+    // 💡 Works across iOS and desktop
     const smoothAutoScroll = () => {
       if (autoScrollEnabled && !isDragging) {
         carousel.scrollLeft += autoScrollSpeed * scrollDirection;
+
+        // Trigger a repaint on iOS (forces scroll update)
+        carousel.style.transform = `translateZ(0)`;
+
         if (atEnd()) scrollDirection = -1;
         else if (atStart()) scrollDirection = 1;
       }
-      frameId = requestAnimationFrame(smoothAutoScroll);
+      rafId = requestAnimationFrame(smoothAutoScroll);
     };
 
     const startAutoScroll = () => {
-      cancelAnimationFrame(frameId);
-      frameId = requestAnimationFrame(smoothAutoScroll);
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(smoothAutoScroll);
     };
 
-    // Start after layout settles (important for iOS)
-    const startTimeout = setTimeout(startAutoScroll, 1000);
+    // Delay start — allows layout & iOS compositor to settle
+    const initDelay = setTimeout(startAutoScroll, 1200);
 
     const startDrag = (x) => {
       isDragging = true;
@@ -58,15 +62,16 @@ const Services = () => {
       if (!isDragging) return;
       isDragging = false;
       carousel.style.cursor = "grab";
-      setTimeout(() => (autoScrollEnabled = true), 1000);
+      setTimeout(() => (autoScrollEnabled = true), 800);
     };
 
+    // Desktop events
     carousel.addEventListener("mousedown", (e) => startDrag(e.pageX));
     carousel.addEventListener("mousemove", (e) => dragMove(e.pageX));
     window.addEventListener("mouseup", endDrag);
     carousel.addEventListener("mouseleave", endDrag);
 
-    // Touch events (iOS fix)
+    // Mobile events (for iOS)
     carousel.addEventListener(
       "touchstart",
       (e) => startDrag(e.touches[0].pageX),
@@ -79,6 +84,7 @@ const Services = () => {
     );
     carousel.addEventListener("touchend", endDrag);
 
+    // Pause auto scroll while scrolling manually
     const handleWheel = (e) => {
       autoScrollEnabled = false;
       carousel.scrollLeft += e.deltaY;
@@ -90,8 +96,8 @@ const Services = () => {
     carousel.addEventListener("wheel", handleWheel);
 
     return () => {
-      cancelAnimationFrame(frameId);
-      clearTimeout(startTimeout);
+      cancelAnimationFrame(rafId);
+      clearTimeout(initDelay);
       carousel.removeEventListener("wheel", handleWheel);
     };
   }, []);
