@@ -20,10 +20,20 @@ const Services = () => {
       Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
     const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
-    // Continuous auto-scroll function
+    // ✅ Force iOS repaint
+    carousel.style.willChange = "transform, scroll-position";
+    carousel.style.webkitOverflowScrolling = "auto";
+    carousel.style.scrollBehavior = "auto";
+
+    // Start slightly away from 0 to trigger smooth scrolling immediately
+    carousel.scrollLeft = 1;
+
     const smoothAutoScroll = () => {
       if (autoScrollEnabled && !isDragging) {
         carousel.scrollLeft += autoScrollSpeed * scrollDirection;
+
+        // Trigger iOS repaint
+        carousel.style.transform = `translateZ(0)`;
 
         if (atEnd()) scrollDirection = -1;
         else if (atStart()) scrollDirection = 1;
@@ -31,12 +41,12 @@ const Services = () => {
       rafId = requestAnimationFrame(smoothAutoScroll);
     };
 
-    // Start auto-scroll after layout settles
+    // Start after layout stabilizes
     const initTimeout = setTimeout(() => {
       rafId = requestAnimationFrame(smoothAutoScroll);
-    }, 500); // Slight delay to stabilize layout
+    }, 500);
 
-    // Drag functionality
+    // Drag handlers
     const startDrag = (x) => {
       isDragging = true;
       startX = x - carousel.getBoundingClientRect().left;
@@ -44,31 +54,29 @@ const Services = () => {
       autoScrollEnabled = false;
       carousel.style.cursor = "grabbing";
     };
-
     const dragMove = (x) => {
       if (!isDragging) return;
       const walk = x - carousel.getBoundingClientRect().left - startX;
       carousel.scrollLeft = scrollLeftStart - walk;
     };
-
     const endDrag = () => {
       isDragging = false;
       carousel.style.cursor = "grab";
       setTimeout(() => (autoScrollEnabled = true), 700);
     };
 
-    // Mobile touch events
-    carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), { passive: true });
-    carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), { passive: true });
-    carousel.addEventListener("touchend", endDrag);
-
-    // Desktop mouse events
+    // Mouse events
     carousel.addEventListener("mousedown", (e) => startDrag(e.pageX));
     carousel.addEventListener("mousemove", (e) => dragMove(e.pageX));
     window.addEventListener("mouseup", endDrag);
     carousel.addEventListener("mouseleave", endDrag);
 
-    // Pause auto-scroll on wheel scroll
+    // Touch events
+    carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), { passive: true });
+    carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), { passive: true });
+    carousel.addEventListener("touchend", endDrag);
+
+    // Wheel scroll
     const handleWheel = (e) => {
       autoScrollEnabled = false;
       carousel.scrollLeft += e.deltaY;
@@ -88,7 +96,7 @@ const Services = () => {
     {
       img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220804114400/Design-Components-For-Front-End-Developers.jpg",
       title: "Frontend Design Components",
-      desc: "React, Tailwind, Bootstrap, Animation UI components free for all",
+      desc: "Free React, Tailwind, Bootstrap, Animation UI components for all to use",
       link: "/frontend-design",
     },
     {
@@ -129,7 +137,7 @@ const Services = () => {
             <div
               className="cv-card"
               key={idx}
-              onClick={() => navigate(service.link)}
+              // onClick={() => navigate(service.link)}
             >
               <img src={service.img} alt={service.title} />
               <div className="cv-card-overlay"></div>
