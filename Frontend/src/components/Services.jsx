@@ -6,107 +6,96 @@ const Services = () => {
   const carouselRef = useRef(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const carousel = carouselRef.current;
-    let isDragging = false;
-    let startX = 0;
-    let scrollLeftStart = 0;
-    let autoScrollEnabled = true;
-    let scrollDirection = 1;
-    let autoScrollSpeed = 0.8;
-    let rafId;
+useEffect(() => {
+  const carousel = carouselRef.current;
+  let isDragging = false;
+  let startX = 0;
+  let scrollLeftStart = 0;
+  let autoScrollEnabled = true;
+  let scrollDirection = 1;
+  let autoScrollSpeed = 0.6;
+  let intervalId;
 
-    const atEnd = () =>
-      Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
-    const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
+  const atEnd = () =>
+    Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
+  const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
-    // 💡 Works across iOS and desktop
-    const smoothAutoScroll = () => {
-      if (autoScrollEnabled && !isDragging) {
-        carousel.scrollLeft += autoScrollSpeed * scrollDirection;
+  // ✅ Force Safari-friendly scrolling
+  carousel.style.webkitOverflowScrolling = "auto";
+  carousel.style.willChange = "transform, scroll-position";
+  carousel.style.scrollBehavior = "auto";
 
-        // Trigger a repaint on iOS (forces scroll update)
-        carousel.style.transform = `translateZ(0)`;
+  const smoothAutoScroll = () => {
+    if (autoScrollEnabled && !isDragging) {
+      carousel.scrollLeft += autoScrollSpeed * scrollDirection;
 
-        if (atEnd()) scrollDirection = -1;
-        else if (atStart()) scrollDirection = 1;
-      }
-      rafId = requestAnimationFrame(smoothAutoScroll);
-    };
+      // Trigger Safari repaint
+      carousel.style.transform = `translate3d(0,0,0)`;
 
-    const startAutoScroll = () => {
-      cancelAnimationFrame(rafId);
-      rafId = requestAnimationFrame(smoothAutoScroll);
-    };
-
-    // Delay start — allows layout & iOS compositor to settle
-    const initDelay = setTimeout(startAutoScroll, 1200);
-
-    const startDrag = (x) => {
-      isDragging = true;
-      startX = x - carousel.getBoundingClientRect().left;
-      scrollLeftStart = carousel.scrollLeft;
-      autoScrollEnabled = false;
-      carousel.style.cursor = "grabbing";
-    };
-
-    const dragMove = (x) => {
-      if (!isDragging) return;
-      const walk = x - carousel.getBoundingClientRect().left - startX;
-      carousel.scrollLeft = scrollLeftStart - walk;
       if (atEnd()) scrollDirection = -1;
       else if (atStart()) scrollDirection = 1;
-    };
+    }
+  };
 
-    const endDrag = () => {
-      if (!isDragging) return;
-      isDragging = false;
-      carousel.style.cursor = "grab";
-      setTimeout(() => (autoScrollEnabled = true), 800);
-    };
+  const startAutoScroll = () => {
+    clearInterval(intervalId);
+    intervalId = setInterval(smoothAutoScroll, 16); // ~60fps
+  };
 
-    // Desktop events
-    carousel.addEventListener("mousedown", (e) => startDrag(e.pageX));
-    carousel.addEventListener("mousemove", (e) => dragMove(e.pageX));
-    window.addEventListener("mouseup", endDrag);
-    carousel.addEventListener("mouseleave", endDrag);
+  // Delay start for layout stability
+  const initDelay = setTimeout(startAutoScroll, 1200);
 
-    // Mobile events (for iOS)
-    carousel.addEventListener(
-      "touchstart",
-      (e) => startDrag(e.touches[0].pageX),
-      { passive: true }
-    );
-    carousel.addEventListener(
-      "touchmove",
-      (e) => dragMove(e.touches[0].pageX),
-      { passive: true }
-    );
-    carousel.addEventListener("touchend", endDrag);
+  // Drag controls remain the same...
+  const startDrag = (x) => {
+    isDragging = true;
+    startX = x - carousel.getBoundingClientRect().left;
+    scrollLeftStart = carousel.scrollLeft;
+    autoScrollEnabled = false;
+    carousel.style.cursor = "grabbing";
+  };
 
-    // Pause auto scroll while scrolling manually
-    const handleWheel = (e) => {
-      autoScrollEnabled = false;
-      carousel.scrollLeft += e.deltaY;
-      if (atEnd()) scrollDirection = -1;
-      else if (atStart()) scrollDirection = 1;
-      clearTimeout(carousel.wheelTimeout);
-      carousel.wheelTimeout = setTimeout(() => (autoScrollEnabled = true), 1000);
-    };
-    carousel.addEventListener("wheel", handleWheel);
+  const dragMove = (x) => {
+    if (!isDragging) return;
+    const walk = x - carousel.getBoundingClientRect().left - startX;
+    carousel.scrollLeft = scrollLeftStart - walk;
+    if (atEnd()) scrollDirection = -1;
+    else if (atStart()) scrollDirection = 1;
+  };
 
-    return () => {
-      cancelAnimationFrame(rafId);
-      clearTimeout(initDelay);
-      carousel.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+  const endDrag = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    carousel.style.cursor = "grab";
+    setTimeout(() => (autoScrollEnabled = true), 800);
+  };
+
+  // Mobile events (for iOS)
+  carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), { passive: true });
+  carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), { passive: true });
+  carousel.addEventListener("touchend", endDrag);
+
+  // Pause on manual scroll
+  const handleWheel = (e) => {
+    autoScrollEnabled = false;
+    carousel.scrollLeft += e.deltaY;
+    clearTimeout(carousel.wheelTimeout);
+    carousel.wheelTimeout = setTimeout(() => (autoScrollEnabled = true), 1000);
+  };
+  carousel.addEventListener("wheel", handleWheel);
+
+  return () => {
+    clearInterval(intervalId);
+    clearTimeout(initDelay);
+    carousel.removeEventListener("wheel", handleWheel);
+  };
+}, []);
+
 
   const services = [
     {
       img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220804114400/Design-Components-For-Front-End-Developers.jpg",
       title: "Frontend Design Components",
-      desc: "React, Tailwind, Bootstrap, Animation UI components for all",
+      desc: "Free React, Tailwind, Bootstrap, Animation UI components for all",
       link: "/frontend-design",
     },
     {

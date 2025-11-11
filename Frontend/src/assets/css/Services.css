@@ -21,22 +21,23 @@ h2.cv-section-title {
     overflow: hidden;
     position: relative;
     width: 100%;
+    contain: layout paint; /* ✅ isolates rendering for better performance on iOS */
 }
 
 .cv-carousel {
     display: flex;
     gap: 18px;
     overflow-x: auto;
-    scroll-behavior: smooth;
+    scroll-behavior: auto; /* ✅ use auto, not smooth — JS handles motion */
     cursor: grab;
     user-select: none;
     padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch;
+    -webkit-overflow-scrolling: touch; /* ✅ helps touch momentum when dragging */
     touch-action: pan-x;
     scroll-snap-type: none;
-    will-change: scroll-position;
-
+    will-change: transform, scroll-position; /* ✅ improves iOS GPU rendering */
 }
+
 
 .cv-carousel::-webkit-scrollbar {
     display: none;
