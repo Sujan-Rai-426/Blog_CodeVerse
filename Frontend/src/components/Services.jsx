@@ -13,40 +13,36 @@ const Services = () => {
     let scrollLeftStart = 0;
     let autoScrollEnabled = true;
     let scrollDirection = 1;
-    const autoScrollSpeed = 0.5;
+    const autoScrollSpeed = 0.6; // adjust speed
     let rafId;
 
-    const atEnd = () =>
-      Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
-    const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
-
-    // ✅ Force iOS repaint
-    carousel.style.willChange = "transform, scroll-position";
-    carousel.style.webkitOverflowScrolling = "auto";
-    carousel.style.scrollBehavior = "auto";
-
-    // Start slightly away from 0 to trigger smooth scrolling immediately
-    carousel.scrollLeft = 1;
+    // Internal virtual scroll position
+    let virtualScroll = 0;
 
     const smoothAutoScroll = () => {
       if (autoScrollEnabled && !isDragging) {
-        carousel.scrollLeft += autoScrollSpeed * scrollDirection;
-
-        // Trigger iOS repaint
-        carousel.style.transform = `translateZ(0)`;
-
-        if (atEnd()) scrollDirection = -1;
-        else if (atStart()) scrollDirection = 1;
+        virtualScroll += autoScrollSpeed * scrollDirection;
+        // Bounce back at edges
+        if (virtualScroll >= carousel.scrollWidth - carousel.clientWidth) {
+          virtualScroll = carousel.scrollWidth - carousel.clientWidth;
+          scrollDirection = -1;
+        } else if (virtualScroll <= 0) {
+          virtualScroll = 0;
+          scrollDirection = 1;
+        }
+        carousel.scrollLeft = virtualScroll;
+        // Force repaint on iOS
+        carousel.style.transform = "translateZ(0)";
       }
       rafId = requestAnimationFrame(smoothAutoScroll);
     };
 
-    // Start after layout stabilizes
+    // Start after a short delay
     const initTimeout = setTimeout(() => {
       rafId = requestAnimationFrame(smoothAutoScroll);
-    }, 500);
+    }, 200);
 
-    // Drag handlers
+    // Drag handling
     const startDrag = (x) => {
       isDragging = true;
       startX = x - carousel.getBoundingClientRect().left;
@@ -54,11 +50,14 @@ const Services = () => {
       autoScrollEnabled = false;
       carousel.style.cursor = "grabbing";
     };
+
     const dragMove = (x) => {
       if (!isDragging) return;
       const walk = x - carousel.getBoundingClientRect().left - startX;
       carousel.scrollLeft = scrollLeftStart - walk;
+      virtualScroll = carousel.scrollLeft; // sync virtual scroll
     };
+
     const endDrag = () => {
       isDragging = false;
       carousel.style.cursor = "grab";
@@ -80,6 +79,7 @@ const Services = () => {
     const handleWheel = (e) => {
       autoScrollEnabled = false;
       carousel.scrollLeft += e.deltaY;
+      virtualScroll = carousel.scrollLeft; // sync virtual scroll
       clearTimeout(carousel.wheelTimeout);
       carousel.wheelTimeout = setTimeout(() => (autoScrollEnabled = true), 1000);
     };
@@ -96,7 +96,7 @@ const Services = () => {
     {
       img: "https://media.geeksforgeeks.org/wp-content/cdn-uploads/20220804114400/Design-Components-For-Front-End-Developers.jpg",
       title: "Frontend Design Components",
-      desc: "Free React, Tailwind, Bootstrap, Animation UI components for all to use",
+      desc: "Free React, Tailwind, Bootstrap, Animation UI components for all ro use",
       link: "/frontend-design",
     },
     {
