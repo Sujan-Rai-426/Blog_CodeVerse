@@ -199,6 +199,8 @@
 
 /* Mobile First Adjustments */
 @media (max-width: 480px) {
+    .hero { padding: 1rem 1.2rem !important; }
+    .hero-subtitle { font-size: .8rem !important; }
     .grid-container { grid-template-columns: repeat(auto-fit,minmax(90px, 1fr)); gap: 0.5rem; }
     .grid-card { max-width: 90px; padding: 0.7rem 0.5rem; }
     .card-icon { font-size: 1.5rem; }
@@ -210,6 +212,8 @@
 
 /* Tablets */
 @media (min-width: 481px) and (max-width: 768px) {
+    .hero { padding: 1rem 1.2rem !important; }
+    .hero-subtitle { font-size: .9rem !important; }
     .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
     .grid-card { max-width: 100px; padding: 0.8rem 0.5rem; }
     .card-icon { font-size: 1.7rem; }
@@ -221,6 +225,7 @@
 
 /* Small Desktops / Tablets */
 @media (min-width: 769px) and (max-width: 1024px) {
+    .hero-subtitle {font-size: 1.2rem !important;}
     .grid-container { grid-template-columns: repeat(4, 1fr); }
     .carousel-section img { width: 85%; max-height: 35vh; border-radius: 14px; }
     .social-link { font-size: 1rem; height: 34px; width: 35px; }
@@ -229,6 +234,7 @@
 
 /* Large Desktops */
 @media (min-width: 1025px) {
+    .hero-subtitle { font-size: 1.3rem !important; }
     .grid-container { grid-template-columns: repeat(5, 1fr); }
     .carousel-section img { width: 100%; max-height: 40vh; border-radius: 16px; }
     .social-link { font-size: 1rem; height: 35px; width: 37px; }

@@ -66,7 +66,7 @@ function About() {
                         </div>
                         <div className="team-card">
                             <img src={roshanImg} alt="Roshan Rai" />
-                            <h3>Roshan Rai</h3>
+                            <h3>Roshan Bantawa Rai</h3>
                             <p>UI/UX Designer</p>
                         </div>
                         {/* <div className="team-card">

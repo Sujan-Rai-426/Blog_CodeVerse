@@ -71,7 +71,7 @@ function Home() {
                         <b>Code</b><sup><u><small>Vora</small>💻</u></sup>
                     </h1>
                     <h5 className="hero-subtitle text-gray">
-                        Your interactive coding platform — learn, share, and grow your skills in frontend, backend, and beyond.
+                        Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         <p className="text-warning m-0 p-0">📢 <small><u>More Content Will Be Added on Weekly Basis...</u></small></p>
                     </h5>
 
