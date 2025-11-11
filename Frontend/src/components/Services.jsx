@@ -16,8 +16,7 @@ const Services = () => {
     let scrollDirection = 1;
     let rafId;
 
-    const atEnd = () =>
-      Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
+    const atEnd = () => Math.ceil(carousel.scrollLeft) >= carousel.scrollWidth - carousel.clientWidth;
     const atStart = () => Math.floor(carousel.scrollLeft) <= 0;
 
     const autoScroll = () => {
@@ -28,7 +27,15 @@ const Services = () => {
       }
       rafId = requestAnimationFrame(autoScroll);
     };
-    autoScroll();
+
+    // For iOS: Start auto-scroll *after a short delay* to allow layout
+    const startAutoScroll = () => {
+      cancelAnimationFrame(rafId);
+      rafId = requestAnimationFrame(autoScroll);
+    };
+
+    // Add a slight delay so iOS properly initializes layout
+    const startTimeout = setTimeout(startAutoScroll, 800);
 
     const startDrag = (x) => {
       isDragging = true;
@@ -57,8 +64,12 @@ const Services = () => {
     carousel.addEventListener("mousemove", (e) => dragMove(e.pageX));
     window.addEventListener("mouseup", endDrag);
     carousel.addEventListener("mouseleave", endDrag);
-    carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX));
-    carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX));
+    carousel.addEventListener("touchstart", (e) => startDrag(e.touches[0].pageX), {
+      passive: true,
+    });
+    carousel.addEventListener("touchmove", (e) => dragMove(e.touches[0].pageX), {
+      passive: true,
+    });
     carousel.addEventListener("touchend", endDrag);
 
     const handleWheel = (e) => {
@@ -71,8 +82,12 @@ const Services = () => {
     };
     carousel.addEventListener("wheel", handleWheel);
 
-    return () => cancelAnimationFrame(rafId);
+    return () => {
+      cancelAnimationFrame(rafId);
+      clearTimeout(startTimeout);
+    };
   }, []);
+
 
   const services = [
     {

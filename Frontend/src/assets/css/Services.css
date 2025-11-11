@@ -31,6 +31,11 @@ h2.cv-section-title {
     cursor: grab;
     user-select: none;
     padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scroll-snap-type: none;
+    will-change: scroll-position;
+
 }
 
 .cv-carousel::-webkit-scrollbar {
