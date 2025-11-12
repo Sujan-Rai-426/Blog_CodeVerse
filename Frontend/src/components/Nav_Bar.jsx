@@ -20,9 +20,9 @@ function Nav_Bar() {
         <div className="d-none d-lg-flex align-items-center navbar-nav">
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/About" className="nav-link">About</Link>
-          <a href="https://www.sujan140.com.np/contact" className="nav-link">Contact</a>
+          <a href="https://sujan140.vercel.app/contact" className="nav-link">Contact</a>
           <Link to="/Privacy_Policy" className="nav-link">Privacy Policy</Link>
-          <a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" className="nav-link">Developer</a>
+          <a href="https://sujan140.vercel.app" target="_blank" rel="noopener noreferrer" className="nav-link">Developer</a>
           {/* <a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light btn-sm ms-3">Admin 💻</a> */}
         </div>
       </nav>
@@ -32,9 +32,9 @@ function Nav_Bar() {
         <ul className="sidebar-nav">
           <li><Link to="/" onClick={toggleSidebar}>Home</Link></li>
           <li><Link to="/About" onClick={toggleSidebar}>About</Link></li>
-          <li><a href="https://www.sujan140.com.np/contact" onClick={toggleSidebar}>Contact</a></li>
+          <li><a href="https://sujan140.vercel.app/contact" onClick={toggleSidebar}>Contact</a></li>
           <li><Link to="/Privacy_Policy" onClick={toggleSidebar}>Privacy Policy</Link></li>
-          <li><a href="https://www.sujan140.com.np" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
+          <li><a href="https://sujan140.vercel.app" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
           {/* <li><a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Admin 💻</a></li> */}
         </ul>
       </div>
