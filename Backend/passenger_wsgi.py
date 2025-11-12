@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the folder containing the inner Backend folder to PYTHONPATH
-project_home = '/home/sujancom/CodeVoraBackend/Backend'
+project_home = '/home/sujancom/CodeVora/Backend'
 if project_home not in sys.path:
     sys.path.insert(0, project_home)
 
