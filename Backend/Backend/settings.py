@@ -1,15 +1,15 @@
 from pathlib import Path
 from decouple import config
-from decouple import Config, RepositoryEnv
+# from decouple import Config, RepositoryEnv
 import cloudinary
 import dj_database_url
 
 # ---------------- BASE ----------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Load .env from BASE_DIR
-env_file = BASE_DIR / ".env"
-config = Config(RepositoryEnv(env_file))
+# # Load .env from BASE_DIR
+# env_file = BASE_DIR / ".env"
+# config = Config(RepositoryEnv(env_file))
 
 
 # ---------------- SECURITY ----------------
