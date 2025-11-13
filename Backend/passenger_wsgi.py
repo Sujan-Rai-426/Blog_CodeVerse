@@ -2,7 +2,7 @@ import sys
 import os
 
 # Add the project folder containing the Django settings
-project_home = '/home/sujancom/CodeVora_Backend'
+project_home = '/home/sujancom/CodeVora_Backend/Backend'
 if project_home not in sys.path:
     sys.path.insert(0, project_home)
 
