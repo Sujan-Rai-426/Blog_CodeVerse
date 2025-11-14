@@ -113,7 +113,7 @@ function Recent_Contents() {
                                         &nbsp;&nbsp; {tutorial.desc.slice(0, 50)}...
                                     </p>
                                     &nbsp;&nbsp;
-                                    <Link to={`/Backend_Tutorial_Solution/${tutorial.topicId}`} className="btn btn-outline-warning btn-sm rounded-pill" >
+                                    <Link to={`/Frontend_Tutorial_Solution/${tutorial.topicId}`} className="btn btn-outline-warning btn-sm rounded-pill" >
                                         View Code →
                                     </Link>
                                 </div>
