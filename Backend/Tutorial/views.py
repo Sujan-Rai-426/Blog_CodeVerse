@@ -8,6 +8,9 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework.permissions import AllowAny
+
+from Tutorial.permissions import IsAdminOrReadOnly
 
 from .models import (
     Category, Topic, Language,
@@ -22,11 +25,13 @@ from .serializers import (
 
 # ------------------ CATEGORY & TOPIC ------------------
 class CategoryViewSet(viewsets.ModelViewSet):  # now allows POST, PUT, DELETE
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Category.objects.all().prefetch_related("sections__languages__topics__videos")
     serializer_class = CategorySerializer
 
 
 class TopicViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Topic.objects.all().prefetch_related("videos", "steps")
     serializer_class = TopicSerializer
 
@@ -46,11 +51,13 @@ class TopicViewSet(viewsets.ModelViewSet):
 
 # ------------------ LANGUAGE ------------------
 class LanguageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
 # ------------------ FRONTEND ------------------
 class FrontendVideoViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = FrontendVideo.objects.all()
     serializer_class = FrontendVideoSerializer
     
@@ -68,15 +75,18 @@ class FrontendVideoViewSet(viewsets.ModelViewSet):
 
 
 class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = FrontendSourceCode.objects.all()
     serializer_class = FrontendSourceCodeSerializer
 
 class FrontendVideoInfoViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = FrontendVideoInfo.objects.all()
     serializer_class = FrontendVideoInfoSerializer
 
 # ------------------ BACKEND ------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = BackendStep.objects.all()
     serializer_class = BackendStepSerializer
     
@@ -87,6 +97,7 @@ class BackendStepViewSet(viewsets.ModelViewSet):
 
 
 class BackendImageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
     
@@ -94,6 +105,7 @@ class BackendImageViewSet(viewsets.ModelViewSet):
 
 # View for logging in as admin
 class AdminLoginAPIView(APIView):
+    permission_classes = [AllowAny]
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
