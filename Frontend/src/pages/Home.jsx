@@ -1,61 +1,54 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import "../assets/css/Home.css";
 import { Link, useNavigate } from "react-router-dom";
-import api from "../api";
-import Carousel from "../components/Carousel";
-import Recent_Contents from "../components/Recent_Contents";
 import Skeleton from "react-loading-skeleton";
 import 'react-loading-skeleton/dist/skeleton.css';
+
+import Carousel from "../components/Carousel";
+import Recent_Contents from "../components/Recent_Contents";
 import Services from "../components/Services";
 
+import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
+
 function Home() {
+    const { data, loading: parentLoading, error } = useContext(Parent_API_Provider_Context);
+
     const [frontendLangs, setFrontendLangs] = useState([]);
     const [backendLangs, setBackendLangs] = useState([]);
-    const [loading, setLoading] = useState(true);
     const [showLoadingMessage, setShowLoadingMessage] = useState(false);
     const navigate = useNavigate();
 
     useEffect(() => {
         // Timer for showing loading message if it takes more than 3s
         const timer = setTimeout(() => {
-            if (loading) setShowLoadingMessage(true);
+            if (parentLoading) setShowLoadingMessage(true);
         }, 3000);
 
-        const fetchCategories = async () => {
-            try {
-                const res = await api.get("/api/categories/");
-                const data = res.data || [];
+        if (!parentLoading && data.categories.length > 0) {
+            const tutorialCategory = data.categories.find(
+                (cat) => cat.name?.toLowerCase() === "tutorial"
+            );
 
-                const tutorialCategory = data.find(
-                    (cat) => cat.name?.toLowerCase() === "tutorial"
+            if (tutorialCategory) {
+                const frontendSection = tutorialCategory.sections.find(
+                    (section) => section.name?.toLowerCase() === "frontend"
                 );
-                if (tutorialCategory) {
-                    const frontendSection = tutorialCategory.sections.find(
-                        (section) => section.name?.toLowerCase() === "frontend"
-                    );
-                    const backendSection = tutorialCategory.sections.find(
-                        (section) => section.name?.toLowerCase() === "backend"
-                    );
+                const backendSection = tutorialCategory.sections.find(
+                    (section) => section.name?.toLowerCase() === "backend"
+                );
 
-                    setFrontendLangs(frontendSection?.languages || []);
-                    setBackendLangs(backendSection?.languages || []);
-                }
-            } catch (err) {
-                console.error("❌ Error fetching categories:", err);
-            } finally {
-                setLoading(false);
-                clearTimeout(timer);
+                setFrontendLangs(frontendSection?.languages || []);
+                setBackendLangs(backendSection?.languages || []);
             }
-        };
-        fetchCategories();
+        }
 
         return () => clearTimeout(timer);
-    }, [loading]);
+    }, [parentLoading, data]);
 
     return (
         <div className="home-container">
             {/* Loading Message Overlay if loading skeleton is more than 3 sec */}
-            {showLoadingMessage && loading && (
+            {showLoadingMessage && parentLoading && (
                 <div className="loading-overlay">
                     <div className="loading-message">
                         <h2>Good things take time</h2>
@@ -104,23 +97,16 @@ function Home() {
                 </div>
             </section>
 
-            {/* Carousel Section */}
-            {/* <section className="carousel-section">
-                {loading ? <Skeleton height={220} borderRadius={16} baseColor="#2b2b2b" highlightColor="#3b3b3b" /> : <Carousel />}
-            </section> */}
-
-
-{/* Service Section Carousel Style */}
-<section className="service">
-    <Services />
-</section>
-
+            {/* Service Section */}
+            <section className="service">
+                <Services />
+            </section>
 
             {/* Frontend Section */}
             <section className="tutorial-section">
                 <h6 className="section-title"> <small> 🎨 <sup><u>Fronted Components Design</u></sup> </small> </h6>
                 <div className="grid-container">
-                    {loading ? (
+                    {parentLoading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
@@ -130,9 +116,7 @@ function Home() {
                     ) : (
                         frontendLangs.map((lang) => (
                             <Link key={lang.id} to={`/Frontend_Tutorial_Topic/${lang.id}`} className="grid-card" >
-                                {lang.icon_class && (
-                                    <i className={`${lang.icon_class} card-icon`}></i>
-                                )}
+                                {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
                                 <span className="card-text">{lang.name}</span>
                             </Link>
                         ))
@@ -144,7 +128,7 @@ function Home() {
             <section className="tutorial-section">
                 <h6 className="section-title"> <small> 🖥️ <sup><u>Coding Guide</u></sup> </small> </h6>
                 <div className="grid-container">
-                    {loading ? (
+                    {parentLoading ? (
                         Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
@@ -154,9 +138,7 @@ function Home() {
                     ) : (
                         backendLangs.map((lang) => (
                             <Link key={lang.id} to={`/Backend_Tutorial_Topic/${lang.id}`} className="grid-card" >
-                                {lang.icon_class && (
-                                    <i className={`${lang.icon_class} card-icon`}></i>
-                                )}
+                                {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
                                 <span className="card-text">{lang.name}</span>
                             </Link>
                         ))
