@@ -1,5 +1,5 @@
 // ============================================================
-// === Frontend_Tutorial_Solution.jsx (Parent API version)
+// === Frontend_Tutorial_Solution.jsx (Parent API version) ===
 // ============================================================
 
 import React, { useEffect, useRef, useState, useContext } from "react";
@@ -16,7 +16,7 @@ import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx"
 
 const Frontend_Tutorial_Solution = () => {
   const { topicID } = useParams();
-  const topicId = parseInt(topicID);
+  const topicId = parseInt(topicID, 10);
   const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
 
   const [topic, setTopic] = useState(null);
@@ -35,34 +35,36 @@ const Frontend_Tutorial_Solution = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // === Show message after 3 seconds if still loading ===
+  // === Show loading message after 3 seconds ===
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (parentLoading) setShowMessage(true);
-    }, 3000);
-    return () => clearTimeout(timer);
-  }, [parentLoading]);
+    if (!parentLoading && data?.length > 0) {
+      let found = null;
 
-  // === Get topic from parent API ===
-  useEffect(() => {
-    if (!parentLoading && data.categories?.length > 0) {
-      for (const category of data.categories) {
+      for (const category of data) {  // data is an array, not data.categories
         for (const section of category.sections || []) {
           for (const language of section.languages || []) {
-            const foundTopic = language.topics?.find(
-              (t) => Number(t.id) === topicId
+            const topicFound = language.topics?.find(
+              (t) => String(t.id) === String(topicId)
             );
-            if (foundTopic) {
-              setTopic(foundTopic);
-              setCurrentVideo(foundTopic.videos[0]);
-              return; // stop once we find the topic
+            if (topicFound) {
+              found = topicFound;
+              break;
             }
           }
+          if (found) break;
         }
+        if (found) break;
       }
-      setTopic(null); // topic not found
+
+      if (found) {
+        setTopic(found);
+        setCurrentVideo(found.videos?.[0] || null);
+      } else {
+        setTopic(null);
+      }
     }
   }, [parentLoading, data, topicId]);
+
 
   // === Highlight code ===
   useEffect(() => {
@@ -106,10 +108,10 @@ const Frontend_Tutorial_Solution = () => {
       <div className="container py-4">
         <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
         <div className="video-main-wrapper">
-          {topic.videos.map((video) => (
+          {topic.videos?.map((video) => (
             <div className="video-wrapper mb-4 position-relative" key={video.id}>
               {(video.access_type === "Premium" ||
-                video.source_codes.some((code) => code.access_type === "Premium")) && (
+                video.source_codes?.some((code) => code.access_type === "Premium")) && (
                 <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
               )}
 
@@ -118,7 +120,7 @@ const Frontend_Tutorial_Solution = () => {
               </div>
 
               <div className="video-description text-white">
-                <p className="mb-0 mt-2 mx-2">{video.info.description}</p>
+                <p className="mb-0 mt-2 mx-2">{video.info?.description || "No description"}</p>
               </div>
 
               <div className="d-flex justify-content-center m-0">
@@ -132,7 +134,7 @@ const Frontend_Tutorial_Solution = () => {
 
               {showCode[video.id] && (
                 <div className="code-info-wrapper mt-3">
-                  {video.source_codes.map((codeObj, idx) => (
+                  {video.source_codes?.map((codeObj, idx) => (
                     <VideoCodeBox key={idx} codeObj={codeObj} />
                   ))}
                 </div>
@@ -145,13 +147,15 @@ const Frontend_Tutorial_Solution = () => {
   }
 
   // === Desktop Layout ===
+  if (!currentVideo) return <p className="text-center mt-5">Loading video...</p>;
+
   return (
     <div className="container py-4">
       <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
       <div className="video-main-wrapper">
         <div className="video-wrapper" ref={mainVideoRef}>
           {(currentVideo.access_type === "Premium" ||
-            currentVideo.source_codes.some((code) => code.access_type === "Premium")) && (
+            currentVideo.source_codes?.some((code) => code.access_type === "Premium")) && (
             <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
           )}
 
@@ -167,7 +171,7 @@ const Frontend_Tutorial_Solution = () => {
           </div>
 
           <div className="video-description text-white">
-            <p className="mb-0 mt-2 mx-2 py-2">{currentVideo?.info.description}</p>
+            <p className="mb-0 mt-2 mx-2 py-2">{currentVideo?.info?.description || "No description"}</p>
           </div>
 
           <div className="d-flex justify-content-center m-0">
@@ -191,7 +195,7 @@ const Frontend_Tutorial_Solution = () => {
 
           {showCode[currentVideo.id] && (
             <div className="code-info-wrapper mt-2" ref={(el) => (codeRefs.current[currentVideo.id] = el)}>
-              {currentVideo.source_codes.map((codeObj, idx) => (
+              {currentVideo.source_codes?.map((codeObj, idx) => (
                 <VideoCodeBox key={idx} codeObj={codeObj} />
               ))}
             </div>
@@ -199,32 +203,30 @@ const Frontend_Tutorial_Solution = () => {
         </div>
 
         <div className="related-videos">
-          {topic.videos
-            .filter((v) => v.id !== currentVideo.id)
-            .map((video) => (
-              <div
-                key={video.id}
-                className="video-card"
-                onClick={() => {
-                  setCurrentVideo(video);
-                  setShowCode({});
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                {(video.access_type === "Premium" ||
-                  video.source_codes.some((code) => code.access_type === "Premium")) && (
-                  <div className="video-price-tag">$</div>
-                )}
+          {topic.videos?.filter((v) => v.id !== currentVideo.id).map((video) => (
+            <div
+              key={video.id}
+              className="video-card"
+              onClick={() => {
+                setCurrentVideo(video);
+                setShowCode({});
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              {(video.access_type === "Premium" ||
+                video.source_codes?.some((code) => code.access_type === "Premium")) && (
+                <div className="video-price-tag">$</div>
+              )}
 
-                <div className="video-card-thumb">
-                  <video src={video.video_url} muted playsInline />
-                </div>
-
-                <div className="video-card-info">
-                  <h5>{video.title}</h5>
-                </div>
+              <div className="video-card-thumb">
+                <video src={video.video_url} muted playsInline />
               </div>
-            ))}
+
+              <div className="video-card-info">
+                <h5>{video.title}</h5>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -265,7 +267,6 @@ const VideoCodeBox = ({ codeObj }) => {
 
     const handleCopy = () => {
       if (!canViewCode) return;
-
       const commentStart = selectedTab === "html" ? "<!-- " : selectedTab === "css" ? "/* " : "// ";
       const commentEnd = selectedTab === "html" ? " -->" : selectedTab === "css" ? " */" : "";
       const promoMessage = `${commentStart}Code by CodeVerse.\nvisit official site for more free designs and tutorial :\n :--- ' https://blog-code-verse.vercel.app ' ${commentEnd}\n`;

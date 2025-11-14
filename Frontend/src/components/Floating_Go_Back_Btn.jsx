@@ -7,14 +7,24 @@ const Floating_Go_Back_Btn = ({ isShareExpanded }) => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    // Disable only on homepage or when share is expanded
     const isDisabled = location.pathname === "/" || isShareExpanded;
+
+    const handleGoBack = () => {
+        if (isDisabled) return;
+
+        // If browser history is available, go back, else go to home
+        if (window.history.state && window.history.state.idx > 0) {
+            navigate(-1);
+        } else {
+            navigate("/"); // fallback to homepage
+        }
+    };
 
     return (
         <button
-            onClick={() => !isDisabled && navigate(-1)}
+            onClick={handleGoBack}
             className={`floating-go-back ${isDisabled ? "disabled" : ""}`}
-            disabled={isDisabled} // actually disables button
+            disabled={isDisabled}
         >
             <ArrowLeftCircle size={28} />
         </button>

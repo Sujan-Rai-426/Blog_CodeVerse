@@ -17,15 +17,15 @@ const Backend_Tutorial_Solution = () => {
 
     const CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dusqlukhy/";
 
-    // Extract all topics from nested data
+    // Flatten all topics from nested data
     const getAllTopics = () => {
-        return data?.categories
-            ?.flatMap(category => category.sections)
-            ?.flatMap(section => section.languages)
-            ?.flatMap(language => language.topics) || [];
+        return data
+            ?.flatMap(category => category.sections || [])
+            ?.flatMap(section => section.languages || [])
+            ?.flatMap(language => language.topics || []) || [];
     };
 
-    // Find the topic based on topicID
+    // Find topic by ID
     useEffect(() => {
         if (!data) return;
         const topicsData = getAllTopics();
@@ -71,62 +71,67 @@ const Backend_Tutorial_Solution = () => {
                 <div className="col-lg-7 mb-4 mb-lg-0 code-steps px-0">
                     <h4 className="mb-2 mt-4 fw-semibold text-center"><small>-Steps-</small></h4>
                     {topic.steps?.length ? (
-                            topic.steps.map((step) => {
-                                const prismLang = getPrismLang(step.step_language);
-                                return (
-                                    <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
-                                        <div className="card-body backend-card">
-                                            <h5 className="fw-bold text-warning mb-0 mt-3 px-1">
-                                                Step {step.step_number}: <small>{step.step_file_name}</small>
-                                            </h5>
-                                            {step.step_description && (
-                                                <p className="text-muted m-0 text-content py-2 px-2">{step.step_description}</p>
-                                            )}
-                                            {step.step_source_code && (
-                                                <div className="code-container position-relative">
-                                                    <button className="copy-btn" onClick={() => handleCopy(step.step_source_code, step.id)}>
-                                                        {copiedStep === step.id ? "✅ Copied!" : <Copy size={18} />}
-                                                    </button>
-                                                    <pre className={`language-${prismLang} code-block`}>
-                                                        <code className={`language-${prismLang}`}>{step.step_source_code}</code>
-                                                    </pre>
-                                                </div>
-                                            )}
-                                        </div>
+                        topic.steps.map((step) => {
+                            const prismLang = getPrismLang(step.step_language);
+                            return (
+                                <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
+                                    <div className="card-body backend-card">
+                                        <h5 className="fw-bold text-warning mb-0 mt-3 px-1">
+                                            Step {step.step_number}: <small>{step.step_file_name}</small>
+                                        </h5>
+                                        {step.step_description && (
+                                            <p className="text-muted m-0 text-content py-2 px-2">{step.step_description}</p>
+                                        )}
+                                        {step.step_source_code && (
+                                            <div className="code-container position-relative">
+                                                <button
+                                                    className="copy-btn"
+                                                    onClick={() => handleCopy(step.step_source_code, step.id)}
+                                                >
+                                                    {copiedStep === step.id ? "✅ Copied!" : <Copy size={18} />}
+                                                </button>
+                                                <pre className={`language-${prismLang} code-block`}>
+                                                    <code className={`language-${prismLang}`}>
+                                                        {step.step_source_code}
+                                                    </code>
+                                                </pre>
+                                            </div>
+                                        )}
                                     </div>
-                                );
-                                })
-                        ) : (
-                            <p className="text-center text-muted py-3">Steps will be uploaded soon...</p>
-                        )}
+                                </div>
+                            );
+                        })
+                    ) : (
+                        <p className="text-center text-muted py-3">Steps will be uploaded soon...</p>
+                    )}
                 </div>
 
                 {/* Images */}
                 {topic.images?.length ? (
-                        <div className="col-lg-5 px-4">
-                            <h4 className="mb-2 mt-3 fw-semibold text-center"><small>-File Format-</small></h4>
-                            {topic.images.map((img) => (
-                                <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden">
-                                    <img
-                                        src={`${CLOUDINARY_BASE_URL}${img.image}`}
-                                        alt={`Backend step ${img.id}`}
-                                        className="img-fluid preview-img"
-                                        onClick={() => setZoomedImage(`${CLOUDINARY_BASE_URL}${img.image}`)}
-                                        loading="lazy"
-                                    />
-                                </div>
-                            ))}
-                            {zoomedImage && (
-                                <div className="image-popup" onClick={() => setZoomedImage(null)}>
-                                    <img src={zoomedImage} alt="Full preview" />
-                                </div>
-                            )}
-                        </div>
-                    ) : (
-                        <div className="col-lg-5 px-4">
-                            <p className="text-center text-muted mt-4">No images uploaded yet...</p>
-                        </div>
-                    )}
+                    <div className="col-lg-5 px-4">
+                        <h4 className="mb-2 mt-3 fw-semibold text-center"><small>-File Format-</small></h4>
+                        {topic.images.map((img) => (
+                            <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden">
+                                <img
+                                    src={`${CLOUDINARY_BASE_URL}${img.image}`}
+                                    alt={`Backend step ${img.id}`}
+                                    className="img-fluid preview-img"
+                                    onClick={() => setZoomedImage(`${CLOUDINARY_BASE_URL}${img.image}`)}
+                                    loading="lazy"
+                                />
+                            </div>
+                        ))}
+                        {zoomedImage && (
+                            <div className="image-popup" onClick={() => setZoomedImage(null)}>
+                                <img src={zoomedImage} alt="Full preview" />
+                            </div>
+                        )}
+                    </div>
+                ) : (
+                    <div className="col-lg-5 px-4">
+                        <p className="text-center text-muted mt-4">No images uploaded yet...</p>
+                    </div>
+                )}
             </div>
 
             <div className="text-center mt-3">

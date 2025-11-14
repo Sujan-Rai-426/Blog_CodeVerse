@@ -11,8 +11,10 @@ const Frontend_Tutorial_Topic = () => {
   const [filteredCategories, setFilteredCategories] = useState([]);
 
   useEffect(() => {
-    if (!parentLoading && data.categories.length > 0) {
-      const categoriesWithFrontend = data.categories
+    if (!parentLoading && data) {
+      const categories = Array.isArray(data) ? data : data.categories || [];
+
+      const categoriesWithFrontend = categories
         .map((category) => {
           const frontendSections = category.sections?.filter(
             (section) => section.name?.toLowerCase() === "frontend"

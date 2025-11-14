@@ -1,106 +1,48 @@
-// Parent_API_Provider_Context.jsx
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useEffect, useState } from "react";
+import api from "../api";
 
-// Create the context
 export const Parent_API_Provider_Context = createContext();
 
-// Replace with your actual backend URL
-const BASE_URL = "https://sujan140.com.np/api";
-
 export const Parent_Api_Provider = ({ children }) => {
-    // Initial empty structure (skeleton)
-    const emptyStructure = {
-        categories: [
-            {
-                id: null,
-                name: "",
-                description: "",
-                sections: [
-                    {
-                        id: null,
-                        name: "",
-                        languages: [
-                            {
-                                id: null,
-                                name: "",
-                                icon_class: "",
-                                topics: [
-                                    {
-                                        id: null,
-                                        name: "",
-                                        language: null,
-                                        section: null,
-                                        category: null,
-                                        videos: [
-                                            {
-                                                id: null,
-                                                topic: null,
-                                                title: "",
-                                                video_url: "",
-                                                access_type: "",
-                                                info: { id: null, video: null, description: "" },
-                                                source_codes: [
-                                                    {
-                                                        id: null,
-                                                        video: null,
-                                                        html_code: "",
-                                                        css_code: "",
-                                                        js_code: "",
-                                                        access_type: ""
-                                                    }
-                                                ]
-                                            }
-                                        ],
-                                        images: [
-                                            { id: null, image: "", topic: null }
-                                        ],
-                                        steps: [
-                                            {
-                                                id: null,
-                                                topic: null,
-                                                step_number: null,
-                                                step_file_name: "",
-                                                step_description: "",
-                                                step_source_code: ""
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
-                        ]
-                    }
-                ]
-            }
-        ]
+  const [data, setData] = useState(null); // Full API data
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  // Load cached data
+  const loadFromCache = () => {
+    const cached = localStorage.getItem("parent_api_data");
+    return cached ? JSON.parse(cached) : null;
+  };
+
+  useEffect(() => {
+    const cachedData = loadFromCache();
+    if (cachedData) {
+      setData(cachedData);
+      setLoading(false); // Show cached data immediately
+    }
+
+    // Fetch fresh data
+    const fetchData = async () => {
+      try {
+        const res = await fetch(`${api}/categories/`);
+        if (!res.ok) throw new Error("Failed to fetch categories");
+        const categories = await res.json();
+        setData(categories);
+        localStorage.setItem("parent_api_data", JSON.stringify(categories));
+      } catch (err) {
+        console.error("Parent API fetch error:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const [data, setData] = useState(emptyStructure);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+    fetchData();
+  }, []);
 
-    // Fetch parent API
-    const fetchParentApi = async () => {
-        try {
-            const res = await fetch(`${BASE_URL}/categories/`);
-            const categories = await res.json();
-
-            // Update state with fetched data
-            setData({ categories });
-            setLoading(false);
-        } catch (err) {
-            console.error("Error fetching parent API:", err);
-            setError(err);
-            setLoading(false);
-        }
-    };
-
-    useEffect(() => {
-        fetchParentApi();
-    }, []);
-
-    return (
-        <Parent_API_Provider_Context.Provider value={{ data, loading, error }}>
-            {children}
-        </Parent_API_Provider_Context.Provider>
-    );
+  return (
+    <Parent_API_Provider_Context.Provider value={{ data, loading, error }}>
+      {children}
+    </Parent_API_Provider_Context.Provider>
+  );
 };

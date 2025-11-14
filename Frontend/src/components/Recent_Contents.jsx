@@ -1,4 +1,3 @@
-// Recent_Contents.jsx
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
@@ -7,7 +6,6 @@ import "../assets/css/Recent_Contents.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";  
 
 function Recent_Contents() {
-    // Use parent API context
     const { data, loading, error } = useContext(Parent_API_Provider_Context);
 
     if (loading) {
@@ -35,25 +33,24 @@ function Recent_Contents() {
         return <p className="text-center text-danger py-5">Failed to load tutorials.</p>;
     }
 
-  // Extract tutorials from parent data
-    const tutorials =
-        data?.categories?.flatMap((cat) =>
-            cat.sections.flatMap((sec) =>
-                sec.languages.flatMap((lang) =>
-                    lang.topics.flatMap((topic) =>
-                        topic.videos.map((video) => ({
-                            videoId: video.id,
-                            topicId: topic.id,
-                            topicName: topic.name,
-                            title: video.title || topic.name,
-                            desc: video.info?.description || "No description available",
-                            video_url: video.video_url,
-                            access_type: video.source_codes || video.access_type,
-                        }))
-                    )
+    // Flatten tutorials safely from nested data
+    const tutorials = data?.flatMap(cat =>
+        (cat.sections || []).flatMap(sec =>
+            (sec.languages || []).flatMap(lang =>
+                (lang.topics || []).flatMap(topic =>
+                    (topic.videos || []).map(video => ({
+                        videoId: video.id,
+                        topicId: topic.id,
+                        topicName: topic.name,
+                        title: video.title || topic.name,
+                        desc: video.info?.description || "No description available",
+                        video_url: video.video_url,
+                        access_type: video.source_codes || video.access_type,
+                    }))
                 )
             )
-        ) || [];
+        )
+    ) || [];
 
     // Sort by latest videoId
     const sortedTutorials = tutorials.sort((a, b) => b.videoId - a.videoId);
@@ -64,7 +61,6 @@ function Recent_Contents() {
                 <p className="text-center text-muted py-5">No recent tutorials found.</p>
             ) : (
                 sortedTutorials.slice(0, 3).map((tutorial) => {
-                    // Handle access_type safely
                     let accessTypeString = "";
                     if (Array.isArray(tutorial.access_type) && tutorial.access_type.length > 0) {
                         accessTypeString = tutorial.access_type[0]?.access_type || "";
@@ -79,15 +75,15 @@ function Recent_Contents() {
                             <div className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative">
                                 <div className="video-container position-relative">
                                     {tutorial.video_url ? (
-                                            <video
-                                                src={tutorial.video_url}
-                                                autoPlay
-                                                muted
-                                                loop
-                                                playsInline
-                                                className="w-100"
-                                                style={{ height: "200px", objectFit: "cover" }}
-                                            />
+                                        <video
+                                            src={tutorial.video_url}
+                                            autoPlay
+                                            muted
+                                            loop
+                                            playsInline
+                                            className="w-100"
+                                            style={{ height: "200px", objectFit: "cover" }}
+                                        />
                                     ) : (
                                         <img
                                             src="https://via.placeholder.com/400x200"
@@ -116,16 +112,10 @@ function Recent_Contents() {
                                     <Link
                                         to={`/Frontend_Tutorial_Solution/${tutorial.topicId}`}
                                         className="btn btn-outline-warning btn-sm rounded-pill"
-                                        onClick={() => {
-                                            // small delay to ensure the page navigates/rendered
-                                            setTimeout(() => {
-                                                window.scrollTo({ top: 0, behavior: "smooth" });
-                                            }, 50);
-                                        }}
+                                        onClick={() => setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50)}
                                     >
                                         View Code →
                                     </Link>
-
                                 </div>
                             </div>
                         </div>
