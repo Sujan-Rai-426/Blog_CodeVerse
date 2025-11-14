@@ -19,8 +19,6 @@ const Admin_Dashboard = () => {
     const [topicName, setTopicName] = useState("");
     const [topicLanguage, setTopicLanguage] = useState("");
 
-
-
     // Frontend
     const [frontendLanguage, setFrontendLanguage] = useState("");
     const [frontendTopic, setFrontendTopic] = useState("");
@@ -33,26 +31,23 @@ const Admin_Dashboard = () => {
     const [videoAccessType, setVideoAccessType] = useState("");
     const [sourceCodeAccessType, setSourceCodeAccessType] = useState("");
 
-
-    
     // Backend
     const [backendLanguage, setBackendLanguage] = useState("");
     const [backendTopic, setBackendTopic] = useState("");
     const [imageFile, setImageFile] = useState(null);
     const [stepNumber, setStepNumber] = useState(1);
-    const [stepFileName, setStepTitle] = useState("");
+    const [stepFileName, setStepFileName] = useState("");
     const [stepDescription, setStepDescription] = useState("");
     const [stepCode, setStepCode] = useState("");
 
-
-
-    // ---------- Fetch Categories api ----------
+  // ---------- Fetch Categories ----------
     const fetchCategories = async () => {
         try {
             const res = await api.get("/api/categories/");
-            setCategories(res.data);
-            setSections(res.data.flatMap(c => c.sections || []));
-            setLanguages(res.data.flatMap(c => c.sections?.flatMap(s => s.languages) || []));
+            const data = res.data || [];
+            setCategories(data);
+            setSections(data.flatMap(c => c.sections || []));
+            setLanguages(data.flatMap(c => c.sections?.flatMap(s => s.languages) || []));
         } catch (err) {
             console.error("Error fetching categories:", err);
         }
@@ -62,123 +57,100 @@ const Admin_Dashboard = () => {
         fetchCategories();
     }, []);
 
-
-    // ---------- Derived dropdown lists ----------
-    const frontendLanguages = sections
-        .find(s => s.name.toLowerCase() === "frontend")
-        ?.languages || [];
-
-    const backendLanguages = sections
-        .find(s => s.name.toLowerCase() === "backend")
-        ?.languages || [];
-
+  // ---------- Derived dropdown lists ----------
+    const frontendLanguages = sections.find(s => s.name?.toLowerCase() === "frontend")?.languages || [];
+    const backendLanguages = sections.find(s => s.name?.toLowerCase() === "backend")?.languages || [];
     const frontendTopics = frontendLanguages.find(l => l.id === parseInt(frontendLanguage))?.topics || [];
     const backendTopics = backendLanguages.find(l => l.id === parseInt(backendLanguage))?.topics || [];
+    const topicLangOptions = languages;
 
-    const topicLangOptions = languages; // For topic tab dropdown
-
-
-        // ---------- Logout Handler ----------
+    // ---------- Logout ----------
     const handleLogout = () => {
-        window.localStorage.removeItem("loggedIn"); // remove login flag
-        navigate("/Admin_Login"); // redirect to login
+        window.localStorage.removeItem("loggedIn");
+        navigate("/Admin_Login");
     };
 
 
-    // ----FETCH AND HANDLE ADDITION OF LANGUAGE----
+  // ---------- Add Language ----------
     const handleAddLanguage = async (e) => {
         e.preventDefault();
         try {
             setIsUploading(true);
             const sec = sections.find(s => s.name === sectionType);
             if (!sec) return alert("Section not selected");
-            await api.post("/api/languages/", { section: sec.id, name: languageName, icon_class: icon });
-            // Reset from fields
+            if (!categoryId) return alert("Please select category");
+
+            await api.post("/api/languages/", { section: sec.id, name: languageName, icon_class: icon, category: parseInt(categoryId) });
+
             setLanguageName("");
             setIcon("");
+            setCategoryId("");
             fetchCategories();
             alert("Language added successfully!");
         } catch (err) {
             console.error(err.response ? err.response.data : err);
             alert("Error adding language!");
-        }   finally {
-        setIsUploading(false);
-    }
+        } finally {
+            setIsUploading(false);
+        }
     };
 
 
-
-    // ----FETCH AND HANDLE ADDITION OF TOPIC----
+  // ---------- Add Topic ----------
     const handleAddTopic = async (e) => {
         e.preventDefault();
         if (!topicLanguage) return alert("Please select a language");
         try {
             setIsUploading(true);
-            await api.post("/api/topics/", { language: topicLanguage, name: topicName });
+            await api.post("/api/topics/", { language: parseInt(topicLanguage), name: topicName });
             setTopicName("");
+            setTopicLanguage("");
             fetchCategories();
             alert("Topic added successfully!");
         } catch (err) {
             console.error(err.response ? err.response.data : err);
             alert(err.response?.data?.error || "Error adding topic!");
-        }   finally {
-        setIsUploading(false);
-    }
+        } finally {
+            setIsUploading(false);
+        }
     };
 
 
-
-    // ----FETCH AND HANDLE ADDITION OF FRONTEND CONTENT----
+  // ---------- Add Frontend ----------
     const handleAddFrontend = async (e) => {
         e.preventDefault();
-
-        if (!frontendLanguage || !frontendTopic || !videoFile) {
-            return alert("Please select language, topic, and upload a video file");
-        }
-
-        if (!videoAccessType || !sourceCodeAccessType) {
-            return alert("Please select access types for video and source code");
-        }
+        if (!frontendLanguage || !frontendTopic || !videoFile) return alert("Please select language, topic, and upload a video file");
+        if (!videoAccessType || !sourceCodeAccessType) return alert("Please select access types for video and source code");
 
         try {
             setIsUploading(true);
 
-            // ----------------- Upload Video -----------------
             const videoFormData = new FormData();
-            videoFormData.append("topic", frontendTopic);  // topic ID
-            videoFormData.append("title", String(frontendDesc || "Untitled Video")); // ensure string
+            videoFormData.append("topic", parseInt(frontendTopic));
+            videoFormData.append("title", String(frontendDesc || "Untitled Video"));
             videoFormData.append("video_url", videoFile);
-            videoFormData.append("access_type", videoAccessType); // NEW FIELD
+            videoFormData.append("access_type", videoAccessType);
 
             const videoRes = await api.post("/api/frontendvideos/", videoFormData, {
                 headers: { "Content-Type": "multipart/form-data" },
             });
 
-            const videoId = videoRes.data.id;  // ID of the uploaded video
-            console.log("Video uploaded with ID:", videoId);
+            const videoId = videoRes.data.id;
 
-            // ----------------- Add Video Info (description) -----------------
             if (frontendDesc) {
-                const infoRes = await api.post("/api/frontendvideoinfo/", {
-                    video: videoId,
-                    description: String(frontendDesc),
-                });
-                console.log("Video description saved:", infoRes.data);
+                await api.post("/api/frontendvideoinfo/", { video: videoId, description: String(frontendDesc) });
             }
 
-            // ----------------- Add Source Codes -----------------
             if (htmlCode || cssCode || jsCode) {
-                const codeRes = await api.post("/api/frontendsourcecodes/", {
+                await api.post("/api/frontendsourcecodes/", {
                     video: videoId,
-                    html_code: String(htmlCode || ""),
-                    css_code: String(cssCode || ""),
-                    js_code: String(jsCode || ""),
-                    access_type: sourceCodeAccessType, // NEW FIELD
+                    html_code: htmlCode || "",
+                    css_code: cssCode || "",
+                    js_code: jsCode || "",
+                    access_type: sourceCodeAccessType,
                 });
-                console.log("Source code saved:", codeRes.data);
             }
 
-            // ----------------- Reset Fields -----------------
             setVideoFile(null);
             setHtmlCode("");
             setCssCode("");
@@ -192,51 +164,39 @@ const Admin_Dashboard = () => {
             alert("✅ Frontend content added successfully!");
         } catch (err) {
             console.error("Error adding frontend content:", err.response ? err.response.data : err);
-            alert("❌ Error adding frontend content! Check console for details.");
+            alert("❌ Error adding frontend content!");
         } finally {
             setIsUploading(false);
         }
     };
 
-
-
-
-    // ----FETCH AND HANDLE ADDITION OF BACKEND STEP----
+  // ---------- Add Backend ----------
     const handleAddBackend = async (e) => {
         e.preventDefault();
-        
-        if (!backendLanguage || !backendTopic) {
-            return alert("Please select language and topic");
-        }
+        if (!backendLanguage || !backendTopic) return alert("Please select language and topic");
 
         try {
             setIsUploading(true);
 
-            // ----------  Create the backend step ----------
             const stepPayload = {
-                topic: parseInt(backendTopic),   // topic ID
+                topic: parseInt(backendTopic),
                 step_number: parseInt(stepNumber),
                 step_file_name: stepFileName,
                 step_description: stepDescription,
                 step_source_code: stepCode,
             };
 
-            const stepResponse = await api.post("/api/backendsteps/", stepPayload);
+            await api.post("/api/backendsteps/", stepPayload);
 
-            // ----------  If an image is selected, upload it ----------
             if (imageFile) {
                 const formData = new FormData();
-                formData.append("topic", backendTopic); // topic ID
+                formData.append("topic", parseInt(backendTopic));
                 formData.append("image", imageFile);
-
-                await api.post("/api/backendimages/", formData, {
-                    headers: { "Content-Type": "multipart/form-data" },
-                });
+                await api.post("/api/backendimages/", formData, { headers: { "Content-Type": "multipart/form-data" } });
             }
 
-            // ----------  Reset all fields ----------
             setStepNumber(1);
-            setStepTitle("");
+            setStepFileName("");
             setStepDescription("");
             setStepCode("");
             setImageFile(null);
@@ -246,48 +206,44 @@ const Admin_Dashboard = () => {
             alert("Backend step and image added successfully!");
         } catch (err) {
             console.error("Backend add error:", err.response ? err.response.data : err);
-            alert("Error! Step number already exists");
-        }   finally {
-        setIsUploading(false);
-    }
+            alert("Error! Step number may already exist.");
+        } finally {
+            setIsUploading(false);
+        }
     };
 
 
-
-    //  Fetch occupied step numbers when backendTopic changes
+  // ---------- Fetch occupied step numbers ----------
     const [occupiedSteps, setOccupiedSteps] = useState([]);
     useEffect(() => {
         const fetchOccupiedSteps = async () => {
-            if (backendTopic) {
-                try {
-                    const res = await api.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
-                    setOccupiedSteps(res.data.occupied_steps);
-                } catch (err) {
-                    console.error("Error fetching occupied steps:", err);
-                }
-              } else {
-                  setOccupiedSteps([]);
-              }
+            if (!backendTopic) return setOccupiedSteps([]);
+            try {
+                const res = await api.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
+                setOccupiedSteps(res.data.occupied_steps || []);
+            } catch (err) {
+                console.error("Error fetching occupied steps:", err);
+            }
         };
         fetchOccupiedSteps();
     }, [backendTopic]);
 
-
-    
     return (
-        <div className="admin-dashboard my-5 ">
-                <h4 className="mb-4 text-center text-light">Admin Dashboard 💡 </h4>
+        <div className="admin-dashboard my-5">
+            <h4 className="mb-4 text-center text-light">Admin Dashboard 💡</h4>
 
             {/* Tabs */}
             <div className="btn-group mb-4">
-                <button className={`btn btn-outline-primary ${activeTab==="language" ? "active":""}`} onClick={() => setActiveTab("language")}>Language</button>
-                <button className={`btn btn-outline-primary ${activeTab==="topic" ? "active":""}`} onClick={() => setActiveTab("topic")}>Topic</button>
-                <button className={`btn btn-outline-success ${activeTab==="frontend" ? "active":""}`} onClick={() => setActiveTab("frontend")}>Frontend</button>
-                <button className={`btn btn-outline-danger ${activeTab==="backend" ? "active":""}`} onClick={() => setActiveTab("backend")}>Backend</button>
+                <button className={`btn btn-outline-primary ${activeTab === "language" ? "active" : ""}`} onClick={() => setActiveTab("language")}>Language</button>
+                <button className={`btn btn-outline-primary ${activeTab === "topic" ? "active" : ""}`} onClick={() => setActiveTab("topic")}>Topic</button>
+                <button className={`btn btn-outline-success ${activeTab === "frontend" ? "active" : ""}`} onClick={() => setActiveTab("frontend")}>Frontend</button>
+                <button className={`btn btn-outline-danger ${activeTab === "backend" ? "active" : ""}`} onClick={() => setActiveTab("backend")}>Backend</button>
             </div>
 
+        {/* Forms */}
 
-            {/* ---------- LANGUAGE FORM FIELD---------- */}
+
+        {/* ADD LANGUAGE FORM */}
             {activeTab === "language" && (
                 <form onSubmit={handleAddLanguage} className="mb-4">
                     <h4>Add Language</h4>
@@ -295,38 +251,23 @@ const Admin_Dashboard = () => {
                         <option value="Frontend">Frontend</option>
                         <option value="Backend">Backend</option>
                     </select>
-                    <select className="form-control mb-2" value={categoryId} onChange={(e) => setCategoryId(e.target.value)}>
+                    <select className="form-control mb-2" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required>
                         <option value="">Select Category</option>
                         {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                     </select>
-
-                    {/* language name */}
                     <input type="text" placeholder="Language Name" value={languageName} onChange={(e) => setLanguageName(e.target.value)} className="form-control mb-2" required />
-                        
-                        {/* 🔹 Icon Class Field */}
                     <input type="text" placeholder="Icon Class (e.g., devicon-python-plain colored)" value={icon} onChange={(e) => setIcon(e.target.value)} className="form-control mb-2" required />
-
-                    <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
-                            {isUploading ? (
-                                    <>
-                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
-                                        Uploading...
-                                    </>
-                                ) : (
-                                    "Add Language"
-                                )}
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
+                        <button type="submit" className="btn btn-success" disabled={isUploading}>
+                            {isUploading ? <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Uploading...</> : "Add Language"}
                         </button>
-                        <button className="btn btn-danger" onClick={handleLogout}>
-                            Logout
-                        </button>
+                        <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
                     </div>
                 </form>
             )}
 
 
-
-            {/* ---------- TOPIC FORM FIELD---------- */}
+        {/* ADD TOPIC */}
             {activeTab === "topic" && (
                 <form onSubmit={handleAddTopic} className="mb-4">
                     <h4>Add Topic</h4>
@@ -335,28 +276,17 @@ const Admin_Dashboard = () => {
                         {topicLangOptions.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
                     </select>
                     <input type="text" placeholder="Topic Name" value={topicName} onChange={(e) => setTopicName(e.target.value)} className="form-control mb-2" required />
-                    
-                    <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
-                            {isUploading ? (
-                                    <>
-                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
-                                        Uploading...
-                                    </>
-                                ) : (
-                                    "Add Topic"
-                                )}
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
+                        <button type="submit" className="btn btn-success" disabled={isUploading}>
+                            {isUploading ? <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Uploading...</> : "Add Topic"}
                         </button>
-                        <button className="btn btn-danger" onClick={handleLogout}>
-                            Logout
-                        </button>
+                        <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
                     </div>
                 </form>
             )}
 
 
-
-            {/* ---------- FRONTEND FORM FIELD -------- */}
+            {/* ADD FRONTEND */}
             {activeTab === "frontend" && (
                 <form onSubmit={handleAddFrontend} className="mb-4">
                     <h4>Add Frontend Content</h4>
@@ -369,108 +299,62 @@ const Admin_Dashboard = () => {
                         {frontendTopics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                     </select>
                     <input type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files[0])} className="form-control mb-2" required />
-
-                    {/* NEW ROW: Video Access Type + Source Code Access Type */}
                     <div style={{ display: "flex", gap: "1rem", marginBottom: "1rem" }}>
-                        <select className="form-control" value={videoAccessType} onChange={(e) => setVideoAccessType(e.target.value)}required>
+                        <select className="form-control" value={videoAccessType} onChange={(e) => setVideoAccessType(e.target.value)} required>
                             <option value="">Video Access Type</option>
                             <option value="Free">Free</option>
                             <option value="Premium">Premium</option>
                         </select>
-
-                        <select className="form-control" value={sourceCodeAccessType} onChange={(e) => setSourceCodeAccessType(e.target.value)}required>
+                        <select className="form-control" value={sourceCodeAccessType} onChange={(e) => setSourceCodeAccessType(e.target.value)} required>
                             <option value="">Source Code Access Type</option>
                             <option value="Free">Free</option>
                             <option value="Premium">Premium</option>
                         </select>
                     </div>
-
                     <textarea placeholder="HTML Code" value={htmlCode} onChange={(e) => setHtmlCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="CSS Code" value={cssCode} onChange={(e) => setCssCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="JS Code" value={jsCode} onChange={(e) => setJsCode(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="Description" value={frontendDesc} onChange={(e) => setFrontendDesc(e.target.value)} className="form-control mb-2" />
-
-                    <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
-                            {isUploading ? (
-                                    <>
-                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
-                                        Uploading...
-                                    </>
-                                ) : (
-                                    "Add Frontend Content"
-                                )}
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
+                        <button type="submit" className="btn btn-success" disabled={isUploading}>
+                            {isUploading ? <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Uploading...</> : "Add Frontend Content"}
                         </button>
-
-                        <button className="btn btn-danger" onClick={handleLogout}>
-                            Logout
-                        </button>
+                        <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
                     </div>
-
                 </form>
             )}
 
 
-
-
-            {/* ---------- BACKEND FORM FIELD---------- */}
+            {/* ADD BACKEND */}
             {activeTab === "backend" && (
                 <form onSubmit={handleAddBackend} className="mb-4">
                     <h4>Add Backend Step</h4>
-
-                    <select className="form-control mb-2" value={backendLanguage} onChange={(e) => setBackendLanguage(e.target.value)} required >
+                    <select className="form-control mb-2" value={backendLanguage} onChange={(e) => setBackendLanguage(e.target.value)} required>
                         <option value="">Select Backend Language</option>
-                        {backendLanguages.map(l => (
-                            <option key={l.id} value={l.id}>{l.name}</option>
-                        ))}
+                        {backendLanguages.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
                     </select>
-
-                    <select className="form-control mb-2" value={backendTopic} onChange={(e) => setBackendTopic(e.target.value)} required >
+                    <select className="form-control mb-2" value={backendTopic} onChange={(e) => setBackendTopic(e.target.value)} required>
                         <option value="">Select Topic</option>
-                        {backendTopics.map(t => (
-                            <option key={t.id} value={t.id}>{t.name}</option>
-                        ))}
+                        {backendTopics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
                     </select>
-
                     <input type="file" onChange={(e) => setImageFile(e.target.files[0])} className="form-control mb-2" />
-
-                    {/* Step number input with occupied step list */}
                     <div className="mb-3">
                         <label>Step Number</label>
                         <input type="number" value={stepNumber} onChange={(e) => setStepNumber(e.target.value)} className="form-control" placeholder="Enter Step Number" />
-                        {occupiedSteps.length > 0 && (
-                            <small className="text-muted">
-                                Occupied Step Numbers: {occupiedSteps.join(", ")}
-                            </small>
-                        )}
+                        {occupiedSteps.length > 0 && <small className="text-muted">Occupied Step Numbers: {occupiedSteps.join(", ")}</small>}
                     </div>
-
-                    <input type="text" placeholder="Step File Name" value={stepFileName} onChange={(e) => setStepTitle(e.target.value)} className="form-control mb-2" />
-
+                    <input type="text" placeholder="Step File Name" value={stepFileName} onChange={(e) => setStepFileName(e.target.value)} className="form-control mb-2" />
                     <textarea placeholder="Step Description" value={stepDescription} onChange={(e) => setStepDescription(e.target.value)} className="form-control mb-2" />
-
                     <textarea placeholder="Step Source Code" value={stepCode} onChange={(e) => setStepCode(e.target.value)} className="form-control mb-2" />
-
-                    <div style={{ display:"flex" ,justifyContent:"space-between", margin: "0 1vw" }}>
-                        <button  type="submit"  className="btn btn-success"  disabled={isUploading} >
-                            {isUploading ? (
-                                    <>
-                                        <span  className="spinner-border spinner-border-sm me-2"  role="status"  aria-hidden="true" ></span>
-                                        Uploading...
-                                    </>
-                                ) : (
-                                    "Add Backend Content"
-                                )}
+                    <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
+                        <button type="submit" className="btn btn-success" disabled={isUploading}>
+                            {isUploading ? <><span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>Uploading...</> : "Add Backend Content"}
                         </button>
-
-                        <button className="btn btn-danger" onClick={handleLogout}>
-                            Logout
-                        </button>
+                        <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
                     </div>
                 </form>
             )}
         </div>
-
     );
 };
 

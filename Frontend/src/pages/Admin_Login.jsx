@@ -1,6 +1,7 @@
+// src/components/Admin_Login.jsx
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import api from "../api";
+import { useNavigate } from "react-router-dom";
+import api from "../api"; // axios instance
 import "../assets/css/Admin_Login.css";
 
 function Admin_Login() {
@@ -13,59 +14,75 @@ function Admin_Login() {
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setIsUploading(true); // Start loading when login starts
+        setIsUploading(true);
+        setError("");
 
         try {
-            const response = await api.post('/api/admin-login/', {
-                username,
-                password
-            });
+        // Updated backend URL
+        const response = await api.post("/api/admin-login/", {
+            username,
+            password,
+        });
 
-            if (response.status === 200) {
-                localStorage.setItem('token', response.data.access_token);
-                localStorage.setItem('loggedIn', 'true');
+        if (response.status === 200) {
+            const { access_token, refresh_token } = response.data;
 
-                console.log('Login successful!');
-                navigate('/Admin_Dashboard');
-            }
+            // Store tokens in localStorage
+            localStorage.setItem("adminToken", access_token);
+            localStorage.setItem("refreshToken", refresh_token);
+            localStorage.setItem("loggedIn", "true");
+
+            // Redirect to Admin Dashboard
+            navigate("/Admin_Dashboard");
+        } else {
+            setError("Invalid credentials or not an admin.");
+        }
         } catch (err) {
-            setError('Invalid credentials or user is not admin.');
+            console.error("Login error:", err);
+            setError("Invalid credentials or not an admin.");
         } finally {
-            setIsUploading(false); // Always stop loading
+            setIsUploading(false);
         }
     };
 
     return (
         <div className="admin-login d-flex justify-content-center align-items-center vh-100">
-            <form onSubmit={handleLogin} className="p-4 shadow rounded bg-white" style={{ width: "350px" }} >
-                <h3 className="text-center mb-4 text-primary">Admin Login</h3>
+        <form
+            onSubmit={handleLogin}
+            className="p-4 shadow rounded bg-white"
+            style={{ width: "350px" }}
+        >
+            <h3 className="text-center mb-4 text-primary">Admin Login</h3>
 
-                <div className="mb-3">
-                    <label className="form-label">Username</label>
-                    <input type="text" className="form-control" value={username} onChange={(e) => setUsername(e.target.value)} required disabled={isUploading} placeholder="Enter your username" />
-                </div>
+            <input
+                type="text"
+                className="form-control mb-3"
+                placeholder="Username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+                required
+                disabled={isUploading}
+            />
+            <input
+                type="password"
+                className="form-control mb-3"
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                disabled={isUploading}
+            />
 
-                <div className="mb-3">
-                    <label className="form-label">Password</label>
-                    <input type="password" className="form-control" value={password} onChange={(e) => setPassword(e.target.value)} required disabled={isUploading} placeholder="Enter your password" />
-                </div>
+            {error && <div className="alert alert-danger">{error}</div>}
 
-                {error && <div className="alert alert-danger">{error}</div>}
-
-                <button type="submit" className="btn btn-primary w-100 d-flex justify-content-center align-items-center" disabled={isUploading} style={{ height: "45px" }} >
-                    {isUploading ? (
-                        <>
-                            <span className="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true" ></span>
-                            Logging In...
-                        </>
-                    ) : (
-                        "Login"
-                    )}
-                </button>
-                <div className="text-center">
-                    <p className="my-1">Mail developer for password: <Link to='https://www.sujan140.com.np/contact'> Mail </Link></p> 
-                </div>
-            </form>
+            <button
+                type="submit"
+                className="btn btn-primary w-100"
+                disabled={isUploading}
+            >
+                {isUploading ? "Logging In..." : "Login"}
+            </button>
+        </form>
         </div>
     );
 }
