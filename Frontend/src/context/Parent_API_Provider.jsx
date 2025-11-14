@@ -24,7 +24,7 @@ export const Parent_Api_Provider = ({ children }) => {
         // Fetch fresh data
         const fetchData = async () => {
             try {
-                const response = await api.get("/categories/"); // Axios GET
+                const response = await api.get("/api/categories/"); // Axios GET
                 setData(response.data);
                 localStorage.setItem("parent_api_data", JSON.stringify(response.data));
             } catch (err) {
