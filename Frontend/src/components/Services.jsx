@@ -129,7 +129,9 @@ const Services = () => {
     <div className="cv-carousel-main-container">
       <div className="cv-carousel-container">
         <h2 className="cv-section-title">
-          🚀 <sup><u><b>Our Top Services</b></u></sup>
+          <i className="bi bi-gear-fill text-light"></i>
+          {" "}
+          <sup><u><b>Our Top Services</b></u></sup>
         </h2>
 
         <div className="cv-carousel" ref={carouselRef}>

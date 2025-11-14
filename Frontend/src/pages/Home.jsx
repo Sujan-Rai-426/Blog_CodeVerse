@@ -58,7 +58,7 @@ function Home() {
             )}
 
         {/* Hero Section */}
-            <section className="hero">
+            <section className="hero mb-5">
                 <div className="hero-content">
                     <h1 className="hero-title text-golden">
                         <b>Code</b>
@@ -109,12 +109,12 @@ function Home() {
             </section>
 
         {/* Service Section */}
-            <section className="service">
+            <section className="service mt-2 mb-5">
                 <Services />
             </section>
 
         {/* Frontend Section */}
-            <section className="tutorial-section">
+            <section className="tutorial-section mt-2 mb-5">
                 <h6 className="section-title">
                     <small>
                         {" "}
@@ -151,7 +151,7 @@ function Home() {
             </section>
 
         {/* Backend Section */}
-            <section className="tutorial-section">
+            <section className="tutorial-section mt-3  mb-5">
                 <h6 className="section-title">
                     <small>
                         {" "}
@@ -188,7 +188,7 @@ function Home() {
             </section>
 
             {/* Recent Blogs Section */}
-            <section className="recent-section">
+            <section className="recent-section mt-3">
                 <p className="section-title">
                     <small>
                         {" "}

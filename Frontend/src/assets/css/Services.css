@@ -11,9 +11,9 @@
 
 h2.cv-section-title {
     font-size: 1.8rem;
-    text-align: center;
-    color: #C6A25D;
-    margin-bottom: 1rem;
+    text-align: left !important;
+    color: #ffa800;
+    margin: 1rem 0 .5rem 1rem !important;
     font-weight: 700;
 }
 
