@@ -126,7 +126,7 @@ const Frontend_Tutorial_Solution = () => {
                   className="view-hide-code-btn"
                   onClick={() => setShowCode((prev) => ({ ...prev, [video.id]: !prev[video.id] }))}
                 >
-                  {showCode[video.id] ? "<- Hide Code" : "View Code →"}
+                  {showCode[video.id] ? "← Hide Code" : "View Code →"}
                 </button>
               </div>
 
@@ -185,7 +185,7 @@ const Frontend_Tutorial_Solution = () => {
                 });
               }}
             >
-              {showCode[currentVideo.id] ? "<- Hide Code" : "View Code →"}
+              {showCode[currentVideo.id] ? "← Hide Code" : "View Code →"}
             </button>
           </div>
 
