@@ -1,6 +1,4 @@
-// ============================================================
-// === Frontend_Tutorial_Solution.jsx (Smooth center scroll) ===
-// ============================================================
+
 
 import React, { useEffect, useRef, useState, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -14,9 +12,6 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Ads_Container from "../context/Ads_Container";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
-// ============================================================
-// === Main Component ===
-// ============================================================
 const Frontend_Tutorial_Solution = () => {
   const { topicID, videoId } = useParams();
   const topicId = parseInt(topicID, 10);
@@ -43,7 +38,9 @@ const Frontend_Tutorial_Solution = () => {
       for (const category of data) {
         for (const section of category.sections || []) {
           for (const language of section.languages || []) {
-            const topicFound = language.topics?.find((t) => String(t.id) === String(topicId));
+            const topicFound = language.topics?.find(
+              (t) => String(t.id) === String(topicId)
+            );
             if (topicFound) {
               found = topicFound;
               break;
@@ -57,7 +54,6 @@ const Frontend_Tutorial_Solution = () => {
       if (found) {
         const sortedVideos = [...(found.videos || [])].sort((a, b) => b.id - a.id);
         found.videos = sortedVideos;
-
         setTopic(found);
 
         const selectedVideo = videoId
@@ -65,9 +61,7 @@ const Frontend_Tutorial_Solution = () => {
           : sortedVideos[0];
 
         setCurrentVideo(selectedVideo || null);
-
-        // Auto-open code for URL video
-        if (selectedVideo) setActiveCodeVideo(selectedVideo.id);
+        setActiveCodeVideo(null); // Ensure code does not auto-open
       } else {
         setTopic(null);
       }
@@ -84,16 +78,15 @@ const Frontend_Tutorial_Solution = () => {
       if (index > -1) selectedVideo = sortedVideos[index];
     }
     setCurrentVideo(selectedVideo);
+    setActiveCodeVideo(null); // reset code on video change
   }, [topic, videoId]);
 
-  // Highlight code on change
+  // Highlight code when it changes
   useEffect(() => {
     Prism.highlightAll();
   }, [currentVideo, isMobile, activeCodeVideo]);
 
-  // ============================================================
-  // === Smooth scroll with retry until fully centered ===
-  // ============================================================
+  // Smooth scroll to center code
   useEffect(() => {
     if (!activeCodeVideo) return;
     const el = codeRefs.current[activeCodeVideo];
@@ -104,23 +97,16 @@ const Frontend_Tutorial_Solution = () => {
 
     const scrollToCenter = () => {
       if (!el) return;
-
       const rect = el.getBoundingClientRect();
       const middle = rect.top + window.scrollY - window.innerHeight / 2 + rect.height / 2;
-
-      window.scrollTo({
-        top: middle,
-        behavior: "smooth",
-      });
+      window.scrollTo({ top: middle, behavior: "smooth" });
 
       attempts++;
-      // Retry if the element is still off-screen or not fully rendered
       if (attempts < maxAttempts && (rect.top < 0 || rect.bottom > window.innerHeight)) {
-        setTimeout(scrollToCenter, 100); // retry after 100ms
+        setTimeout(scrollToCenter, 100);
       }
     };
 
-    // Initial delay to allow DOM + Prism
     const timer = setTimeout(scrollToCenter, 50);
     return () => clearTimeout(timer);
   }, [activeCodeVideo]);
@@ -128,8 +114,8 @@ const Frontend_Tutorial_Solution = () => {
   // Loading skeleton
   if (parentLoading) {
     return (
-      <div className="container py-4 position-relative text-center">
-        <h4 className="text-center mb-4">
+      <div className="container py-4 text-center">
+        <h4 className="mb-4">
           <Skeleton width={250} height={25} />
         </h4>
         {[...Array(2)].map((_, i) => (
@@ -174,13 +160,17 @@ const Frontend_Tutorial_Solution = () => {
                   <video key={video.id} src={video.video_url} autoPlay loop muted playsInline />
                 </div>
 
+                {/* Description */}
+                {video.info?.description && (
+                  <p className="video-description text-light mt-2 mx-3">{video.info.description}</p>
+                )}
+
                 <div className="d-flex justify-content-center m-0">
                   <button
                     className="view-hide-code-btn"
                     onClick={(e) => {
                       e.stopPropagation();
                       setCurrentVideo(video);
-                      navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
                       setActiveCodeVideo((prev) => (prev === video.id ? null : video.id));
                     }}
                   >
@@ -188,12 +178,12 @@ const Frontend_Tutorial_Solution = () => {
                   </button>
                 </div>
 
-                {activeCodeVideo === video.id && (
+                {activeCodeVideo === video.id && video.source_codes?.length > 0 && (
                   <div
                     className="code-info-wrapper mt-3"
                     ref={(el) => (codeRefs.current[video.id] = el)}
                   >
-                    {video.source_codes?.map((codeObj, idx) => (
+                    {video.source_codes.map((codeObj, idx) => (
                       <VideoCodeBox key={idx} codeObj={codeObj} videoId={video.id} />
                     ))}
                   </div>
@@ -222,25 +212,28 @@ const Frontend_Tutorial_Solution = () => {
             <video key={currentVideo.id} src={currentVideo.video_url} autoPlay loop muted playsInline />
           </div>
 
+          {/* Description */}
+          {currentVideo.info?.description && (
+            <p className="video-description text-light mt-2 mx-3">{currentVideo.info.description}</p>
+          )}
+
           <div className="d-flex justify-content-center m-0">
             <button
               className="view-hide-code-btn"
-              onClick={() => {
-                setCurrentVideo(currentVideo);
-                navigate(`/Frontend_Tutorial_Solution/${topicID}/${currentVideo.id}`);
-                setActiveCodeVideo((prev) => (prev === currentVideo.id ? null : currentVideo.id));
-              }}
+              onClick={() =>
+                setActiveCodeVideo((prev) => (prev === currentVideo.id ? null : currentVideo.id))
+              }
             >
               {activeCodeVideo === currentVideo.id ? "← Hide Code" : "View Code →"}
             </button>
           </div>
 
-          {activeCodeVideo === currentVideo.id && (
+          {activeCodeVideo === currentVideo.id && currentVideo.source_codes?.length > 0 && (
             <div
               className="code-info-wrapper mt-2"
               ref={(el) => (codeRefs.current[currentVideo.id] = el)}
             >
-              {currentVideo.source_codes?.map((codeObj, idx) => (
+              {currentVideo.source_codes.map((codeObj, idx) => (
                 <VideoCodeBox key={idx} codeObj={codeObj} videoId={currentVideo.id} />
               ))}
             </div>
@@ -273,9 +266,7 @@ const Frontend_Tutorial_Solution = () => {
   );
 };
 
-// ============================================================
-// === Video Code Box ===
-// ============================================================
+// VideoCodeBox component remains the same as before
 const VideoCodeBox = React.memo(({ codeObj, videoId }) => {
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
@@ -286,7 +277,7 @@ const VideoCodeBox = React.memo(({ codeObj, videoId }) => {
     if (codeRef.current) Prism.highlightElement(codeRef.current);
   }, [selectedTab, adCompleted]);
 
-  const handleAdComplete = (tab) => setAdCompleted((prev) => ({ ...prev, [tab]: true }));
+  const handleAdComplete = (tab) => setAdCompleted(prev => ({ ...prev, [tab]: true }));
 
   const getCodeByTab = (tab) => {
     switch (tab) {
@@ -325,11 +316,11 @@ const VideoCodeBox = React.memo(({ codeObj, videoId }) => {
     <div className="card shadow-lg mb-1 d-flex flex-column h-100 position-relative">
       <div className="card-header d-flex justify-content-between align-items-center position-relative">
         <div className="btn-group">
-          {["html", "css", "js"].map((tab) => (
+          {["html", "css", "js"].map(tab => (
             <button
               key={tab}
               className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`}
-              onClick={(e) => { e.stopPropagation(); setSelectedTab(tab); }}
+              onClick={e => { e.stopPropagation(); setSelectedTab(tab); }}
             >
               {tab.toUpperCase()}
             </button>
