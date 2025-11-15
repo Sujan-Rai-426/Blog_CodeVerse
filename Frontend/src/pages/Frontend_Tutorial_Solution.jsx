@@ -28,6 +28,7 @@ const Frontend_Tutorial_Solution = () => {
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 992);
     window.addEventListener("resize", handleResize);
+    window.scrollTo({ top: 0, behavior: "smooth" });  //scroll viewport to top everytime page load
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
@@ -162,7 +163,7 @@ const Frontend_Tutorial_Solution = () => {
 
                 {/* Description */}
                 {video.info?.description && (
-                  <p className="video-description text-light mt-2 mx-3">{video.info.description}</p>
+                  <p className="video-description text-light">{video.info.description}</p>
                 )}
 
                 <div className="d-flex justify-content-center m-0">
@@ -230,7 +231,7 @@ const Frontend_Tutorial_Solution = () => {
 
           {activeCodeVideo === currentVideo.id && currentVideo.source_codes?.length > 0 && (
             <div
-              className="code-info-wrapper mt-2"
+              className="code-info-wrapper"
               ref={(el) => (codeRefs.current[currentVideo.id] = el)}
             >
               {currentVideo.source_codes.map((codeObj, idx) => (
@@ -293,24 +294,39 @@ const VideoCodeBox = React.memo(({ codeObj, videoId }) => {
   const hasBought = codeObj.hasBought === true;
   const canViewCode = (isFree && adCompleted[selectedTab]) || (isPremium && hasBought);
 
+
+  // ===== COPY BUTOTN Logic=======
   const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
+
     const handleCopy = () => {
       if (!canViewCode) return;
+
       const commentStart = selectedTab === "html" ? "<!-- " : selectedTab === "css" ? "/* " : "// ";
       const commentEnd = selectedTab === "html" ? " -->" : selectedTab === "css" ? " */" : "";
-      const promoMessage = `${commentStart}Code by CodeVerse. Visit official site: 'https://blog-code-verse.vercel.app' ${commentEnd}\n`;
+      const promoMessage = `${commentStart}Code by CodeVora. Visit official site: 'https://codevora140.vercel.app' ${commentEnd}\n`;
+
       const finalCode = `${promoMessage}${code}\n${promoMessage}`;
       navigator.clipboard.writeText(finalCode);
+
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
+
     return (
-      <button className={`copy-btn ${canViewCode ? "" : "disabled-copy-btn"}`} onClick={handleCopy} disabled={!canViewCode}>
+      <button
+        className={`copy-btn ${canViewCode ? "" : "disabled-copy-btn"}`}
+        onClick={(e) => {
+          e.stopPropagation();  // 🔥 Fix: Prevent closing
+          handleCopy();
+        }}
+        disabled={!canViewCode}
+      >
         <FaCopy /> {copied ? "Copied!" : "Copy"}
       </button>
     );
   };
+
 
   return (
     <div className="card shadow-lg mb-1 d-flex flex-column h-100 position-relative">

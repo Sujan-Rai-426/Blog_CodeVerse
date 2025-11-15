@@ -357,11 +357,15 @@
   }
   .video-description {
     font-size: 0.7rem;
+    margin: 0.5rem 0 0 0.5rem !important;
   }
   .btn-group {
     font-size: 0.7rem;
     display: flex;
     flex-direction: row !important;
+  }
+  .code-info-wrapper{
+    margin: 0;
   }
   .code-wrapper {
     font-size: 0.7rem;
