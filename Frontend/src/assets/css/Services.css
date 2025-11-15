@@ -1,19 +1,18 @@
-/* CodeVerse Services Section */
+/* ================= Services Carousel Section ================= */
 .cv-carousel-main-container {
-    padding: 25px 0;
+    padding: 30px 0;
     display: flex;
     justify-content: center;
     align-items: center;
-    background: transparent;
     color: #fff;
     overflow: hidden;
 }
 
 h2.cv-section-title {
-    font-size: 1.8rem;
+    font-size: 2rem;
     text-align: left !important;
     color: #ffa800;
-    margin: 1rem 0 .5rem 1rem !important;
+    margin: 1rem 0 1rem 1rem !important;
     font-weight: 700;
 }
 
@@ -21,33 +20,32 @@ h2.cv-section-title {
     overflow: hidden;
     position: relative;
     width: 100%;
-    contain: layout paint; /* isolates rendering for better performance on iOS */
+    contain: layout paint;
 }
 
 .cv-carousel {
     display: flex;
-    gap: 18px;
+    gap: 20px;
     overflow-x: auto;
-    scroll-behavior: auto; /* use auto, not smooth — JS handles motion */
+    scroll-behavior: auto;
     cursor: grab;
     user-select: none;
-    padding-bottom: 10px;
-    -webkit-overflow-scrolling: touch; /* helps touch momentum when dragging */
+    padding-bottom: 15px;
+    -webkit-overflow-scrolling: touch;
     touch-action: pan-x;
-    scroll-snap-type: none;
-    will-change: transform, scroll-position; /*  improves iOS GPU rendering */
+    will-change: transform, scroll-position;
 }
-
 
 .cv-carousel::-webkit-scrollbar {
     display: none;
 }
 
+/* ================= Cards ================= */
 .cv-card {
-    flex: 0 0 300px;
-    height: 200px;
-    border-radius: 14px;
-    background: #111;
+    flex: 0 0 350px; /* ideal desktop width */
+    height: 260px;    /* ideal desktop height */
+    border-radius: 16px;
+    background: #1a1a1a;
     overflow: hidden;
     position: relative;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
@@ -56,98 +54,90 @@ h2.cv-section-title {
 
 .cv-card:hover {
     transform: scale(1.06);
-    box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.45);
 }
 
 .cv-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: brightness(70%);
-    transition: filter 0.3s ease;
+    transition: transform 0.3s ease;
 }
 
 .cv-card:hover img {
-    filter: brightness(50%);
+    transform: scale(1.05);
 }
 
-/* Overlay for better text visibility */
-.cv-card-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.4);
-    backdrop-filter: blur(2px);
-}
-
-/* Text info */
+/* ================= Text Overlay ================= */
 .cv-card-info {
     position: absolute;
     bottom: 0;
     width: 100%;
-    padding: 12px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+    padding: 14px;
+    background: rgba(0, 0, 0, 0.5); /* only text container has semi-transparent background */
+    backdrop-filter: blur(2px); /* blur only behind text */
     color: #fff;
 }
 
 .cv-card-info h3 {
-    font-size: 1rem;
-    margin-bottom: 4px;
-    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+    font-weight: 700;
 }
 
 .cv-card-info p {
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     color: #ccc;
+    line-height: 1.3;
 }
 
-/* Tablet */
+/* ================= Tablet ================= */
 @media (max-width: 1024px) {
+    .cv-carousel-main-container {
+        padding: 25px 0;
+    }
+    .cv-card {
+        flex: 0 0 290px;
+        height: 240px;
+    }
+    h2.cv-section-title {
+        font-size: 1.8rem;
+    }
+    .cv-card-info h3 { font-size: 1rem; }
+    .cv-card-info p { font-size: 0.85rem; }
+}
+
+/* ================= Mobile ================= */
+@media (max-width: 768px) {
     .cv-carousel-main-container {
         padding: 20px 0;
     }
     .cv-card {
-        flex: 0 0 250px;
-        height: 200px;
+        flex: 0 0 250px; /* ideal mobile width */
+        height: 200px;    /* ideal mobile height */
     }
     h2.cv-section-title {
         font-size: 1.6rem;
-        margin: 0 0 5px 0;
     }
+    .cv-card-info h3 { font-size: 0.95rem; }
+    .cv-card-info p { font-size: 0.75rem; }
 }
 
-/* Mobile */
-@media (max-width: 768px) {
+/* ================= Small Mobile ================= */
+@media (max-width: 480px) {
     .cv-carousel-main-container {
         padding: 15px 0;
     }
     .cv-card {
-        flex: 0 0 195px;
-        height: 165px;
+        flex: 0 0 190px; /* small mobile width */
+        height: 160px;    /* small mobile height */
     }
     h2.cv-section-title {
-        font-size: 1.4rem;
-    }
-    .cv-card-info h3 {
-        font-size: 0.9rem;
-    }
-    .cv-card-info p {
-        font-size: 0.75rem;
-    }
-}
-
-/* Small Mobile */
-@media (max-width: 480px) {
-    .cv-carousel-main-container {
-        padding: 10px 0;
-    }
-    .cv-card {
-        flex: 0 0 190px;
-        height: 160px;
-    }
-    h2.cv-section-title {
-        font-size: 1.2rem;
+        font-size: 1.3rem;
     }
     .cv-card-info {
         padding: 8px;
     }
+    .cv-card-info h3 { font-size: 0.85rem; }
+    .cv-card-info p { font-size: 0.65rem; }
 }
