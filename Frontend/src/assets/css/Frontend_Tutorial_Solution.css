@@ -426,10 +426,10 @@
 
 /* Highlight selected mobile video */
 .video-wrapper.active-video-mobile {
-  border: 2px solid #ffc107;
-  border-radius: 20px;
+  border: 1px solid #ffc107;
+  border-radius: 15px;
   transition: border 0.3s ease;
 }
 .video-wrapper.active-video-mobile:hover {
-  border: 2px solid #ffea00;
+  border: 1px solid #ffea00;
 }
