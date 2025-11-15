@@ -109,11 +109,21 @@ const Frontend_Tutorial_Solution = () => {
 
   // === Mobile Layout ===
   if (isMobile) {
+    // Reorder videos: if videoId exists in URL, bring that video to top
+    let mobileVideos = [...(topic.videos || [])];
+    if (videoId) {
+      const index = mobileVideos.findIndex(v => String(v.id) === String(videoId));
+      if (index > -1) {
+        const [selectedVideo] = mobileVideos.splice(index, 1);
+        mobileVideos = [selectedVideo, ...mobileVideos];
+      }
+    }
+
     return (
       <div className="container py-4">
         <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
         <div className="video-main-wrapper">
-          {topic.videos?.map((video) => (
+          {mobileVideos.map((video) => (
             <div className="video-wrapper mb-4 position-relative" key={video.id}>
               {(video.access_type === "Premium" ||
                 video.source_codes?.some((code) => code.access_type === "Premium")) && (
@@ -150,6 +160,7 @@ const Frontend_Tutorial_Solution = () => {
       </div>
     );
   }
+
 
   // === Desktop Layout ===
   if (!currentVideo) return <p className="text-center mt-5">Loading video...</p>;
