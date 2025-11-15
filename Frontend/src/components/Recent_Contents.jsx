@@ -80,7 +80,15 @@ function Recent_Contents() {
                         <div className="col-12 col-md-6 col-lg-4" key={`${tutorial.videoId}-${tutorial.topicId}`}>
                             <div
                                 className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
-                                onClick={() => handleNavigate(tutorial.topicId, tutorial.videoId)}
+                                onClick={(e) => {
+                                    e.stopPropagation(); // prevent parent click events if any
+                                    handleNavigate(tutorial.topicId, tutorial.videoId);
+
+                                    // Scroll to top after a slight delay to ensure navigation is complete
+                                    setTimeout(() => {
+                                        window.scrollTo({ top: 0, behavior: "smooth" });
+                                    }, 100);
+                                }}
                                 style={{ cursor: "pointer" }}
                             >
                                 <div className="video-container position-relative">
