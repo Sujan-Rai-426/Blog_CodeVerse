@@ -15,7 +15,7 @@ import Ads_Container from "../context/Ads_Container";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
 const Frontend_Tutorial_Solution = () => {
-  const { topicID } = useParams();
+  const { topicID, videoId } = useParams();
   const topicId = parseInt(topicID, 10);
   const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
 
@@ -40,7 +40,7 @@ const Frontend_Tutorial_Solution = () => {
     if (!parentLoading && data?.length > 0) {
       let found = null;
 
-      for (const category of data) {  // data is an array, not data.categories
+      for (const category of data) {
         for (const section of category.sections || []) {
           for (const language of section.languages || []) {
             const topicFound = language.topics?.find(
@@ -58,13 +58,18 @@ const Frontend_Tutorial_Solution = () => {
 
       if (found) {
         setTopic(found);
-        setCurrentVideo(found.videos?.[0] || null);
+
+        // Select video based on URL param
+        const selectedVideo = videoId
+          ? found.videos.find((v) => String(v.id) === String(videoId))
+          : found.videos?.[0];
+
+        setCurrentVideo(selectedVideo || null);
       } else {
         setTopic(null);
       }
     }
-  }, [parentLoading, data, topicId]);
-
+  }, [parentLoading, data, topicId, videoId]);
 
   // === Highlight code ===
   useEffect(() => {
@@ -203,30 +208,32 @@ const Frontend_Tutorial_Solution = () => {
         </div>
 
         <div className="related-videos">
-          {topic.videos?.filter((v) => v.id !== currentVideo.id).map((video) => (
-            <div
-              key={video.id}
-              className="video-card"
-              onClick={() => {
-                setCurrentVideo(video);
-                setShowCode({});
-                window.scrollTo({ top: 0, behavior: "smooth" });
-              }}
-            >
-              {(video.access_type === "Premium" ||
-                video.source_codes?.some((code) => code.access_type === "Premium")) && (
-                <div className="video-price-tag">$</div>
-              )}
+          {topic.videos
+            ?.filter((v) => v.id !== currentVideo.id)
+            .map((video) => (
+              <div
+                key={video.id}
+                className="video-card"
+                onClick={() => {
+                  navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
+                  setShowCode({});
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                {(video.access_type === "Premium" ||
+                  video.source_codes?.some((code) => code.access_type === "Premium")) && (
+                  <div className="video-price-tag">$</div>
+                )}
 
-              <div className="video-card-thumb">
-                <video src={video.video_url} muted playsInline />
-              </div>
+                <div className="video-card-thumb">
+                  <video src={video.video_url} muted playsInline />
+                </div>
 
-              <div className="video-card-info">
-                <h5>{video.title}</h5>
+                <div className="video-card-info">
+                  <h5>{video.title}</h5>
+                </div>
               </div>
-            </div>
-          ))}
+            ))}
         </div>
       </div>
     </div>

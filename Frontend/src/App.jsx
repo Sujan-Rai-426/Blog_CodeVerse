@@ -74,7 +74,7 @@ function App() {
                                   <Route exact path='/About'  element={ <About/> } />
                                   <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
                                   
-                                  <Route exact path='/Frontend_Tutorial_Solution/:topicID'  element={ <Frontend_Tutorial_Solution  />  } />
+                                  <Route exact path='/Frontend_Tutorial_Solution/:topicID/:videoId?'  element={ <Frontend_Tutorial_Solution  />  } />
                                   <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
 
                                   {/* Frontend_Tutorial_Topic is Frontend Design */}

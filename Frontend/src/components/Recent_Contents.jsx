@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css"; 
@@ -7,6 +7,7 @@ import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
 
 function Recent_Contents() {
     const { data, loading, error } = useContext(Parent_API_Provider_Context);
+    const navigate = useNavigate();
 
     if (loading) {
         return (
@@ -55,6 +56,11 @@ function Recent_Contents() {
     // Sort by latest videoId
     const sortedTutorials = tutorials.sort((a, b) => b.videoId - a.videoId);
 
+    const handleNavigate = (topicId, videoId) => {
+        navigate(`/Frontend_Tutorial_Solution/${topicId}/${videoId}`);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
         <div className="row g-4">
             {sortedTutorials.length === 0 ? (
@@ -71,8 +77,12 @@ function Recent_Contents() {
                     const isPremium = accessTypeString.trim().toLowerCase() === "premium";
 
                     return (
-                        <div className="col-12 col-md-6 col-lg-4" key={`${tutorial.videoId}-${tutorial.topicId}`} >
-                            <div className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative">
+                        <div className="col-12 col-md-6 col-lg-4" key={`${tutorial.videoId}-${tutorial.topicId}`}>
+                            <div
+                                className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
+                                onClick={() => handleNavigate(tutorial.topicId, tutorial.videoId)}
+                                style={{ cursor: "pointer" }}
+                            >
                                 <div className="video-container position-relative">
                                     {tutorial.video_url ? (
                                         <video
@@ -105,17 +115,17 @@ function Recent_Contents() {
 
                                 <div className="card-body py-2">
                                     <h5 className="card-title fw-bold">&nbsp; {tutorial.topicName}</h5>
-                                    <p className="card-text text-white">
-                                        &nbsp;&nbsp; {tutorial.desc.slice(0, 50)}...
-                                    </p>
+                                    <p className="card-text text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 50)}...</p>
                                     &nbsp;&nbsp;
-                                    <Link
-                                        to={`/Frontend_Tutorial_Solution/${tutorial.topicId}`}
+                                    <button
                                         className="btn btn-outline-warning btn-sm rounded-pill"
-                                        onClick={() => setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 50)}
+                                        onClick={(e) => {
+                                            e.stopPropagation(); // prevent parent card click
+                                            handleNavigate(tutorial.topicId, tutorial.videoId);
+                                        }}
                                     >
                                         View Code →
-                                    </Link>
+                                    </button>
                                 </div>
                             </div>
                         </div>
