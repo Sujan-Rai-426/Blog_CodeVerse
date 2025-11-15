@@ -6,6 +6,7 @@
     padding: 1rem;
     font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
     color: #1f1f1f;
+    scroll-behavior: smooth;
 }
 
 /* ===== Text Colors ===== */
@@ -14,7 +15,7 @@
 }
 
 .text-gray {
-    color: #979797;
+    color: #555;
 }
 
 .text-warning {
@@ -23,50 +24,63 @@
 
 /* ================= Hero Section ================= */
 .hero {
-    background: linear-gradient(145deg, #0000000d 0%, #0808087a 50%, #2a28286e 100%);
-    border-radius: 16px;
-    padding: 2rem 1.5rem;
+    background: linear-gradient(145deg, #1a1a1a 0%, #0d0d0d 50%, #1c1c1c 100%);
+    border-radius: 20px;
+    padding: 3rem 2rem;
     text-align: center;
-    margin-bottom: 2rem;
-    box-shadow: 0 3px 8px rgba(228, 228, 227, 0.15);
+    margin-bottom: 3rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+    position: relative;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("/hero-bg-pattern.png") center/cover no-repeat; /* Optional subtle background pattern */
+    opacity: 0.05;
+    pointer-events: none;
 }
 
 .hero-title {
-    font-size: clamp(2rem, 6vw, 3rem);
-    font-weight: 700;
-    color: #222;
+    font-size: clamp(2.5rem, 6vw, 3.5rem);
+    font-weight: 800;
+    margin-bottom: 0.5rem;
 }
 
 .hero-subtitle {
-    max-width: 700px;
-    margin: 0.75rem auto 1.5rem;
-    font-size: clamp(1rem, 2.5vw, 1.15rem);
+    max-width: 750px;
+    margin: 0.75rem auto 2rem;
+    font-size: clamp(1.1rem, 2.5vw, 1.3rem);
     line-height: 1.6;
+    color: #d3d3d3;
 }
 
 /* ================= Social Media Bar ================= */
 .social-bar {
-    margin: 0.5rem 0;
-    font-size: 1rem;
+    margin: 1rem 0;
     display: flex;
     justify-content: center;
+    align-items: center;
     gap: 1rem;
+    flex-wrap: wrap;
 }
 
 .social-link {
     font-size: 1.2rem;
-    color: #555;
-    width: 40px;
-    height: 40px;
+    color: #fff;
+    width: 45px;
+    height: 45px;
     display: flex;
     align-items: center;
     justify-content: center;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(6px);
     transition: all 0.3s ease;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
     text-decoration: none;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .social-link:hover {
@@ -76,72 +90,74 @@
 
 .social-link.facebook:hover { background: #1877f2; }
 .social-link.instagram:hover { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4); }
-.social-link.github:hover { background: #060606; }
+.social-link.github:hover { background: #24292e; }
 .social-link.linkedin:hover { background: #0077b5; }
-.social-link.globe:hover { background: red; color: #fff; }
+.social-link.globe:hover { background: #ff4b4b; }
 
+/* ================= Hero Button ================= */
 .share-btn {
     background: #e1ab44;
-    color: black;
+    color: #1f1f1f;
     border: none;
-    padding: 0.7rem 2rem;
-    margin-top: 1rem;
+    padding: 0.8rem 2.5rem;
+    margin-top: 1.5rem;
     border-radius: 50px;
     font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 
 .share-btn:hover {
-    background: #C6A25D;
+    background: #c6a25d;
     transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(215, 204, 56, 0.3);
+    box-shadow: 0 8px 20px rgba(198, 162, 93, 0.3);
 }
 
 /* ================= Section Titles ================= */
 .section-title {
-    font-size: clamp(1.4rem, 4vw, 1.9rem);
+    font-size: clamp(1.5rem, 3vw, 2rem);
     font-weight: 700;
     color: #ffa800;
-    margin: 1rem 0 0.5rem 1rem;
+    margin: 1.5rem 0 0.75rem 0.5rem;
 }
 
 /* ================= Grid / Tutorials ================= */
 .grid-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
     gap: 1rem;
-    justify-content: center;
     justify-items: center;
 }
 
 .grid-card {
-    background: #fff;
-    border-radius: 12px;
+    background: #1f1f1f;
+    border-radius: 14px;
     text-align: center;
     width: 100%;
-    max-width: 120px;
-    padding: 1rem 0.5rem;
+    max-width: 130px;
+    padding: 1.2rem 0.8rem;
     text-decoration: none;
-    color: #222;
+    color: #fff;
     transition: all 0.3s ease;
-    border: 1px solid #eaeaea;
+    border: 1px solid #2c2c2c;
 }
 
 .grid-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px);
     border-color: #e1ab44;
-    box-shadow: 0 6px 18px #c6a15d37;
+    box-shadow: 0 8px 20px rgba(225, 171, 68, 0.3);
 }
 
 .card-icon {
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: #e1ab44;
-    margin-bottom: 0.4rem;
+    margin-bottom: 0.5rem;
 }
 
 .card-text {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
     text-transform: capitalize;
 }
 
@@ -167,7 +183,7 @@
 .loading-overlay {
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.85);
+    background: rgba(0, 0, 0, 0.9);
     color: #fff;
     z-index: 99;
     display: flex;
@@ -181,13 +197,13 @@
 
 .loading-message h2 {
     color: #e1ab44;
-    font-size: 1.8rem;
+    font-size: 2rem;
     margin-bottom: 0.5rem;
     animation: pulseText 1.5s infinite ease-in-out;
 }
 
 .loading-message p {
-    font-size: 1.1rem;
+    font-size: 1.2rem;
     color: #ddd;
 }
 
@@ -198,43 +214,38 @@
 
 /* Mobile First Adjustments */
 @media (max-width: 480px) {
-    .hero { padding: 1rem 1.2rem !important; }
-    .hero-subtitle { font-size: .8rem !important; }
-    .grid-container { grid-template-columns: repeat(auto-fit,minmax(90px, 1fr)); gap: 0.5rem; }
-    .grid-card { max-width: 90px; padding: 0.7rem 0.5rem; }
-    .card-icon { font-size: 1.5rem; }
+    .hero { padding: 2rem 1rem; border-radius: 16px; }
+    .hero-title { font-size: 2rem; }
+    .hero-subtitle { font-size: 0.9rem; }
+    .grid-container { grid-template-columns: repeat(auto-fit,minmax(80px, 1fr)); gap: 0.5rem; }
+    .grid-card { max-width: 90px; padding: 0.6rem 0.4rem; }
+    .card-icon { font-size: 1.6rem; }
     .card-text { font-size: 0.8rem; }
-    .carousel-section img { width: 75%; max-height: 30vh; border-radius: 10px; }
-    .social-link { font-size: 1rem; height: 30px; width: 31px; }
-    .share-btn { padding: 0.4rem 1rem; }
+    .social-link { width: 32px; height: 32px; font-size: 1rem; }
+    .share-btn { padding: 0.5rem 1.5rem; font-size: 0.9rem; }
 }
 
 /* Tablets */
 @media (min-width: 481px) and (max-width: 768px) {
-    .hero { padding: 1rem 1.2rem !important; }
-    .hero-subtitle { font-size: .9rem !important; }
+    .hero { padding: 2.5rem 1.5rem; }
+    .hero-title { font-size: 2.5rem; }
+    .hero-subtitle { font-size: 1rem; }
     .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
     .grid-card { max-width: 100px; padding: 0.8rem 0.5rem; }
-    .card-icon { font-size: 1.7rem; }
-    .card-text { font-size: 0.85rem; }
-    .carousel-section img { width: 80%; max-height: 35vh; border-radius: 12px; }
-    .social-link { font-size: 1rem; height: 32px; width: 33px; }
-    .share-btn { padding: 0.4rem 1rem; }
+    .card-icon { font-size: 1.8rem; }
 }
 
-/* Small Desktops / Tablets */
+/* Small Desktops / Laptops */
 @media (min-width: 769px) and (max-width: 1024px) {
-    .hero-subtitle {font-size: 1.2rem !important;}
+    .hero { padding: 3rem 2rem; }
+    .hero-title { font-size: 3rem; }
+    .hero-subtitle { font-size: 1.2rem; }
     .grid-container { grid-template-columns: repeat(4, 1fr); }
-    .carousel-section img { width: 85%; max-height: 35vh; border-radius: 14px; }
-    .social-link { font-size: 1rem; height: 34px; width: 35px; }
-    .share-btn { padding: 0.4rem 1rem; }
 }
 
 /* Large Desktops */
 @media (min-width: 1025px) {
-    .hero-subtitle { font-size: 1.3rem !important; }
+    .hero-title { font-size: 3.5rem; }
+    .hero-subtitle { font-size: 1.3rem; }
     .grid-container { grid-template-columns: repeat(5, 1fr); }
-    .carousel-section img { width: 100%; max-height: 40vh; border-radius: 16px; }
-    .social-link { font-size: 1rem; height: 35px; width: 37px; }
 }
