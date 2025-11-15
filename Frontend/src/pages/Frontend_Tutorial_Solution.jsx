@@ -1,5 +1,5 @@
 // ============================================================
-// === Frontend_Tutorial_Solution.jsx (Parent API version) ===
+// === Frontend_Tutorial_Solution.jsx (Smooth center scroll) ===
 // ============================================================
 
 import React, { useEffect, useRef, useState, useContext } from "react";
@@ -14,38 +14,36 @@ import "react-loading-skeleton/dist/skeleton.css";
 import Ads_Container from "../context/Ads_Container";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
+// ============================================================
+// === Main Component ===
+// ============================================================
 const Frontend_Tutorial_Solution = () => {
   const { topicID, videoId } = useParams();
   const topicId = parseInt(topicID, 10);
   const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
 
   const [topic, setTopic] = useState(null);
-  const [showMessage, setShowMessage] = useState(false);
-  const [showCode, setShowCode] = useState({});
+  const [activeCodeVideo, setActiveCodeVideo] = useState(null);
   const [currentVideo, setCurrentVideo] = useState(null);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 992);
-  const mainVideoRef = useRef(null);
   const codeRefs = useRef({});
   const navigate = useNavigate();
 
-  // === Detect screen resize ===
+  // Detect screen resize
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth < 992);
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // === Show loading message after 3 seconds ===
+  // Find topic after parent data loads
   useEffect(() => {
     if (!parentLoading && data?.length > 0) {
       let found = null;
-
       for (const category of data) {
         for (const section of category.sections || []) {
           for (const language of section.languages || []) {
-            const topicFound = language.topics?.find(
-              (t) => String(t.id) === String(topicId)
-            );
+            const topicFound = language.topics?.find((t) => String(t.id) === String(topicId));
             if (topicFound) {
               found = topicFound;
               break;
@@ -57,33 +55,83 @@ const Frontend_Tutorial_Solution = () => {
       }
 
       if (found) {
+        const sortedVideos = [...(found.videos || [])].sort((a, b) => b.id - a.id);
+        found.videos = sortedVideos;
+
         setTopic(found);
 
-        // Select video based on URL param
         const selectedVideo = videoId
-          ? found.videos.find((v) => String(v.id) === String(videoId))
-          : found.videos?.[0];
+          ? sortedVideos.find((v) => String(v.id) === String(videoId))
+          : sortedVideos[0];
 
         setCurrentVideo(selectedVideo || null);
+
+        // Auto-open code for URL video
+        if (selectedVideo) setActiveCodeVideo(selectedVideo.id);
       } else {
         setTopic(null);
       }
     }
   }, [parentLoading, data, topicId, videoId]);
 
-  // === Highlight code ===
+  // Update current video when videoId changes
+  useEffect(() => {
+    if (!topic) return;
+    const sortedVideos = [...(topic.videos || [])].sort((a, b) => b.id - a.id);
+    let selectedVideo = sortedVideos[0];
+    if (videoId) {
+      const index = sortedVideos.findIndex((v) => String(v.id) === String(videoId));
+      if (index > -1) selectedVideo = sortedVideos[index];
+    }
+    setCurrentVideo(selectedVideo);
+  }, [topic, videoId]);
+
+  // Highlight code on change
   useEffect(() => {
     Prism.highlightAll();
-  }, [currentVideo, isMobile]);
+  }, [currentVideo, isMobile, activeCodeVideo]);
 
-  // === Loading Skeleton ===
+  // ============================================================
+  // === Smooth scroll with retry until fully centered ===
+  // ============================================================
+  useEffect(() => {
+    if (!activeCodeVideo) return;
+    const el = codeRefs.current[activeCodeVideo];
+    if (!el) return;
+
+    let attempts = 0;
+    const maxAttempts = 10;
+
+    const scrollToCenter = () => {
+      if (!el) return;
+
+      const rect = el.getBoundingClientRect();
+      const middle = rect.top + window.scrollY - window.innerHeight / 2 + rect.height / 2;
+
+      window.scrollTo({
+        top: middle,
+        behavior: "smooth",
+      });
+
+      attempts++;
+      // Retry if the element is still off-screen or not fully rendered
+      if (attempts < maxAttempts && (rect.top < 0 || rect.bottom > window.innerHeight)) {
+        setTimeout(scrollToCenter, 100); // retry after 100ms
+      }
+    };
+
+    // Initial delay to allow DOM + Prism
+    const timer = setTimeout(scrollToCenter, 50);
+    return () => clearTimeout(timer);
+  }, [activeCodeVideo]);
+
+  // Loading skeleton
   if (parentLoading) {
     return (
       <div className="container py-4 position-relative text-center">
         <h4 className="text-center mb-4">
           <Skeleton width={250} height={25} />
         </h4>
-
         {[...Array(2)].map((_, i) => (
           <div key={i} className="card video-card mb-5 p-2 shadow-lg rounded-4 skeleton-card">
             <Skeleton height={isMobile ? 180 : 250} borderRadius={20} />
@@ -94,157 +142,131 @@ const Frontend_Tutorial_Solution = () => {
             </div>
           </div>
         ))}
-
-        {showMessage && (
-          <div className="loading-message fade-in">
-            <h2>Good things take time</h2>
-            <p>Almost there! Hold tight! Loading the magic ✨...</p>
-          </div>
-        )}
       </div>
     );
   }
 
   if (!topic) return <p className="text-center mt-5">❌ Topic not found</p>;
 
-  // === Mobile Layout ===
+  // MOBILE layout
   if (isMobile) {
-    // Reorder videos: if videoId exists in URL, bring that video to top
-    let mobileVideos = [...(topic.videos || [])];
-    if (videoId) {
-      const index = mobileVideos.findIndex(v => String(v.id) === String(videoId));
-      if (index > -1) {
-        const [selectedVideo] = mobileVideos.splice(index, 1);
-        mobileVideos = [selectedVideo, ...mobileVideos];
-      }
-    }
+    const mobileVideos = [...(topic.videos || [])].sort((a, b) => b.id - a.id);
 
     return (
       <div className="container py-4">
         <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
         <div className="video-main-wrapper">
-          {mobileVideos.map((video) => (
-            <div className="video-wrapper mb-4 position-relative" key={video.id}>
-              {(video.access_type === "Premium" ||
-                video.source_codes?.some((code) => code.access_type === "Premium")) && (
-                <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
-              )}
+          {mobileVideos.map((video) => {
+            const isActive = currentVideo?.id === video.id;
 
-              <div className="video-container-inner">
-                <video key={video.id} src={video.video_url} autoPlay loop muted playsInline />
-              </div>
-
-              <div className="video-description text-white">
-                <p className="mb-0 mt-2 mx-2">{video.info?.description || "No description"}</p>
-              </div>
-
-              <div className="d-flex justify-content-center m-0">
-                <button
-                  className="view-hide-code-btn"
-                  onClick={() => setShowCode((prev) => ({ ...prev, [video.id]: !prev[video.id] }))}
-                >
-                  {showCode[video.id] ? "← Hide Code" : "View Code →"}
-                </button>
-              </div>
-
-              {showCode[video.id] && (
-                <div className="code-info-wrapper mt-3">
-                  {video.source_codes?.map((codeObj, idx) => (
-                    <VideoCodeBox key={idx} codeObj={codeObj} />
-                  ))}
+            return (
+              <div
+                className={`video-wrapper mb-4 position-relative ${isActive ? "active-video-mobile" : ""}`}
+                key={video.id}
+                onClick={() => {
+                  setCurrentVideo(video);
+                  setActiveCodeVideo(null);
+                  navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
+                  window.scrollTo({ top: 0, behavior: "smooth" });
+                }}
+              >
+                <div className="video-container-inner">
+                  <video key={video.id} src={video.video_url} autoPlay loop muted playsInline />
                 </div>
-              )}
-            </div>
-          ))}
+
+                <div className="d-flex justify-content-center m-0">
+                  <button
+                    className="view-hide-code-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setCurrentVideo(video);
+                      navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
+                      setActiveCodeVideo((prev) => (prev === video.id ? null : video.id));
+                    }}
+                  >
+                    {activeCodeVideo === video.id ? "← Hide Code" : "View Code →"}
+                  </button>
+                </div>
+
+                {activeCodeVideo === video.id && (
+                  <div
+                    className="code-info-wrapper mt-3"
+                    ref={(el) => (codeRefs.current[video.id] = el)}
+                  >
+                    {video.source_codes?.map((codeObj, idx) => (
+                      <VideoCodeBox key={idx} codeObj={codeObj} videoId={video.id} />
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
       </div>
     );
   }
 
-
-  // === Desktop Layout ===
+  // DESKTOP layout
   if (!currentVideo) return <p className="text-center mt-5">Loading video...</p>;
+
+  const relatedVideos = [...(topic.videos || [])]
+    .sort((a, b) => b.id - a.id)
+    .filter((v) => v.id !== currentVideo.id);
 
   return (
     <div className="container py-4">
       <h3 className="text-center text-warning mb-4">🎬 {topic.name}</h3>
       <div className="video-main-wrapper">
-        <div className="video-wrapper" ref={mainVideoRef}>
-          {(currentVideo.access_type === "Premium" ||
-            currentVideo.source_codes?.some((code) => code.access_type === "Premium")) && (
-            <div className="video-price-tag"><i className="bi bi-currency-dollar"></i></div>
-          )}
-
+        <div className="video-wrapper">
           <div className="video-container-inner">
-            <video
-              key={currentVideo?.id}
-              src={currentVideo?.video_url}
-              autoPlay
-              loop
-              muted
-              playsInline
-            />
-          </div>
-
-          <div className="video-description text-white">
-            <p className="mb-0 mt-2 mx-2 py-2">{currentVideo?.info?.description || "No description"}</p>
+            <video key={currentVideo.id} src={currentVideo.video_url} autoPlay loop muted playsInline />
           </div>
 
           <div className="d-flex justify-content-center m-0">
             <button
               className="view-hide-code-btn"
               onClick={() => {
-                setShowCode((prev) => {
-                  const newState = { ...prev, [currentVideo.id]: !prev[currentVideo.id] };
-                  if (!prev[currentVideo.id]) {
-                    setTimeout(() => {
-                      codeRefs.current[currentVideo.id]?.scrollIntoView({ behavior: "smooth", block: "start" });
-                    }, 100);
-                  }
-                  return newState;
-                });
+                setCurrentVideo(currentVideo);
+                navigate(`/Frontend_Tutorial_Solution/${topicID}/${currentVideo.id}`);
+                setActiveCodeVideo((prev) => (prev === currentVideo.id ? null : currentVideo.id));
               }}
             >
-              {showCode[currentVideo.id] ? "← Hide Code" : "View Code →"}
+              {activeCodeVideo === currentVideo.id ? "← Hide Code" : "View Code →"}
             </button>
           </div>
 
-          {showCode[currentVideo.id] && (
-            <div className="code-info-wrapper mt-2" ref={(el) => (codeRefs.current[currentVideo.id] = el)}>
+          {activeCodeVideo === currentVideo.id && (
+            <div
+              className="code-info-wrapper mt-2"
+              ref={(el) => (codeRefs.current[currentVideo.id] = el)}
+            >
               {currentVideo.source_codes?.map((codeObj, idx) => (
-                <VideoCodeBox key={idx} codeObj={codeObj} />
+                <VideoCodeBox key={idx} codeObj={codeObj} videoId={currentVideo.id} />
               ))}
             </div>
           )}
         </div>
 
         <div className="related-videos">
-          {topic.videos
-            ?.filter((v) => v.id !== currentVideo.id)
-            .map((video) => (
-              <div
-                key={video.id}
-                className="video-card"
-                onClick={() => {
-                  navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
-                  setShowCode({});
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-              >
-                {(video.access_type === "Premium" ||
-                  video.source_codes?.some((code) => code.access_type === "Premium")) && (
-                  <div className="video-price-tag">$</div>
-                )}
-
-                <div className="video-card-thumb">
-                  <video src={video.video_url} muted playsInline />
-                </div>
-
-                <div className="video-card-info">
-                  <h5>{video.title}</h5>
-                </div>
+          {relatedVideos.map((video) => (
+            <div
+              key={video.id}
+              className="video-card"
+              onClick={() => {
+                setCurrentVideo(video);
+                setActiveCodeVideo(null);
+                navigate(`/Frontend_Tutorial_Solution/${topicID}/${video.id}`);
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }}
+            >
+              <div className="video-card-thumb">
+                <video src={video.video_url} muted playsInline />
               </div>
-            ))}
+              <div className="video-card-info">
+                <h5>{video.title}</h5>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
@@ -252,9 +274,9 @@ const Frontend_Tutorial_Solution = () => {
 };
 
 // ============================================================
-// === Code Box Component ===
+// === Video Code Box ===
 // ============================================================
-const VideoCodeBox = ({ codeObj }) => {
+const VideoCodeBox = React.memo(({ codeObj, videoId }) => {
   const codeRef = useRef(null);
   const [selectedTab, setSelectedTab] = useState("html");
   const [adCompleted, setAdCompleted] = useState({ html: true, css: false, js: false });
@@ -282,18 +304,16 @@ const VideoCodeBox = ({ codeObj }) => {
 
   const CopyButton = ({ code }) => {
     const [copied, setCopied] = useState(false);
-
     const handleCopy = () => {
       if (!canViewCode) return;
       const commentStart = selectedTab === "html" ? "<!-- " : selectedTab === "css" ? "/* " : "// ";
       const commentEnd = selectedTab === "html" ? " -->" : selectedTab === "css" ? " */" : "";
-      const promoMessage = `${commentStart}Code by CodeVerse.\nvisit official site for more free designs and tutorial :\n :--- ' https://blog-code-verse.vercel.app ' ${commentEnd}\n`;
+      const promoMessage = `${commentStart}Code by CodeVerse. Visit official site: 'https://blog-code-verse.vercel.app' ${commentEnd}\n`;
       const finalCode = `${promoMessage}${code}\n${promoMessage}`;
       navigator.clipboard.writeText(finalCode);
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     };
-
     return (
       <button className={`copy-btn ${canViewCode ? "" : "disabled-copy-btn"}`} onClick={handleCopy} disabled={!canViewCode}>
         <FaCopy /> {copied ? "Copied!" : "Copy"}
@@ -306,7 +326,11 @@ const VideoCodeBox = ({ codeObj }) => {
       <div className="card-header d-flex justify-content-between align-items-center position-relative">
         <div className="btn-group">
           {["html", "css", "js"].map((tab) => (
-            <button key={tab} className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`} onClick={() => setSelectedTab(tab)}>
+            <button
+              key={tab}
+              className={`btn-tab ${selectedTab === tab ? "active-tab" : ""}`}
+              onClick={(e) => { e.stopPropagation(); setSelectedTab(tab); }}
+            >
               {tab.toUpperCase()}
             </button>
           ))}
@@ -341,6 +365,6 @@ const VideoCodeBox = ({ codeObj }) => {
       </div>
     </div>
   );
-};
+});
 
 export default Frontend_Tutorial_Solution;
