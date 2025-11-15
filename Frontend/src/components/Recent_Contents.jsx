@@ -120,12 +120,18 @@ function Recent_Contents() {
                                     <button
                                         className="btn btn-outline-warning btn-sm rounded-pill"
                                         onClick={(e) => {
-                                            e.stopPropagation(); // prevent parent card click
+                                            e.stopPropagation(); 
                                             handleNavigate(tutorial.topicId, tutorial.videoId);
+
+                                            // Scroll to top AFTER navigation
+                                            setTimeout(() => {
+                                                window.scrollTo({ top: 0, behavior: "smooth" });
+                                            }, 100);
                                         }}
                                     >
                                         View Code →
                                     </button>
+
                                 </div>
                             </div>
                         </div>
