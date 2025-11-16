@@ -82,6 +82,9 @@ function Admin_Login() {
             >
                 {isUploading ? "Logging In..." : "Login"}
             </button>
+            <p className="mt-3">Mail here to join our team 
+            &nbsp; <a href="https://sujan140.vercel.app/contact/">Mail</a>
+            </p>
         </form>
         </div>
     );
