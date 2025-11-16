@@ -95,16 +95,29 @@ function Home() {
                             <i className=" fab fa-linkedin-in"></i>
                         </a>
                     </div>
+                        {/* Hero  BTN Section */}
+                    <div style={{ display: 'flex', flexDirection:'row', justifyContent:'space-between' }}>
+                            {/* PlayGround BTN */}
+                            <button
+                                className="share-btn"
+                                onClick={() => {
+                                    navigate( "/PlayGround");
+                                }}
+                            >
+                                🎮 PlayGround
+                            </button>
 
-                    <button
-                        className="share-btn"
-                        onClick={() => {
-                            const loggedIn = window.localStorage.getItem("loggedIn") === "true";
-                            navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
-                        }}
-                    >
-                        ✍️ Share Your Code
-                    </button>
+                            {/* Share code BTN */}
+                            <button
+                                className="share-btn"
+                                onClick={() => {
+                                    const loggedIn = window.localStorage.getItem("loggedIn") === "true";
+                                    navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
+                                }}
+                            >
+                                ✍️ Share Your Code
+                            </button>
+                    </div>
                 </div>
             </section>
 

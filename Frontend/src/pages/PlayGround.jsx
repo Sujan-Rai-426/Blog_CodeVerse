@@ -262,93 +262,139 @@ export default function PlayGround() {
   };
 
   return (
-    <div className="cv-wrapper cv-codevora">
-      <aside className="cv-sidebar">
-        <h2 className="cv-sidebar-title">Controls</h2>
-        <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-          {/* Add Box */}
-          <button className="cv-btn-primary" onClick={addBox}>+ Add Box</button>
-          {/* View Code */}
-          <button
-            className="cv-btn-viewcode"
-            onClick={() => {
-              const codeSection = document.getElementById("CODE");
-              if (codeSection) {
-                codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
-              }
-            }}
-          >
-            View Code
-          </button>
-        </div>
+    <>
+      <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
+      <div className="cv-wrapper cv-codevora">
+        <aside className="cv-sidebar">
+          <h2 className="cv-sidebar-title">Controls</h2>
+          <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+            {/* Add Box */}
+            <button className="cv-btn-primary" onClick={addBox}>+ Add Box</button>
+            {/* View Code */}
+            <button
+              className="cv-btn-viewcode"
+              onClick={() => {
+                const codeSection = document.getElementById("CODE");
+                if (codeSection) {
+                  codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+                }
+              }}
+            >
+              View Code
+            </button>
+          </div>
 
-        {selectedBoxId && (
+          {selectedBoxId && (
             <>
+              {/* Add Box and View Code btn */}
               <div className="cv-control-container">
-                  {/* Color */}
-                  <div className="cv-control">
-                    <label>Box Color</label>
-                    <input type="color" value={boxes.find((b) => b.id === selectedBoxId)?.color} onChange={(e) => updateColor(e.target.value)} />
-                  </div>
-                  {/* Border Radius */}
-                  <div className="cv-control">
-                    <label>Border Radius</label>
-                    <input type="range" min="0" max="50" value={boxes.find((b) => b.id === selectedBoxId)?.radius || 0} onChange={(e) => updateRadius(parseInt(e.target.value))} />
-                  </div>
-            </div>
-              {/* Delete Box */}
-              <div className="cv-control">
+                {/* Color */}
+                <div className="cv-control">
+                  <label>Box Color</label>
+                  <input
+                    type="color"
+                    value={boxes.find((b) => b.id === selectedBoxId)?.color}
+                    onChange={(e) => updateColor(e.target.value)}
+                  />
+                </div>
+                {/* Border Radius */}
+                <div className="cv-control">
+                  <label>Border Radius</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    value={boxes.find((b) => b.id === selectedBoxId)?.radius || 0}
+                    onChange={(e) => updateRadius(parseInt(e.target.value))}
+                  />
+                </div>
+              </div>
+
+              {/* Delete & Copy Box Buttons */}
+              <div className="cv-control" style={{ display: 'flex', justifyContent: 'space-between'}}>
                 <button className="cv-btn-deleteBOX" onClick={deleteBox}>🗑 Delete Box</button>
+                
+                <button
+                  className="cv-btn-copyBOX"
+                  onClick={() => {
+                    const boxToCopy = boxes.find((b) => b.id === selectedBoxId);
+                    if (boxToCopy) {
+                      const maxZ = boxes.length > 0 ? Math.max(...boxes.map(b => b.z)) : 0;
+                      const canvasRect = canvasRef.current.getBoundingClientRect();
+
+                      // Offset 15px right and 15px up (convert to ratio)
+                      const offsetX = 15 / canvasRect.width;
+                      const offsetY = -15 / canvasRect.height;
+
+                      setBoxes((prev) => [
+                        ...prev,
+                        {
+                          ...boxToCopy,
+                          id: Date.now(),
+                          z: maxZ + 1, // Bring copied box on top
+                          x: Math.min(Math.max(boxToCopy.x + offsetX, 0), 1 - boxToCopy.w),
+                          y: Math.min(Math.max(boxToCopy.y + offsetY, 0), 1 - boxToCopy.h),
+                        },
+                      ]);
+                    }
+                  }}
+                >
+                  📄 Copy Box
+                </button>
+
               </div>
             </>
-        )}
-      </aside>
+          )}
 
-      <main className="cv-content">
-        <section className="cv-canvas" ref={canvasRef}>
-          <p>CodeVora Canvas</p>
-          {boxes.map((box, i) => (
-            <Box
-              key={box.id}
-              box={box}
-              index={i}
-              selectedBoxId={selectedBoxId}
-              setSelectedBoxId={setSelectedBoxId}
-              boxes={boxes}
-              setBoxes={setBoxes}
-              canvasRef={canvasRef}
-            />
-          ))}
-        </section>
+        </aside>
 
-        <section id="CODE" className="cv-code-wrapper">
-          <div className="cv-code-card">
-            <div className="cv-code-top codevora-top">
-              <div className="cv-code-title">HTML</div>
-              <div className="cv-code-actions">
-                <button className="cv-copy-btn-small" onClick={copyHTML}>📋</button>
-                {copied.html && <span className="cv-copied-badge">Copied!</span>}
+        <main className="cv-content">
+          <section className="cv-canvas" ref={canvasRef}>
+            <p>CodeVora Canvas</p>
+            {boxes.map((box, i) => (
+              <Box
+                key={box.id}
+                box={box}
+                index={i}
+                selectedBoxId={selectedBoxId}
+                setSelectedBoxId={setSelectedBoxId}
+                boxes={boxes}
+                setBoxes={setBoxes}
+                canvasRef={canvasRef}
+              />
+            ))}
+          </section>
+
+          <section id="CODE" className="cv-code-wrapper">
+            <div className="cv-code-card">
+              <div className="cv-code-top codevora-top">
+                <div className="cv-code-title">HTML</div>
+                <div className="cv-code-actions">
+                  <button className="cv-copy-btn-small" onClick={copyHTML}>📋</button>
+                  {copied.html && <span className="cv-copied-badge">Copied!</span>}
+                </div>
               </div>
+              <pre className="cv-code-area">
+                <code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code>
+              </pre>
             </div>
-            <pre className="cv-code-area">
-              <code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code>
-            </pre>
-          </div>
 
-          <div className="cv-code-card">
-            <div className="cv-code-top codevora-top">
-              <div className="cv-code-title">CSS</div>
-              <div className="cv-code-actions">
-                <button className="cv-copy-btn-small" onClick={copyCSS}>📋</button>
-                {copied.css && <span className="cv-copied-badge">Copied!</span>}
+            <div className="cv-code-card">
+              <div className="cv-code-top codevora-top">
+                <div className="cv-code-title">CSS</div>
+                <div className="cv-code-actions">
+                  <button className="cv-copy-btn-small" onClick={copyCSS}>📋</button>
+                  {copied.css && <span className="cv-copied-badge">Copied!</span>}
+                </div>
               </div>
+              <pre className="cv-code-area">
+                <code className="language-css">{generatedCode.css}</code>
+              </pre>
             </div>
-            <pre className="cv-code-area">
-              <code className="language-css">{generatedCode.css}</code>
-            </pre>
-          </div>
-        </section>
-      </main>
-    </div>
+          </section>
+        </main>
+      </div>
+    </>
+
   );
 }
