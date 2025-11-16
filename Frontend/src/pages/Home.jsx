@@ -115,7 +115,7 @@ function Home() {
                                     navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
                                 }}
                             >
-                                ✍️ Share Your Code
+                                ✍️ Share Code
                             </button>
                     </div>
                 </div>
