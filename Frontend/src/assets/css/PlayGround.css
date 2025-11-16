@@ -1,0 +1,297 @@
+/* =========================================================
+PlayGround.css - CodeVora style | responsive & prism-ready
+========================================================= */
+
+/* ---------------- BASE WRAPPER ---------------- */
+.cv-wrapper {
+  display: flex;
+  gap: 22px;
+  padding: 20px;
+  background: transparent;
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: Inter, "Fira Code", ui-monospace, SFMono-Regular, Menlo, Monaco, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+/* ---------------- SIDEBAR ---------------- */
+.cv-sidebar {
+  width: 260px;
+  min-width: 220px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Responsive Sidebar adjustments */
+@media (max-width: 980px) {
+  .cv-sidebar { width: 100%; }
+  .cv-sidebar-title { margin: 0; }
+  .cv-control-container { display: flex; flex-direction: row; justify-content: space-between; }
+  .cv-control input[type="color"] { width: 30px !important; height: 30px !important; border-radius: 10px !important; }
+  .cv-code-wrapper { order: 1; }
+  .cv-wrapper { flex-direction: column; padding: 0; gap: 14px; }
+}
+
+/* mobile full width */
+@media (max-width: 680px) {
+  .cv-code-card { min-width: 100%; }
+}
+
+/* ---------------- CANVAS ---------------- */
+.cv-canvas {
+  position: relative;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e6eef8;
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 1/1; /* Keep canvas always square */
+  box-shadow: 0 14px 30px rgba(2,6,23,0.06);
+  overflow: hidden;
+  padding: 12px;
+  margin: 0 auto; /* Center horizontally */
+}
+
+/* ---------------- BOXES (Movable & Resizable) ---------------- */
+.cv-box {
+  position: absolute;
+  border: 2px solid rgba(52,65,85,0.95);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: grab;
+  user-select: none;
+  transition: transform .12s ease, box-shadow .12s ease;
+  will-change: transform, width, height, left, top;
+}
+
+.cv-box:hover {
+  transform: scale(1.04);
+  box-shadow: 0 12px 30px rgba(2,6,23,0.12);
+}
+
+.cv-box.dragging {
+  cursor: grabbing;
+  transition: none !important;
+}
+
+/* Box remove button */
+.cv-remove-btn {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  background: #ef4444;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-weight: 700;
+  box-shadow: 0 6px 12px rgba(2,6,23,0.12);
+}
+
+/* Index inside box */
+.cv-box-index {
+  font-weight: 800;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+/* ---------------- CODE CARDS ---------------- */
+.cv-code-wrapper {
+  display: flex;
+  gap: 18px;
+  flex-wrap: wrap;
+}
+
+.cv-code-card {
+  max-width: 500px;
+  flex: 1;
+  background: linear-gradient(180deg, rgba(12,17,31,0.98), rgba(10,13,24,0.98));
+  color: #e6eef8;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(2,6,23,0.12);
+  border: 1px solid rgba(255,255,255,0.03);
+}
+
+/* Top Bar (CodeVora style) */
+.cv-code-top.codevora-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 14px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+  border-bottom: 1px solid rgba(255,255,255,0.02);
+  gap: 8px;
+}
+
+.cv-code-title {
+  font-weight: 700;
+  color: #e6eef8;
+  letter-spacing: 0.2px;
+  font-size: 14px;
+}
+
+/* Icons area */
+.cv-code-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.cv-copy-btn-small {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.04);
+  color: #cfe7ff;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform .12s ease, background .12s ease;
+}
+.cv-copy-btn-small:hover {
+  transform: translateY(-3px);
+  background: rgba(255,255,255,0.04);
+}
+
+/* Copied badge */
+.cv-copied-badge {
+  background: #065f46;
+  color: #e6f6ef;
+  padding: 6px 8px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  box-shadow: 0 6px 16px rgba(2,6,23,0.12);
+}
+
+/* Code area (scrollable) */
+.cv-code-area {
+  padding: 14px 16px;
+  font-family: "Fira Code", monospace;
+  font-size: 13px;
+  line-height: 1.5;
+  max-height: 260px;
+  overflow: auto;
+  color: #e6eef8;
+  background: transparent;
+  white-space: pre-wrap;
+  border: 0.8px solid white;
+  border-radius: 15px;
+}
+
+/* Prism override */
+pre[class*="language-"] {
+  margin: 0;
+  height: 100%;
+}
+
+/* Scrollbar */
+.cv-code-area::-webkit-scrollbar { width: 8px; height: 8px; }
+.cv-code-area::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 6px; }
+.cv-code-area::-webkit-scrollbar-track { background: rgba(255,255,255,0.01); }
+
+/* Button active polish */
+.cv-btn-primary:active,
+.cv-copy-btn-small:active {
+  transform: translateY(0);
+}
+
+
+/* Sidebar title */
+.cv-sidebar-title {
+  font-size: 18px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+/* ---------------- BUTTONS ---------------- */
+.cv-btn-primary {
+  appearance: none;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #39e007, #1a6f06);
+  color: #fff;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.cv-btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.15);
+}
+
+/* Ghost button style */
+.cv-btn-ghost {
+  background: transparent;
+  border: 1px dashed #cbd5e1;
+  color: #334155;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* ---------------- CONTROLS ---------------- */
+.cv-control label {
+  font-size: 13px;
+  color: #334155;
+  font-weight: 600;
+  margin-bottom: 6px;
+  display: block;
+}
+
+.cv-control input[type="range"] { width: 100%; }
+.cv-control input[type="color"] {
+  width: 100%;
+  height: 42px;
+  border-radius: 8px;
+  border: none;
+}
+
+/* Sidebar footer */
+.cv-sidebar-footer {
+  margin-top: auto;
+  display: flex;
+  gap: 8px;
+}
+
+/* ---------------- MAIN CONTENT ---------------- */
+.cv-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* ---------------- VIEW CODE BUTTON ---------------- */
+/* Small, elegant, CodeVora-themed button */
+.cv-btn-viewcode, .cv-btn-deleteBOX {
+  appearance: none;
+  border: none;
+  padding: 6px 12px;         /* Small & compact */
+  border-radius: 8px;
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+.cv-btn-viewcode:hover, .cv-btn-deleteBOX:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 14px rgba(37, 99, 235, 0.25);
+}
+.cv-btn-deleteBOX{
+  background: linear-gradient(135deg, #ab2020, #ff0303) !important;
+}

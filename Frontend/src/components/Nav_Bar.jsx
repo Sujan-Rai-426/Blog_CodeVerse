@@ -22,6 +22,7 @@ function Nav_Bar() {
           <Link to="/About" className="nav-link">About</Link>
           <a href="https://sujan140.vercel.app/contact" className="nav-link">Contact</a>
           <Link to="/Privacy_Policy" className="nav-link">Privacy Policy</Link>
+          <Link to="/PlayGround" className="nav-link">PlayGround</Link>
           <a href="https://sujan140.vercel.app" target="_blank" rel="noopener noreferrer" className="nav-link">Developer</a>
           {/* <a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" className="btn btn-outline-light btn-sm ms-3">Admin 💻</a> */}
         </div>
@@ -34,6 +35,7 @@ function Nav_Bar() {
           <li><Link to="/About" onClick={toggleSidebar}>About</Link></li>
           <li><a href="https://sujan140.vercel.app/contact" onClick={toggleSidebar}>Contact</a></li>
           <li><Link to="/Privacy_Policy" onClick={toggleSidebar}>Privacy Policy</Link></li>
+          <li><Link to="/PlayGround" onClick={toggleSidebar}>PlayGround</Link></li>
           <li><a href="https://sujan140.vercel.app" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
           {/* <li><a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Admin 💻</a></li> */}
         </ul>

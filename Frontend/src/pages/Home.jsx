@@ -73,7 +73,7 @@ function Home() {
                         <p className="text-warning m-0 p-0">
                             📢{" "}
                             <small>
-                                <u>More Content Will Be Added on Weekly Basis...</u>
+                                More Content Will Be Added on Weekly Basis...
                             </small>
                         </p>
                     </h5>

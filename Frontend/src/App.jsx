@@ -38,6 +38,7 @@ import Floating_Donate_Me from './payment/donation/Floating_Donate_Me.jsx';
 
 // for fetching once in parent and use same api in every page, instead of constant fetching --> to solve lack of persistence loading problem
 import { Parent_Api_Provider } from './context/Parent_API_Provider.jsx';
+import PlayGround from './pages/PlayGround.jsx';
 
 
 
@@ -84,6 +85,9 @@ function App() {
                                   <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
 
                                   <Route exact path="/Admin_Login" element={<Admin_Login />} />
+
+
+                                  <Route exact path="/PlayGround" element={<PlayGround />} />
 
 
                                     {/* Protected Dashboard */}
