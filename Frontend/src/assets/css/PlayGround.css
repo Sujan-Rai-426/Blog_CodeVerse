@@ -24,7 +24,8 @@ PlayGround.css - CodeVora style | responsive & prism-ready
 .cv-sidebar {
   width: 260px;
   min-width: 220px;
-  background: #ffffff;
+  background: linear-gradient(145deg, #0c0c0c 0%, #181818 50% 50%, #272525 100%);
+  border: 1px solid white;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 10px 30px rgba(2,6,23,0.06);
@@ -238,7 +239,7 @@ pre[class*="language-"] {
 /* Sidebar title */
 .cv-sidebar-title {
   font-size: 18px;
-  color: #0f172a;
+  color: white;
   font-weight: 700;
 }
 
@@ -272,7 +273,7 @@ pre[class*="language-"] {
 /* ---------------- CONTROLS ---------------- */
 .cv-control label {
   font-size: 13px;
-  color: #334155;
+  color: white;
   font-weight: 600;
   margin-bottom: 6px;
   display: block;
