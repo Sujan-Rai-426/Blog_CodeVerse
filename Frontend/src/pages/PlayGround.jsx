@@ -5,15 +5,13 @@ import "prismjs/components/prism-css";
 import "prismjs/components/prism-markup";
 import "../assets/css/PlayGround.css";
 
-/**
- * Box component: draggable, resizable, and rotatable (supports mobile)
- */
 function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, canvasRef }) {
   const boxRef = useRef(null);
   const [hoverSide, setHoverSide] = useState(null);
   const [dragging, setDragging] = useState(false);
+  const [showHLine, setShowHLine] = useState(false);
+  const [showVLine, setShowVLine] = useState(false);
 
-  // Bring selected box to front
   const bringToFront = (id) => {
     const maxZ = Math.max(...boxes.map((b) => b.z));
     setBoxes((prev) =>
@@ -21,7 +19,6 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     );
   };
 
-  // Detect which side of the box is hovered for resize
   const detectHoverSide = (x, y) => {
     const rect = boxRef.current.getBoundingClientRect();
     const offset = Math.max(12, Math.min(16, rect.width * 0.03));
@@ -36,7 +33,6 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     return side;
   };
 
-  // Handle drag & resize
   const startDragResize = (startEvent, isTouch = false) => {
     if (startEvent.cancelable) startEvent.preventDefault();
     bringToFront(box.id);
@@ -49,10 +45,7 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     let startBox;
     const canvasRect = canvasRef.current.getBoundingClientRect();
 
-    setBoxes((prev) => {
-      startBox = prev.find((b) => b.id === box.id);
-      return prev;
-    });
+    startBox = boxes.find((b) => b.id === box.id);
 
     const side = detectHoverSide(startX, startY);
     const resizing = !!side;
@@ -66,44 +59,126 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       const deltaX = mx - startX;
       const deltaY = my - startY;
 
-      setBoxes((prev) =>
-        prev.map((b) => {
-          if (b.id !== box.id) return b;
+      // Compute new box positions
+      let newBoxes = boxes.map((b) => {
+        if (b.id !== box.id) return b;
 
-          let newX = startBox.x * canvasRect.width;
-          let newY = startBox.y * canvasRect.height;
-          let newW = startBox.w * canvasRect.width;
-          let newH = startBox.h * canvasRect.height;
+        let newX = startBox.x * canvasRect.width;
+        let newY = startBox.y * canvasRect.height;
+        let newW = startBox.w * canvasRect.width;
+        let newH = startBox.h * canvasRect.height;
 
-          if (resizing && side) {
-            if (side.includes("e")) newW = Math.max(30, newW + deltaX);
-            if (side.includes("s")) newH = Math.max(30, newH + deltaY);
-            if (side.includes("w")) {
-              newW = Math.max(30, newW - deltaX);
-              newX += deltaX;
-            }
-            if (side.includes("n")) {
-              newH = Math.max(30, newH - deltaY);
-              newY += deltaY;
-            }
-          } else {
+        if (resizing && side) {
+          if (side.includes("e")) newW = Math.max(30, newW + deltaX);
+          if (side.includes("s")) newH = Math.max(30, newH + deltaY);
+          if (side.includes("w")) {
+            newW = Math.max(30, newW - deltaX);
             newX += deltaX;
+          }
+          if (side.includes("n")) {
+            newH = Math.max(30, newH - deltaY);
             newY += deltaY;
           }
+        } else {
+          newX += deltaX;
+          newY += deltaY;
+        }
 
-          return {
-            ...b,
-            x: newX / canvasRect.width,
-            y: newY / canvasRect.height,
-            w: newW / canvasRect.width,
-            h: newH / canvasRect.height,
-          };
-        })
-      );
+        return {
+          ...b,
+          x: newX / canvasRect.width,
+          y: newY / canvasRect.height,
+          w: newW / canvasRect.width,
+          h: newH / canvasRect.height,
+        };
+      });
+
+      // ===== Improved Alignment helper lines calculation =====
+      let hLine = false;
+      let vLine = false;
+      const movingBox = newBoxes.find((b) => b.id === box.id);
+
+      const rad = (movingBox.rotation || 0) * (Math.PI / 180);
+      const cx = movingBox.x * canvasRect.width + (movingBox.w * canvasRect.width) / 2;
+      const cy = movingBox.y * canvasRect.height + (movingBox.h * canvasRect.height) / 2;
+      const w2 = movingBox.w * canvasRect.width / 2;
+      const h2 = movingBox.h * canvasRect.height / 2;
+
+      // Calculate rotated corners
+      const corners = [
+        { x: -w2, y: -h2 },
+        { x: w2, y: -h2 },
+        { x: w2, y: h2 },
+        { x: -w2, y: h2 },
+      ].map(c => ({
+        x: cx + c.x * Math.cos(rad) - c.y * Math.sin(rad),
+        y: cy + c.x * Math.sin(rad) + c.y * Math.cos(rad),
+      }));
+
+      const bLeft = Math.min(...corners.map(c => c.x));
+      const bRight = Math.max(...corners.map(c => c.x));
+      const bTop = Math.min(...corners.map(c => c.y));
+      const bBottom = Math.max(...corners.map(c => c.y));
+      const bCenterX = (bLeft + bRight) / 2;
+      const bCenterY = (bTop + bBottom) / 2;
+
+      const tolerance = 8;
+      const checkAlign = (p1, p2) => Math.abs(p1 - p2) < tolerance;
+
+      // Snap to canvas edges
+      if (checkAlign(bLeft, 0) || checkAlign(bRight, canvasRect.width) || checkAlign(bCenterX, canvasRect.width / 2)) vLine = true;
+      if (checkAlign(bTop, 0) || checkAlign(bBottom, canvasRect.height) || checkAlign(bCenterY, canvasRect.height / 2)) hLine = true;
+
+      // Snap to other boxes
+      newBoxes.forEach(other => {
+        if (other.id === box.id) return;
+
+        const orad = (other.rotation || 0) * (Math.PI / 180);
+        const ocx = other.x * canvasRect.width + (other.w * canvasRect.width) / 2;
+        const ocy = other.y * canvasRect.height + (other.h * canvasRect.height) / 2;
+        const ow2 = other.w * canvasRect.width / 2;
+        const oh2 = other.h * canvasRect.height / 2;
+
+        const ocorners = [
+          { x: -ow2, y: -oh2 },
+          { x: ow2, y: -oh2 },
+          { x: ow2, y: oh2 },
+          { x: -ow2, y: oh2 },
+        ].map(c => ({
+          x: ocx + c.x * Math.cos(orad) - c.y * Math.sin(orad),
+          y: ocy + c.x * Math.sin(orad) + c.y * Math.cos(orad),
+        }));
+
+        const oLeft = Math.min(...ocorners.map(c => c.x));
+        const oRight = Math.max(...ocorners.map(c => c.x));
+        const oTop = Math.min(...ocorners.map(c => c.y));
+        const oBottom = Math.max(...ocorners.map(c => c.y));
+        const oCenterX = (oLeft + oRight) / 2;
+        const oCenterY = (oTop + oBottom) / 2;
+
+        if (
+          checkAlign(bLeft, oLeft) || checkAlign(bLeft, oRight) ||
+          checkAlign(bRight, oLeft) || checkAlign(bRight, oRight) ||
+          checkAlign(bCenterX, oCenterX)
+        ) vLine = true;
+
+        if (
+          checkAlign(bTop, oTop) || checkAlign(bTop, oBottom) ||
+          checkAlign(bBottom, oTop) || checkAlign(bBottom, oBottom) ||
+          checkAlign(bCenterY, oCenterY)
+        ) hLine = true;
+      });
+
+      setShowHLine(hLine);
+      setShowVLine(vLine);
+      setBoxes(newBoxes);
     };
+
 
     const stopMove = () => {
       setDragging(false);
+      setShowHLine(false);
+      setShowVLine(false);
       window.removeEventListener(moveEvent, handleMove);
       window.removeEventListener(upEvent, stopMove);
     };
@@ -112,34 +187,77 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     window.addEventListener(upEvent, stopMove);
   };
 
-  // ===== Rotation handle (desktop + mobile) =====
-  const startRotation = (e, isTouch = false) => {
-    e.stopPropagation();
-    bringToFront(box.id);
-    setSelectedBoxId(box.id);
+const startRotation = (e, isTouch = false) => {
+  e.stopPropagation();
+  bringToFront(box.id);
+  setSelectedBoxId(box.id);
 
-    const rect = boxRef.current.getBoundingClientRect();
-    const centerX = rect.left + rect.width / 2;
-    const centerY = rect.top + rect.height / 2;
+  const rect = boxRef.current.getBoundingClientRect();
+  const centerX = rect.left + rect.width / 2;
+  const centerY = rect.top + rect.height / 2;
 
-    const handleMove = (moveE) => {
-      if (moveE.cancelable) moveE.preventDefault();
-      const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
-      const my = isTouch ? moveE.touches[0].clientY : moveE.clientY;
-      const angle = Math.atan2(my - centerY, mx - centerX) * (180 / Math.PI);
-      setBoxes((prev) =>
-        prev.map((b) => (b.id === box.id ? { ...b, rotation: angle } : b))
-      );
-    };
+  const startX = isTouch ? e.touches[0].clientX : e.clientX;
+  const startY = isTouch ? e.touches[0].clientY : e.clientY;
 
-    const stopMove = () => {
-      window.removeEventListener(isTouch ? "touchmove" : "mousemove", handleMove);
-      window.removeEventListener(isTouch ? "touchend" : "mouseup", stopMove);
-    };
+  // Initial angle between mouse and box center
+  const startAngle = Math.atan2(startY - centerY, startX - centerX) * (180 / Math.PI);
+  const initialRotation = box.rotation || 0;
 
-    window.addEventListener(isTouch ? "touchmove" : "mousemove", handleMove, { passive: false });
-    window.addEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
+  let lastAngle = initialRotation; // track last angle
+  let animationFrame = null;
+
+  const snapTolerance = 10; // snapping degrees
+  const showLineThreshold = 15;
+
+  const handleMove = (moveE) => {
+    if (moveE.cancelable) moveE.preventDefault();
+    const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
+    const my = isTouch ? moveE.touches[0].clientY : moveE.clientY;
+
+    const currentAngle = Math.atan2(my - centerY, mx - centerX) * (180 / Math.PI);
+    let deltaAngle = currentAngle - startAngle;
+
+    // Normalize delta to prevent sudden jumps across -180/180
+    if (deltaAngle > 180) deltaAngle -= 360;
+    if (deltaAngle < -180) deltaAngle += 360;
+
+    let newAngle = initialRotation + deltaAngle;
+
+    // Snap to nearest 0,90,180,270
+    const snapAngles = [0, 90, 180, 270];
+    snapAngles.forEach(snap => {
+      if (Math.abs(newAngle - snap) <= snapTolerance) newAngle = snap;
+    });
+
+    // Show helper lines
+    const showHLine = Math.abs(newAngle % 180) < showLineThreshold || Math.abs(newAngle % 180 - 180) < showLineThreshold;
+    const showVLine = Math.abs((newAngle - 90) % 180) < showLineThreshold || Math.abs((newAngle - 270) % 180) < showLineThreshold;
+
+    // Smooth update using requestAnimationFrame
+    if (!animationFrame) {
+      animationFrame = requestAnimationFrame(() => {
+        setBoxes(prev => prev.map(b => (b.id === box.id ? { ...b, rotation: newAngle } : b)));
+        setShowHLine(showHLine);
+        setShowVLine(showVLine);
+        animationFrame = null;
+      });
+    }
+
+    lastAngle = newAngle;
   };
+
+  const stopMove = () => {
+    setShowHLine(false);
+    setShowVLine(false);
+    if (animationFrame) cancelAnimationFrame(animationFrame);
+    window.removeEventListener(isTouch ? "touchmove" : "mousemove", handleMove);
+    window.removeEventListener(isTouch ? "touchend" : "mouseup", stopMove);
+  };
+
+  window.addEventListener(isTouch ? "touchmove" : "mousemove", handleMove, { passive: false });
+  window.addEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
+};
+
 
   const handleMouseMoveOver = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
@@ -189,7 +307,6 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       onMouseLeave={() => setHoverSide(null)}
     >
       {index + 1}
-      {/* Rotation Handle */}
       {selectedBoxId === box.id && (
         <div
           style={{
@@ -212,13 +329,39 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
           ⟳
         </div>
       )}
+
+      {/* Alignment lines */}
+      {selectedBoxId === box.id && showHLine && (
+        <div style={{
+          position: "absolute",
+          top: "50%",
+          left: 0,
+          width: "100%",
+          height: "1px",
+          background: "red",
+          pointerEvents: "none",
+          transform: "translateY(-0.5px)",
+          zIndex: 9999,
+        }} />
+      )}
+      {selectedBoxId === box.id && showVLine && (
+        <div style={{
+          position: "absolute",
+          left: "50%",
+          top: 0,
+          width: "1px",
+          height: "100%",
+          background: "red",
+          pointerEvents: "none",
+          transform: "translateX(-0.5px)",
+          zIndex: 9999,
+        }} />
+      )}
     </div>
   );
 }
 
-/**
- * Main PlayGround component
- */
+// ----------------------- PlayGround component -----------------------
 export default function PlayGround() {
   const [boxes, setBoxes] = useState([
     { id: 1, w: 0.2, h: 0.2, x: 0.4, y: 0.4, z: 1, color: "#2563eb", radius: 12 },
@@ -231,187 +374,109 @@ export default function PlayGround() {
     Prism.highlightAll();
   }, [boxes]);
 
-  /** Generate responsive HTML & CSS */
   const generatedCode = (() => {
     const html = boxes.map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`).join("\n");
-
     const css = [
       `.cv-container { 
-      position: relative; 
-      width: 100%; 
-      max-width: 600px; 
-      aspect-ratio: 1/1; 
-      background: #f9fafb; 
-      border-radius: 20px; 
-      overflow: hidden; 
-      border: 2px solid #e5e7eb; 
-    }`,
+        position: relative; 
+        width: 100%; 
+        max-width: 600px; 
+        aspect-ratio: 1/1; 
+        background: #f9fafb; 
+        border-radius: 20px; 
+        overflow: hidden; 
+        border: 2px solid #e5e7eb; 
+      }`
     ].concat(
-      boxes.map((b, i) => {
-        return `.cv-box-${i + 1} {
-      width: ${b.w * 100}%;
-      height: ${b.h * 100}%;
-      position: absolute;
-      left: ${b.x * 100}%;
-      top: ${b.y * 100}%;
-      z-index: ${b.z};
-      background: ${b.color};
-      border-radius: ${b.radius}px;
-      border: 2px solid #374151;
-      transition: all 0.2s ease;
-      transform: rotate(${b.rotation || 0}deg);
-    }`;
-      })
+      boxes.map((b, i) => `.cv-box-${i + 1} {
+        width: ${b.w * 100}%;
+        height: ${b.h * 100}%;
+        position: absolute;
+        left: ${b.x * 100}%;
+        top: ${b.y * 100}%;
+        z-index: ${b.z};
+        background: ${b.color};
+        border-radius: ${b.radius}px;
+        border: 2px solid #374151;
+        transition: all 0.2s ease;
+        transform: rotate(${b.rotation || 0}deg);
+      }`)
     ).join("\n");
 
     return { html, css };
   })();
 
-  // Copy HTML & CSS
   const copyHTML = async () => {
     await navigator.clipboard.writeText(`<div class="cv-container">\n${generatedCode.html}\n</div>`);
-    setCopied((prev) => ({ ...prev, html: true }));
-    setTimeout(() => setCopied((prev) => ({ ...prev, html: false })), 1500);
-  };
-  const copyCSS = async () => {
-    await navigator.clipboard.writeText(generatedCode.css);
-    setCopied((prev) => ({ ...prev, css: true }));
-    setTimeout(() => setCopied((prev) => ({ ...prev, css: false })), 1500);
+    setCopied(prev => ({ ...prev, html: true }));
+    setTimeout(() => setCopied(prev => ({ ...prev, html: false })), 1500);
   };
 
-  // Add Box
+  const copyCSS = async () => {
+    await navigator.clipboard.writeText(generatedCode.css);
+    setCopied(prev => ({ ...prev, css: true }));
+    setTimeout(() => setCopied(prev => ({ ...prev, css: false })), 1500);
+  };
+
   const addBox = () => {
-    setBoxes((prev) => {
-      const maxZ = prev.length > 0 ? Math.max(...prev.map((b) => b.z)) : 0;
-      return [
-        ...prev,
-        {
-          id: Date.now(),
-          w: 0.2,
-          h: 0.2,
-          x: 0.4,
-          y: 0.4,
-          z: maxZ + 1,
-          color: "#10b981",
-          radius: 12,
-        },
-      ];
+    setBoxes(prev => {
+      const maxZ = prev.length > 0 ? Math.max(...prev.map(b => b.z)) : 0;
+      return [...prev, { id: Date.now(), w: 0.2, h: 0.2, x: 0.4, y: 0.4, z: maxZ + 1, color: "#10b981", radius: 12 }];
     });
   };
 
-  const updateColor = (color) =>
-    setBoxes((prev) =>
-      prev.map((b) => (b.id === selectedBoxId ? { ...b, color } : b))
-    );
-
-  const updateRadius = (radius) =>
-    setBoxes((prev) =>
-      prev.map((b) => (b.id === selectedBoxId ? { ...b, radius } : b))
-    );
-
-  const deleteBox = () => {
-    setBoxes((prev) => prev.filter((b) => b.id !== selectedBoxId));
-    setSelectedBoxId(null);
-  };
+  const updateColor = color => setBoxes(prev => prev.map(b => b.id === selectedBoxId ? { ...b, color } : b));
+  const updateRadius = radius => setBoxes(prev => prev.map(b => b.id === selectedBoxId ? { ...b, radius } : b));
+  const deleteBox = () => { setBoxes(prev => prev.filter(b => b.id !== selectedBoxId)); setSelectedBoxId(null); };
 
   return (
     <div className="main-PlayGround-body">
       <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
-
       <div className="cv-wrapper cv-codevora">
-        {/* Sidebar Controls */}
         <aside className="cv-sidebar">
           <h2 className="cv-sidebar-title">Controls</h2>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <button className="cv-btn-primary" onClick={addBox}>+ Add Box</button>
-            <button
-              className="cv-btn-viewcode"
-              onClick={() => {
-                const codeSection = document.getElementById("CODE");
-                if (codeSection) codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
-              }}
-            >
-              View Code
-            </button>
+            <button className="cv-btn-viewcode" onClick={() => {
+              const codeSection = document.getElementById("CODE");
+              if (codeSection) codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+            }}>View Code</button>
           </div>
-
-          {selectedBoxId && (
-            <>
-              <div className="cv-control-container">
-                <div className="cv-control">
-                  <label>Box Color</label>
-                  <input
-                    type="color"
-                    value={boxes.find((b) => b.id === selectedBoxId)?.color}
-                    onChange={(e) => updateColor(e.target.value)}
-                  />
-                </div>
-                <div className="cv-control">
-                  <label>Border Radius</label>
-                  <input
-                    type="range"
-                    min="0"
-                    max="50"
-                    value={boxes.find((b) => b.id === selectedBoxId)?.radius || 0}
-                    onChange={(e) => updateRadius(parseInt(e.target.value))}
-                  />
-                </div>
+          {selectedBoxId && <>
+            <div className="cv-control-container">
+              <div className="cv-control">
+                <label>Box Color</label>
+                <input type="color" value={boxes.find(b => b.id === selectedBoxId)?.color} onChange={e => updateColor(e.target.value)} />
               </div>
-
-              <div className="cv-control" style={{ display: 'flex', justifyContent: 'space-between'}}>
-                <button className="cv-btn-deleteBOX" onClick={deleteBox}>🗑 Delete Box</button>
-
-                <button
-                  className="cv-btn-copyBOX"
-                  onClick={() => {
-                    const boxToCopy = boxes.find((b) => b.id === selectedBoxId);
-                    if (boxToCopy) {
-                      const maxZ = boxes.length > 0 ? Math.max(...boxes.map(b => b.z)) : 0;
-                      const canvasRect = canvasRef.current.getBoundingClientRect();
-                      const offsetX = 15 / canvasRect.width;
-                      const offsetY = -15 / canvasRect.height;
-
-                      setBoxes((prev) => [
-                        ...prev,
-                        {
-                          ...boxToCopy,
-                          id: Date.now(),
-                          z: maxZ + 1,
-                          x: Math.min(Math.max(boxToCopy.x + offsetX, 0), 1 - boxToCopy.w),
-                          y: Math.min(Math.max(boxToCopy.y + offsetY, 0), 1 - boxToCopy.h),
-                        },
-                      ]);
-                    }
-                  }}
-                >
-                  📄 Copy Box
-                </button>
+              <div className="cv-control">
+                <label>Border Radius</label>
+                <input type="range" min="0" max="50" value={boxes.find(b => b.id === selectedBoxId)?.radius || 0} onChange={e => updateRadius(parseInt(e.target.value))} />
               </div>
-            </>
-          )}
+            </div>
+            <div className="cv-control" style={{ display: 'flex', justifyContent: 'space-between'}}>
+              <button className="cv-btn-deleteBOX" onClick={deleteBox}>🗑 Delete Box</button>
+              <button className="cv-btn-copyBOX" onClick={() => {
+                const boxToCopy = boxes.find(b => b.id === selectedBoxId);
+                if (boxToCopy) {
+                  const maxZ = boxes.length > 0 ? Math.max(...boxes.map(b => b.z)) : 0;
+                  const canvasRect = canvasRef.current.getBoundingClientRect();
+                  const offsetX = 15 / canvasRect.width;
+                  const offsetY = -15 / canvasRect.height;
+                  setBoxes(prev => [...prev, { ...boxToCopy, id: Date.now(), z: maxZ + 1, x: Math.min(Math.max(boxToCopy.x + offsetX, 0), 1 - boxToCopy.w), y: Math.min(Math.max(boxToCopy.y + offsetY, 0), 1 - boxToCopy.h) }]);
+                }
+              }}>📄 Copy Box</button>
+            </div>
+          </>}
         </aside>
 
-        {/* Canvas */}
         <main className="cv-content">
           <section className="cv-canvas" ref={canvasRef}>
             <p>CodeVora Canvas</p>
-            {boxes.map((box, i) => (
-              <Box
-                key={box.id}
-                box={box}
-                index={i}
-                selectedBoxId={selectedBoxId}
-                setSelectedBoxId={setSelectedBoxId}
-                boxes={boxes}
-                setBoxes={setBoxes}
-                canvasRef={canvasRef}
-              />
-            ))}
+            {boxes.map((box, i) => <Box key={box.id} box={box} index={i} selectedBoxId={selectedBoxId} setSelectedBoxId={setSelectedBoxId} boxes={boxes} setBoxes={setBoxes} canvasRef={canvasRef} />)}
           </section>
         </main>
       </div>
 
-      {/* Code Output */}
       <section id="CODE" className="cv-code-wrapper">
         <div className="cv-code-card">
           <div className="cv-code-top codevora-top">
@@ -421,11 +486,8 @@ export default function PlayGround() {
               {copied.html && <span className="cv-copied-badge">Copied!</span>}
             </div>
           </div>
-          <pre className="cv-code-area">
-            <code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code>
-          </pre>
+          <pre className="cv-code-area"><code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code></pre>
         </div>
-
         <div className="cv-code-card">
           <div className="cv-code-top codevora-top">
             <div className="cv-code-title">CSS</div>
@@ -434,9 +496,7 @@ export default function PlayGround() {
               {copied.css && <span className="cv-copied-badge">Copied!</span>}
             </div>
           </div>
-          <pre className="cv-code-area">
-            <code className="language-css">{generatedCode.css}</code>
-          </pre>
+          <pre className="cv-code-area"><code className="language-css">{generatedCode.css}</code></pre>
         </div>
       </section>
     </div>
