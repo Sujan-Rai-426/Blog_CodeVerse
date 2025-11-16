@@ -12,8 +12,12 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
   const [showHLine, setShowHLine] = useState(false);
   const [showVLine, setShowVLine] = useState(false);
 
+  // ======= FIX: always use latest boxes =======
+  const boxesRef = useRef(boxes);
+  useEffect(() => { boxesRef.current = boxes; }, [boxes]);
+
   const bringToFront = (id) => {
-    const maxZ = Math.max(...boxes.map((b) => b.z));
+    const maxZ = Math.max(...boxesRef.current.map((b) => b.z));
     setBoxes((prev) =>
       prev.map((b) => (b.id === id ? { ...b, z: maxZ + 1 } : b))
     );
@@ -42,10 +46,9 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     const startX = isTouch ? startEvent.touches[0].clientX : startEvent.clientX;
     const startY = isTouch ? startEvent.touches[0].clientY : startEvent.clientY;
 
-    let startBox;
     const canvasRect = canvasRef.current.getBoundingClientRect();
 
-    startBox = boxes.find((b) => b.id === box.id);
+    let startBox = boxesRef.current.find((b) => b.id === box.id); // <-- use ref
 
     const side = detectHoverSide(startX, startY);
     const resizing = !!side;
@@ -59,8 +62,7 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       const deltaX = mx - startX;
       const deltaY = my - startY;
 
-      // Compute new box positions
-      let newBoxes = boxes.map((b) => {
+      let newBoxes = boxesRef.current.map((b) => {
         if (b.id !== box.id) return b;
 
         let newX = startBox.x * canvasRect.width;
@@ -93,7 +95,7 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
         };
       });
 
-      // ===== Improved Alignment helper lines calculation =====
+      // ===== Alignment lines =====
       let hLine = false;
       let vLine = false;
       const movingBox = newBoxes.find((b) => b.id === box.id);
@@ -104,7 +106,6 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       const w2 = movingBox.w * canvasRect.width / 2;
       const h2 = movingBox.h * canvasRect.height / 2;
 
-      // Calculate rotated corners
       const corners = [
         { x: -w2, y: -h2 },
         { x: w2, y: -h2 },
@@ -125,11 +126,9 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       const tolerance = 8;
       const checkAlign = (p1, p2) => Math.abs(p1 - p2) < tolerance;
 
-      // Snap to canvas edges
       if (checkAlign(bLeft, 0) || checkAlign(bRight, canvasRect.width) || checkAlign(bCenterX, canvasRect.width / 2)) vLine = true;
       if (checkAlign(bTop, 0) || checkAlign(bBottom, canvasRect.height) || checkAlign(bCenterY, canvasRect.height / 2)) hLine = true;
 
-      // Snap to other boxes
       newBoxes.forEach(other => {
         if (other.id === box.id) return;
 
@@ -174,7 +173,6 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
       setBoxes(newBoxes);
     };
 
-
     const stopMove = () => {
       setDragging(false);
       setShowHLine(false);
@@ -187,77 +185,61 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     window.addEventListener(upEvent, stopMove);
   };
 
-const startRotation = (e, isTouch = false) => {
-  e.stopPropagation();
-  bringToFront(box.id);
-  setSelectedBoxId(box.id);
+  const startRotation = (e, isTouch = false) => {
+    e.stopPropagation();
+    bringToFront(box.id);
+    setSelectedBoxId(box.id);
 
-  const rect = boxRef.current.getBoundingClientRect();
-  const centerX = rect.left + rect.width / 2;
-  const centerY = rect.top + rect.height / 2;
+    const rect = boxRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
 
-  const startX = isTouch ? e.touches[0].clientX : e.clientX;
-  const startY = isTouch ? e.touches[0].clientY : e.clientY;
+    const startX = isTouch ? e.touches[0].clientX : e.clientX;
+    const startY = isTouch ? e.touches[0].clientY : e.clientY;
 
-  // Initial angle between mouse and box center
-  const startAngle = Math.atan2(startY - centerY, startX - centerX) * (180 / Math.PI);
-  const initialRotation = box.rotation || 0;
+    const startAngle = Math.atan2(startY - centerY, startX - centerX) * (180 / Math.PI);
+    const initialRotation = boxesRef.current.find(b => b.id === box.id)?.rotation || 0; // <-- use ref
 
-  let lastAngle = initialRotation; // track last angle
-  let animationFrame = null;
+    let animationFrame = null;
+    const snapTolerance = 10;
+    const showLineThreshold = 15;
 
-  const snapTolerance = 10; // snapping degrees
-  const showLineThreshold = 15;
+    const handleMove = (moveE) => {
+      if (moveE.cancelable) moveE.preventDefault();
+      const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
+      const my = isTouch ? moveE.touches[0].clientY : moveE.clientY;
 
-  const handleMove = (moveE) => {
-    if (moveE.cancelable) moveE.preventDefault();
-    const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
-    const my = isTouch ? moveE.touches[0].clientY : moveE.clientY;
+      let deltaAngle = Math.atan2(my - centerY, mx - centerX) * (180 / Math.PI) - startAngle;
+      if (deltaAngle > 180) deltaAngle -= 360;
+      if (deltaAngle < -180) deltaAngle += 360;
 
-    const currentAngle = Math.atan2(my - centerY, mx - centerX) * (180 / Math.PI);
-    let deltaAngle = currentAngle - startAngle;
+      let newAngle = initialRotation + deltaAngle;
+      [0, 90, 180, 270].forEach(snap => { if (Math.abs(newAngle - snap) <= snapTolerance) newAngle = snap; });
 
-    // Normalize delta to prevent sudden jumps across -180/180
-    if (deltaAngle > 180) deltaAngle -= 360;
-    if (deltaAngle < -180) deltaAngle += 360;
+      const showHLine = Math.abs(newAngle % 180) < showLineThreshold || Math.abs(newAngle % 180 - 180) < showLineThreshold;
+      const showVLine = Math.abs((newAngle - 90) % 180) < showLineThreshold || Math.abs((newAngle - 270) % 180) < showLineThreshold;
 
-    let newAngle = initialRotation + deltaAngle;
+      if (!animationFrame) {
+        animationFrame = requestAnimationFrame(() => {
+          setBoxes(prev => prev.map(b => (b.id === box.id ? { ...b, rotation: newAngle } : b)));
+          setShowHLine(showHLine);
+          setShowVLine(showVLine);
+          animationFrame = null;
+        });
+      }
+    };
 
-    // Snap to nearest 0,90,180,270
-    const snapAngles = [0, 90, 180, 270];
-    snapAngles.forEach(snap => {
-      if (Math.abs(newAngle - snap) <= snapTolerance) newAngle = snap;
-    });
+    const stopMove = () => {
+      setShowHLine(false);
+      setShowVLine(false);
+      if (animationFrame) cancelAnimationFrame(animationFrame);
+      window.removeEventListener(isTouch ? "touchmove" : "mousemove", handleMove);
+      window.removeEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
+    };
 
-    // Show helper lines
-    const showHLine = Math.abs(newAngle % 180) < showLineThreshold || Math.abs(newAngle % 180 - 180) < showLineThreshold;
-    const showVLine = Math.abs((newAngle - 90) % 180) < showLineThreshold || Math.abs((newAngle - 270) % 180) < showLineThreshold;
-
-    // Smooth update using requestAnimationFrame
-    if (!animationFrame) {
-      animationFrame = requestAnimationFrame(() => {
-        setBoxes(prev => prev.map(b => (b.id === box.id ? { ...b, rotation: newAngle } : b)));
-        setShowHLine(showHLine);
-        setShowVLine(showVLine);
-        animationFrame = null;
-      });
-    }
-
-    lastAngle = newAngle;
+    window.addEventListener(isTouch ? "touchmove" : "mousemove", handleMove, { passive: false });
+    window.addEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
   };
-
-  const stopMove = () => {
-    setShowHLine(false);
-    setShowVLine(false);
-    if (animationFrame) cancelAnimationFrame(animationFrame);
-    window.removeEventListener(isTouch ? "touchmove" : "mousemove", handleMove);
-    window.removeEventListener(isTouch ? "touchend" : "mouseup", stopMove);
-  };
-
-  window.addEventListener(isTouch ? "touchmove" : "mousemove", handleMove, { passive: false });
-  window.addEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
-};
-
 
   const handleMouseMoveOver = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
@@ -329,8 +311,6 @@ const startRotation = (e, isTouch = false) => {
           ⟳
         </div>
       )}
-
-      {/* Alignment lines */}
       {selectedBoxId === box.id && showHLine && (
         <div style={{
           position: "absolute",
