@@ -6,7 +6,7 @@ import "prismjs/components/prism-markup";
 import "../assets/css/PlayGround.css";
 
 /**
- * Box component: draggable & resizable (responsive)
+ * Box component: draggable, resizable, and rotatable (supports mobile)
  */
 function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, canvasRef }) {
   const boxRef = useRef(null);
@@ -112,6 +112,35 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     window.addEventListener(upEvent, stopMove);
   };
 
+  // ===== Rotation handle (desktop + mobile) =====
+  const startRotation = (e, isTouch = false) => {
+    e.stopPropagation();
+    bringToFront(box.id);
+    setSelectedBoxId(box.id);
+
+    const rect = boxRef.current.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    const handleMove = (moveE) => {
+      if (moveE.cancelable) moveE.preventDefault();
+      const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
+      const my = isTouch ? moveE.touches[0].clientY : moveE.clientY;
+      const angle = Math.atan2(my - centerY, mx - centerX) * (180 / Math.PI);
+      setBoxes((prev) =>
+        prev.map((b) => (b.id === box.id ? { ...b, rotation: angle } : b))
+      );
+    };
+
+    const stopMove = () => {
+      window.removeEventListener(isTouch ? "touchmove" : "mousemove", handleMove);
+      window.removeEventListener(isTouch ? "touchend" : "mouseup", stopMove);
+    };
+
+    window.addEventListener(isTouch ? "touchmove" : "mousemove", handleMove, { passive: false });
+    window.addEventListener(isTouch ? "touchend" : "mouseup", stopMove, { once: true });
+  };
+
   const handleMouseMoveOver = (e) => {
     if (window.matchMedia("(pointer: coarse)").matches) return;
     const side = detectHoverSide(e.clientX, e.clientY);
@@ -153,12 +182,36 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
         color: "#fff",
         fontWeight: "700",
         fontSize: "14px",
+        transform: `rotate(${box.rotation || 0}deg)`,
       }}
       onMouseDown={(e) => startDragResize(e)}
       onMouseMove={handleMouseMoveOver}
       onMouseLeave={() => setHoverSide(null)}
     >
-      {index + 1} {/* Display box number */}
+      {index + 1}
+      {/* Rotation Handle */}
+      {selectedBoxId === box.id && (
+        <div
+          style={{
+            width: "16px",
+            height: "16px",
+            borderRadius: "50%",
+            background: "#facc15",
+            position: "absolute",
+            top: "-10px",
+            right: "-10px",
+            cursor: "grab",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: "12px",
+          }}
+          onMouseDown={(e) => startRotation(e)}
+          onTouchStart={(e) => startRotation(e, true)}
+        >
+          ⟳
+        </div>
+      )}
     </div>
   );
 }
@@ -206,6 +259,7 @@ export default function PlayGround() {
       border-radius: ${b.radius}px;
       border: 2px solid #374151;
       transition: all 0.2s ease;
+      transform: rotate(${b.rotation || 0}deg);
     }`;
       })
     ).join("\n");
@@ -225,7 +279,7 @@ export default function PlayGround() {
     setTimeout(() => setCopied((prev) => ({ ...prev, css: false })), 1500);
   };
 
-  // ===== Add Box with higher Z-index =====
+  // Add Box
   const addBox = () => {
     setBoxes((prev) => {
       const maxZ = prev.length > 0 ? Math.max(...prev.map((b) => b.z)) : 0;
@@ -237,7 +291,7 @@ export default function PlayGround() {
           h: 0.2,
           x: 0.4,
           y: 0.4,
-          z: maxZ + 1, // New box on top
+          z: maxZ + 1,
           color: "#10b981",
           radius: 12,
         },
@@ -255,157 +309,136 @@ export default function PlayGround() {
       prev.map((b) => (b.id === selectedBoxId ? { ...b, radius } : b))
     );
 
-  // ===== Delete selected box =====
   const deleteBox = () => {
-    setBoxes((prev) => prev.filter(b => b.id !== selectedBoxId));
+    setBoxes((prev) => prev.filter((b) => b.id !== selectedBoxId));
     setSelectedBoxId(null);
   };
 
   return (
-
-    // <-------------{ (SideBar Control + Canvas) + CODE box } wrapper------------------>
-    <div className="main-PlayGround-body"> 
+    <div className="main-PlayGround-body">
       <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
 
-
-          {/* <-------------( Sidebar Control + Canvas )------------> */}
       <div className="cv-wrapper cv-codevora">
-          {/* ======SIDE BAR CONTROL ======== */}
-          <aside className="cv-sidebar">
-            <h2 className="cv-sidebar-title">Controls</h2>
-            <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-              {/* Add Box */}
-              <button className="cv-btn-primary" onClick={addBox}>+ Add Box</button>
-              {/* View Code */}
-              <button
-                className="cv-btn-viewcode"
-                onClick={() => {
-                  const codeSection = document.getElementById("CODE");
-                  if (codeSection) {
-                    codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
-                  }
-                }}
-              >
-                View Code
-              </button>
-            </div>
+        {/* Sidebar Controls */}
+        <aside className="cv-sidebar">
+          <h2 className="cv-sidebar-title">Controls</h2>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <button className="cv-btn-primary" onClick={addBox}>+ Add Box</button>
+            <button
+              className="cv-btn-viewcode"
+              onClick={() => {
+                const codeSection = document.getElementById("CODE");
+                if (codeSection) codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
+              }}
+            >
+              View Code
+            </button>
+          </div>
 
-            {selectedBoxId && (
-              <>
-                {/* Add Box and View Code btn */}
-                <div className="cv-control-container">
-                  {/* Color */}
-                  <div className="cv-control">
-                    <label>Box Color</label>
-                    <input
-                      type="color"
-                      value={boxes.find((b) => b.id === selectedBoxId)?.color}
-                      onChange={(e) => updateColor(e.target.value)}
-                    />
-                  </div>
-                  {/* Border Radius */}
-                  <div className="cv-control">
-                    <label>Border Radius</label>
-                    <input
-                      type="range"
-                      min="0"
-                      max="50"
-                      value={boxes.find((b) => b.id === selectedBoxId)?.radius || 0}
-                      onChange={(e) => updateRadius(parseInt(e.target.value))}
-                    />
-                  </div>
+          {selectedBoxId && (
+            <>
+              <div className="cv-control-container">
+                <div className="cv-control">
+                  <label>Box Color</label>
+                  <input
+                    type="color"
+                    value={boxes.find((b) => b.id === selectedBoxId)?.color}
+                    onChange={(e) => updateColor(e.target.value)}
+                  />
                 </div>
-
-                {/* Delete & Copy Box Buttons */}
-                <div className="cv-control" style={{ display: 'flex', justifyContent: 'space-between'}}>
-                  <button className="cv-btn-deleteBOX" onClick={deleteBox}>🗑 Delete Box</button>
-                  
-                  <button
-                    className="cv-btn-copyBOX"
-                    onClick={() => {
-                      const boxToCopy = boxes.find((b) => b.id === selectedBoxId);
-                      if (boxToCopy) {
-                        const maxZ = boxes.length > 0 ? Math.max(...boxes.map(b => b.z)) : 0;
-                        const canvasRect = canvasRef.current.getBoundingClientRect();
-
-                        // Offset 15px right and 15px up (convert to ratio)
-                        const offsetX = 15 / canvasRect.width;
-                        const offsetY = -15 / canvasRect.height;
-
-                        setBoxes((prev) => [
-                          ...prev,
-                          {
-                            ...boxToCopy,
-                            id: Date.now(),
-                            z: maxZ + 1, // Bring copied box on top
-                            x: Math.min(Math.max(boxToCopy.x + offsetX, 0), 1 - boxToCopy.w),
-                            y: Math.min(Math.max(boxToCopy.y + offsetY, 0), 1 - boxToCopy.h),
-                          },
-                        ]);
-                      }
-                    }}
-                  >
-                    📄 Copy Box
-                  </button>
-
+                <div className="cv-control">
+                  <label>Border Radius</label>
+                  <input
+                    type="range"
+                    min="0"
+                    max="50"
+                    value={boxes.find((b) => b.id === selectedBoxId)?.radius || 0}
+                    onChange={(e) => updateRadius(parseInt(e.target.value))}
+                  />
                 </div>
-              </>
-            )}
+              </div>
 
-          </aside>
+              <div className="cv-control" style={{ display: 'flex', justifyContent: 'space-between'}}>
+                <button className="cv-btn-deleteBOX" onClick={deleteBox}>🗑 Delete Box</button>
 
+                <button
+                  className="cv-btn-copyBOX"
+                  onClick={() => {
+                    const boxToCopy = boxes.find((b) => b.id === selectedBoxId);
+                    if (boxToCopy) {
+                      const maxZ = boxes.length > 0 ? Math.max(...boxes.map(b => b.z)) : 0;
+                      const canvasRect = canvasRef.current.getBoundingClientRect();
+                      const offsetX = 15 / canvasRect.width;
+                      const offsetY = -15 / canvasRect.height;
 
-          {/* ======CANVAS======== */}
-          <main className="cv-content">
-            <section className="cv-canvas" ref={canvasRef}>
-              <p>CodeVora Canvas</p>
-              {boxes.map((box, i) => (
-                <Box
-                  key={box.id}
-                  box={box}
-                  index={i}
-                  selectedBoxId={selectedBoxId}
-                  setSelectedBoxId={setSelectedBoxId}
-                  boxes={boxes}
-                  setBoxes={setBoxes}
-                  canvasRef={canvasRef}
-                />
-              ))}
-            </section>
-          </main>
+                      setBoxes((prev) => [
+                        ...prev,
+                        {
+                          ...boxToCopy,
+                          id: Date.now(),
+                          z: maxZ + 1,
+                          x: Math.min(Math.max(boxToCopy.x + offsetX, 0), 1 - boxToCopy.w),
+                          y: Math.min(Math.max(boxToCopy.y + offsetY, 0), 1 - boxToCopy.h),
+                        },
+                      ]);
+                    }
+                  }}
+                >
+                  📄 Copy Box
+                </button>
+              </div>
+            </>
+          )}
+        </aside>
+
+        {/* Canvas */}
+        <main className="cv-content">
+          <section className="cv-canvas" ref={canvasRef}>
+            <p>CodeVora Canvas</p>
+            {boxes.map((box, i) => (
+              <Box
+                key={box.id}
+                box={box}
+                index={i}
+                selectedBoxId={selectedBoxId}
+                setSelectedBoxId={setSelectedBoxId}
+                boxes={boxes}
+                setBoxes={setBoxes}
+                canvasRef={canvasRef}
+              />
+            ))}
+          </section>
+        </main>
       </div>
 
-      {/* ========CODE BOX========== */}
-        <section id="CODE" className="cv-code-wrapper">
-          <div className="cv-code-card">
-            <div className="cv-code-top codevora-top">
-              <div className="cv-code-title">HTML</div>
-              <div className="cv-code-actions">
-                <button className="cv-copy-btn-small" onClick={copyHTML}>📋</button>
-                {copied.html && <span className="cv-copied-badge">Copied!</span>}
-              </div>
+      {/* Code Output */}
+      <section id="CODE" className="cv-code-wrapper">
+        <div className="cv-code-card">
+          <div className="cv-code-top codevora-top">
+            <div className="cv-code-title">HTML</div>
+            <div className="cv-code-actions">
+              <button className="cv-copy-btn-small" onClick={copyHTML}>📋</button>
+              {copied.html && <span className="cv-copied-badge">Copied!</span>}
             </div>
-            <pre className="cv-code-area">
-              <code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code>
-            </pre>
           </div>
+          <pre className="cv-code-area">
+            <code className="language-markup">{`<div class="cv-container">\n${generatedCode.html}\n</div>`}</code>
+          </pre>
+        </div>
 
-          <div className="cv-code-card">
-            <div className="cv-code-top codevora-top">
-              <div className="cv-code-title">CSS</div>
-              <div className="cv-code-actions">
-                <button className="cv-copy-btn-small" onClick={copyCSS}>📋</button>
-                {copied.css && <span className="cv-copied-badge">Copied!</span>}
-              </div>
+        <div className="cv-code-card">
+          <div className="cv-code-top codevora-top">
+            <div className="cv-code-title">CSS</div>
+            <div className="cv-code-actions">
+              <button className="cv-copy-btn-small" onClick={copyCSS}>📋</button>
+              {copied.css && <span className="cv-copied-badge">Copied!</span>}
             </div>
-            <pre className="cv-code-area">
-              <code className="language-css">{generatedCode.css}</code>
-            </pre>
           </div>
-        </section>
-        
-      
+          <pre className="cv-code-area">
+            <code className="language-css">{generatedCode.css}</code>
+          </pre>
+        </div>
+      </section>
     </div>
-
   );
 }
