@@ -5,6 +5,8 @@ import "prismjs/components/prism-css";
 import "prismjs/components/prism-markup";
 import "../assets/css/PlayGround.css";
 
+
+// <------------------ Function of BOX logic -------------------->
 function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, canvasRef }) {
   const boxRef = useRef(null);
   const [hoverSide, setHoverSide] = useState(null);
@@ -12,7 +14,7 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
   const [showHLine, setShowHLine] = useState(false);
   const [showVLine, setShowVLine] = useState(false);
 
-  // ======= FIX: always use latest boxes =======
+  // =======  always use latest boxes for saving latest change in box =======
   const boxesRef = useRef(boxes);
   useEffect(() => { boxesRef.current = boxes; }, [boxes]);
 
@@ -37,6 +39,8 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     return side;
   };
 
+
+  // =======  Drag and Resize Boc Logic  =============
   const startDragResize = (startEvent, isTouch = false) => {
     if (startEvent.cancelable) startEvent.preventDefault();
     bringToFront(box.id);
@@ -55,6 +59,8 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     const moveEvent = isTouch ? "touchmove" : "mousemove";
     const upEvent = isTouch ? "touchend" : "mouseup";
 
+
+    // ========== Box Movement handle logic ============
     const handleMove = (moveE) => {
       if (moveE.cancelable) moveE.preventDefault();
       const mx = isTouch ? moveE.touches[0].clientX : moveE.clientX;
@@ -185,6 +191,8 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
     window.addEventListener(upEvent, stopMove);
   };
 
+
+  //  ============  Rotation of BOX Logic handel ================
   const startRotation = (e, isTouch = false) => {
     e.stopPropagation();
     bringToFront(box.id);
@@ -341,7 +349,7 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
   );
 }
 
-// ----------------------- PlayGround component -----------------------
+// <----------------------- PlayGround component ----------------------->
 export default function PlayGround() {
   const [boxes, setBoxes] = useState([
     { id: 1, w: 0.2, h: 0.2, x: 0.4, y: 0.4, z: 1, color: "#2563eb", radius: 12 },
@@ -354,6 +362,9 @@ export default function PlayGround() {
     Prism.highlightAll();
   }, [boxes]);
 
+
+
+  // ============= Generate CODE Logic ===================
   const generatedCode = (() => {
     const html = boxes.map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`).join("\n");
     const css = [
@@ -385,18 +396,21 @@ export default function PlayGround() {
     return { html, css };
   })();
 
+
+  //========== Copy CODE [ HTML + CSS ] Logic==============
   const copyHTML = async () => {
     await navigator.clipboard.writeText(`<div class="cv-container">\n${generatedCode.html}\n</div>`);
     setCopied(prev => ({ ...prev, html: true }));
     setTimeout(() => setCopied(prev => ({ ...prev, html: false })), 1500);
   };
-
   const copyCSS = async () => {
     await navigator.clipboard.writeText(generatedCode.css);
     setCopied(prev => ({ ...prev, css: true }));
     setTimeout(() => setCopied(prev => ({ ...prev, css: false })), 1500);
   };
 
+
+  // =======ADD Normal BOX logic =============
   const addBox = () => {
     setBoxes(prev => {
       const maxZ = prev.length > 0 ? Math.max(...prev.map(b => b.z)) : 0;
@@ -412,6 +426,8 @@ export default function PlayGround() {
     <div className="main-PlayGround-body">
       <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
       <div className="cv-wrapper cv-codevora">
+
+        {/* <=======  CONTROL Section ==========> */}
         <aside className="cv-sidebar">
           <h2 className="cv-sidebar-title">Controls</h2>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -448,6 +464,8 @@ export default function PlayGround() {
           </>}
         </aside>
 
+
+        {/* <======== CANVAS ART Section =========> */}
         <main className="cv-content">
           <section className="cv-canvas" ref={canvasRef}>
             <p>CodeVora Canvas</p>
@@ -456,6 +474,8 @@ export default function PlayGround() {
         </main>
       </div>
 
+
+        {/* <========= CODE Generator Section ========> */}
       <section id="CODE" className="cv-code-wrapper">
         <div className="cv-code-card">
           <div className="cv-code-top codevora-top">
