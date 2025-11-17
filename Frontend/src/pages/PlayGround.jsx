@@ -362,7 +362,8 @@ export default function PlayGround() {
       width: 100%; 
       max-width: 600px; 
       aspect-ratio: 1/1; 
-      background: #f9fafb; 
+      background: #f9fafb;
+      border: 1px solid black 
       border-radius: 20px; 
       overflow: hidden;  
       }`
