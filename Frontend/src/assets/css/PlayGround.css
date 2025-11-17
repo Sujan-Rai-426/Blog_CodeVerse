@@ -67,7 +67,7 @@ PlayGround.css - CodeVora style | responsive & prism-ready
 /* ---------------- BOXES (Movable & Resizable) ---------------- */
 .cv-box {
   position: absolute;
-  border: 2px solid rgba(52,65,85,0.95);
+  border: .2px solid rgb(240, 236, 226);
   color: #fff;
   display: flex;
   align-items: center;
