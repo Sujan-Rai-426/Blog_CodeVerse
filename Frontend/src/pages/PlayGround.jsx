@@ -365,21 +365,28 @@ export default function PlayGround() {
 
 
   // ============= Generate CODE Logic ===================
-  const generatedCode = (() => {
-    const html = boxes.map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`).join("\n");
-    const css = [
-      `.cv-container { 
+// ============= Generate CODE Logic ===================
+const generatedCode = (() => {
+  const html = boxes
+    .map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`)
+    .join("\n");
+
+  const css = [
+    `.cv-container { 
       position: relative; 
       width: 100%; 
-      max-width: 600px; 
-      aspect-ratio: 1/1; 
+      max-width: 600px; /* Desktop size limit */
+      aspect-ratio: 1/1; /* Keep square */
       background: #f9fafb;
-      border: 1px solid black 
+      border: 1px solid black;
       border-radius: 20px; 
       overflow: hidden;  
-      }`
-    ].concat(
-      boxes.map((b, i) => `.cv-box-${i + 1} {
+      margin: 0 auto; /* center */
+      padding: 0;
+      box-sizing: border-box;
+    }`
+  ].concat(
+    boxes.map((b, i) => `.cv-box-${i + 1} {
       width: ${b.w * 100}%;
       height: ${b.h * 100}%;
       position: absolute;
@@ -390,11 +397,16 @@ export default function PlayGround() {
       border-radius: ${b.radius}px;
       transition: all 0.2s ease;
       transform: rotate(${b.rotation || 0}deg);
-      }`)
-    ).join("\n");
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem; /* scales for responsiveness */
+    }`)
+  ).join("\n");
 
-    return { html, css };
-  })();
+  return { html, css };
+})();
+
 
 
   //========== Copy CODE [ HTML + CSS ] Logic==============
@@ -467,9 +479,21 @@ export default function PlayGround() {
 
         {/* <======== CANVAS ART Section =========> */}
         <main className="cv-content">
-          <section className="cv-canvas" ref={canvasRef}>
-            <p>CodeVora Canvas</p>
-            {boxes.map((box, i) => <Box key={box.id} box={box} index={i} selectedBoxId={selectedBoxId} setSelectedBoxId={setSelectedBoxId} boxes={boxes} setBoxes={setBoxes} canvasRef={canvasRef} />)}
+          <section className="cv-canvas">
+            <div className="cv-canvas-inner" ref={canvasRef}>
+              {boxes.map((box, i) => (
+                <Box
+                  key={box.id}
+                  box={box}
+                  index={i}
+                  selectedBoxId={selectedBoxId}
+                  setSelectedBoxId={setSelectedBoxId}
+                  boxes={boxes}
+                  setBoxes={setBoxes}
+                  canvasRef={canvasRef}
+                />
+              ))}
+            </div>
           </section>
         </main>
       </div>
