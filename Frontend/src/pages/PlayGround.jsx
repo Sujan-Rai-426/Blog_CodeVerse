@@ -358,28 +358,26 @@ export default function PlayGround() {
     const html = boxes.map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`).join("\n");
     const css = [
       `.cv-container { 
-        position: relative; 
-        width: 100%; 
-        max-width: 600px; 
-        aspect-ratio: 1/1; 
-        background: #f9fafb; 
-        border-radius: 20px; 
-        overflow: hidden; 
-        border: 2px solid #e5e7eb; 
+      position: relative; 
+      width: 100%; 
+      max-width: 600px; 
+      aspect-ratio: 1/1; 
+      background: #f9fafb; 
+      border-radius: 20px; 
+      overflow: hidden;  
       }`
     ].concat(
       boxes.map((b, i) => `.cv-box-${i + 1} {
-        width: ${b.w * 100}%;
-        height: ${b.h * 100}%;
-        position: absolute;
-        left: ${b.x * 100}%;
-        top: ${b.y * 100}%;
-        z-index: ${b.z};
-        background: ${b.color};
-        border-radius: ${b.radius}px;
-        border: 2px solid #374151;
-        transition: all 0.2s ease;
-        transform: rotate(${b.rotation || 0}deg);
+      width: ${b.w * 100}%;
+      height: ${b.h * 100}%;
+      position: absolute;
+      left: ${b.x * 100}%;
+      top: ${b.y * 100}%;
+      z-index: ${b.z};
+      background: ${b.color};
+      border-radius: ${b.radius}px;
+      transition: all 0.2s ease;
+      transform: rotate(${b.rotation || 0}deg);
       }`)
     ).join("\n");
 
