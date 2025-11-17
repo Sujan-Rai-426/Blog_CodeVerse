@@ -372,19 +372,32 @@ const generatedCode = (() => {
     .join("\n");
 
   const css = [
-    `.cv-container { 
-      position: relative; 
-      width: 100%; 
-      max-width: 600px; /* Desktop size limit */
-      aspect-ratio: 1/1; /* Keep square */
-      background: #f9fafb;
-      border: 1px solid black;
-      border-radius: 20px; 
-      overflow: hidden;  
-      margin: 0 auto; /* center */
-      padding: 0;
-      box-sizing: border-box;
-    }`
+    `.cv-container {
+    position: relative;
+    width: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    aspect-ratio: 16 / 9;  /* desktop ratio */
+    background: #f9fafb;
+    border: 1px solid black;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 0 auto;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+/* Portrait mode: Mobile & Tablet */
+  @media (max-width: 980px), (orientation: portrait) {
+  .cv-container {
+    width: 100%;          
+    height: 100vh;         
+    max-width: 100vw;      
+    aspect-ratio: 9 / 16;  /* mobile ratio */ 
+    margin: 0 auto;        
+  }
+}
+`
   ].concat(
     boxes.map((b, i) => `.cv-box-${i + 1} {
       width: ${b.w * 100}%;
