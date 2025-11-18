@@ -365,7 +365,6 @@ export default function PlayGround() {
 
 
   // ============= Generate CODE Logic ===================
-// ============= Generate CODE Logic ===================
 const generatedCode = (() => {
   const html = boxes
     .map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`)
@@ -374,10 +373,9 @@ const generatedCode = (() => {
   const css = [
     `.cv-container {
     position: relative;
-    width: 100%;
+    width: 45%;
     max-width: 100vw;
-    max-height: 100vh;
-    aspect-ratio: 16 / 9;  /* desktop ratio */
+    aspect-ratio: 1/1;
     background: #f9fafb;
     border: 1px solid black;
     border-radius: 20px;
@@ -385,36 +383,30 @@ const generatedCode = (() => {
     margin: 0 auto;
     padding: 0;
     box-sizing: border-box;
-  }
-
-/* Portrait mode: Mobile & Tablet */
-  @media (max-width: 980px), (orientation: portrait) {
-  .cv-container {
-    width: 100%;          
-    height: 100vh;         
-    max-width: 100vw;      
-    aspect-ratio: 9 / 16;  /* mobile ratio */ 
-    margin: 0 auto;        
-  }
 }
-`
+    /* Portrait mode: Mobile & Tablet */
+@media (max-width: 980px), (orientation: portrait) {
+  .cv-container {
+    width: 100%;
+  }
+}`
   ].concat(
     boxes.map((b, i) => `.cv-box-${i + 1} {
-      width: ${b.w * 100}%;
-      height: ${b.h * 100}%;
-      position: absolute;
-      left: ${b.x * 100}%;
-      top: ${b.y * 100}%;
-      z-index: ${b.z};
-      background: ${b.color};
-      border-radius: ${b.radius}px;
-      transition: all 0.2s ease;
-      transform: rotate(${b.rotation || 0}deg);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem; /* scales for responsiveness */
-    }`)
+    width: ${b.w * 100}%;
+    height: ${b.h * 100}%;
+    position: absolute;
+    left: ${b.x * 100}%;
+    top: ${b.y * 100}%;
+    z-index: ${b.z};
+    background: ${b.color};
+    border-radius: ${b.radius}px;
+    transition: all 0.2s ease;
+    transform: rotate(${b.rotation || 0}deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem; /* scales for responsiveness */
+}`)
   ).join("\n");
 
   return { html, css };
