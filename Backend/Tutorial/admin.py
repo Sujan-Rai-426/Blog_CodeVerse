@@ -116,7 +116,7 @@ class BackendStepAdmin(admin.ModelAdmin):
 @admin.register(BackendImage)
 class BackendImageAdmin(admin.ModelAdmin):
     list_display = ("topic", "image")
-    list_filter = ("topic__language__section__name")
+    list_filter = ("topic__language__section__name",)
 
 # ================== ADMIN SITE CUSTOMIZATION ==================
 admin.site.site_header = "CodeVerse Tutorial Admin"
