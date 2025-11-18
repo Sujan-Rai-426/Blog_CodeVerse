@@ -387,7 +387,7 @@ const generatedCode = (() => {
     /* Portrait mode: Mobile & Tablet */
 @media (max-width: 980px), (orientation: portrait) {
     .cv-container {
-      width: 100%;
+        width: 100%;
     }
 }`
   ].concat(
