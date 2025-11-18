@@ -14,6 +14,7 @@ from Tutorial.permissions import IsAdminOrReadOnly
 
 from rest_framework.decorators import api_view
 
+import re
 from django.core.mail import send_mail
 from Tutorial.utils import verify_email_exists
 
