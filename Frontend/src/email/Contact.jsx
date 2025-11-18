@@ -3,40 +3,38 @@ import "../assets/css/Contact.css";
 
 function Contact() {
     const [result, setResult] = useState("");
+    const [isSending, setIsSending] = useState(false); // new state for sending
 
     const onSubmit = async (event) => {
         event.preventDefault();
+        setIsSending(true);          // disable button
         setResult("Sending....");
 
         const formData = new FormData(event.target);
-        const data = {
-            name: formData.get("name"),
-            email: formData.get("email"),
-            subject: formData.get("subject"),
-            message: formData.get("message"),
-        };
+
+        formData.append("access_key", import.meta.env.VITE_EMAIL_ACCESS_KEY);
 
         try {
-            const response = await fetch("https://sujan140.com.np/api/contact/", {
+            const response = await fetch("https://api.web3forms.com/submit", {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify(data),
+                body: formData
             });
 
-            const resData = await response.json();
+            const data = await response.json();
 
-            if (response.ok) {
+            if (data.success) {
                 setResult("Form Submitted Successfully");
                 alert("Your message is sent successfully!!!");
                 event.target.reset();
             } else {
-                setResult(resData.error || "Something went wrong");
+                console.log("Error", data);
+                setResult(data.message || "Something went wrong");
             }
         } catch (err) {
             console.error(err);
             setResult("Network error. Try again later.");
+        } finally {
+            setIsSending(false);      // re-enable button
         }
     };
 
@@ -83,9 +81,15 @@ function Contact() {
                                 <textarea className='form-label2' placeholder='Message' name="message" required></textarea>
                             </div>
 
-                            <button type="submit" className='contact-btn'>Send Message</button>
+                            <button 
+                                type="submit" 
+                                className='contact-btn'
+                                disabled={isSending}  // disable while sending
+                            >
+                                {isSending ? "Sending..." : "Send Message"} {/* show animation text */}
+                            </button>
                         </form>
-                        <p className="form-result">{result}</p>
+                        <p>{result}</p>
                     </section>
                 </div>
             </div>
