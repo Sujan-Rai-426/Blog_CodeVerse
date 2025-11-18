@@ -2,9 +2,10 @@ from django.contrib import admin
 from Tutorial.models import (
     Category, Section, Language, Topic,
     FrontendVideo, FrontendVideoInfo, FrontendSourceCode,
-    BackendImage, BackendStep
+    BackendImage, BackendStep, Contact
 )
 
+admin.site.register(Contact)
 
 # =============TOPIC ADMIN===============
 class TopicInline(admin.TabularInline):

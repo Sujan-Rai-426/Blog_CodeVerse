@@ -33,7 +33,7 @@ function Nav_Bar() {
         <ul className="sidebar-nav">
           <li><Link to="/" onClick={toggleSidebar}>Home</Link></li>
           <li><Link to="/About" onClick={toggleSidebar}>About</Link></li>
-          <li><a href="https://sujan140.vercel.app/contact" onClick={toggleSidebar}>Contact</a></li>
+          <li><a href="/Contact" onClick={toggleSidebar}>Contact</a></li>
           <li><Link to="/PlayGround" onClick={toggleSidebar}>PlayGround</Link></li>
           <li><a href="https://sujan140.vercel.app" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Developer</a></li>
           {/* <li><a href="https://blog-codeverse.onrender.com/" target="_blank" rel="noopener noreferrer" onClick={toggleSidebar}>Admin 💻</a></li> */}
