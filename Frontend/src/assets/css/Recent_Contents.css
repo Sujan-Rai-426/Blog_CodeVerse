@@ -3,6 +3,11 @@
     pointer-events: none;
 }
 
+.rc-card-text{
+    font-size: .85rem;
+    margin-bottom: 8px;
+}
+
 .premium-badge-center {
     position: absolute;
     top: 50%;

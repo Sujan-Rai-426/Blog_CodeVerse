@@ -123,7 +123,7 @@ function Recent_Contents() {
 
                                 <div className="card-body py-2">
                                     <h5 className="card-title fw-bold">&nbsp; {tutorial.topicName}</h5>
-                                    <p className="card-text text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 50)}...</p>
+                                    <p className="rc-card-text text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 40)} ....</p>
                                     &nbsp;&nbsp;
                                     <button
                                         className="btn btn-outline-warning btn-sm rounded-pill"

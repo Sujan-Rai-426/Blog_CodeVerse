@@ -8,7 +8,7 @@ const Footer = () => {
             <div className="footer-container">
                 <p>&copy; {new Date().getFullYear()} Er.Sujan Rai. All rights reserved.</p>
                 <div className="footer-links">
-                    <a href="Contact">Contact</a>
+                    <Link to="Contact">Contact</Link>
                     <Link to="/Privacy_Policy">Privacy Policy</Link>
                     <a href="https://dev.to/sujanrai426">Dev.to</a>
                 </div>

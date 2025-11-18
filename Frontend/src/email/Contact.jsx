@@ -61,13 +61,12 @@ function Contact() {
                         <p> rsujan140.in@gmail.com </p>
                         <p> sujanrai20070140@gmail.com </p>
                     </div>
-                            <div></div>
             </div>
 
             <div className="contact-right">
 
 {/*     ACTUAL FORM SECTION  */}
-        <section className="form-container">
+        <section className="form-container contact">
             <form onSubmit={onSubmit}>
                 <h2>Contact Form</h2>
 
@@ -87,7 +86,7 @@ function Contact() {
                     <textarea className='form-label2' placeholder='Message' name="message" id="message" required></textarea>
                 </div>
 
-                <button type="submit" className='btn'> Send Message </button>
+                <button type="submit" className='contact-btn'> Send Message </button>
             </form>
         </section>
 {/*     ACTUAL FORM SECTION  END    */}
