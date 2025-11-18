@@ -1,19 +1,22 @@
 from django.db import IntegrityError
 import cloudinary.uploader
-from rest_framework.decorators import action
 
+from rest_framework.decorators import action
 from rest_framework import viewsets
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from django.contrib.auth import authenticate
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 
+from django.contrib.auth import authenticate
 from Tutorial.permissions import IsAdminOrReadOnly
 
 from rest_framework.decorators import api_view
+
 from django.core.mail import send_mail
+from Tutorial.utils import verify_email_exists
+
 
 from .models import (
     Category, Topic, Language,
@@ -134,25 +137,35 @@ class AdminLoginAPIView(APIView):
             return Response({"detail": "Invalid credentials or user is not admin."}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-# views for Contact model and serializer
+
+
+EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
+
 @api_view(['POST'])
 def contact_form_view(request):
-    # Get the data from the request
     name = request.data.get('name')
     email = request.data.get('email')
     message = request.data.get('message')
 
-    # Check if any field is empty
+    # Check required fields
     if not name or not email or not message:
         return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Email configuration (make sure SMTP is configured in settings.py)
+    # Validate email format
+    if not re.match(EMAIL_REGEX, email):
+        return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Verify email exists
+    if not verify_email_exists(email):
+        return Response({"error": "The email address does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+
+    # Send email
     try:
         send_mail(
             subject=f"Contact Form Message from {name}",
             message=message,
             from_email=email,
-            recipient_list=['your_email@example.com'],  # Your email here
+            recipient_list=['your_email@example.com'],  # Replace with your email
             fail_silently=False
         )
         return Response({"message": "Message sent successfully!"}, status=status.HTTP_200_OK)
