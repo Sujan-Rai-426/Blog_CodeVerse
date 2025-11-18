@@ -117,7 +117,7 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
         <div className="CodeBox-Ads-Placeholder">
           <h1>
             <b>
-              Code<sup><u>Verse💻</u></sup>
+              Code<sup><u>Vora💻</u></sup>
             </b>
           </h1>
           <p>Visit our social site for more updates</p>
