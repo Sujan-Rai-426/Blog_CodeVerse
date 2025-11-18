@@ -38,6 +38,7 @@ PlayGround.css - CodeVora style | responsive & prism-ready
 @media (max-width: 980px) {
   .cv-sidebar { width: 100%; }
   .cv-sidebar-title { margin: 0; }
+  .cv-code-card { font-size: .8rem; }
   .cv-control-container { display: flex; flex-direction: row; justify-content: space-between; }
   .cv-control input[type="color"] { width: 55px !important; height: 25px !important; border-radius: 10px !important; }
   .cv-code-wrapper { order: 1; }
@@ -47,6 +48,7 @@ PlayGround.css - CodeVora style | responsive & prism-ready
 /* mobile full width */
 @media (max-width: 680px) {
   .cv-code-card { min-width: 100%; }
+  .cv-code-card { font-size: .7rem; }
 }
 
 /* ---------------- CANVAS ---------------- */
@@ -151,6 +153,7 @@ PlayGround.css - CodeVora style | responsive & prism-ready
 }
 
 .cv-code-card {
+  font-size: .9rem;
   max-width: 49%;
   flex: 1;
   background: linear-gradient(180deg, rgba(12,17,31,0.98), rgba(10,13,24,0.98));
