@@ -15,7 +15,7 @@ from Tutorial.permissions import IsAdminOrReadOnly
 from rest_framework.decorators import api_view
 
 import re
-from django.core.mail import send_mail
+from django.core.mail import send_mail, BadHeaderError
 from Tutorial.utils import verify_email_exists
 
 
@@ -140,43 +140,45 @@ class AdminLoginAPIView(APIView):
 
 
 
+
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
 
 @api_view(['POST'])
 def contact_form_view(request):
     name = request.data.get('name')
     email = request.data.get('email')
+    subject = request.data.get('subject')
     message = request.data.get('message')
 
-    # Check required fields
-    if not name or not email or not message:
+    # 1. Check required fields
+    if not name or not email or not subject or not message:
         return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Validate email format
+    # 2. Validate email format
     if not re.match(EMAIL_REGEX, email):
         return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Verify if email exists
+    # 3. Verify email exists (optional, can be slow)
     if not verify_email_exists(email):
         return Response({"error": "The email address does not exist or cannot receive emails."},
                         status=status.HTTP_400_BAD_REQUEST)
 
-    # Send email safely
+    # 4. Prepare email content
+    email_subject = f"Contact Form Message: {subject}"
+    email_message = f"From: {name} <{email}>\n\nMessage:\n{message}"
+
     try:
-        # Use a verified sender email for SMTP, set the user's email in "reply_to"
         send_mail(
-            subject=f"Contact Form Message from {name}",
-            message=message,
-            from_email='rsujan140.in@gmail.com',  # Your verified SMTP email
-            recipient_list=['rsujan140.in@gmail.com'],  # Your email
+            subject=email_subject,
+            message=email_message,
+            from_email='rsujan140.in@gmail.com',          # Verified SMTP email
+            recipient_list=['rsujan140.in@gmail.com'],   # Your email
             fail_silently=False,
-            # This ensures replies go to the user's email
-            html_message=None,
-            auth_user=None,
-            auth_password=None,
-            connection=None,
-            headers={'Reply-To': email}
+            headers={'Reply-To': email}                  # User email for reply
         )
         return Response({"message": "Message sent successfully!"}, status=status.HTTP_200_OK)
+
+    except BadHeaderError:
+        return Response({"error": "Invalid header found."}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
