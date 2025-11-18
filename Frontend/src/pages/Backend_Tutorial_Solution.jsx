@@ -8,6 +8,10 @@ import { Copy } from "lucide-react";
 import "../assets/css/Backend_Tutorial_Solution.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider"; 
 
+// Make url clickable in any text field or description
+import Linkify from "react-linkify";
+
+
 const Backend_Tutorial_Solution = () => {
     const { topicID } = useParams();
     const { data, loading, error } = useContext(Parent_API_Provider_Context);
@@ -67,7 +71,7 @@ const Backend_Tutorial_Solution = () => {
         <div className="container py-3" style={{ minHeight: "100vh" }}>
             <h2 className="mb-3 mt-3 fw-bold text-center text-warning">{topic.name}</h2>
             <div className="row">
-                {/* Steps */}
+                {/* Steps --> of Backend Topic*/}
                 <div className="col-lg-7 mb-4 mb-lg-0 code-steps px-0">
                     <h4 className="mb-2 mt-4 fw-semibold text-center"><small>-Steps-</small></h4>
                     {topic.steps?.length ? (
@@ -76,12 +80,28 @@ const Backend_Tutorial_Solution = () => {
                             return (
                                 <div key={step.id} className="card mb-4 shadow-sm border-0 rounded-4">
                                     <div className="card-body backend-card">
+
+                                            {/* Step Number --> of Backend Topic step */}
                                         <h5 className="fw-bold text-warning mb-0 mt-3 px-1">
                                             Step {step.step_number}: <small>{step.step_file_name}</small>
                                         </h5>
+                                        
+                                            {/* Description --> of Backend Topic step*/}
                                         {step.step_description && (
-                                            <p className="text-muted m-0 text-content py-2 px-2">{step.step_description}</p>
+                                            <p className="text-muted m-0 text-content py-2 px-2">
+                                                {/* Make link in description clickable */}
+                                                <Linkify componentDecorator={(href, text, key) => (
+                                                        <a href={href} key={key} target="_blank" rel="noopener noreferrer" style={{ color: "#1e90ff", textDecoration: "underline" }} >
+                                                            {text}
+                                                        </a>
+                                                    )}
+                                                >
+                                                    {step.step_description}
+                                                </Linkify>
+                                            </p>
                                         )}
+
+                                            {/* Source Code --> of Backend Topic step  */}
                                         {step.step_source_code && (
                                             <div className="code-container position-relative">
                                                 <button
@@ -106,7 +126,7 @@ const Backend_Tutorial_Solution = () => {
                     )}
                 </div>
 
-                {/* Images */}
+                {/* Images --> of Backend Topic*/}
                 {topic.images?.length ? (
                     <div className="col-lg-5 px-4">
                         <h4 className="mb-2 mt-3 fw-semibold text-center"><small>-File Format-</small></h4>
