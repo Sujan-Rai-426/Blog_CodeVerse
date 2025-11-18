@@ -15,7 +15,7 @@ from Tutorial.permissions import IsAdminOrReadOnly
 from rest_framework.decorators import api_view
 
 import re
-from django.core.mail import send_mail, BadHeaderError
+from django.core.mail import EmailMessage, BadHeaderError
 from Tutorial.utils import verify_email_exists
 
 
@@ -140,7 +140,6 @@ class AdminLoginAPIView(APIView):
 
 
 
-
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
 
 @api_view(['POST'])
@@ -168,14 +167,14 @@ def contact_form_view(request):
     email_message = f"From: {name} <{email}>\n\nMessage:\n{message}"
 
     try:
-        send_mail(
+        email_obj = EmailMessage(
             subject=email_subject,
-            message=email_message,
+            body=email_message,
             from_email='rsujan140.in@gmail.com',          # Verified SMTP email
-            recipient_list=['rsujan140.in@gmail.com'],   # Your email
-            fail_silently=False,
-            headers={'Reply-To': email}                  # User email for reply
+            to=['rsujan140.in@gmail.com'],               # Your email
+            reply_to=[email]                             # User email for reply
         )
+        email_obj.send(fail_silently=False)
         return Response({"message": "Message sent successfully!"}, status=status.HTTP_200_OK)
 
     except BadHeaderError:
