@@ -367,7 +367,7 @@ export default function PlayGround() {
   // ============= Generate CODE Logic ===================
 const generatedCode = (() => {
   const html = boxes
-    .map((b, i) => `   <div class="cv-box cv-box-${i + 1}"></div>`)
+    .map((b, i) => `<div class="cv-box cv-box-${i + 1}"></div>`)
     .join("\n");
 
   const css = [
@@ -386,9 +386,9 @@ const generatedCode = (() => {
 }
     /* Portrait mode: Mobile & Tablet */
 @media (max-width: 980px), (orientation: portrait) {
-  .cv-container {
-    width: 100%;
-  }
+    .cv-container {
+      width: 100%;
+    }
 }`
   ].concat(
     boxes.map((b, i) => `.cv-box-${i + 1} {

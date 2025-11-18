@@ -57,7 +57,9 @@ PlayGround.css - CodeVora style | responsive & prism-ready
   background: #ffffff;
   border-radius: 16px;
   border: 1px solid #e6eef8;
-  width: 100%;               /* fill parent container */
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1/1;               /* fill parent container */
   max-width: 1366px;         /* simulate standard laptop width */
   height: 0;                 /* initial height for aspect ratio */
   padding-top: 56.25%;       /* 16:9 aspect ratio: 9/16 = 0.5625 */
@@ -73,6 +75,7 @@ PlayGround.css - CodeVora style | responsive & prism-ready
   left: 0;
   width: 100%;
   height: 100%;
+  aspect-ratio: 1/1;
 }
 
 /* ---------------- BOXES (Movable & Resizable) ---------------- */
