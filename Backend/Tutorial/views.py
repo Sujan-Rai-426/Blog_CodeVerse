@@ -156,19 +156,27 @@ def contact_form_view(request):
     if not re.match(EMAIL_REGEX, email):
         return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # Verify email exists
+    # Verify if email exists
     if not verify_email_exists(email):
-        return Response({"error": "The email address does not exist."}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "The email address does not exist or cannot receive emails."},
+                        status=status.HTTP_400_BAD_REQUEST)
 
-    # Send email
+    # Send email safely
     try:
+        # Use a verified sender email for SMTP, set the user's email in "reply_to"
         send_mail(
             subject=f"Contact Form Message from {name}",
             message=message,
-            from_email=email,
-            recipient_list=['your_email@example.com'],  # Replace with your email
-            fail_silently=False
+            from_email='rsujan140.in@gmail.com',  # Your verified SMTP email
+            recipient_list=['rsujan140.in@gmail.com'],  # Your email
+            fail_silently=False,
+            # This ensures replies go to the user's email
+            html_message=None,
+            auth_user=None,
+            auth_password=None,
+            connection=None,
+            headers={'Reply-To': email}
         )
         return Response({"message": "Message sent successfully!"}, status=status.HTTP_200_OK)
     except Exception as e:
-        return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
