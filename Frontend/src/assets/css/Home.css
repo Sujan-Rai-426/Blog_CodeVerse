@@ -98,7 +98,7 @@
 .share-btn {
     background: #e1ab44;
     color: #1f1f1f;
-    border: none;
+    border: 2px solid white;
     padding: 0.8rem 2.5rem;
     margin-top: 1.5rem;
     border-radius: 50px;
@@ -109,8 +109,10 @@
 }
 
 .share-btn:hover {
+    color: white;
     background: #c6a25d;
-    transform: translateY(-3px);
+    border: 2px solid #f0a71e;
+    transform: translateY(-2px);
     box-shadow: 0 8px 20px rgba(198, 162, 93, 0.3);
 }
 

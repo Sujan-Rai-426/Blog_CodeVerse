@@ -1,6 +1,6 @@
 from rest_framework import serializers
-from .models import (
-    Category, Section, Language, Topic,
+from Tutorial.models import (
+    Category, Contact, Section, Language, Topic,
     FrontendVideo, FrontendVideoInfo, FrontendSourceCode,
     BackendImage, BackendStep
 )
@@ -28,7 +28,6 @@ class FrontendVideoSerializer(serializers.ModelSerializer):
     class Meta:
         model = FrontendVideo
         fields = ['id', 'topic', 'title', 'video_url', 'info', 'source_codes', 'access_type']
-
     def get_video_url(self, obj):
         if obj.video_url:
             video_path = str(obj.video_url)
@@ -50,7 +49,6 @@ class BackendStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackendStep
         fields = ['id', 'topic', 'step_number', 'step_file_name', 'step_description', 'step_source_code']
-        
     def validate(self, data): # Prevent duplicate step_number for the same topic
         topic = data.get("topic")
         step_number = data.get("step_number")
@@ -71,7 +69,6 @@ class TopicSerializer(serializers.ModelSerializer):
     language = serializers.PrimaryKeyRelatedField(queryset=Language.objects.all())
     section = serializers.PrimaryKeyRelatedField(queryset=Section.objects.all(), required=False)
     category = serializers.PrimaryKeyRelatedField(queryset=Category.objects.all(), required=False)
-
     class Meta:
         model = Topic
         fields = ['id', 'name', 'language', 'section', 'category', 'videos', 'images', 'steps']
@@ -82,7 +79,6 @@ class TopicSerializer(serializers.ModelSerializer):
 
 class LanguageSerializer(serializers.ModelSerializer):
     topics = TopicSerializer(many=True, read_only=True)
-
     class Meta:
         model = Language
         fields = ['id', 'name', 'topics', 'icon_class', 'section']
@@ -90,7 +86,6 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 class SectionSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True, read_only=True)
-
     class Meta:
         model = Section
         fields = ['id', 'name', 'languages']
@@ -98,11 +93,14 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
-
     class Meta:
         model = Category
         fields = ['id', 'name', 'description', 'sections']
         
-        
+
+class ContactSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Contact
+        fields = '__all__'
 
 

@@ -170,3 +170,12 @@ class BackendStep(models.Model):
                 raise ValidationError({
                     "step_number": f"Upto step no. {max_step} already exists in this topic."
                 })
+
+# models.py for contact form
+class Contact(models.Model):
+    name = models.CharField(max_length=25, null=False)
+    email = models.EmailField(null=False)
+    message = models.TextField(null=False)
+    created_at = models.DateTimeField(auto_now_add=True, null=False)
+    def __str__(self):
+        return f"Message from {self.name} ({self.email})"

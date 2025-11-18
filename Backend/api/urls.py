@@ -1,5 +1,6 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
+from Tutorial import views
 from Tutorial.views import (
     CategoryViewSet, TopicViewSet, LanguageViewSet,
     FrontendVideoViewSet, FrontendSourceCodeViewSet, FrontendVideoInfoViewSet,
@@ -20,5 +21,6 @@ router.register("backendimages", BackendImageViewSet, basename="backendimage")
 
 urlpatterns = [
     path('admin-login/', AdminLoginAPIView.as_view(), name='admin-login'),
+    path('contact/', views.contact_form_view, name='contact_form'),
     path("", include(router.urls)),
 ] 
