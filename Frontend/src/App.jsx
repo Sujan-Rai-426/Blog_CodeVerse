@@ -98,8 +98,8 @@ function App() {
                                   </Route>
 
                                     {/* Payment */}
-                                  <Route  exact path="/payment-success" element={<Payment_Success />} />
-                                  <Route  exact path="/payment-fail" element={<Payment_Fail />} />
+                                  <Route  exact path="/Payment_Success" element={<Payment_Success />} />
+                                  <Route  exact path="/Payment_Failure" element={<Payment_Fail />} />
                                   <Route  exact path="/Payment_Page" element={<Payment_Page />} />
 
 

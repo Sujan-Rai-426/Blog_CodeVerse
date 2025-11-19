@@ -1,25 +1,41 @@
-import React, { useEffect, useContext } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Payment_Context } from "./Payment_Context.jsx";
+import React, { useEffect, useState } from "react";
+import { useSearchParams, useNavigate } from "react-router-dom";
+import "../../assets/css/Payment_esewa.css";
+import Payment_Success from "../../assets/img/payment/Payment_Success.png";
 
-const Payment_Success = () => {
-  const { unlockVideo } = useContext(Payment_Context);
-  const [params] = useSearchParams();
+const PaymentSuccess = () => {
+  const [search] = useSearchParams();
+  const navigate = useNavigate();
+  const dataQuery = search.get("data");
+  const [data, setData] = useState({});
+  const [prevUrl, setPrevUrl] = useState("/"); // default fallback
 
   useEffect(() => {
-    const pid = params.get("pid"); // e.g., VID5
-    if (pid) {
-      const videoId = pid.replace("VID", "");
-      unlockVideo(videoId);
+    if (dataQuery) {
+      const resData = atob(dataQuery);
+      const resObject = JSON.parse(resData);
+      console.log(resObject);
+
+      setData(resObject);
+      if (resObject.prev_url) setPrevUrl(resObject.prev_url);
     }
-  }, [params, unlockVideo]);
+
+    // Redirect after 3 seconds
+    const timer = setTimeout(() => {
+      navigate(prevUrl);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [dataQuery, navigate, prevUrl]);
 
   return (
-    <div className="text-center my-5">
-      <h2>✅ Payment Successful!</h2>
-      <p>Your premium content is now unlocked.</p>
+    <div className="esewa-success-payment-container">
+      <img src={Payment_Success} alt="Payment Successful" />
+      <p className="esewa-success-price">Rs. {data.total_amount}</p>
+      <p className="esewa-success-status">Payment Successful</p>
+      <p className="redirect-msg">Redirecting to previous page...</p>
     </div>
   );
 };
 
-export default Payment_Success;
+export default PaymentSuccess;

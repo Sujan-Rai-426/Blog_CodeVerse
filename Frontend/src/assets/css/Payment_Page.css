@@ -1,3 +1,7 @@
+/* =====================================================
+Payment_Page.css - Floating Payment Overlay for Premium Videos
+===================================================== */
+
 .payment-page-container {
     position: relative;
     min-height: 100vh;
@@ -13,112 +17,161 @@
 }
 
 .blurred-background {
-    filter: blur(6px) brightness(0.5);
+    filter: blur(8px) brightness(0.5);
     pointer-events: none;
     user-select: none;
 }
 
-.page-header { text-align: center; margin-bottom: 2rem; }
-.page-header h1 { font-size: 2rem; color: #ffd700; }
+.page-header { 
+    text-align: center; 
+    margin-bottom: 2rem; 
+}
+.page-header h1 { 
+    font-size: 2.2rem; 
+    color: #ffd700; 
+    text-shadow: 0 2px 6px rgba(0,0,0,0.7);
+}
 
-.page-main { display: flex; flex-direction: column; align-items: center; gap: 2rem; }
-.video-preview .sample-video { width: 90%; max-width: 700px; border-radius: 15px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+.page-main {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    gap: 2rem;
+}
 
-.page-info { max-width: 700px; text-align: center; }
-.page-info h2 { font-size: 1.5rem; color: #4caf50; margin-bottom: 0.5rem; }
-.page-info p { font-size: 1rem; color: #ddd; }
+.video-preview .sample-video {
+    width: 90%; 
+    max-width: 700px; 
+    border-radius: 15px; 
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+    transition: transform 0.3s ease;
+}
+.video-preview .sample-video:hover {
+    transform: scale(1.02);
+}
 
+.page-info { 
+    max-width: 700px; 
+    text-align: center; 
+}
+.page-info h2 { 
+    font-size: 1.6rem; 
+    color: #4caf50; 
+    margin-bottom: 0.5rem; 
+}
+.page-info p { 
+    font-size: 1rem; 
+    color: #ccc; 
+}
+
+/* === Payment Overlay === */
 .payment-overlay {
     position: fixed;
     top: 0; left: 0; width: 100vw; height: 100vh;
-    backdrop-filter: blur(6px);
-    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(8px);
+    background: rgba(0,0,0,0.85);
     display: flex; justify-content: center; align-items: center;
     z-index: 9999;
 }
 
 .payment-box {
     position: relative;
-    background: rgba(25,25,25,0.95);
-    padding: 2rem; border-radius: 20px; width: 90%; max-width: 500px;
-    text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.7);
-    animation: fadeIn 0.3s ease;
+    background: linear-gradient(145deg, #0c0c0c 0%, #181818 50% 50%, #272525 100%);
+    padding: 2.5rem 2rem;
+    border-radius: 20px;
+    width: 90%; max-width: 55%;
+    text-align: center;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.8);
+    animation: fadeIn 0.35s ease;
 }
 
-.payment-box h3 { font-size: 1.4rem; color: #ffd700; margin-bottom: 1rem; }
-.payment-box p { font-size: 1rem; color: #ccc; margin-bottom: 1.5rem; }
-
-.payment-methods { display: flex; flex-direction: column; gap: 1rem; }
-.payment-card {
-    display: flex; justify-content: space-between; align-items: center;
-    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-    padding: 0.8rem 1rem; border-radius: 12px; cursor: pointer;
-    transition: all 0.3s ease;
+.payment-box h3 {
+    font-size: 1.5rem; 
+    color: #ffd700; 
+    margin-bottom: 1rem;
+    text-shadow: 0 2px 5px rgba(0,0,0,0.5);
 }
+.payment-box p {
+    font-size: 1rem; 
+    color: #ddd; 
+    margin-bottom: 2rem;
+}
+
+/* === Payment Methods === */
+.payment-methods {
+    display: flex; 
+    flex-wrap: wrap; 
+    gap: 1rem; 
+    justify-content: center;
+}
+
 .payment-card {
-    flex: 1; /* equal width */
-    display: flex;
-    flex-direction: column; /* stack logo + text + button */
-    align-items: center;
+    flex: 1 1 200px;
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
     gap: 0.5rem;
-    background: linear-gradient(145deg, #1a1a1a, #2a2a2a);
-    padding: 1rem;
-    border-radius: 12px;
+    background: linear-gradient(145deg, #1f1f1f, #2f2f2f);
+    padding: 1.2rem;
+    border-radius: 15px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s ease, transform 0.3s ease;
+    min-width: 180px;
+}
+.payment-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    box-shadow: 0 12px 25px rgba(0,0,0,0.5);
 }
 
 .payment-card img {
     height: 50px;
+    margin-bottom: 0.5rem;
+    border: 2px solid green;
+    border-radius: 15px;
 }
 
 .payment-card span {
     font-weight: bold;
     color: #fff;
+    margin-bottom: 0.8rem;
+}
+
+/* === Buttons === */
+.payment-card .bank-payment-btn,
+.payment-card .esewa-payment-btn {
+    width: 100%;
+    padding: 10px 0;
+    border-radius: 10px;
+    border: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease, transform 0.3s ease;
 }
 
 .payment-card .bank-payment-btn {
-    width: 100%; /* full width of card */
-    background: #e7830d;
-    color: black;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
+    background: #e7830d; 
+    color: #000;
 }
-.esewa-payment-btn{
-    width: 100%; /* full width of card */
-    background: #0de747;
-    color: black;
-    padding: 8px 12px;
-    border-radius: 8px;
-    border: none;
-    cursor: pointer;
-    font-weight: bold;
-    transition: all 0.3s ease;
+.payment-card .esewa-payment-btn {
+    background: #0de747; 
+    color: #000;
 }
-
-.payment-card .bank-payment-btn:hover{
-    transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
-}
-.esewa-payment-btn:hover{
+.payment-card .bank-payment-btn:hover,
+.payment-card .esewa-payment-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
 }
 
-.bank-pay-btn {
-    background-color: #27ae60; color: #fff;
-    padding: 6px 12px; border-radius: 8px; border: none;
-    cursor: pointer; font-weight: bold;
-}
-.bank-pay-btn:hover { background-color: #2ecc71; }
-
+/* === Cancel Button === */
 .cancel-btn {
-    margin-top: 1.5rem; background: #c0392b; color: #fff;
-    padding: 8px 16px; border-radius: 8px; border: none; font-weight: bold; cursor: pointer;
+    margin-top: 2rem; 
+    background: #c0392b; 
+    color: #fff;
+    padding: 10px 18px; 
+    border-radius: 10px; 
+    border: none; 
+    font-weight: bold; 
+    cursor: pointer;
     transition: all 0.3s ease;
 }
 .cancel-btn:hover { 
@@ -126,12 +179,55 @@
     background: #e74c3c; 
 }
 
+/* === Animations === */
 @keyframes fadeIn {
     from { opacity: 0; transform: scale(0.95); }
     to { opacity: 1; transform: scale(1); }
 }
 
+/* === Responsive === */
 @media (max-width: 768px) {
-    .payment-box { padding: 1.5rem; }
-    .payment-card { flex-direction: column; gap: 0.5rem; }
+    .payment-box { padding: 2rem 1.5rem; max-width: 95%; }
+    .payment-methods { gap: 1rem; }
+    .payment-card { width: 90%; min-width: unset; }
+}
+
+@media (max-width: 480px) {
+    .payment-box { padding: 1.5rem 1rem; }
+    .payment-box h3 { font-size: 1.3rem; }
+    .payment-box p { font-size: 0.95rem; }
+    .payment-card img { height: 40px; }
+    .payment-card span { font-size: 0.95rem; }
+    .payment-card .bank-payment-btn,
+    .payment-card .esewa-payment-btn {
+        font-size: 0.95rem;
+        padding: 8px 0;
+    }
+    .cancel-btn { padding: 8px 16px; font-size: 0.95rem; }
+}
+.payment-toggle-logos {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.payment-toggle-logos img {
+    height: 60px;
+    cursor: pointer;
+    opacity: 0.6;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    border-radius: 10px;
+}
+
+.payment-toggle-logos img:hover {
+    opacity: 1;
+    transform: scale(1.05);
+}
+
+.payment-toggle-logos img.active {
+    opacity: 1;
+    border-color: #ffd700;
+    transform: scale(1.1);
 }
