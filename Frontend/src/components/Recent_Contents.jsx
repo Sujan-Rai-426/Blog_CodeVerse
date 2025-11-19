@@ -62,11 +62,11 @@ function Recent_Contents() {
     };
 
     return (
-        <div className="row g-4">
+        <div className="g-4 recent-cards-container">
             {sortedTutorials.length === 0 ? (
                 <p className="text-center text-muted py-5">No recent tutorials found.</p>
             ) : (
-                sortedTutorials.slice(0, 3).map((tutorial) => {
+                sortedTutorials.slice(0, 8).map((tutorial) => {
                     let accessTypeString = "";
                     if (Array.isArray(tutorial.access_type) && tutorial.access_type.length > 0) {
                         accessTypeString = tutorial.access_type[0]?.access_type || "";
@@ -77,7 +77,7 @@ function Recent_Contents() {
                     const isPremium = accessTypeString.trim().toLowerCase() === "premium";
 
                     return (
-                        <div className="col-12 col-md-6 col-lg-4" key={`${tutorial.videoId}-${tutorial.topicId}`}>
+                        <div key={`${tutorial.videoId}-${tutorial.topicId}`}>
                             <div
                                 className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
                                 onClick={(e) => {
@@ -122,8 +122,8 @@ function Recent_Contents() {
                                 </div>
 
                                 <div className="card-body py-2">
-                                    <h5 className="card-title fw-bold">&nbsp; {tutorial.topicName}</h5>
-                                    <p className="rc-card-text text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 40)} ....</p>
+                                    <h5 className="recent-card-title">&nbsp; {tutorial.topicName}</h5>
+                                    {/* <p className="recent-card-desc text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 25)} ....</p> */}
                                     &nbsp;&nbsp;
                                     <button
                                         className="btn btn-outline-warning btn-sm rounded-pill"

@@ -3,9 +3,15 @@
     pointer-events: none;
 }
 
-.rc-card-text{
-    font-size: .85rem;
+.recent-card-desc{
+    font-size: .65rem;
     margin-bottom: 8px;
+}
+
+.recent-card-title{
+    font-size: .9rem;
+    font-weight: 600;
+    margin-bottom: 16px;
 }
 
 .premium-badge-center {
@@ -66,4 +72,28 @@
     color: black;
     background: rgb(255 215 0 / 90%);
     border: 3px solid #fefefe;
+}
+.recent-cards-container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px 8px;
+}
+
+/* Responsive */
+@media (max-width: 1200px) {
+    .recent-cards-container {
+        grid-template-columns: repeat(3, 1fr); 
+    }
+}
+
+@media (min-width: 767px) and (max-width: 1200px) {
+    .recent-cards-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 767px) {
+    .recent-cards-container {
+        grid-template-columns: repeat(1, 1fr); 
+    }
 }

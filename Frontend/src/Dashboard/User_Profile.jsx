@@ -19,7 +19,7 @@ const User_Profile = () => {
             name: "Sujan Rai",
             email: "sujan@example.com",
             bio: "Full Stack Developer | Codevora Creator",
-            avatar: "https://api.dicebear.com/7.x/initials/svg?seed=SujanRai&backgroundColor=0f172a&textColor=fff",
+            avatar: "https://scontent.fbir2-1.fna.fbcdn.net/v/t39.30808-1/578026329_122095438437120223_7138633905277938491_n.jpg?stp=dst-jpg_s200x200_tt6&_nc_cat=106&ccb=1-7&_nc_sid=2d3e12&_nc_ohc=z8qPCaHGsg0Q7kNvwEJjQFR&_nc_oc=Admm7v5Uxy4UIBiJWOGU-jjUsJna2rVMW-VinH5qi0IfPe19aPKc5o12mUo6dPnwaY4&_nc_zt=24&_nc_ht=scontent.fbir2-1.fna&_nc_gid=u07dOH08bNeDqNNIwpVehA&oh=00_Afh1J0jAZw46VDXBjza5XtaYUgOKJdJlImkzlFPdHJskjQ&oe=6923C417",
             joined: "2024-01-10",
         },
         favorites: [

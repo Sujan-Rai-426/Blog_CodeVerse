@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-import Carousel from "../components/Carousel";
+
 import Recent_Contents from "../components/Recent_Contents";
 import Services from "../components/Services";
 
@@ -57,27 +57,26 @@ function Home() {
                 </div>
             )}
 
-        {/* Hero Section */}
+
+
+        {/* =============== Hero Section =============== */}
             <section className="hero mb-5">
                 <div className="hero-content">
-                    <h1 className="hero-title text-golden">
-                        <b>Code</b>
-                        <sup>
-                            <u>
-                                <small>Vora</small>💻
-                            </u>
-                        </sup>
-                    </h1>
-                    <h5 className="hero-subtitle text-gray">
-                        Where Ideas Turn Into Code and Where Coding Meets Creativity.
-                        <p className="text-warning m-0 p-0">
-                            📢{" "}
-                            <small>
-                                More Content Will Be Added on Weekly Basis...
-                            </small>
+                    
+                    {/* Hero description */}
+                    <div className="hero-subtitle text-center">
+                        <h2 className="hero-title">
+                            Where Ideas Turn Into Code and Where Coding Meets Creativity.
+                        </h2>
+                        <p className="hero-note m-0">
+                            <small> --- Follow our social media to stay updated --- </small>
                         </p>
-                    </h5>
+                        <p className="hero-warning m-0">
+                            📢 <small>More Content Will Be Added on a Weekly Basis...</small>
+                        </p>
+                    </div>
 
+                        {/* Hero Social Media Links */}
                     <div className="social-bar d-flex justify-content-center align-items-center gap-4 mt-3">
                         <a href="https://www.youtube.com/@CodeVora140" className="social-link globe" target="_blank" rel="noopener noreferrer" >
                             <i className="fab fa-youtube"></i>
@@ -95,47 +94,70 @@ function Home() {
                             <i className=" fab fa-linkedin-in"></i>
                         </a>
                     </div>
+
+                    {/* Hero Card Highlights */}
+                    <div className="hero-card-highlights">
+                        <div className="highlight-card text-light">
+                            <i className="bi bi-lightning-fill highlight-icon"></i>
+                            <h5>Fast & Modern</h5>
+                            <p>All tutorials are easy to use and easy to modify.</p>
+                        </div>
+                        <div className="highlight-card text-light">
+                            <i className="bi bi-star-fill highlight-icon"></i>
+                            <h5>Premium Quality</h5>
+                            <p>Curated high-quality content for developers.</p>
+                        </div>
+                        <div className="highlight-card text-light">
+                            <i className="bi bi-globe highlight-icon"></i>
+                            <h5>Global Access</h5>
+                            <p>Access your tutorials from anywhere, anytime.</p>
+                        </div>
+                    </div>
+
                         {/* Hero  BTN Section */}
                     <div style={{ display: 'flex', flexDirection:'row', justifyContent:'space-between' }}>
                             {/* PlayGround BTN */}
                             <button
-                                className="share-btn"
+                                className="share-btn text-light"
                                 onClick={() => {
                                     navigate( "/PlayGround");
                                 }}
                             >
-                                🎮 PlayGround
+                                <i className="bi bi-joystick fs-5 "></i> PlayGround
                             </button>
 
                             {/* Share code BTN */}
                             <button
-                                className="share-btn"
+                                className="share-btn text-light"
                                 onClick={() => {
                                     const loggedIn = window.localStorage.getItem("loggedIn") === "true";
                                     navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
                                 }}
                             >
-                                ✍️ Share Code
+                                <i className="bi bi-share"></i> Share Code
                             </button>
                     </div>
+                    
                 </div>
             </section>
 
-        {/* Service Section */}
+
+
+        {/* =============== Service Section =============== */}
             <section className="service mt-2 mb-5">
+                <h2 className="home-section-title">
+                    Our Top Services
+                </h2>
                 <Services />
             </section>
 
-        {/* Frontend Section */}
+
+
+        {/* =============== Frontend Section =============== */}
             <section className="tutorial-section mt-2 mb-5">
-                <h6 className="section-title">
-                    <small>
-                        {" "}
-                        🎨 <sup>
-                            <u>Fronted Components Design</u>
-                        </sup>{" "}
-                    </small>
-                </h6>
+                <h2 className="home-section-title">
+                    Fronted Components Design
+                </h2>
                 <div className="grid-container">
                     {parentLoading
                         ? Array.from({ length: 5 }).map((_, idx) => (
@@ -163,16 +185,13 @@ function Home() {
                 </div>
             </section>
 
-        {/* Backend Section */}
+
+
+        {/* =============== Backend Section =============== */}
             <section className="tutorial-section mt-3  mb-5">
-                <h6 className="section-title">
-                    <small>
-                        {" "}
-                        🖥️ <sup>
-                            <u>Coding Guide</u>
-                        </sup>{" "}
-                    </small>
-                </h6>
+                <h2 className="home-section-title">
+                    Coding Guide
+                </h2>
                 <div className="grid-container">
                     {parentLoading
                         ? Array.from({ length: 5 }).map((_, idx) => (
@@ -200,20 +219,19 @@ function Home() {
                 </div>
             </section>
 
-            {/* Recent Blogs Section */}
+
+
+        {/* =============== Recent Blogs Section =============== */}
             <section className="recent-section mt-3">
-                <p className="section-title">
-                    <small>
-                        {" "}
-                        🕒 <sup>
-                            <u>Recently uploaded Designs</u>
-                        </sup>{" "}
-                    </small>
-                </p>
-                <div className="recent-wrapper">
+                <h2 className="home-section-title">
+                    Recently uploaded Designs
+                </h2>
+                <div>
                     <Recent_Contents />
                 </div>
             </section>
+
+
         </div>
     );
 }

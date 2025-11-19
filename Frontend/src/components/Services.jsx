@@ -128,12 +128,6 @@ const Services = () => {
   return (
     <div className="cv-carousel-main-container">
       <div className="cv-carousel-container">
-        <h2 className="cv-section-title">
-          <i className="bi bi-gear-fill text-light"></i>
-          {" "}
-          <sup><u><b>Our Top Services</b></u></sup>
-        </h2>
-
         <div className="cv-carousel" ref={carouselRef}>
           {services.map((service, idx) => (
             <div
