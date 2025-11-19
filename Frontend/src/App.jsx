@@ -40,6 +40,7 @@ import Floating_Donate_Me from './payment/donation/Floating_Donate_Me.jsx';
 import { Parent_Api_Provider } from './context/Parent_API_Provider.jsx';
 import PlayGround from './pages/PlayGround.jsx';
 import Contact from './email/Contact.jsx';
+import User_Profile from './Dashboard/User_Profile.jsx';
 
 
 
@@ -101,6 +102,10 @@ function App() {
                                   <Route  exact path="/Payment_Success" element={<Payment_Success />} />
                                   <Route  exact path="/Payment_Failure" element={<Payment_Fail />} />
                                   <Route  exact path="/Payment_Page" element={<Payment_Page />} />
+
+
+                                  {/* Dashboard */}
+                                  <Route exact path='/User-Profile' element={<User_Profile />} />
 
 
                                   {/* Unavailable and in development phase */}
