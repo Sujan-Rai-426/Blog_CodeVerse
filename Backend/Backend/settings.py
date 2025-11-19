@@ -7,15 +7,11 @@ import dj_database_url
 # ---------------- BASE ----------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# # Load .env from BASE_DIR
-# env_file = BASE_DIR / ".env"
-# config = Config(RepositoryEnv(env_file))
-
 
 # ---------------- SECURITY ----------------
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config("DEBUG", default=False, cast=bool)
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="*").split(",")
+DEBUG = config("DEBUG",cast=bool)
+ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
 # ---------------- INSTALLED APPS ----------------
 INSTALLED_APPS = [
@@ -81,20 +77,15 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 
 # ---------------- DATABASE ----------------
 # Define my database for local host and production
-if DEBUG: #debug is true
-    # Local sqlit3 configuration for local host development
+if DEBUG: #debug is true -->  Localhost configuration (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:  #  Production configuration (PostgreSQL via railway) 
+else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
     DATABASES = {
-        # 'default': {
-        #     'ENGINE': 'django.db.backends.sqlite3',
-        #     'NAME': BASE_DIR / 'db.sqlite3',
-        # }
         'default': dj_database_url.parse(config('DATABASE_URL'))
     }
 
@@ -144,7 +135,7 @@ cloudinary.config(
 
 # ---------------- CORS ----------------
 CORS_ALLOWED_ORIGINS = [
-    "https://codevora140.vercel.app",
+    "https://codevora140.vercel.app", "http://localhost:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
 
