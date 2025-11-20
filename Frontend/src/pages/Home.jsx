@@ -71,7 +71,7 @@ function Home() {
                         <p className="hero-note m-0">
                             <small> - Follow our social media to stay updated - </small>
                         </p>
-                        <p className="hero-warning m-0">
+                        <p className="text-light m-0">
                             📢 <small>More Content Will Be Added on a Weekly Basis...</small>
                         </p>
                     </div>
