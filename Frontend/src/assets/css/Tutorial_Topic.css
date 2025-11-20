@@ -1,6 +1,154 @@
+
+/* ======== GRID Frontend Languages Card ========== */
+/* scrollbar styling */
+.fs-wrapper::-webkit-scrollbar, .horizontal-scroll-wrapper::-webkit-scrollbar { height: 10px; }
+.fs-wrapper::-webkit-scrollbar-thumb, .horizontal-scroll-wrapper::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 999px; }
+.fs-wrapper::-webkit-scrollbar-track, .horizontal-scroll-wrapper::-webkit-scrollbar-track { background: transparent; }
+
+/* ensure topic grid below keeps its spacing (no overlap) */
+.tutorial-topic-page .fs-wrapper, .tutorial-topic-page .horizontal-scroll-wrapper { margin-top: 10px; margin-bottom: 28px; }
+.fs-empty, .horizontal-empty { padding: 1rem; color: #9ca3af; text-align: center; }
+/* container wrappers */
+.fs-wrapper,
+.horizontal-scroll-wrapper,
+.horizontal-scroll {
+    width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 12px 0;
+    margin-bottom: 25px;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+    /* enable snap */
+    scroll-snap-type: x mandatory;
+}
+
+/* grid layout */
+.fs-grid,
+.horizontal-grid {
+    display: grid;
+    grid-auto-flow: column;
+    /* card width: change --card-w to adjust */
+    --card-w: 220px;
+    grid-auto-columns: var(--card-w);
+    gap: 1rem;
+    padding: 6px;
+    align-items: start; /* align cards at top */
+}
+
+/* fallback for older CSS where min-width used */
+.horizontal-grid .horizontal-card,
+.fs-grid .fs-card,
+.fs-grid .horizontal-card,
+.horizontal-grid .fs-card {
+    min-width: var(--card-w);
+}
+
+/* card / link */
+.fs-card,
+.horizontal-card,
+.fs-grid a.fs-card,
+.horizontal-grid a.horizontal-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    background: #0f1724; /* dark card background — change if needed */
+    color: #fff;
+    border-radius: 12px;
+    padding: 12px;
+    border: 1px solid rgba(255,255,255,0.04);
+    box-shadow: 0 6px 18px rgba(2,6,23,0.6);
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+    scroll-snap-align: start;
+    cursor: pointer;
+}
+
+/* hover / focus */
+.fs-card:hover,
+.horizontal-card:hover,
+.fs-card:focus,
+.horizontal-card:focus,
+.fs-card.active-hover /* NEW: active hover default */ {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(77, 69, 6, 0.6) !important;
+    outline: none;
+    background: #0e131b !important;
+    border: 1px solid rgb(255, 213, 0) !important;
+}
+
+
+.fs-card:focus-visible,
+.horizontal-card:focus-visible {
+    outline: 3px solid rgba(99,102,241,0.18); /* accessible focus ring */
+    outline-offset: 3px;
+}
+
+.fs-card-icon,
+.card-icon {
+    font-size: 2.0rem;
+    margin-bottom: 8px;
+    line-height: 1;
+    color: #a5b4fc;
+}
+
+.fs-card-text,
+.card-text {
+    font-size: 0.98rem;
+    font-weight: 600;
+    color: #e6eef8;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: calc(var(--card-w) - 32px);
+}
+
+/* Large tablets & small laptops */
+@media (max-width: 1200px) {
+    .fs-grid, .horizontal-grid { --card-w: 45vw; grid-auto-columns: var(--card-w); }
+}
+
+/* Tablets */
+@media (max-width: 900px) {
+    .fs-grid, .horizontal-grid { --card-w: 40vw; grid-auto-columns: var(--card-w); }
+    .fs-card, .horizontal-card { padding: 14px; }
+    .fs-card-icon, .card-icon { font-size: 1.8rem; }
+    .fs-card-text, .card-text { font-size: 0.9rem; }
+}
+
+/* Large mobile */
+@media (max-width: 680px) {
+    .fs-grid, .horizontal-grid { --card-w: 35vw; grid-auto-columns: var(--card-w); }
+    .fs-card-icon, .card-icon { font-size: 1.7rem; }
+}
+
+/* Normal mobile */
+@media (max-width: 520px) {
+    .fs-grid, .horizontal-grid { --card-w: 30vw; grid-auto-columns: var(--card-w); }
+    .fs-card, .horizontal-card { padding: 12px; border-radius: 10px; }
+    .fs-card-text, .card-text { font-size: 0.85rem; }
+}
+
+/* Small mobile (<400px) */
+@media (max-width: 400px) {
+    .fs-grid, .horizontal-grid { --card-w: 25vw; grid-auto-columns: var(--card-w); }
+    .fs-card-icon, .card-icon { font-size: 1.6rem; }
+    .fs-card-text, .card-text { font-size: 0.8rem; }
+}
+
+/* Ultra small devices (<340px) */
+@media (max-width: 340px) {
+    .fs-grid, .horizontal-grid { --card-w: 20vw; grid-auto-columns: var(--card-w); gap: 0.7rem; }
+    .fs-card-text, .card-text { font-size: 0.75rem; }
+}
+
+
+
 /* === Page Layout === */
 .tutorial-topic-page {
-    padding: 7rem 2rem 4rem;
+    padding: 3rem 2rem 4rem;
     min-height: 100vh;
     background: none;
     font-family: "Poppins", sans-serif;
@@ -9,9 +157,9 @@
 /* === Title === */
 .page-title {
     text-align: center;
-    font-size: 2.5rem;
+    font-size: 1.5rem;
     font-weight: 700;
-    margin-bottom: 2rem;
+    margin-bottom: 1rem;
     color: #cecece;
 }
 
@@ -81,29 +229,16 @@
 
 /* === Responsive Design === */
 @media (max-width: 768px) {
-    .tutorial-topic-page {
-        padding: 2rem 1rem;
-    }
-
-    .page-title {
-        font-size: 2rem;
-    }
-
-    .language-title {
-        font-size: 1.4rem;
-    }
-
-    .topic-content h3 {
-        font-size: 1rem;
-    }
+    .tutorial-topic-page { padding: 2rem 1rem; }
+    .page-title { font-size: 2rem; }
+    .language-title { font-size: 1.4rem; }
+    .topic-content h3 { font-size: 1rem; }
 }
 
 @media (max-width: 480px) {
-    .page-title {
-        font-size: 1.7rem;
-    }
-
-    .topic-content p {
-        font-size: 0.9rem;
-    }
+    .page-title { font-size: 1.7rem; }
+    .topic-content p { font-size: 0.9rem; }
 }
+
+
+
