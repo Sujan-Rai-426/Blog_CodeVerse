@@ -154,7 +154,7 @@ function Home() {
 
 
         {/* =============== Frontend Section =============== */}
-            <section className="tutorial-section mt-2 mb-5">
+            <section className="tutorial-section">
                 <h2 className="home-section-title">
                     Fronted Components Design
                 </h2>
@@ -188,7 +188,7 @@ function Home() {
 
 
         {/* =============== Backend Section =============== */}
-            <section className="tutorial-section mt-3  mb-5">
+            <section className="tutorial-section">
                 <h2 className="home-section-title">
                     Coding Guide
                 </h2>

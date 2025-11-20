@@ -188,6 +188,9 @@
 
 
 /* ================= Grid / Tutorials ================= */
+.tutorial-section {
+    margin: 4rem 0 6rem 0;
+}
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -292,6 +295,7 @@
     .hero-title { font-size: 1rem; margin: 0 0 15px 0; }
     .hero-subtitle { font-size: 0.9rem; }
     .hero-card-highlights {font-size: .75rem;}
+    .tutorial-section { margin: 2rem 0 4rem 0; }
     .grid-container { grid-template-columns: repeat(auto-fit,minmax(80px, 1fr)); gap: 0.5rem; }
     .grid-card { max-width: 90px; padding: 0.6rem 0.4rem; }
     .card-icon { font-size: 1.6rem; }
@@ -312,6 +316,7 @@
     .hero-note small, .hero-warning small { font-size: 0.85rem; }
     .hero-card-highlights {font-size: .85rem;}
     .social-bar { margin: .8rem 0 !important;}
+    .tutorial-section { margin: 2.5rem 0 4.5rem 0; }
     .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
     .grid-card { max-width: 100px; padding: 0.8rem 0.5rem; }
     .card-icon { font-size: 1.8rem; }
@@ -326,6 +331,7 @@
     .hero-subtitle { font-size: 1.7rem; }
     .hero-card-highlights {font-size: .95rem;}
     .social-bar { margin: 1rem 0 !important;}
+    .tutorial-section { margin: 3rem 0 5rem 0; }
     .grid-container { grid-template-columns: repeat(4, 1fr); }
 }
 
