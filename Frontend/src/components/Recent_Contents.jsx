@@ -66,7 +66,7 @@ function Recent_Contents() {
             {sortedTutorials.length === 0 ? (
                 <p className="text-center text-muted py-5">No recent tutorials found.</p>
             ) : (
-                sortedTutorials.slice(0, 8).map((tutorial) => {
+                sortedTutorials.slice(0, 6).map((tutorial) => {
                     let accessTypeString = "";
                     if (Array.isArray(tutorial.access_type) && tutorial.access_type.length > 0) {
                         accessTypeString = tutorial.access_type[0]?.access_type || "";

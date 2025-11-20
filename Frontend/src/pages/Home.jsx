@@ -47,7 +47,8 @@ function Home() {
 
     return (
         <div className="home-container">
-            {/* Loading Message Overlay if loading > 3s */}
+
+        {/* Loading Message Overlay if loading > 3s */}
             {showLoadingMessage && parentLoading && (
                 <div className="loading-overlay">
                     <div className="loading-message">
@@ -56,7 +57,6 @@ function Home() {
                     </div>
                 </div>
             )}
-
 
 
         {/* =============== Hero Section =============== */}
@@ -142,22 +142,23 @@ function Home() {
             </section>
 
 
-
         {/* =============== Service Section =============== */}
             <section className="service mt-2 mb-5">
-                <h2 className="home-section-title">
-                    Our Top Services
-                </h2>
+                <h2 className="home-section-title">Our Top Services</h2>
+                <p className="section-subtext">
+                    Explore our essential services designed to help developers build faster and smarter.
+                </p>
                 <Services />
             </section>
 
 
-
         {/* =============== Frontend Section =============== */}
             <section className="tutorial-section">
-                <h2 className="home-section-title">
-                    Fronted Components Design
-                </h2>
+                <h2 className="home-section-title">Frontend Components Design</h2>
+                <p className="section-subtext">
+                    Discover modern, reusable UI components to enhance your frontend development workflow.
+                </p>
+
                 <div className="grid-container">
                     {parentLoading
                         ? Array.from({ length: 5 }).map((_, idx) => (
@@ -186,12 +187,13 @@ function Home() {
             </section>
 
 
-
         {/* =============== Backend Section =============== */}
             <section className="tutorial-section">
-                <h2 className="home-section-title">
-                    Coding Guide
-                </h2>
+                <h2 className="home-section-title">Coding Guide</h2>
+                <p className="section-subtext">
+                    Improve your development workflow with hands-on guides for Frontend, backend coding, and API development.
+                </p>
+
                 <div className="grid-container">
                     {parentLoading
                         ? Array.from({ length: 5 }).map((_, idx) => (
@@ -205,32 +207,66 @@ function Home() {
                                 />
                                 <Skeleton width={60} baseColor="#2b2b2b" highlightColor="#3b3b3b" />
                             </div>
-                            ))
+                        ))
                         : backendLangs.map((lang) => (
-                        <Link
-                            key={lang.id}
-                            to={`/Backend_Tutorial_Topic/${lang.id}`}
-                            className="grid-card"
-                        >
-                            {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
-                            <span className="card-text">{lang.name}</span>
-                        </Link>
-                    ))}
+                            <Link
+                                key={lang.id}
+                                to={`/Backend_Tutorial_Topic/${lang.id}`}
+                                className="grid-card"
+                            >
+                                {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
+                                <span className="card-text">{lang.name}</span>
+                            </Link>
+                        ))}
                 </div>
             </section>
 
 
-
         {/* =============== Recent Blogs Section =============== */}
             <section className="recent-section mt-3">
-                <h2 className="home-section-title">
-                    Recently uploaded Designs
-                </h2>
+                <h2 className="home-section-title">Recently uploaded Designs</h2>
+                <p className="section-subtext">
+                    Browse our latest uploaded UI designs, components, and creative inspirations.
+                </p>
+
                 <div>
                     <Recent_Contents />
                 </div>
             </section>
 
+
+        {/* =============== Informational Content Section =============== */}
+            <section className="info-section">
+                <div className="info-container">
+                    <h2 className="home-section-title">Quality Resources for Developers & Designers</h2>
+
+                    <p className="info-text">
+                        At Codevora, we focus on delivering high–quality and practical resources 
+                        for developers, designers, and digital creators. Our platform publishes clean,
+                        well-structured UI components, modern layouts, and reusable design elements
+                        that help you build stunning web applications with ease.
+                    </p>
+
+                    <p className="info-text">
+                        Every design and code snippet shared on Codevora is carefully crafted to meet 
+                        professional standards, ensuring responsiveness, accessibility, and performance. 
+                        We aim to support both beginners and experienced developers by providing content 
+                        that is easy to understand, implement, and customize.
+                    </p>
+
+                    <p className="info-text">
+                        Our team consistently works on expanding the collection with fresh designs, 
+                        updated tutorials, and detailed guides. We believe in empowering creators 
+                        with knowledge and inspiration, helping them bring their ideas to life through 
+                        clean code and thoughtful UI/UX practices.
+                    </p>
+
+                    <p className="info-text">
+                        Stay connected with us as we continue to improve, learn, and deliver meaningful 
+                        resources that elevate your development journey.
+                    </p>
+                </div>
+            </section>
 
         </div>
     );

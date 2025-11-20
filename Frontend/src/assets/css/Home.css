@@ -9,18 +9,19 @@
     scroll-behavior: smooth;
 }
 
+
 /* ===== Text Colors ===== */
 .text-golden {
     color: #C6A25D !important;
 }
-
 .text-gray {
     color: #555;
 }
-
 .text-warning {
     color: #e1ab44;
 }
+
+
 
 /* ================= Hero Section ================= */
 .hero {
@@ -33,7 +34,6 @@
     position: relative;
     overflow: hidden;
 }
-
 .hero::after {
     content: "";
     position: absolute;
@@ -42,7 +42,6 @@
     opacity: 0.05;
     pointer-events: none;
 }
-
 .hero-subtitle {
     max-width: 800px;
     margin: 0 auto;
@@ -50,7 +49,6 @@
     color: #d1d5db; 
     font-family: 'Inter', sans-serif;
 }
-
 .hero-title {
     font-size: 2rem; 
     margin: 0 0 15px 0;
@@ -58,19 +56,16 @@
     color: #ffffff; 
     line-height: 1.3;
 }
-
 .hero-note small {
     color: #9ca3af;
     font-size: 0.9rem;
 }
-
 .hero-warning {
     color: #ffcc00;
     font-weight: 500;
     font-size: 0.95rem;
     margin-top: 10px;
 }
-
 .hero-card-highlights {
     display: flex;
     justify-content: space-between;
@@ -78,7 +73,6 @@
     flex-wrap: wrap;
     text-align: center;
 }
-
 .highlight-card {
     flex: 1;
     min-width: 200px;
@@ -87,20 +81,17 @@
     border-radius: 15px;
     transition: all 0.3s ease;
 }
-
 .highlight-card:hover {
     transform: translateY(-5px);
     background: #222;
 }
-
 .highlight-icon {
     font-size: 2rem;
     color: #ffcc00;
     margin-bottom: 10px;
 }
 
-
-/* ================= Social Media Bar ================= */
+/* <----------- Social Media Bar ----------> */
 .social-bar {
     margin: 2rem 0;
     display: flex;
@@ -109,7 +100,6 @@
     gap: 1rem;
     flex-wrap: wrap;
 }
-
 .social-link {
     font-size: 1.2rem;
     color: #fff;
@@ -125,12 +115,10 @@
     text-decoration: none;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
-
 .social-link:hover {
     transform: translateY(-4px);
     color: #fff;
 }
-
 .social-link.facebook:hover { background: #1877f2; }
 .social-link.instagram:hover { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4); }
 .social-link.github:hover { background: #24292e; }
@@ -150,7 +138,6 @@
     cursor: pointer;
     transition: all 0.3s ease;
 }
-
 .share-btn:hover {
     color: white;
     background: linear-gradient(145deg, #9d7558f7 0%, #be8f39 50%, #c4993c 100%);;
@@ -159,12 +146,13 @@
     box-shadow: 0 8px 20px rgba(198, 162, 93, 0.3);
 }
 
+
 /* ================= Home Section Titles ================= */
 .home-section-title {
     display: block;
     font-family: 'Inter', sans-serif;
     font-weight: 700;
-    color: #c4c1b3;
+    color: #e9e6d9;
     text-align: left; 
     line-height: 1.2;
     font-size: 1.7rem; 
@@ -172,19 +160,40 @@
     position: relative;
     padding-left: 10px; 
 }
-
 /* Accent underline (like Netflix subtle line) */
 .home-section-title::after {
     content: '';
     display: block;
     width: 50px;
     height: 3px;
-    background: #d4cdb4;
+    background: #e1dccd;
     margin-top: 6px;
     border-radius: 2px;
 }
 
 
+/* === Hearing Paragraph of Tutorials and Services and Recent Contents */
+.info-container{
+    margin: 4rem 0;
+}
+.info-text{
+    color: #cbd5e1;
+}
+.text-content-section {
+    width: 100%;
+    margin: 1rem auto;
+    padding: 1rem 1.5rem;
+}
+.section-subtext {
+    font-size: 1.1rem;
+    color: #cbd5e1; /* slate-300 */
+    margin-top: -5px;
+    margin-bottom: 1.3rem;
+    line-height: 1.6;
+    font-family: 'Inter', sans-serif;
+    text-align: left;
+    opacity: 0.9;
+}
 
 
 /* ================= Grid / Tutorials ================= */
@@ -197,7 +206,6 @@
     gap: 1rem;
     justify-items: center;
 }
-
 .grid-card {
     background: #1f1f1f;
     border-radius: 14px;
@@ -210,19 +218,16 @@
     transition: all 0.3s ease;
     border: 1px solid #2c2c2c;
 }
-
 .grid-card:hover {
     transform: translateY(-6px);
     border-color: #e1ab44;
     box-shadow: 0 8px 20px rgba(225, 171, 68, 0.3);
 }
-
 .card-icon {
     font-size: 2.2rem;
     color: #e1ab44;
     margin-bottom: 0.5rem;
 }
-
 .card-text {
     font-weight: 600;
     font-size: 0.95rem;
@@ -234,23 +239,24 @@
 }
 
 
+
 /* ================= Recent Section ================= */
 .recent-section {
     margin-top: 3rem;
 }
-
 .recent-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1rem;
 }
-
 .recent-wrapper > * {
     width: 100%;
     display: flex;
     justify-content: center;
 }
+
+
 
 /* ================= Loading Overlay ================= */
 .loading-overlay {
@@ -267,14 +273,12 @@
     padding: 2rem;
     animation: fadeIn 0.5s ease;
 }
-
 .loading-message h2 {
     color: #e1ab44;
     font-size: 2rem;
     margin-bottom: 0.5rem;
     animation: pulseText 1.5s infinite ease-in-out;
 }
-
 .loading-message p {
     font-size: 1.2rem;
     color: #ddd;
@@ -283,10 +287,14 @@
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes pulseText { 0%,100% { opacity: 1; } 50% { opacity: 0.6; } }
 
+
+
+
 /* ================= Responsive ================= */
 
-/* Mobile First Adjustments */
+/* <----------------> Mobile First Adjustments <----------------> */
 @media (max-width: 480px) {
+    .section-subtext { font-size: 0.9rem; margin-bottom: 1rem; }
     .home-container { padding: 0.2rem; }
     .home-section-title { font-size: 1.2rem; margin: 20px 0 10px 0; }
     .home-section-title::after { width: 30px; }
@@ -305,8 +313,9 @@
     .share-btn { padding: 0.5rem 0.7rem; font-size: 0.9rem; }
 }
 
-/* Tablets */
+/* <----------------> Tablets <----------------> */
 @media (min-width: 481px) and (max-width: 768px) {
+    .section-subtext { font-size: 0.95rem; padding: 0 10px; }
     .home-container { padding: 0.4rem; }
     .home-section-title { font-size: 1.4rem; margin: 25px 0 12px 0; }
     .home-section-title::after { width: 35px; }
@@ -322,7 +331,7 @@
     .card-icon { font-size: 1.8rem; }
 }
 
-/* Small Desktops / Laptops */
+/* <----------------> Small Desktops / Laptops <----------------> */
 @media (min-width: 769px) and (max-width: 1024px) {
     .home-container { padding: 0.6rem; }
     .home-section-title { font-size: 1.6rem; margin: 30px 0 16px 0; }
@@ -335,7 +344,7 @@
     .grid-container { grid-template-columns: repeat(4, 1fr); }
 }
 
-/* Large Desktops */
+/* <----------------> Large Desktops <----------------> */
 @media (min-width: 1025px) {
     .home-container { padding: 0.8rem; }
     .home-section-title { font-size: 1.8rem; margin: 35px 0 18px 0; }
@@ -345,3 +354,4 @@
     .social-bar { margin: 1.5rem 0 !important;}
     .grid-container { grid-template-columns: repeat(5, 1fr); }
 }
+
