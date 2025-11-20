@@ -68,11 +68,11 @@ function Home() {
                         <h2 className="hero-title">
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>
-                        <p className="hero-note m-0">
-                            <small> - Follow our social media to stay updated - </small>
+                        <p className="hero-note my-0 py-0">
+                            📢<small> - Follow our social media to stay updated - </small>
                         </p>
-                        <p className="text-light m-0">
-                            📢 <small>More Content Will Be Added on a Weekly Basis...</small>
+                        <p className="hero-note text-light m-0">
+                            <small>More tutorials, projects, and coding guides will be added to help you level up your skills.</small>
                         </p>
                     </div>
 
@@ -98,19 +98,19 @@ function Home() {
                     {/* Hero Card Highlights */}
                     <div className="hero-card-highlights">
                         <div className="highlight-card text-light">
-                            <i className="bi bi-lightning-fill highlight-icon"></i>
+                            <i className="bi bi-lightning-fill highlight-icon text-primary"></i>
                             <h5>Fast & Modern</h5>
-                            <p>All tutorials are easy to use and easy to modify.</p>
+                            <small>All tutorials are easy to use and easy to modify.</small>
                         </div>
                         <div className="highlight-card text-light">
                             <i className="bi bi-star-fill highlight-icon"></i>
                             <h5>Premium Quality</h5>
-                            <p>Curated high-quality content for developers.</p>
+                            <small>Curated high-quality content for developers.</small>
                         </div>
                         <div className="highlight-card text-light">
-                            <i className="bi bi-globe highlight-icon"></i>
+                            <i className="bi bi-globe highlight-icon text-success"></i>
                             <h5>Global Access</h5>
-                            <p>Access your tutorials from anywhere, anytime.</p>
+                            <small>Access your tutorials from anywhere, anytime.</small>
                         </div>
                     </div>
 

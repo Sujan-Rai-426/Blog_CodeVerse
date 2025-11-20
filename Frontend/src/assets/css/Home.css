@@ -303,6 +303,7 @@
     .hero-title { font-size: 1rem; margin: 0 0 15px 0; }
     .hero-subtitle { font-size: 0.9rem; }
     .hero-card-highlights {font-size: .75rem;}
+    .highlight-card { padding: 10px 15px 20px 15px; }
     .tutorial-section { margin: 2rem 0 4rem 0; }
     .grid-container { grid-template-columns: repeat(auto-fit,minmax(80px, 1fr)); gap: 0.5rem; }
     .grid-card { max-width: 90px; padding: 0.6rem 0.4rem; }
@@ -324,6 +325,7 @@
     .hero-title { font-size: 1.5rem; margin: 0 0 17px 0; }
     .hero-note small, .hero-warning small { font-size: 0.85rem; }
     .hero-card-highlights {font-size: .85rem;}
+    .highlight-card { padding: 10px 15px 20px 15px;; }
     .social-bar { margin: .8rem 0 !important;}
     .tutorial-section { margin: 2.5rem 0 4.5rem 0; }
     .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }

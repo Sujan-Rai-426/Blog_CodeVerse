@@ -81,19 +81,13 @@
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .recent-cards-container {
-        grid-template-columns: repeat(3, 1fr); 
-    }
+    .recent-cards-container { padding: 0 15px; grid-template-columns: repeat(3, 1fr);  }
 }
 
 @media (min-width: 767px) and (max-width: 1200px) {
-    .recent-cards-container {
-        grid-template-columns: repeat(2, 1fr);
-    }
+    .recent-cards-container { padding: 0 15px; grid-template-columns: repeat(2, 1fr); }
 }
 
 @media (max-width: 767px) {
-    .recent-cards-container {
-        grid-template-columns: repeat(1, 1fr); 
-    }
+    .recent-cards-container { padding: 0 15px; grid-template-columns: repeat(1, 1fr);  }
 }
