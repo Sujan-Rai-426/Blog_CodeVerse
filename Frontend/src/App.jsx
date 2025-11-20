@@ -22,7 +22,7 @@ function App() {
                     {/* Sticky Floating share and Go back button visible on all pages */}
                     <Floating_Share_Btn />
                     <Floating_Go_Back_Btn />
-                    <Floating_Donate_Me />
+                    {/* <Floating_Donate_Me /> */}
 
                     <Scroll_To_Top />  {/* <---- Default Auto Scroll to top*/}
                     <Nav_Bar />  {/* <----- Navbar */}
