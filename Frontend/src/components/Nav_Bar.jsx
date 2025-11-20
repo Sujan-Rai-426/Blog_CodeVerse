@@ -27,6 +27,7 @@ function Nav_Bar() {
 
   // Close dropdown when clicking outside (desktop/tablet)
   useEffect(() => {
+// sourcery skip: avoid-function-declarations-in-blocks
     function onDocClick(e) {
       if (aboutRef.current && !aboutRef.current.contains(e.target)) {
         setAboutOpen(false);
@@ -38,6 +39,7 @@ function Nav_Bar() {
 
   // Close sidebar when clicking outside
   useEffect(() => {
+// sourcery skip: avoid-function-declarations-in-blocks
     function onDocClick(e) {
       if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
         setSidebarOpen(false);
@@ -117,7 +119,7 @@ function Nav_Bar() {
                     <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
                       <Link className="dropdown-item" to="/About"> <i className="bi bi-people-fill"></i> Our Team </Link>
                       <a className="dropdown-item" href="https://sujan140.vercel.app"> <i className="bi bi-person-fill"></i> Developer </a>
-                      <Link className="dropdown-item" to="/Privacy_Policy"> <i className="bi bi-shield-lock-fill"></i> Terms & Policy </Link>
+                      <Link className="dropdown-item" to="/Privacy_Policy"> <i className="bi bi-shield-lock-fill"></i> Privacy Policy </Link>
                     </div>
                 </li>
             </ul>
@@ -130,6 +132,7 @@ function Nav_Bar() {
           <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
 
           <ul className="sidebar-list">
+              <li><Link to="/" onClick={() => setSidebarOpen(false)}> <i className="bi bi-house-fill"></i> &nbsp; Home</Link></li>
               <li>
                   <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
                       <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
@@ -137,11 +140,10 @@ function Nav_Bar() {
                   <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
                       <li><Link to="/About" onClick={() => setSidebarOpen(false)}> <i className="bi bi-people-fill"></i> &nbsp; Our Team </Link></li>
                       <li><a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}> <i className="bi bi-person-fill"></i> &nbsp;  Developer </a></li>
-                      <li><Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}> <i className="bi bi-shield-lock-fill"></i> &nbsp; Terms & Policy </Link></li>
+                      <li><Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}> <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy </Link></li>
                   </ul>
               </li>
 
-              <li><Link to="/" onClick={() => setSidebarOpen(false)}> <i className="bi bi-house-fill"></i> &nbsp; Home</Link></li>
               <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact</Link></li>
               <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}> <i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li>
           </ul>

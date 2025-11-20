@@ -6,8 +6,8 @@ import { Previous_Page_Provider } from './context/Previous_Page_Context.jsx';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Previous_Page_Provider>
-      <App />
-    </Previous_Page_Provider>
+      <Previous_Page_Provider>
+          <App />
+      </Previous_Page_Provider>
   </StrictMode>
 );
