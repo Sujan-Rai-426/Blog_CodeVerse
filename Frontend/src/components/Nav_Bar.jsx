@@ -106,7 +106,7 @@ function Nav_Bar() {
             {/* Desktop / Tablet nav */}
             <ul className="nav-list d-none d-lg-flex" >
                 <li className="nav-item"> <Link to="/" className="nav-link">Home</Link> </li>
-                <li className="nav-item"> <Link to="/Contact" className="nav-link">Contact</Link> </li>
+                <li className="nav-item"> <Link to="/Contact" className="nav-link">Contact Us</Link> </li>
                 <li className="nav-item"> <Link to="/PlayGround" className="nav-link">PlayGround</Link> </li>
 
                 {/* ABOUT dropdown (desktop hover, tablet click) */}
@@ -144,7 +144,7 @@ function Nav_Bar() {
                   </ul>
               </li>
 
-              <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact</Link></li>
+              <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>
               <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}> <i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li>
           </ul>
       </aside>
