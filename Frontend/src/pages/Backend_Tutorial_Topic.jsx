@@ -75,7 +75,7 @@ const Backend_Tutorial_Topic = () => {
             const cardRect = selectedCard.getBoundingClientRect();
             const offset =
                 cardRect.left - containerRect.left - containerRect.width / 2 + cardRect.width / 2;
-            container.scrollBy({ left: offset, behavior: "smooth" });
+                container.scrollTo({ left: container.scrollLeft + offset, behavior: "smooth" });
         }
     }, [backendLangs, categories, languageID]);
 
