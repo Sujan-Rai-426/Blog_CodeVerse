@@ -49,7 +49,7 @@ const Backend_Tutorial_Topic = () => {
     return (
         <div className={`tutorial-topic-page ${parentLoading ? "" : "fade-in"}`}>
             <h1 className="page-title">
-                ⚙️ <sup><u>Coding Guide</u></sup>
+                - Coding Guide -
             </h1>
 
             {parentLoading ? (

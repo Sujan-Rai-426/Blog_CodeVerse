@@ -3,6 +3,25 @@ import { Link  }from 'react-router-dom';
 import '../assets/css/Footer.css'; 
 
 const Footer = () => {
+
+    // Scroll to section function using id
+    const scrollToSection = (id) => {
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = -100; // scroll 100px more upwards (adjust as needed)
+                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                const finalPosition = elementPosition + offset;
+
+                window.scrollTo({
+                    top: finalPosition,
+                    behavior: "smooth",
+                });
+            }
+        }, 120); // wait for react-router navigation
+    };
+
+
     return (
 
 
@@ -22,8 +41,8 @@ const Footer = () => {
                         <div className="footer-links">
                             <h5>Quick Links</h5>
                             <ul>
-                                <li><Link to="https://codevora140.vercel.app/Frontend_Tutorial_Topic/2">Frontend Tutorials</Link></li>
-                                <li><Link to="https://codevora140.vercel.app/Backend_Tutorial_Topic/6">Coding Guides</Link></li>
+                                <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Frontend Tutorials</Link></li>
+                                <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>Coding Guides</Link></li>
                                 <li><Link to="/">Projects & Services</Link></li>
                                 <li><Link to="/Contact">Contact US</Link></li>
                             </ul>

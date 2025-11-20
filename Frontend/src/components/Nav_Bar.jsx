@@ -3,84 +3,106 @@ import { Link } from "react-router-dom";
 import "../assets/css/Nav_Bar.css";
 
 function Nav_Bar() {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [aboutOpen, setAboutOpen] = useState(false); // desktop/tablet dropdown state
-  const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // sidebar dropdown state
-  const [isTouchDevice, setIsTouchDevice] = useState(false);
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [aboutOpen, setAboutOpen] = useState(false); // desktop/tablet dropdown state
+    const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // sidebar dropdown state
+    const [isTouchDevice, setIsTouchDevice] = useState(false);
 
-  const aboutRef = useRef(null); // desktop dropdown wrapper
-  const sidebarRef = useRef(null);
+    const aboutRef = useRef(null); // desktop dropdown wrapper
+    const sidebarRef = useRef(null);
 
-  useEffect(() => {
-    // detect touch / coarse pointer devices
-    const checkTouch = () => {
-      // matchMedia pointer:coarse is a good hint for touch
-      const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
-      // also check user agent as fallback
-      const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      setIsTouchDevice(coarse || uaTouch);
+    useEffect(() => {
+      // detect touch / coarse pointer devices
+      const checkTouch = () => {
+        // matchMedia pointer:coarse is a good hint for touch
+        const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
+        // also check user agent as fallback
+        const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+        setIsTouchDevice(coarse || uaTouch);
+      };
+      checkTouch();
+      window.addEventListener("resize", checkTouch);
+      return () => window.removeEventListener("resize", checkTouch);
+    }, []);
+
+    // Close dropdown when clicking outside (desktop/tablet)
+    useEffect(() => {
+  // sourcery skip: avoid-function-declarations-in-blocks
+      function onDocClick(e) {
+        if (aboutRef.current && !aboutRef.current.contains(e.target)) {
+          setAboutOpen(false);
+        }
+      }
+      document.addEventListener("click", onDocClick);
+      return () => document.removeEventListener("click", onDocClick);
+    }, []);
+
+    // Close sidebar when clicking outside
+    useEffect(() => {
+  // sourcery skip: avoid-function-declarations-in-blocks
+      function onDocClick(e) {
+        if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+          setSidebarOpen(false);
+        }
+      }
+      document.addEventListener("click", onDocClick);
+      return () => document.removeEventListener("click", onDocClick);
+    }, [sidebarOpen]);
+
+    const toggleSidebar = (e) => {
+      e.stopPropagation();
+      setSidebarOpen((s) => !s);
     };
-    checkTouch();
-    window.addEventListener("resize", checkTouch);
-    return () => window.removeEventListener("resize", checkTouch);
-  }, []);
 
-  // Close dropdown when clicking outside (desktop/tablet)
-  useEffect(() => {
-// sourcery skip: avoid-function-declarations-in-blocks
-    function onDocClick(e) {
-      if (aboutRef.current && !aboutRef.current.contains(e.target)) {
+    // Desktop: open on hover only if not a touch device and width >= 992
+    const handleAboutMouseEnter = () => {
+      if (!isTouchDevice && window.innerWidth >= 992) {
+        setAboutOpen(true);
+      }
+    };
+    const handleAboutMouseLeave = () => {
+      if (!isTouchDevice && window.innerWidth >= 992) {
         setAboutOpen(false);
       }
-    }
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, []);
+    };
 
-  // Close sidebar when clicking outside
-  useEffect(() => {
-// sourcery skip: avoid-function-declarations-in-blocks
-    function onDocClick(e) {
-      if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-        setSidebarOpen(false);
+
+    // Click handler (tablet & accessibility): toggle on click when touch device OR narrow screen
+    const handleAboutClick = (e) => {
+      // prevent navigation
+      e.preventDefault();
+      // toggle only for touch devices or narrow screens
+      if (isTouchDevice || window.innerWidth < 992) {
+        setAboutOpen((s) => !s);
       }
-    }
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, [sidebarOpen]);
+    };
 
-  const toggleSidebar = (e) => {
-    e.stopPropagation();
-    setSidebarOpen((s) => !s);
-  };
+    // Mobile sidebar dropdown toggle
+    const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
 
-  // Desktop: open on hover only if not a touch device and width >= 992
-  const handleAboutMouseEnter = () => {
-    if (!isTouchDevice && window.innerWidth >= 992) {
-      setAboutOpen(true);
-    }
-  };
-  const handleAboutMouseLeave = () => {
-    if (!isTouchDevice && window.innerWidth >= 992) {
-      setAboutOpen(false);
-    }
-  };
 
-  // Click handler (tablet & accessibility): toggle on click when touch device OR narrow screen
-  const handleAboutClick = (e) => {
-    // prevent navigation
-    e.preventDefault();
-    // toggle only for touch devices or narrow screens
-    if (isTouchDevice || window.innerWidth < 992) {
-      setAboutOpen((s) => !s);
-    }
-  };
 
-  // Mobile sidebar dropdown toggle
-  const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
+      // Scroll to section function using id
+    const scrollToSection = (id) => {
+        setTimeout(() => {
+            const element = document.getElementById(id);
+            if (element) {
+                const offset = -100; // scroll 100px more upwards (adjust as needed)
+                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                const finalPosition = elementPosition + offset;
+
+                window.scrollTo({
+                    top: finalPosition,
+                    behavior: "smooth",
+                });
+            }
+        }, 120); // wait for react-router navigation
+    };
 
   return (
     <>
+
+    {/* ===================== Desktop Navbar ===================== */}
       <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
         <div className="nav-container">
           <Link to="/" className="brand">
@@ -106,8 +128,6 @@ function Nav_Bar() {
             {/* Desktop / Tablet nav */}
             <ul className="nav-list d-none d-lg-flex" >
                 <li className="nav-item"> <Link to="/" className="nav-link">Home</Link> </li>
-                <li className="nav-item"> <Link to="/Contact" className="nav-link">Contact Us</Link> </li>
-                <li className="nav-item"> <Link to="/PlayGround" className="nav-link">PlayGround</Link> </li>
 
                 {/* ABOUT dropdown (desktop hover, tablet click) */}
                 <li className={`nav-item nav-dropdown ${aboutOpen ? "open" : ""}`} ref={aboutRef} onMouseEnter={handleAboutMouseEnter} onMouseLeave={handleAboutMouseLeave} >
@@ -122,12 +142,17 @@ function Nav_Bar() {
                       <Link className="dropdown-item" to="/Privacy_Policy"> <i className="bi bi-shield-lock-fill"></i> Privacy Policy </Link>
                     </div>
                 </li>
+
+                <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
+                <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link></li>
+                <li className="nav-item"> <Link to="/PlayGround" className="nav-link">PlayGround</Link> </li>
+
             </ul>
           </div>
         </div>
       </nav>
 
-      {/* Sidebar (mobile) */}
+      {/* ===================== Mobile Sidebar ===================== */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef} role="dialog" aria-modal="true">
           <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
 
@@ -144,6 +169,8 @@ function Nav_Bar() {
                   </ul>
               </li>
 
+              <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}> <i className="bi bi-easel3"></i> &nbsp; Components</Link></li>
+              <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}> <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides</Link></li>
               <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>
               <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}> <i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li>
           </ul>

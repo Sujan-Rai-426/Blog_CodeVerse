@@ -69,7 +69,7 @@ function Home() {
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>
                         <p className="hero-note m-0">
-                            <small> --- Follow our social media to stay updated --- </small>
+                            <small> - Follow our social media to stay updated - </small>
                         </p>
                         <p className="hero-warning m-0">
                             📢 <small>More Content Will Be Added on a Weekly Basis...</small>
@@ -153,7 +153,7 @@ function Home() {
 
 
         {/* =============== Frontend Section =============== */}
-            <section className="tutorial-section">
+            <section id="FRONTEND_TUTORIALS" className="tutorial-section">
                 <h2 className="home-section-title">Frontend Components Design</h2>
                 <p className="section-subtext">
                     Discover modern, reusable UI components to enhance your frontend development workflow.
@@ -188,7 +188,7 @@ function Home() {
 
 
         {/* =============== Backend Section =============== */}
-            <section className="tutorial-section">
+            <section id="CODING_GUIDE" className="tutorial-section">
                 <h2 className="home-section-title">Coding Guide</h2>
                 <p className="section-subtext">
                     Improve your development workflow with hands-on guides for Frontend, backend coding, and API development.

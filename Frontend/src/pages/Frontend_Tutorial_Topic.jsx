@@ -41,7 +41,7 @@ const Frontend_Tutorial_Topic = () => {
   return (
     <div className="tutorial-topic-page">
       <h1 className="page-title">
-        🎨 <sup><u>Frontend Designs</u></sup>
+        - Frontend Components Design -
       </h1>
 
       {parentLoading ? (
