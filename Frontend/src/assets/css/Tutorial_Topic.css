@@ -65,6 +65,15 @@
     cursor: pointer;
 }
 
+.fs-card{
+    padding: 12px 0 !important;
+    border: 0.8px solid gray !important;
+    flex-direction: row !important;
+    align-items: baseline !important;
+    max-width: 70px !important;
+    border-radius: 15px !important;
+}
+
 /* hover / focus */
 .fs-card:hover,
 .horizontal-card:hover,
@@ -75,7 +84,7 @@
     box-shadow: 0 10px 30px rgba(77, 69, 6, 0.6) !important;
     outline: none;
     background: #0e131b !important;
-    border: 1px solid rgb(255, 213, 0) !important;
+    border: 1.5px solid rgb(255, 213, 0) !important;
 }
 
 
@@ -95,6 +104,7 @@
 
 .fs-card-text,
 .card-text {
+    margin: 0 0 0 5px;
     font-size: 0.98rem;
     font-weight: 600;
     color: #e6eef8;
@@ -107,12 +117,12 @@
 
 /* Large tablets & small laptops */
 @media (max-width: 1200px) {
-    .fs-grid, .horizontal-grid { --card-w: 45vw; grid-auto-columns: var(--card-w); }
+    .fs-grid, .horizontal-grid { --card-w: 130px; grid-auto-columns: var(--card-w); }
 }
 
 /* Tablets */
 @media (max-width: 900px) {
-    .fs-grid, .horizontal-grid { --card-w: 40vw; grid-auto-columns: var(--card-w); }
+    .fs-grid, .horizontal-grid { --card-w: 125px; grid-auto-columns: var(--card-w); }
     .fs-card, .horizontal-card { padding: 14px; }
     .fs-card-icon, .card-icon { font-size: 1.8rem; }
     .fs-card-text, .card-text { font-size: 0.9rem; }
@@ -120,27 +130,27 @@
 
 /* Large mobile */
 @media (max-width: 680px) {
-    .fs-grid, .horizontal-grid { --card-w: 35vw; grid-auto-columns: var(--card-w); }
+    .fs-grid, .horizontal-grid { --card-w: 110px; grid-auto-columns: var(--card-w); }
     .fs-card-icon, .card-icon { font-size: 1.7rem; }
 }
 
 /* Normal mobile */
 @media (max-width: 520px) {
-    .fs-grid, .horizontal-grid { --card-w: 30vw; grid-auto-columns: var(--card-w); }
+    .fs-grid, .horizontal-grid { --card-w: 90px; grid-auto-columns: var(--card-w); }
     .fs-card, .horizontal-card { padding: 12px; border-radius: 10px; }
     .fs-card-text, .card-text { font-size: 0.85rem; }
 }
 
 /* Small mobile (<400px) */
 @media (max-width: 400px) {
-    .fs-grid, .horizontal-grid { --card-w: 25vw; grid-auto-columns: var(--card-w); }
+    .fs-grid, .horizontal-grid { --card-w: 90px; grid-auto-columns: var(--card-w); }
     .fs-card-icon, .card-icon { font-size: 1.6rem; }
     .fs-card-text, .card-text { font-size: 0.8rem; }
 }
 
 /* Ultra small devices (<340px) */
 @media (max-width: 340px) {
-    .fs-grid, .horizontal-grid { --card-w: 20vw; grid-auto-columns: var(--card-w); gap: 0.7rem; }
+    .fs-grid, .horizontal-grid { --card-w: 90px; grid-auto-columns: var(--card-w); gap: 0.7rem; }
     .fs-card-text, .card-text { font-size: 0.75rem; }
 }
 
