@@ -22,8 +22,8 @@ const Footer = () => {
                         <div className="footer-links">
                             <h5>Quick Links</h5>
                             <ul>
-                                <li><Link to="/Frontend_Tutorial_Solution/2">Frontend Tutorials</Link></li>
-                                <li><Link to="/Backend_Tutorial_Solution/6">Coding Guides</Link></li>
+                                <li><Link to="https://codevora140.vercel.app/Frontend_Tutorial_Topic/2">Frontend Tutorials</Link></li>
+                                <li><Link to="https://codevora140.vercel.app/Backend_Tutorial_Topic/6">Coding Guides</Link></li>
                                 <li><Link to="/">Projects & Services</Link></li>
                                 <li><Link to="/Contact">Contact US</Link></li>
                             </ul>
