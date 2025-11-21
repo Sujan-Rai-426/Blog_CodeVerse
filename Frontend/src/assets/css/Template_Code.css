@@ -60,33 +60,17 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .preview-header h3 {
-        font-size: 1.2rem;
-    }
-    .device-buttons button {
-        padding: 5px 8px;
-        font-size: 0.85rem;
-    }
+    .preview-header h3 { font-size: 1.2rem; }
+    .device-buttons button { padding: 5px 8px; font-size: 0.85rem; }
 }
 
 @media (max-width: 768px) {
-    .preview-wrap {
-        padding: 15px;
-    }
-    .iframe-container {
-        height: 60vh !important;
-    }
+    .preview-wrap { padding: 15px; }
+    .iframe-container { height: 60vh !important; }
 }
 
 @media (max-width: 480px) {
-    .preview-wrap {
-        padding: 10px;
-    }
-    .device-buttons {
-        display: flex;
-        gap: 5px;
-    }
-    .iframe-container {
-        height: 50vh !important;
-    }
+    .preview-wrap { padding: 10px; }
+    .device-buttons { display: flex; gap: 5px; }
+    .iframe-container { height: 50vh !important; }
 }
