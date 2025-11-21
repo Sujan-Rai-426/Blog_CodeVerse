@@ -1,3 +1,102 @@
-.template-page{
-    padding: 0;
+/* src/assets/css/Template_Options.css */
+
+/* Page container */
+.template-page {
+  padding: 2rem;
+  font-family: 'Inter', sans-serif;
+  background-color: #f5f6fa;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* Loading state */
+.loading {
+  text-align: center;
+  font-size: 1.2rem;
+  color: #6b7280;
+  padding: 2rem;
+}
+
+/* Grid container */
+.list-and-view {
+  display: grid;
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+/* Template card */
+.tpl-item {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.tpl-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+}
+
+/* Template image */
+.tpl-item img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* Template info */
+.tpl-info {
+  padding: 1rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.tpl-info strong {
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+
+.tpl-info .badge {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  text-transform: uppercase;
+  display: inline-block;
+}
+
+/* Badge colors */
+.badge.free {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.badge.premium {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+  .tpl-item img {
+    height: 160px;
+  }
+}
+
+@media (max-width: 768px) {
+  .tpl-item img {
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .tpl-item img {
+    height: 120px;
+  }
 }

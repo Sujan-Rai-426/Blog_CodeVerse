@@ -12,7 +12,7 @@ const Template_Options = () => {
   useEffect(() => {
     const loadTemplates = async () => {
       const data = await fetchTemplates();
-      setTemplates(data);
+      setTemplates(data || []);
       setLoading(false);
     };
     loadTemplates();
@@ -23,23 +23,32 @@ const Template_Options = () => {
   return (
     <div className="template-page">
       <h2 style={{ marginBottom: "20px" }}>Choose a Template</h2>
-      <div className="list-and-view" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
-        {templates.map((t) => (
-          <div
-            key={t.id}
-            className="tpl-item"
-            onClick={() => navigate(`/Templates/${t.id}`)}
-          >
-            <img src={t.thumbnail} alt={t.title} />
-            <div className="tpl-info">
-              <strong>{t.title}</strong>
-              <span className={`badge ${t.user_access.toLowerCase()}`}>
-                {t.user_access}
-                {t.user_access === "Premium" ? ` • $${t.price}` : ""}
-              </span>
+      <div
+        className="list-and-view"
+        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}
+      >
+        {templates.map((t) => {
+          const userAccess = t?.user_access || "Free"; // default fallback
+          const title = t?.title || "Untitled";
+          const thumbnail = t?.thumbnail || "/default-thumbnail.png"; // optional default
+
+          return (
+            <div
+              key={t.id}
+              className="tpl-item"
+              onClick={() => navigate(`/Templates/${t.id}`)}
+            >
+              <img src={thumbnail} alt={title} />
+              <div className="tpl-info">
+                <strong>{title}</strong>
+                <span className={`badge ${userAccess.toLowerCase()}`}>
+                  {userAccess}
+                  {userAccess === "Premium" && t.price ? ` • $${t.price}` : ""}
+                </span>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
