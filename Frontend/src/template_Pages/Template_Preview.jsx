@@ -63,7 +63,7 @@ const Template_Preview = ({ template, isProd = false }) => {
                             <div id="root"></div>
                             <script type="text/babel">
                                 ${template.react_code}
-                                ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+                                ReactDOM.createRoot(document.getElementById('root')).render(<Portfolio />);
                             </script>
                         </body>
                     </html>

@@ -24,7 +24,7 @@ const templates = [
         // "user_access": "Premium",
         "price": 10,
         "react_code": `
-function App() {
+function Portfolio() {
   const scrollToSection = (id) => {
     const element = document.getElementById(id); // element inside iframe
     if (element) {
@@ -38,13 +38,13 @@ function App() {
       <header style={{ position: "sticky", top: 0, background: "#0f172a", color: "white", padding: "1rem" }}>
         <h1>Sujan Rai</h1>
         <nav>
-          <button onClick={() => scrollToSection("about")}>About</button>
+          <button onClick={() => scrollToSection("about_1")}>About</button>
           <button onClick={() => scrollToSection("projects")}>Projects</button>
           <button onClick={() => scrollToSection("contact")}>Contact</button>
         </nav>
       </header>
 
-      <section id="about" style={{ height: "400px", padding: "2rem", background: "#f1f5f9" }}>
+      <section id="about_1" style={{ height: "400px", padding: "2rem", background: "#f1f5f9" }}>
         <h2>About Me</h2>
         <p>Hi! I'm Sujan Rai, a Full Stack Developer.</p>
       </section>
@@ -61,6 +61,9 @@ function App() {
     </div>
   );
 }
+
+
+
 
 `
 ,
