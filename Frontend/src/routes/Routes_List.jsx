@@ -28,6 +28,10 @@ import Payment_Success from '../payment/payment_status/Payment_Success'
 import Payment_Fail from '../payment/payment_status/Payment_Fail'
 import Payment_Page from '../payment/payment_status/Payment_Page'
 
+// Template Pages import
+import Templates from '../templates/Template'
+import Template_Options from '../templates/Template_Options'
+
 // Unavailable Page imports
 import Unavailable_Page from '../components/Unavailable_Page'
 
@@ -42,6 +46,10 @@ function Routes_List() {
                 <Route exact path="/Contact" element={<Contact />} />
                 <Route exact path='/Privacy_Policy'  element={ <Privacy_Policy/> } />
                 <Route exact path="/PlayGround" element={<PlayGround />} />
+
+                {/* Template Routes */}
+                <Route path="/Template_Options" element={<Template_Options />} />
+                <Route exact path="/Templates/:id" element={<Templates />} />
 
 
                 {/* Frontend and Backend Tutorial routes */}

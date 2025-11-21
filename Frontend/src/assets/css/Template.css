@@ -1,0 +1,232 @@
+/* ---------------- Template.jsx CSS ---------------- */
+
+/* Reset */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Inter', Arial, sans-serif;
+}
+
+/* Page container */
+.template-page {
+  padding: 20px;
+  background: transparent;
+  min-height: 100vh;
+}
+
+/* Loading */
+.loading {
+  text-align: center;
+  font-size: 1.5rem;
+  padding: 100px 0;
+  color: #4b5563;
+}
+
+/* Empty state */
+.empty {
+  text-align: center;
+  font-style: italic;
+  color: #6b7280;
+  padding: 60px 0;
+}
+
+/* Template view card */
+.template-view {
+  /* background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%); */
+  background: transparent;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.template-view:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+}
+
+/* Top controls */
+.top-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+/* Template title */
+.top-controls h2 {
+  font-size: 1.75rem;
+  color: #111827;
+  font-weight: 600;
+}
+
+/* Badge */
+.badge {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  text-transform: uppercase;
+}
+
+/* Badge colors */
+.badge.free {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.badge.premium {
+  background: #fce7f3;
+  color: #db2777;
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 8px;
+}
+
+.tabs button {
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  background: #f3f4f6;
+  transition: all 0.2s ease;
+}
+
+.tabs button:hover {
+  background: #e5e7eb;
+}
+
+.tabs button.active {
+  background: #4f46e5;
+  color: #fff;
+}
+
+/* Tab content */
+.tab-content {
+  margin-top: 20px;
+}
+
+/* Code editor card */
+.editor-card {
+  margin-bottom: 20px;
+  background: #1e293b;
+  border-radius: 8px;
+  padding: 12px;
+  color: #f8fafc;
+  font-family: monospace;
+  overflow-x: auto;
+}
+
+/* Preview container */
+.preview-wrap {
+  width: 100%;
+}
+
+.iframe-container {
+  border-radius: 12px;
+  border: 1px solid gray;
+  overflow: hidden;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+  margin-top: 16px;
+}
+
+.iframe-container iframe {
+  width: 100%;
+  height: 70vh;
+  border: none;
+}
+
+/* Device buttons */
+.device-buttons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.device-buttons button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  background: #f3f4f6;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.device-buttons button.active {
+  background: #4f46e5;
+  color: #fff;
+  border-color: #4f46e5;
+}
+
+.device-buttons button:hover {
+  background: #e5e7eb;
+}
+
+/* Documentation card */
+.docs-wrap {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 8px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.docs-wrap h3 {
+  font-size: 1.25rem;
+  margin-bottom: 12px;
+  color: #111827;
+}
+
+.docs-wrap p, .docs-wrap li {
+  margin-bottom: 8px;
+}
+
+.docs-wrap ul {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+/* Premium lock message */
+.premium-lock {
+  text-align: center;
+  padding: 40px 20px;
+  background: #fef2f2;
+  border-radius: 12px;
+  color: #b91c1c;
+}
+
+.premium-lock button {
+  margin-top: 12px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  border: none;
+  background: #b91c1c;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.premium-lock button:hover {
+  background: #7f1d1d;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .top-controls { align-items: flex-start; }
+  .tabs { margin-top: 12px; }
+  .tabs button { font-size: .6rem; padding: 2px 6px; }
+}
+
+@media (max-width: 768px) {
+  .iframe-container iframe { height: 60vh; }
+}

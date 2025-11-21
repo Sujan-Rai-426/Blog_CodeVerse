@@ -1,0 +1,121 @@
+/* src/assets/css/Template_Preview.css */
+
+/* Reset */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Empty & loading states */
+.empty {
+    text-align: center;
+    color: #6b7280;
+    font-style: italic;
+    padding: 60px 0;
+    font-size: 1rem;
+}
+
+.preview-wrap {
+    font-family: 'Inter', Arial, sans-serif;
+    background: #f9fafb;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* Header */
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 16px;
+}
+
+.preview-header h3 {
+    font-size: 1.5rem;
+    color: #111827;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.preview-header span {
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+}
+
+/* Device buttons */
+.device-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 8px;
+}
+
+.device-buttons button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 8px 14px;
+    background: #f3f4f6;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+    color: #374151;
+    transition: all 0.2s ease;
+    font-size: 1rem;
+}
+
+.device-buttons button i {
+    font-size: 1.2rem;
+}
+
+.device-buttons button:hover {
+    background: #e5e7eb;
+}
+
+.device-buttons button.active {
+    background: #4f46e5;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(79,70,229,0.3);
+}
+
+/* Iframe container */
+.iframe-container {
+    border-radius: 12px;
+    overflow: hidden;
+    margin-top: 16px;
+    min-height: 60vh;
+    box-shadow: 0 6px 18px rgba(2,6,23,0.08);
+}
+
+/* iframe style */
+.iframe-container iframe {
+    width: 100%;
+    height: 70vh;
+    border: 0;
+}
+
+/* TABLET + SMALL LAPTOP */
+@media (max-width: 1024px) {
+    .template-view { padding: 8px; }
+    .preview-header h3 { font-size: 1.35rem; }
+    .device-buttons button { font-size: 0.95rem; padding: 7px 12px; }
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+    .preview-wrap { padding: 10px; }
+    .preview-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+    .device-buttons { gap: 8px; }
+    .device-buttons button { font-size: 0.9rem; padding: 6px 10px; }
+    .template-page { padding: 0; }
+}
+
+/* SMALLER MOBILE SCREEN */
+@media (max-width: 480px) {
+    .preview-header h3 { font-size: 0.9rem; }
+    .device-buttons button { font-size: 0.85rem; padding: 5px 8px; }
+}
