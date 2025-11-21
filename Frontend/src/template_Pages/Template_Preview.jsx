@@ -63,7 +63,7 @@ const Template_Preview = ({ template, isProd = false }) => {
                             <div id="root"></div>
                             <script type="text/babel">
                                 ${template.react_code}
-                                ReactDOM.createRoot(document.getElementById('root')).render(<Card />);
+                                ReactDOM.createRoot(document.getElementById('root')).render(<App />);
                             </script>
                         </body>
                     </html>

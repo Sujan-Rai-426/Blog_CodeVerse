@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from "react";
 import { fetchTemplates } from "./Template_API";
 import { useNavigate } from "react-router-dom";
-import "../assets/css/Template.css";
+import "../assets/css/Template_Options.css";
 
 const Template_Options = () => {
   const [templates, setTemplates] = useState([]);

@@ -21,6 +21,8 @@
     background: #f9fafb;
     padding: 20px;
     border-radius: 10px;
+    overflow: hidden;
+    height: 100vh;
 }
 
 /* Header */
