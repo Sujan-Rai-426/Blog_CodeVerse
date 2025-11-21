@@ -1,19 +1,26 @@
-// src/template/Template_Preview.jsx
+// src/template_Pages/Template_Preview.jsx
 import React, { useEffect, useState } from "react";
 import "../assets/css/Template_Preview.css";
-
 
 const Template_Preview = ({ template, isProd = false }) => {
     const [srcDoc, setSrcDoc] = useState("");
     const [device, setDevice] = useState("desktop");
 
+    // Device widths
     const deviceWidth = {
         desktop: "100%",
         tablet: "768px",
         mobile: "375px",
     };
 
-    // Generate iframe srcDoc
+    // Force iframe reload on device switch
+    const [frameKey, setFrameKey] = useState(0);
+    const changeDevice = (d) => {
+        setDevice(d);
+        setFrameKey((prev) => prev + 1);
+    };
+
+    // Generate iframe HTML
     useEffect(() => {
         if (!template) return;
 
@@ -31,9 +38,9 @@ const Template_Preview = ({ template, isProd = false }) => {
                     </body>
                 </html>
             `);
-        } else if (template.type === "react") {
+        } 
+        else if (template.type === "react") {
             if (isProd) {
-                // Production: load precompiled bundle
                 setSrcDoc(`
                     <html>
                         <head><style>${template.css}</style></head>
@@ -44,7 +51,6 @@ const Template_Preview = ({ template, isProd = false }) => {
                     </html>
                 `);
             } else {
-                // Development: use Babel in browser
                 setSrcDoc(`
                     <html>
                         <head>
@@ -66,57 +72,63 @@ const Template_Preview = ({ template, isProd = false }) => {
         }
     }, [template, isProd]);
 
-    if (!template) return <div className="empty">Select a template to preview</div>;
-
     const devices = [
         { label: "desktop", icon: <i className="bi bi-laptop-fill"></i> },
         { label: "tablet", icon: <i className="bi bi-tablet-fill"></i> },
         { label: "mobile", icon: <i className="bi bi-phone-fill"></i> },
     ];
 
+    if (!template) return <div className="empty">Select a template to preview</div>;
+
     return (
-        <div className="preview-wrap text-info">
+        <div className="preview-wrap">
+
             {/* Header */}
             <div className="preview-header">
-                <h3>
-                    {template.title} 
-                </h3>
+                <h3>{template.title}</h3>
 
-                {/* Device buttons */}
                 <div className="device-buttons">
                     {devices.map((d) => (
                         <button
                             key={d.label}
                             className={device === d.label ? "active" : ""}
-                            onClick={() => setDevice(d.label)}
+                            onClick={() => changeDevice(d.label)}
                         >
-                            {d.icon} 
-                            {/* &nbsp; {d.label.charAt(0).toUpperCase() + d.label.slice(1)} */}
+                            {d.icon}
                         </button>
                     ))}
                 </div>
             </div>
 
-            {/* Iframe container */}
-            <div
-                className="iframe-container"
+            {/* iframe preview */}
+            
+        <div
+            className="iframe-container"
+            style={{
+                width: deviceWidth[device],
+                maxWidth: "100%",
+                margin: "0 auto",
+                borderRadius: 8,
+                overflow: "auto", // allow scroll if content overflows
+                boxShadow: "0 6px 18px rgba(2,6,23,0.08)",
+                background: "#f9fafb",
+                height: "75vh",
+            }}
+        >
+            <iframe
+                key={frameKey}
+                title={`preview-${template.id}`}
+                srcDoc={srcDoc}
+                sandbox="allow-scripts allow-same-origin"
                 style={{
-                    width: deviceWidth[device],
-                    maxWidth: "100%",
-                    margin: "0 auto",
-                    minHeight: "60vh",
-                    borderRadius: 8,
-                    overflow: "hidden",
-                    boxShadow: "0 6px 18px rgba(2,6,23,0.08)",
+                    width: "100%",
+                    height: "100%",      // fill the container
+                    border: "none",
+                    display: "block",
                 }}
-            >
-                <iframe
-                    title={`preview-${template.id}`}
-                    srcDoc={srcDoc}
-                    sandbox={isProd ? "allow-scripts" : "allow-scripts allow-same-origin"}
-                    style={{ width: "100%", height: "70vh", border: 0 }}
-                />
-            </div>
+            />
+        </div>
+
         </div>
     );
 };

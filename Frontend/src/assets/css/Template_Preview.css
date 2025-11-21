@@ -100,7 +100,7 @@
 
 /* TABLET + SMALL LAPTOP */
 @media (max-width: 1024px) {
-    .template-view { padding: 8px; }
+    .template-view { padding: 8px !important; }
     .preview-header h3 { font-size: 1.35rem; }
     .device-buttons button { font-size: 0.95rem; padding: 7px 12px; }
 }

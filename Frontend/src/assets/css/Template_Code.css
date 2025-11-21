@@ -1,0 +1,92 @@
+/* =============================== */
+/*   TEMPLATE PREVIEW STYLING      */
+/* =============================== */
+
+.preview-wrap {
+    padding: 20px;
+    font-family: "Inter", sans-serif;
+}
+
+.empty {
+    padding: 40px;
+    text-align: center;
+    font-size: 1.1rem;
+    color: #6b7280;
+    font-style: italic;
+}
+
+/* Header */
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.preview-header h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #111827;
+}
+
+/* Device buttons */
+.device-buttons button {
+    margin-left: 8px;
+    padding: 6px 10px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background: #f3f4f6;
+    cursor: pointer;
+    transition: 0.2s;
+    font-size: 0.9rem;
+}
+
+.device-buttons button.active {
+    background: #6366f1;
+    color: #fff;
+    border-color: #4f46e5;
+}
+
+.device-buttons button:hover {
+    background: #e5e7eb;
+}
+
+/* Iframe container */
+.iframe-container {
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f9fafb;
+}
+
+/* Responsive adjustments */
+@media (max-width: 1024px) {
+    .preview-header h3 {
+        font-size: 1.2rem;
+    }
+    .device-buttons button {
+        padding: 5px 8px;
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .preview-wrap {
+        padding: 15px;
+    }
+    .iframe-container {
+        height: 60vh !important;
+    }
+}
+
+@media (max-width: 480px) {
+    .preview-wrap {
+        padding: 10px;
+    }
+    .device-buttons {
+        display: flex;
+        gap: 5px;
+    }
+    .iframe-container {
+        height: 50vh !important;
+    }
+}

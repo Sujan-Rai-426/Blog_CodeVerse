@@ -9,7 +9,7 @@ import Footer from './components/Footer.jsx'
 import Floating_Share_Btn from './components/Floating_Share_Btn.jsx';
 import Floating_Go_Back_Btn from './components/Floating_Go_Back_Btn.jsx';
 import { Payment_Provider } from './payment/payment_status/Payment_Context.jsx';
-import Floating_Donate_Me from './payment/donation/Floating_Donate_Me.jsx';
+// import Floating_Donate_Me from './payment/donation/Floating_Donate_Me.jsx';
 import { Parent_Api_Provider } from './context/Parent_API_Provider.jsx';
 import Routes_List from './routes/Routes_List.jsx';
 
@@ -30,7 +30,7 @@ function App() {
                     <Footer />  {/* <----- Footer */}
                 </Router>
                 <Analytics />  {/* <--- Add Vercel Analytics at the bottom */}
-          </ Payment_Provider>
+          </Payment_Provider>
     </ Parent_Api_Provider>
   )
 }

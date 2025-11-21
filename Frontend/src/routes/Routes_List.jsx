@@ -29,8 +29,8 @@ import Payment_Fail from '../payment/payment_status/Payment_Fail'
 import Payment_Page from '../payment/payment_status/Payment_Page'
 
 // Template Pages import
-import Templates from '../templates/Template'
-import Template_Options from '../templates/Template_Options'
+import Templates from '../template_Pages/Template'
+import Template_Options from '../template_Pages/Template_Options'
 
 // Unavailable Page imports
 import Unavailable_Page from '../components/Unavailable_Page'

@@ -6,7 +6,7 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/mode-jsx";
 import "ace-builds/src-noconflict/theme-monokai";
 import { FiCopy, FiCheck } from "react-icons/fi"; // copy icon
-import "../assets/css/Template.css";
+import "../assets/css/Template_Code.css"
 
 const Template_Code = ({ template }) => {
     if (!template) return <div className="empty">Select a template to view code</div>;

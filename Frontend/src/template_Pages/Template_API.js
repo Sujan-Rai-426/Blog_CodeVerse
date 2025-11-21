@@ -20,7 +20,8 @@ const templates = [
         "type": "react",
         "title": "React Card Component",
         "thumbnail": "/img/template2.png",
-        "user_access": "Premium",
+        "user_access": "Free",
+        // "user_access": "Premium",
         "price": 10,
         "react_code": `
 function Card() {
