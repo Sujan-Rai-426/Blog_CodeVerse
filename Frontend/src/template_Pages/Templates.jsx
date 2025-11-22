@@ -1,10 +1,10 @@
-// src/template/Template_Options.jsx
+// src/template/Templates.jsx
 import React, { useEffect, useState } from "react";
 import { fetchTemplates } from "./Template_API";
 import { useNavigate } from "react-router-dom";
-import "../assets/css/Template_Options.css";
+import "../assets/css/Template.css";
 
-const Template_Options = () => {
+const Templates = () => {
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
@@ -54,4 +54,4 @@ const Template_Options = () => {
   );
 };
 
-export default Template_Options;
+export default Templates;

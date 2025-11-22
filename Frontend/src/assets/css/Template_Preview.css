@@ -5,16 +5,16 @@
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  padding: 2rem;
   font-family: 'Inter', sans-serif;
-  background-color: #f5f6fa;
+  background-color: transparent;
   min-height: 100vh;
   box-sizing: border-box;
 }
 
 /* Template preview card */
 .template-preview {
-  background: #fff;
+  background: transparent;
+  color: wheat;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
   padding: 1.5rem;
@@ -26,9 +26,9 @@
 /* Header */
 .preview-header h3 {
   margin: 0;
+  margin: 1.5rem 0 0.5rem 0 !important;
   font-size: 1.8rem;
   font-weight: 600;
-  color: #1f2937;
 }
 
 .preview-header p {
@@ -38,16 +38,25 @@
   line-height: 1.5;
 }
 
+
+.device-download-documentation{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  margin: 0 1rem !important;
+}
+
 /* Device buttons */
 .device-buttons {
   display: flex;
   gap: 0.75rem;
+  margin: 0 !important;
 }
 
 .device-buttons button {
-  border: none;
-  background: #e5e7eb;
-  color: #374151;
+  background: transparent;
+  color: white;
+  border: 1px solid gray;
   padding: 0.5rem 0.75rem;
   border-radius: 8px;
   cursor: pointer;
@@ -59,24 +68,26 @@
 }
 
 .device-buttons button.active {
-  background: #3b82f6;
-  color: #fff;
+  background: linear-gradient(145deg, var(--nav-grad-start) 0%, var(--nav-grad-mid) 50%, var(--nav-grad-end) 100%);
+  color: black;
   box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
 .device-buttons button:hover:not(.active) {
-  background: #d1d5db;
+  background: #d1d5db83;
 }
 
 /* iframe container */
 .iframe-container {
   width: 100%;
+  margin: 0 !important;
   display: flex;
   justify-content: center;
-  border-radius: 12px;
+  border-radius: 8px;
   overflow: hidden;
   box-shadow: 0 6px 18px rgba(2,6,23,0.08);
-  background: #f9fafb;
+  border: 0.1px solid rgba(128, 128, 128, 0.484) !important;
+  background: transparent;
   transition: all 0.3s ease;
 }
 
@@ -90,16 +101,16 @@
 }
 
 /* Template actions */
-.template-actions {
+.download-documentation {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
   justify-content: flex-start;
   align-items: center;
-  margin-top: 1rem;
+  margin-top: 0 !important;
 }
 
-.template-actions .nav-btn {
+.download-documentation .nav-btn {
   background: #f3f4f6;
   border: none;
   color: #374151;
@@ -110,12 +121,12 @@
   transition: all 0.2s ease;
 }
 
-.template-actions .nav-btn:hover {
+.download-documentation .nav-btn:hover {
   background: #e5e7eb;
 }
 
-.template-actions .download-btn,
-.template-actions .docs-btn {
+.download-documentation .download-btn,
+.download-documentation .docs-btn {
   text-decoration: none;
   padding: 0.5rem 1rem;
   border-radius: 8px;
@@ -123,21 +134,21 @@
   transition: all 0.2s ease;
 }
 
-.template-actions .download-btn {
+.download-documentation .download-btn {
   background: #3b82f6;
   color: #fff;
 }
 
-.template-actions .download-btn:hover {
+.download-documentation .download-btn:hover {
   background: #2563eb;
 }
 
-.template-actions .docs-btn {
+.download-documentation .docs-btn {
   background: #e5e7eb;
   color: #374151;
 }
 
-.template-actions .docs-btn:hover {
+.download-documentation .docs-btn:hover {
   background: #d1d5db;
 }
 
@@ -169,12 +180,40 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
+  .preview-header p {
+    font-size: 1rem;
+    margin: 0;
+  }
+  .template-preview{
+    gap: 0.1rem;
+  }
   .iframe-container iframe {
     height: 500px;
+  }
+  .template-preview{
+    padding: 0;
+  }
+  .template-preview-container {
+    padding: 0.3rem;
+  }
+  .download-documentation .btn-text {
+    display: none !important; /* Hide document and download text in span for other than desktop device */
   }
 }
 
 @media (max-width: 768px) {
+  .preview-header h3 {
+    font-size: 1.34rem;
+  }
+  .preview-header p {
+    font-size: 0.85rem;
+  }
+  .device-buttons button {
+    display: none !important;
+  }
+  .device-download-documentation {
+    margin: 0.4rem 0.2rem !important;
+  }
   .iframe-container iframe {
     height: 450px;
   }
@@ -187,12 +226,12 @@
 
   .device-buttons button {
     font-size: 0.9rem;
-    padding: 0.4rem 0.6rem;
+    padding: 0.4rem 0.8rem;
   }
 
-  .template-actions .nav-btn,
-  .template-actions .download-btn,
-  .template-actions .docs-btn {
+  .download-documentation .nav-btn,
+  .download-documentation .download-btn,
+  .download-documentation .docs-btn {
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
   }

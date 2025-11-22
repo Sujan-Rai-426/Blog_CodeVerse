@@ -49,74 +49,67 @@ const Template_Preview = () => {
   return (
     <div className="template-preview-container">
 
-      <div className="template-preview">
+        <div className="template-preview">
 
-        {/* Navigation & Actions */}
-        <div className="template-actions">
-          <button onClick={goPrev} className="nav-btn">Previous</button>
-          <button onClick={goNext} className="nav-btn">Next</button>
+{/* ============ Title + Description+ Header ============ */}
+            <div className="preview-header">
+                <h3>{selected.title}</h3>
+                <p>{selected.project_info}</p>
 
-          <a
-            href={selected.repo_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="download-btn"
-          >
-            Download / View Code
-          </a>
 
-          <a
-            href={selected.documentation}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="docs-btn"
-          >
-            Documentation
-          </a>
+{/* ===========Download + Device + Documentation=============== */}
+                <div className="device-download-documentation">
+                    {/* Device buttons */}
+                      <div className="device-buttons">
+                          {devices.map((d) => (
+                              <button key={d.label} className={device === d.label ? "active" : ""} onClick={() => changeDevice(d.label)} >
+                                  {d.icon}
+                              </button>
+                          ))}
+
+                        {/* Access Type & Price */}
+                          <div className="access-info">
+                              <span className={`badge ${selected.access_type.toLowerCase()}`}>
+                                  {selected.access_type}
+                                  {selected.access_type === "Premium" && selected.price
+                                      ? ` • $${selected.price}`
+                                      : ""}
+                              </span>
+                          </div>
+                      </div>
+
+                    {/* Navigation & Actions */}
+                      <div className="download-documentation">
+                          <a href={selected.iframe_url} target="_blank" rel="noopener noreferrer" className="docs-btn" >
+                              <i className="bi bi-arrows-fullscreen"></i>
+                              <span className="btn-text"> FullScreen</span>
+                          </a>
+                          <a href={selected.repo_url} target="_blank" rel="noopener noreferrer" className="download-btn" >
+                              <i className="bi bi-download"></i> 
+                              <span className="btn-text"> Download</span>
+                          </a>
+                          <a href={selected.documentation} target="_blank" rel="noopener noreferrer" className="docs-btn" >
+                              <i className="bi bi-file-earmark-code-fill"></i> 
+                              <span className="btn-text"> Documentation</span>
+                          </a>
+                      </div>
+                  </div>
+
+            </div>
+
+  {/* =========== Preview iframe =========== */}
+            <div className="iframe-container">
+              <iframe
+                src={selected.iframe_url}
+                title={selected.title}
+                style={{
+                  width: deviceSizes[device].width,
+                  height: deviceSizes[device].height,
+                  border: "1px solid #ccc",
+                }}
+              />
+            </div>
         </div>
-
-        {/* Header */}
-        <div className="preview-header">
-          <h3>{selected.title}</h3>
-          <p>{selected.description}</p>
-
-          {/* Access Type & Price */}
-          <div className="access-info">
-            <span className={`badge ${selected.access_type.toLowerCase()}`}>
-              {selected.access_type}
-              {selected.access_type === "Premium" && selected.price
-                ? ` • $${selected.price}`
-                : ""}
-            </span>
-          </div>
-
-          {/* Device buttons */}
-          <div className="device-buttons">
-            {devices.map((d) => (
-              <button
-                key={d.label}
-                className={device === d.label ? "active" : ""}
-                onClick={() => changeDevice(d.label)}
-              >
-                {d.icon}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Preview iframe */}
-        <div className="iframe-container">
-          <iframe
-            src={selected.iframe_url}
-            title={selected.title}
-            style={{
-              width: deviceSizes[device].width,
-              height: deviceSizes[device].height,
-              border: "1px solid #ccc",
-            }}
-          />
-        </div>
-      </div>
     </div>
   );
 };
