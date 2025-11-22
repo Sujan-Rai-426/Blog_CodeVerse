@@ -17,6 +17,7 @@ function Home() {
     const [backendLangs, setBackendLangs] = useState([]);
     const [showLoadingMessage, setShowLoadingMessage] = useState(false);
     const navigate = useNavigate();
+    
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -245,7 +246,17 @@ function Home() {
                 </div>
 
                 <div className="templates-cta">
-                    <button  className="btn-primary"  onClick={() => navigate("/Templates")} >
+                    <button  
+                        className="btn-primary"      
+                        style={{ cursor: "pointer" }}
+                        onClick={(e) => {
+                            e.stopPropagation();;
+                            navigate("/Templates");
+                            setTimeout(() => {
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                            }, 100);
+                        }}
+                    >
                         View All Templates
                     </button>
                 </div>
