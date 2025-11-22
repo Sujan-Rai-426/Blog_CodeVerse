@@ -14,14 +14,14 @@ const templates = [
   },
   {
     id: 2,
-    access_type: "Premium",
-    price: 100,
-    title: "Todo React App",
-    project_info: "A personal portfolio website built with React.",
+    access_type: "Free",
+    price: 10,
+    title: "Portfolio using React TS [ Credit: lightswind.com ]",
+    project_info: "This portfolio is created by lightswind.com using React TypeScript. We just used this link for testing purpose.",
     iframe_url: "https://lwportfolio01.muhilanorg.in/",
-    repo_url: "https://github.com/your-username/todo-app",
+    repo_url: "https://lightswind.com/templates/portfolio01",
     cover_image: "https://png.pngtree.com/png-clipart/20250105/original/pngtree-premium-gold-stickers-design-png-image_18775640.png",
-    documentation: "https://github.com/your-username/todo-app#readme"
+    documentation: "https://lightswind.com/templates/portfolio01"
   }
 ];
 

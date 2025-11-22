@@ -143,6 +143,7 @@ function Nav_Bar() {
                     </div>
                 </li>
 
+                <li className="nav-item"> <Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link></li>
                 <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
                 <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link></li>
                 <li className="nav-item"> <Link to="/PlayGround" className="nav-link">PlayGround</Link> </li>
@@ -169,6 +170,7 @@ function Nav_Bar() {
                   </ul>
               </li>
 
+              <li><Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}> <i className="bi bi-columns"></i> &nbsp; Templates</Link></li>
               <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}> <i className="bi bi-easel3"></i> &nbsp; Components</Link></li>
               <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}> <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides</Link></li>
               <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>

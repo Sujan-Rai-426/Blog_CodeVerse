@@ -4,7 +4,7 @@
 .template-page {
   padding: 2rem;
   font-family: 'Inter', sans-serif;
-  background-color: #f5f6fa;
+  background-color: transparent;
   min-height: 100vh;
   box-sizing: border-box;
 }
@@ -84,19 +84,14 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-  .tpl-item img {
-    height: 160px;
-  }
+    .tpl-item img { height: 160px; }
 }
 
 @media (max-width: 768px) {
-  .tpl-item img {
-    height: 140px;
-  }
+    .tpl-item img { height: 140px; }
+    .template-page { padding: 0.2rem; }
 }
 
 @media (max-width: 480px) {
-  .tpl-item img {
-    height: 120px;
-  }
+    .tpl-item img { height: 120px; }
 }

@@ -180,59 +180,28 @@
 
 /* Responsive */
 @media (max-width: 1024px) {
-  .preview-header p {
-    font-size: 1rem;
-    margin: 0;
-  }
-  .template-preview{
-    gap: 0.1rem;
-  }
-  .iframe-container iframe {
-    height: 500px;
-  }
-  .template-preview{
-    padding: 0;
-  }
-  .template-preview-container {
-    padding: 0.3rem;
-  }
-  .download-documentation .btn-text {
-    display: none !important; /* Hide document and download text in span for other than desktop device */
-  }
+    .preview-header p { font-size: 1rem; margin: 0; }
+    .template-preview{ gap: 0.1rem; }
+    .iframe-container iframe { height: 500px; }
+    .template-preview{ padding: 0; }
+    .template-preview-container { padding: 0.3rem; }
+    .download-documentation .btn-text {
+        display: none !important; /* Hide document and download text in span for other than desktop device */
+    }
 }
 
 @media (max-width: 768px) {
-  .preview-header h3 {
-    font-size: 1.34rem;
-  }
-  .preview-header p {
-    font-size: 0.85rem;
-  }
-  .device-buttons button {
-    display: none !important;
-  }
-  .device-download-documentation {
-    margin: 0.4rem 0.2rem !important;
-  }
-  .iframe-container iframe {
-    height: 450px;
-  }
+    .preview-header h3 { font-size: 1.34rem; }
+    .preview-header p { font-size: 0.85rem; }
+    .device-buttons button { display: none !important; }
+    .device-download-documentation { margin: 0.4rem 0.2rem !important; }
+    .iframe-container iframe { height: 450px; }
 }
 
 @media (max-width: 480px) {
-  .iframe-container iframe {
-    height: 400px;
-  }
-
-  .device-buttons button {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  .download-documentation .nav-btn,
-  .download-documentation .download-btn,
-  .download-documentation .docs-btn {
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-  }
+    .iframe-container iframe { height: 400px; }
+    .device-buttons button { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
+    .download-documentation .nav-btn,
+    .download-documentation .download-btn,
+    .download-documentation .docs-btn { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
 }

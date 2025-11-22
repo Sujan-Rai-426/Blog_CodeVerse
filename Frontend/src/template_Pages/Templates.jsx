@@ -20,7 +20,7 @@ const Templates = () => {
   if (loading) return <div className="loading">Loading templates...</div>;
 
   return (
-    <div className="template-page">
+    <div id="TEMPLATES" className="template-page">
       <h2 style={{ marginBottom: "20px" }}>Choose a Template</h2>
       <div
         className="list-and-view"
