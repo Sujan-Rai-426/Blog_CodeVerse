@@ -5,8 +5,8 @@ const templates = [
     id: 1,
     access_type: "Free",
     price: 0,
-    title: "Portfolio React App",
-    project_info: "A personal portfolio website built with React.",
+    title: "React Github Page",
+    project_info: "react github page hosted in github.",
     iframe_url: "https://donkirkby.github.io/react-gh-pages/?utm_source=chatgpt.com", // Hosted via GitHub Pages
     repo_url: "https://github.com/donkirkby/react-gh-pages", // For download/view
     cover_image: "https://media.istockphoto.com/id/1413056339/vector/red-free-stamp.jpg?s=612x612&w=0&k=20&c=16ng4tPJkMoN4DuTy3fbNr_tepOAp-_w80aS3BfpdRA=",
