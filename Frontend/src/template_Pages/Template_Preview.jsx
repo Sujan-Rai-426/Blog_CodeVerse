@@ -72,7 +72,7 @@ const Template_Preview = () => {
                 <span className="btn-text"> FullScreen</span>
               </a>
               <a
-                href={template.repo_url}
+                href={template.download_repo_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="download-btn"
