@@ -222,6 +222,36 @@ function Home() {
             </section>
 
 
+        {/* =============== Templates Section =============== */}
+            <section className="templates-section mt-3">
+                <div className="templates-header">
+                    <h2 className="home-section-title">Explore Our Templates</h2>
+                    <p className="section-subtext">
+                        Our curated collection of templates is designed to accelerate your workflow. 
+                        Clean, modern, and responsive—perfect for React, Django, or plain HTML/CSS projects.
+                    </p>
+                </div>
+
+                <div className="templates-preview-description">
+                    <p>
+                        Quick highlights of what you'll get:
+                        <ul>
+                            <li>Professionally designed UI layouts.</li>
+                            <li>Responsive design for mobile, tablet, and desktop.</li>
+                            <li>Reusable components ready to integrate into your projects.</li>
+                            <li>Free and premium options to suit your needs.</li>
+                        </ul>
+                    </p>
+                </div>
+
+                <div className="templates-cta">
+                    <button  className="btn-primary"  onClick={() => navigate("/Templates")} >
+                        View All Templates
+                    </button>
+                </div>
+            </section>
+
+
         {/* =============== Recent Blogs Section =============== */}
             <section className="recent-section mt-3">
                 <h2 className="home-section-title">Recently uploaded Designs</h2>

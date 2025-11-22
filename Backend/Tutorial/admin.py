@@ -2,11 +2,21 @@ from django.contrib import admin
 from .models import (
     Category, Section, Language, Topic,
     FrontendVideo, FrontendVideoInfo, FrontendSourceCode,
-    BackendImage, BackendStep, Contact,
+    BackendImage, BackendStep, Contact, TemplateType, Template
 )
 
 # ================== CONTACT ==================
 admin.site.register(Contact)
+
+
+@admin.register(TemplateType)
+class TemplateTypeAdmin(admin.ModelAdmin):
+    list_display = ['id', 'name']
+
+@admin.register(Template)
+class TemplateAdmin(admin.ModelAdmin):
+    list_display = ['id', 'title', 'template_type', 'access_type', 'price', 'created_at']
+    list_filter = ['access_type', 'template_type']
 
 # ================== FRONTEND VIDEO INLINES ==================
 class FrontendVideoInfoInline(admin.StackedInline):

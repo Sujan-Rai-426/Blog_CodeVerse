@@ -171,6 +171,77 @@
     border-radius: 2px;
 }
 
+/* ================= Templates Section ================= */
+.templates-section {
+    text-align: center;
+    padding: 20px 20px 40px 10px !important;
+    border-radius: 20px;
+    max-width: 950px;
+    color: #e1e1e1;
+}
+.templates-header h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #f0a71e;
+    text-align: left;
+}
+.templates-header .section-subtext {
+    font-size: 1rem;
+    color: #cbd5e1;
+    margin-bottom: 25px;
+    line-height: 1.6;
+    text-align: left;
+}
+.templates-preview-description {
+    font-size: 0.95rem;
+    color: #cbd5e1;
+    margin-bottom: 30px;
+    line-height: 1.7;
+    text-align: left;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.templates-preview-description ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+.templates-preview-description li {
+    margin-bottom: 8px;
+    position: relative;
+}
+.templates-preview-description li::before {
+    content: '•';
+    color: #f0a71e;
+    font-weight: bold;
+    display: inline-block; 
+    width: 1em;
+    margin-left: -1em;
+}
+.templates-cta {
+    margin-top: 15px;
+    text-align: center;
+}
+.btn-primary {
+    padding: 12px 32px;
+    font-size: 1rem;
+    font-weight: 600;
+    border-radius: 12px;
+    border: none;
+    background: linear-gradient(90deg, #f0a71e, #e1ab44);
+    color: #1f1f1f;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background: linear-gradient(90deg, #e1ab44, #f0a71e);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(240, 167, 30, 0.4);
+}
+
+
+
 
 /* === Hearing Paragraph of Tutorials and Services and Recent Contents */
 .info-container{
@@ -312,6 +383,11 @@
     .social-bar { margin: 0.7rem 0 !important; }
     .social-link { width: 32px; height: 32px; font-size: 1rem; }
     .share-btn { padding: 0.2rem 0.7rem; font-size: 0.9rem; }
+    .templates-section { padding: 30px 15px; }
+    .templates-header h2 { font-size: 1.4rem; }
+    .templates-header .section-subtext { font-size: 0.9rem; }
+    .templates-preview-description { font-size: 0.85rem; line-height: 1.5; }
+    .btn-primary { padding: 10px 24px; font-size: 0.9rem; }
 }
 
 /* <----------------> Tablets <----------------> */
@@ -332,6 +408,11 @@
     .grid-card { max-width: 100px; padding: 0.8rem 0.5rem; }
     .card-icon { font-size: 1.8rem; }
     .share-btn { padding: 0.2rem 0.7rem;}
+    .templates-section { padding: 40px 20px; }
+    .templates-header h2 { font-size: 1.6rem; }
+    .templates-header .section-subtext { font-size: 0.95rem; }
+    .templates-preview-description { font-size: 0.9rem; line-height: 1.6; }
+    .btn-primary { padding: 11px 28px; font-size: 0.95rem; }
 }
 
 /* <----------------> Small Desktops / Laptops <----------------> */
@@ -345,6 +426,11 @@
     .social-bar { margin: 1rem 0 !important;}
     .tutorial-section { margin: 3rem 0 5rem 0; }
     .grid-container { grid-template-columns: repeat(4, 1fr); }
+    .templates-section { padding: 45px 25px; }
+    .templates-header h2 { font-size: 1.8rem; }
+    .templates-header .section-subtext { font-size: 1rem; }
+    .templates-preview-description { font-size: 0.95rem; }
+    .btn-primary { padding: 12px 30px; font-size: 1rem; }
 }
 
 /* <----------------> Large Desktops <----------------> */
@@ -356,5 +442,10 @@
     .hero-card-highlights {font-size: 1.15rem;}
     .social-bar { margin: 1.5rem 0 !important;}
     .grid-container { grid-template-columns: repeat(5, 1fr); }
+    .templates-section { padding: 50px 30px; }
+    .templates-header h2 { font-size: 2rem; }
+    .templates-header .section-subtext { font-size: 1rem; }
+    .templates-preview-description { font-size: 0.95rem; }
+    .btn-primary { padding: 12px 32px; font-size: 1rem; }
 }
 

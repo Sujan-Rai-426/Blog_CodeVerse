@@ -2,7 +2,7 @@ from rest_framework import serializers
 from Tutorial.models import (
     Category, Contact, Section, Language, Topic,
     FrontendVideo, FrontendVideoInfo, FrontendSourceCode,
-    BackendImage, BackendStep
+    BackendImage, BackendStep, TemplateType, Template
 )
 
 # -------------------- FRONTEND SERIALIZERS --------------------
@@ -102,5 +102,36 @@ class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = '__all__'
+    
+
+
+class TemplateTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TemplateType
+        fields = ["id", "name"]
+
+class TemplateSerializer(serializers.ModelSerializer):
+    template_type = TemplateTypeSerializer(read_only=True)
+    template_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=TemplateType.objects.all(), source="template_type", write_only=True
+    )
+
+    class Meta:
+        model = Template
+        fields = [
+            "id",
+            "title",
+            "project_info",
+            "iframe_url",
+            "download_repo_url",
+            "documentation",
+            "access_type",
+            "price",
+            "template_type",
+            "template_type_id",
+            "created_at",
+            "updated_at",
+        ]
+
 
 

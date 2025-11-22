@@ -19,15 +19,15 @@ from django.core.mail import EmailMessage, BadHeaderError
 from Tutorial.utils import verify_email_exists
 
 
-from .models import (
+from Tutorial.models import (
     Category, Topic, Language,
     FrontendVideo, FrontendSourceCode, FrontendVideoInfo,
-    BackendStep, BackendImage
+    BackendStep, BackendImage, TemplateType, Template
 )
-from .serializers import (
+from Tutorial.serializers import (
     CategorySerializer, TopicSerializer, LanguageSerializer,
     FrontendVideoSerializer, FrontendSourceCodeSerializer, FrontendVideoInfoSerializer,
-    BackendStepSerializer, BackendImageSerializer
+    BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
 
 # ------------------ CATEGORY & TOPIC ------------------
@@ -181,3 +181,15 @@ def contact_form_view(request):
         return Response({"error": "Invalid header found."}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+
+class TemplateTypeViewSet(viewsets.ModelViewSet):
+    queryset = TemplateType.objects.all()
+    serializer_class = TemplateTypeSerializer
+    permission_classes = [IsAdminOrReadOnly]
+
+class TemplateViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = Template.objects.all().order_by("-created_at")
+    serializer_class = TemplateSerializer
