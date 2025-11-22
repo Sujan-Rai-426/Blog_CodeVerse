@@ -1,4 +1,3 @@
-// src/template/Templates.jsx
 import React, { useEffect, useState } from "react";
 import { fetchTemplates } from "./Template_API";
 import { useNavigate } from "react-router-dom";
@@ -28,9 +27,9 @@ const Templates = () => {
         style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}
       >
         {templates.map((t) => {
-          const userAccess = t?.user_access || "Free"; // default fallback
-          const title = t?.title || "Untitled";
-          const thumbnail = t?.thumbnail || "/default-thumbnail.png"; // optional default
+          const userAccess = t.access_type || "Free"; // ✅ fixed
+          const title = t.title || "Untitled";
+          const thumbnail = t.cover_image || "/default-thumbnail.png"; // ✅ fixed
 
           return (
             <div
