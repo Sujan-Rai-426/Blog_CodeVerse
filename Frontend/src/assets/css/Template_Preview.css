@@ -52,25 +52,30 @@
   gap: 0.75rem;
   margin: 0 !important;
 }
-
+.devices{
+  display: flex;
+  flex-direction: row;
+  margin: 0 1rem 0 0;
+  gap: 0;
+  border: 1px solid gray;
+  border-radius: 10px
+}
 .device-buttons button {
   background: transparent;
   color: white;
-  border: 1px solid gray;
   padding: 0.5rem 0.75rem;
-  border-radius: 8px;
   cursor: pointer;
   font-size: 1rem;
   display: flex;
+  border-radius: 5px;
   align-items: center;
   gap: 0.3rem;
   transition: all 0.2s ease;
 }
 
 .device-buttons button.active {
-  background: linear-gradient(145deg, var(--nav-grad-start) 0%, var(--nav-grad-mid) 50%, var(--nav-grad-end) 100%);
+  background: rgb(179, 230, 245);
   color: black;
-  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
 }
 
 .device-buttons button:hover:not(.active) {
@@ -177,6 +182,15 @@
   font-size: 0.85rem;
 }
 
+.temp{
+    margin: 0 1rem;
+    padding: 0.2rem;
+    background: transparent;
+    color: #ffffff;
+    font-size: 1.1rem;
+    border-radius: 5px;
+}
+
 
 /* Responsive */
 @media (max-width: 1024px) {
@@ -185,6 +199,7 @@
     .iframe-container iframe { height: 500px; }
     .template-preview{ padding: 0; }
     .template-preview-container { padding: 0.3rem; }
+    .devices{display: none;}
     .download-documentation .btn-text {
         display: none !important; /* Hide document and download text in span for other than desktop device */
     }

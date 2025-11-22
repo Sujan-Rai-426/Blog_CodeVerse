@@ -1,35 +1,67 @@
+// src/template_Pages/Templates.jsx
 import React, { useEffect, useState } from "react";
-import { fetchTemplates } from "./Template_API";
-import { useNavigate } from "react-router-dom";
+import { useTemplates } from "./Template_API.jsx";
+import {  useNavigate } from "react-router-dom";
 import "../assets/css/Template.css";
 
 const Templates = () => {
-  const [templates, setTemplates] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+    const { templates: apiTemplates, loading: apiLoading } = useTemplates();
+    const [templates, setTemplates] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [filters, setFilters] = useState({ access: "All", type: "All", maxPrice: null });
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const loadTemplates = async () => {
-      const data = await fetchTemplates();
-      setTemplates(data || []);
-      setLoading(false);
-    };
-    loadTemplates();
-  }, []);
+    useEffect(() => {
+      if (apiTemplates && apiTemplates.length > 0) {
+        setTemplates(apiTemplates);
+      }
+      setLoading(apiLoading);
+    }, [apiTemplates, apiLoading]);
 
-  if (loading) return <div className="loading">Loading templates...</div>;
+    // Filtered templates
+    const filteredTemplates = templates.filter((t) => {
+      const matchAccess = filters.access === "All" || t.access_type === filters.access;
+      const matchType = filters.type === "All" || t.template_type === filters.type;
+      const matchPrice = filters.maxPrice == null || (t.price || 0) <= filters.maxPrice;
+      return matchAccess && matchType && matchPrice;
+    });
+
+    if (loading) return <div className="loading">Loading templates...</div>;
+
+    // Unique filter values
+    const accessTypes = ["All", ...new Set(templates.map((t) => t.access_type))];
+    const templateTypes = ["All", ...new Set(templates.map((t) => t.template_type))];
 
   return (
     <div id="TEMPLATES" className="template-page">
       <h2 style={{ marginBottom: "20px" }}>Choose a Template</h2>
-      <div
-        className="list-and-view"
-        style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}
-      >
-        {templates.map((t) => {
-          const userAccess = t.access_type || "Free"; // ✅ fixed
+
+      {/* =========== Filters =========== */}
+      <div className="template-filters">
+            <select onChange={(e) => setFilters({ ...filters, access: e.target.value })} value={filters.access}>
+              {accessTypes.map((a) => <option key={a} value={a}>{a}</option>)}
+            </select>
+
+            <select onChange={(e) => setFilters({ ...filters, type: e.target.value })} value={filters.type}>
+              {templateTypes.map((t) => <option key={t} value={t}>{t}</option>)}
+            </select>
+
+            <input
+              type="number"
+              placeholder="Max Price"
+              value={filters.maxPrice || ""}
+              onChange={(e) => setFilters({ ...filters, maxPrice: e.target.value ? Number(e.target.value) : null })}
+            />
+
+      </div>
+
+      {/* Templates Grid */}
+      <div className="list-and-view">
+        {filteredTemplates.length === 0 && <p>No templates found.</p>}
+        {filteredTemplates.map((t) => {
+          const userAccess = t.access_type || "Free";
           const title = t.title || "Untitled";
-          const thumbnail = t.cover_image || "/default-thumbnail.png"; // ✅ fixed
+          const type = t.template_type || "General";
 
           return (
             <div
@@ -37,13 +69,18 @@ const Templates = () => {
               className="tpl-item"
               onClick={() => navigate(`/Templates/${t.id}`)}
             >
-              <img src={thumbnail} alt={title} />
+              <div className="tpl-placeholder">
+                <span>{title}</span>
+              </div>
+
               <div className="tpl-info">
-                <strong>{title}</strong>
-                <span className={`badge ${userAccess.toLowerCase()}`}>
-                  {userAccess}
-                  {userAccess === "Premium" && t.price ? ` • $${t.price}` : ""}
-                </span>
+                {/* <strong>Click to View Template</strong> */}
+                <div className="tpl-badges">
+                  <span className={`badge ${userAccess.toLowerCase()}`}>
+                    {userAccess}{userAccess === "Premium" && t.price ? ` • $${t.price}` : ""}
+                  </span>
+                  <span className="badge type-badge">{type}</span>
+                </div>
               </div>
             </div>
           );
