@@ -39,12 +39,36 @@
 }
 
 
-.device-download-documentation{
+.download-guide{
+  padding: 0.25rem 0.8rem;
+  border-radius: 7px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  height: 30px;
+  margin: 0.4rem 0;
+}
+.download-guide:hover{
+  background: #00ff62 !important;
+}
+
+.device-download-documentation {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  margin: 0 1rem !important;
+  padding: 1.5rem 1.2rem !important;
+
+  /* Background with dots */
+  background-color: #2f2c1e; /* dark base color */
+  background-image: radial-gradient(#ffffff20 1px, transparent 1px);
+  background-size: 20px 20px; /* space between dots */
+
+  border-radius: 12px;
+
+  /* Inside shadow effect */
+  box-shadow: inset 0 4px 8px rgba(189, 162, 150, 0.5),
+              inset 0 -4px 6px rgba(255, 255, 255, 0.05);
 }
+
 
 /* Device buttons */
 .device-buttons {
@@ -88,12 +112,20 @@
   margin: 0 !important;
   display: flex;
   justify-content: center;
-  border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 6px 18px rgba(2,6,23,0.08);
   border: 0.1px solid rgba(128, 128, 128, 0.484) !important;
-  background: transparent;
   transition: all 0.3s ease;
+
+    /* Background with dots */
+  background-color: #181816b8; /* dark base color */
+  background-image: radial-gradient(#ffffff20 1px, transparent 1px);
+  background-size: 20px 20px; /* space between dots */
+
+  border-radius: 12px;
+
+  /* Inside shadow effect */
+  box-shadow: inset 0 4px 8px rgba(189, 162, 150, 0.5),
+              inset 0 -4px 6px rgba(255, 255, 255, 0.05);
 }
 
 /* iframe */
@@ -183,38 +215,116 @@
 }
 
 .temp{
-    margin: 0 1rem;
-    padding: 0.2rem;
+    /* margin: 0 1rem;
+    padding: 0.2rem; */
     background: transparent;
     color: #ffffff;
-    font-size: 1.1rem;
+    font-size: 2rem;
     border-radius: 5px;
 }
+.temp:hover{
+  color: gray;
+}
+
+
+/* ==== PROJECT DOWNLOAD GUIDE ========= */
+.run-instructions {
+  background-color: transparent; /* dark base */
+  color: #f0f0f5;
+  padding: 2rem;
+  border-radius: 16px;
+  margin-top: 2rem;
+  /* box-shadow: inset 0 6px 16px rgba(0,0,0,0.5), 0 4px 12px rgba(0,0,0,0.3); */
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.6;
+  background-image: radial-gradient(#ffffff10 1px, transparent 1px);
+  background-size: 20px 20px;
+}
+
+.run-instructions h3 {
+  margin-bottom: 1rem;
+  color: #ffd700;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
+}
+
+.run-instructions h4 {
+  color: #00ffff;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+}
+
+.run-instructions ol, .run-instructions ul {
+  padding-left: 1.5rem;
+}
+
+.run-instructions li {
+  margin-bottom: 1rem;
+}
+
+.run-instructions code {
+  background-color: #2a2a3a;
+  color: #00ff99;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  font-size: 0.95rem;
+}
+
+.run-instructions .case {
+  margin-top: 1.5rem;
+  padding: 1rem 1.2rem;
+  border-radius: 12px;
+  background-color: #2f2c1e;
+  background-image: radial-gradient(#ffffff20 1px, transparent 1px);
+  background-size: 20px 20px;
+  box-shadow: inset 0 4px 12px rgba(0,0,0,0.4);
+}
+
+
 
 
 /* Responsive */
 @media (max-width: 1024px) {
+    .run-instructions {padding: 1rem;}
+    .run-instructions h3 { font-size: 1.6rem; }
+    .run-instructions h4 { font-size: 1.1rem; }
+    .run-instructions p,
+    .run-instructions li { font-size: 0.95rem; }
+    .run-instructions code { font-size: 0.9rem; }
+    .device-download-documentation{ padding: 0.8rem;}
     .preview-header p { font-size: 1rem; margin: 0; }
     .template-preview{ gap: 0.1rem; }
     .iframe-container iframe { height: 500px; }
     .template-preview{ padding: 0; }
     .template-preview-container { padding: 0.3rem; }
-    .devices{display: none;}
     .download-documentation .btn-text {
-        display: none !important; /* Hide document and download text in span for other than desktop device */
+      display: none !important; /* Hide document and download text in span for other than desktop device */
     }
 }
 
 @media (max-width: 768px) {
+    .run-instructions {padding: 1rem 0.5rem;}
+    .run-instructions h3 { font-size: 1.4rem; }
+    .run-instructions h4 { font-size: 1rem; }
+    .run-instructions p,
+    .run-instructions li { font-size: 0.9rem; }
+    .run-instructions code { font-size: 0.85rem; }
+    .run-instructions .case { padding: 0.5rem; }
+    .devices{display: none;}
     .preview-header h3 { font-size: 1.34rem; }
     .preview-header p { font-size: 0.85rem; }
     .device-buttons button { display: none !important; }
-    .device-download-documentation { margin: 0.4rem 0.2rem !important; }
+    .device-download-documentation { padding: 0.2rem 0.8rem !important; }
     .iframe-container iframe { height: 450px; }
 }
 
 @media (max-width: 480px) {
     .iframe-container iframe { height: 400px; }
+    .run-instructions h3 { font-size: 1.2rem; }
+    .run-instructions h4 { font-size: 0.95rem; }
+    .run-instructions p,
+    .run-instructions li { font-size: 0.85rem; }
+    .run-instructions code { font-size: 0.8rem; }
     .device-buttons button { font-size: 0.9rem; padding: 0.4rem 0.8rem; }
     .download-documentation .nav-btn,
     .download-documentation .download-btn,

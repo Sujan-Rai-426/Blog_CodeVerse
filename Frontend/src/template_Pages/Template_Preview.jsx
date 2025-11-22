@@ -10,7 +10,7 @@ const deviceSizes = {
 };
 
 const Template_Preview = () => {
-  const { id } = useParams(); // ✅ get id from route
+  const { id } = useParams(); // get id from route
   const [template, setTemplate] = useState(null);
   const [device, setDevice] = useState("desktop");
 
@@ -56,6 +56,38 @@ const Template_Preview = () => {
           <h3>{template.title}</h3>
           <p>{template.project_info}</p>
 
+            {/* price tag and download guide*/}
+            <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "0 0.5rem",}}>
+                  <div className="access-info">
+                    <span className={`badge ${template.access_type.toLowerCase()}`}>
+                      {template.access_type}
+                      {template.access_type === "Premium" && template.price
+                        ? ` • $${template.price}`
+                        : ""}
+                    </span>
+                  </div>
+                  <button 
+  className="download-guide bg-info"
+  onClick={() => {
+    const element = document.getElementById("PROJECT-SetUP-GUIDE");
+    if (element) {
+      const offset = -80; // optional offset for sticky headers
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+      const finalPosition = elementPosition + offset;
+
+      window.scrollTo({
+        top: finalPosition,
+        behavior: "smooth",
+      });
+    }
+  }}
+>
+  Project Setup Guide
+</button>
+
+            </div>
+
+{/* Device + Template+ Donwload + documentation + Fullscreen icons */}
           <div className="device-download-documentation">
 
             {/* === Device btn + Price Tag + Template ==== */}
@@ -74,18 +106,10 @@ const Template_Preview = () => {
                     ))}
                   </div>
 
-                    {/* price tag and template */}
-                <div className="access-info">
-                  <span className={`badge ${template.access_type.toLowerCase()}`}>
-                    {template.access_type}
-                    {template.access_type === "Premium" && template.price
-                      ? ` • $${template.price}`
-                      : ""}
-                  </span>
+                {/* Template icon */}
                   <Link to="/Templates" className="temp" onClick={() => scrollToSection('TEMPLATE')}> 
                     <i className="bi bi-columns"></i> 
                   </Link>
-                </div>
               </div>
 
             {/* ======== Download + Docmentation + Screen Size ====== */}
@@ -136,6 +160,65 @@ const Template_Preview = () => {
             }}
           />
         </div>
+
+
+        {/* ===== Section to show Coding Guide ======= */}
+        <div id="PROJECT-SetUP-GUIDE" className="run-instructions">
+              <h3>How to Run This Project Locally</h3>
+              <p>Follow the steps below depending on your setup:</p>
+
+              {/* Case 1: Frontend Only */}
+              <div className="case">
+                  <h4>Case 1: Frontend Only (React / Vite)</h4>
+                  <ol>
+                      <li>Download the project zip from GitHub and extract it to a folder on your computer.</li>
+                      <li>Open a terminal and navigate to the project folder.</li>
+                      <li>Install dependencies: <code>npm install</code> or <code>yarn install</code></li>
+                      <li>Start the development server: <code>npm run dev</code> or <code>yarn dev</code></li>
+                      <li>Open the URL provided by Vite (usually <code>http://127.0.0.1:5173/</code>) in your browser.</li>
+                      <li>Follow the documentation if there are extra environment variables or configuration.</li>
+                  </ol>
+              </div>
+
+            {/* Case 2: Frontend + Backend */}
+              <div className="case">
+                  <h4>Case 2: Frontend + Backend (React + Django REST Framework)</h4>
+                  <ol>
+                      <li>
+                        <strong>Download the project</strong> from GitHub and extract it.
+                      </li>
+                      <li>
+                          <strong>Backend setup (Django REST Framework):</strong>
+                          <ul>
+                              <li>Navigate to the backend folder.</li>
+                              <li>Create a virtual environment: <code>python -m venv env</code></li>
+                              <li>Activate the environment: <code>env\Scripts\activate</code> (Windows) or <code>source env/bin/activate</code> (Linux/macOS)</li>
+                              <li>Install dependencies: <code>pip install -r requirements.txt</code></li>
+                              <li>Apply migrations: <code>python manage.py migrate</code></li>
+                              <li>Create superuser: <code>python manage.py createsuperuser</code> (optional)</li>
+                              <li>Run backend server: <code>python manage.py runserver</code></li>
+                              <li>Backend should run at <code>http://127.0.0.1:8000/</code></li>
+                          </ul>
+                      </li>
+
+                      <li>
+                          <strong>Frontend setup (Vite + React):</strong>
+                          <ul>
+                              <li>Navigate to the frontend folder.</li>
+                              <li>Install dependencies: <code>npm install</code> or <code>yarn install</code></li>
+                              <li>Configure API URL in <code>.env</code> file: <code>VITE_API_URL=http://127.0.0.1:8000/api/</code></li>
+                              <li>Start frontend: <code>npm run dev</code> or <code>yarn dev</code></li>
+                              <li>Open the Vite localhost URL (usually <code>http://127.0.0.1:5173/</code>) in your browser.</li>
+                          </ul>
+                      </li>
+                      
+                      <li>Check that the frontend loads data from backend correctly.</li>
+                      <li>Admin dashboard: <code>http://127.0.0.1:8000/admin/</code> to manage templates, categories, and other data.</li>
+                      <li>Follow the project documentation for additional setup if needed.</li>
+                  </ol>
+              </div>
+        </div>
+
       </div>
     </div>
   );
