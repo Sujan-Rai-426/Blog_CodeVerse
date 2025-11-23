@@ -67,27 +67,27 @@ const Template_Preview = () => {
                     </span>
                   </div>
                   <button 
-  className="download-guide bg-info"
-  onClick={() => {
-    const element = document.getElementById("PROJECT-SetUP-GUIDE");
-    if (element) {
-      const offset = -80; // optional offset for sticky headers
-      const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-      const finalPosition = elementPosition + offset;
+                    className="download-guide bg-info"
+                    onClick={() => {
+                      const element = document.getElementById("PROJECT-SetUP-GUIDE");
+                      if (element) {
+                        const offset = -80; // optional offset for sticky headers
+                        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                        const finalPosition = elementPosition + offset;
 
-      window.scrollTo({
-        top: finalPosition,
-        behavior: "smooth",
-      });
-    }
-  }}
->
-  Project Setup Guide
-</button>
+                        window.scrollTo({
+                          top: finalPosition,
+                          behavior: "smooth",
+                        });
+                      }
+                    }}
+                  >
+                    Project Setup Guide
+                  </button>
 
             </div>
 
-{/* Device + Template+ Donwload + documentation + Fullscreen icons */}
+          {/* Device + Template+ Donwload + documentation + Fullscreen icons */}
           <div className="device-download-documentation">
 
             {/* === Device btn + Price Tag + Template ==== */}

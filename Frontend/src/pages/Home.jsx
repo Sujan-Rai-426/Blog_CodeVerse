@@ -257,7 +257,7 @@ function Home() {
                             }, 100);
                         }}
                     >
-                        View All Templates
+                        <i className="bi bi-columns"></i> Templates
                     </button>
                 </div>
             </section>

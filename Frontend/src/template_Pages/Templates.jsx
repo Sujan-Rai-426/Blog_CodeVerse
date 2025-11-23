@@ -7,7 +7,7 @@ const Templates = () => {
   const { templates: apiTemplates, loading: apiLoading } = useTemplates();
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ access: "All", type: "All", maxPrice: null });
+  const [filters, setFilters] = useState({ access: "All", type: "All Category", maxPrice: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Templates = () => {
     const price = t.price || 0;
 
     const matchAccess = filters.access === "All" || access === filters.access;
-    const matchType = filters.type === "All" || type === filters.type;
+    const matchType = filters.type === "All Category" || type === filters.type;
     const matchPrice = filters.maxPrice == null || price <= filters.maxPrice;
 
     return matchAccess && matchType && matchPrice;
@@ -36,7 +36,7 @@ const Templates = () => {
   ))];
 
   // Unique template types (strings)
-  const templateTypes = ["All", ...Array.from(new Set(
+  const templateTypes = ["All Category", ...Array.from(new Set(
     templates.map((t) => (typeof t.template_type === "string" ? t.template_type : t.template_type?.name))
   ))];
 
