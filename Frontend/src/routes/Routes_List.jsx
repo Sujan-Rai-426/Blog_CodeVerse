@@ -10,10 +10,13 @@ import Privacy_Policy from '../pages/Privacy_Policy'
 import PlayGround from '../pages/PlayGround'
 
 // Frontend and Backend Tutorial Pages imports
-import Frontend_Tutorial_Solution from '../pages/Frontend_Tutorial_Solution'
 import Backend_Tutorial_Solution from '../pages/Backend_Tutorial_Solution'
-import Frontend_Tutorial_Topic from '../pages/Frontend_Tutorial_Topic'
 import Backend_Tutorial_Topic from '../pages/Backend_Tutorial_Topic'
+
+// Frontend Or DESIGN Tutorials import
+import Components_Design from '../designs/Components_Design'
+import Frontend_Tutorial_Solution from '../pages/Frontend_Tutorial_Solution'
+import Frontend_Tutorial_Topic from '../pages/Frontend_Tutorial_Topic'
 
 // Login and Signup Pages imports
 import Admin_Login from '../admin/Admin_Login'
@@ -35,7 +38,6 @@ import Template_Preview from '../template_Pages/Template_Preview'
 
 // Unavailable Page imports
 import Unavailable_Page from '../components/Unavailable_Page'
-import Components_Design from '../designs/Components_Design'
 
 function Routes_List() {
     return (

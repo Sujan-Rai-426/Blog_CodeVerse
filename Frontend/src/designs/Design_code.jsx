@@ -135,23 +135,29 @@ export default function Design_Code({
                 ))}
 
                 {/* 🔸 COPY BUTTON */}
-                <button
-                    onClick={handleCopy}
-                    disabled={!canViewCode}
-                    style={{
-                        marginLeft: "auto",
-                        padding: "0.5rem 1rem",
-                        borderRadius: "6px",
-                        border: "none",
-                        background: "#f7971e",
-                        color: "black",
-                        cursor: canViewCode ? "pointer" : "not-allowed",
-                        fontWeight: "bold",
-                    }}
-                >
-                    <FaCopy />
-                    {copied ? " Copied!" : " Copy"}
-                </button>
+                    <button
+                        onClick={handleCopy}
+                        disabled={!canViewCode}
+                        style={{
+                            marginLeft: "auto",
+                            padding: "0.5rem 1rem",
+                            borderRadius: "6px",
+                            border: "none",
+                            background: canViewCode ? "#f7971e" : "#b5b5b5",  // disabled color
+                            color: "black",
+                            cursor: canViewCode ? "pointer" : "not-allowed",
+                            fontWeight: "bold",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: "6px",
+                            transition: "0.2s ease-in-out",
+                            opacity: canViewCode ? 1 : 0.6,
+                        }}
+                    >
+                        <FaCopy />
+                        {copied ? "Copied!" : "Copy"}
+                    </button>
+
             </div>
 
             {/* ============================

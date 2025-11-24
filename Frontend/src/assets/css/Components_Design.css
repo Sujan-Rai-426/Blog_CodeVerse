@@ -227,6 +227,13 @@
     text-align: center;
     border-radius: 20px;
 }
+.copy-btn.disabled-copy {
+    opacity: 0.4;              /* visibly dim */
+    cursor: not-allowed;       /* disable cursor */
+    pointer-events: none;      /* fully disable click */
+    filter: grayscale(0.8);    /* optional: slight grey effect */
+}
+
 
 /* Preview Button */
 .preview-btn {
