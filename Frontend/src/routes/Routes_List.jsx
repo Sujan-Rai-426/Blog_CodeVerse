@@ -35,6 +35,7 @@ import Template_Preview from '../template_Pages/Template_Preview'
 
 // Unavailable Page imports
 import Unavailable_Page from '../components/Unavailable_Page'
+import Components_Design from '../designs/Components_Design'
 
 function Routes_List() {
     return (
@@ -54,8 +55,9 @@ function Routes_List() {
 
 
                 {/* Frontend and Backend Tutorial routes */}
-                <Route exact path='/Frontend_Tutorial_Solution/:topicID/:videoId?'  element={ <Frontend_Tutorial_Solution  />  } />
-                <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />\
+                <Route exact path='/Frontend_Tutorial_Solution/:topicID/:videoId?'  element={ <Components_Design />  } />
+                {/* <Route exact path='/Frontend_Tutorial_Solution/:topicID/:videoId?'  element={ <Frontend_Tutorial_Solution  />  } /> */}
+                <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />
                 <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
                 <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
 

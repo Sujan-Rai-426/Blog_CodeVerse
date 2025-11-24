@@ -234,15 +234,13 @@ function Home() {
                 </div>
 
                 <div className="templates-preview-description">
-                    <p>
-                        Quick highlights of what you'll get:
-                        <ul>
-                            <li>Professionally designed UI layouts.</li>
-                            <li>Responsive design for mobile, tablet, and desktop.</li>
-                            <li>Reusable components ready to integrate into your projects.</li>
-                            <li>Free and premium options to suit your needs.</li>
-                        </ul>
-                    </p>
+                    <p> Quick highlights of what you'll get: </p>
+                    <ul>
+                        <li>Professionally designed UI layouts.</li>
+                        <li>Responsive design for mobile, tablet, and desktop.</li>
+                        <li>Reusable components ready to integrate into your projects.</li>
+                        <li>Free and premium options to suit your needs.</li>
+                    </ul>
                 </div>
 
                 <div className="templates-cta">
