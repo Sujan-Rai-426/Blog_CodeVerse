@@ -1,11 +1,15 @@
+// ============================
+// Recent_Contents.jsx (FINAL)
+// ============================
+
 import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import "../assets/css/Recent_Contents.css"; 
-import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";  
+import "../assets/css/Recent_Contents.css";
+import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
 
-function Recent_Contents() {
+export default function Recent_Contents() {
     const { data, loading, error } = useContext(Parent_API_Provider_Context);
     const navigate = useNavigate();
 
@@ -34,26 +38,35 @@ function Recent_Contents() {
         return <p className="text-center text-danger py-5">Failed to load tutorials.</p>;
     }
 
-    // Flatten tutorials safely from nested data
-    const tutorials = data?.flatMap(cat =>
-        (cat.sections || []).flatMap(sec =>
-            (sec.languages || []).flatMap(lang =>
-                (lang.topics || []).flatMap(topic =>
-                    (topic.videos || []).map(video => ({
-                        videoId: video.id,
-                        topicId: topic.id,
-                        topicName: topic.name,
-                        title: video.title || topic.name,
-                        desc: video.info?.description || "No description available",
-                        video_url: video.video_url,
-                        access_type: video.source_codes || video.access_type,
-                    }))
+    // ------------------------------------------
+    // FLATTEN API DATA EXACTLY LIKE Components_Design
+    // ------------------------------------------
+    const tutorials =
+        data?.flatMap((cat) =>
+            (cat.sections || []).flatMap((sec) =>
+                (sec.languages || []).flatMap((lang) =>
+                    (lang.topics || []).flatMap((topic) =>
+                        (topic.videos || []).map((video) => {
+                            const codeObj = video.source_codes?.[0];
+
+                            return {
+                                videoId: video.id,
+                                topicId: topic.id,
+                                topicName: topic.name,
+
+                                html: codeObj?.html_code || "",
+                                css: codeObj?.css_code || "",
+                                js: codeObj?.js_code || "",
+
+                                desc: video.info?.description || "",
+                                access_type: codeObj?.access_type || "Free"
+                            };
+                        })
+                    )
                 )
             )
-        )
-    ) || [];
+        ) || [];
 
-    // Sort by latest videoId
     const sortedTutorials = tutorials.sort((a, b) => b.videoId - a.videoId);
 
     const handleNavigate = (topicId, videoId) => {
@@ -63,91 +76,90 @@ function Recent_Contents() {
 
     return (
         <div className="g-4 recent-cards-container">
-            {sortedTutorials.length === 0 ? (
-                <p className="text-center text-muted py-5">No recent tutorials found.</p>
-            ) : (
-                sortedTutorials.slice(0, 6).map((tutorial) => {
-                    let accessTypeString = "";
-                    if (Array.isArray(tutorial.access_type) && tutorial.access_type.length > 0) {
-                        accessTypeString = tutorial.access_type[0]?.access_type || "";
-                    } else if (tutorial.access_type && typeof tutorial.access_type === "string") {
-                        accessTypeString = tutorial.access_type;
-                    }
+            {sortedTutorials.slice(0, 6).map((tutorial) => {
+                const isPremium = tutorial.access_type?.toLowerCase() === "premium";
 
-                    const isPremium = accessTypeString.trim().toLowerCase() === "premium";
+                // -----------------------------
+                // iframe document builder
+                // -----------------------------
+                const usesChart = tutorial.js.includes("Chart(") || tutorial.js.includes("new Chart");
 
-                    return (
-                        <div key={`${tutorial.videoId}-${tutorial.topicId}`}>
-                            <div
-                                className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
-                                onClick={(e) => {
-                                    e.stopPropagation(); // prevent parent click events if any
-                                    handleNavigate(tutorial.topicId, tutorial.videoId);
+                const iframeDoc = `
+                    <!DOCTYPE html>
+                    <html>
+                    <head>
+                        <style>
+                            body { margin: 0; padding: 0; }
+                            ${tutorial.css}
+                        </style>
 
-                                    // Scroll to top after a slight delay to ensure navigation is complete
-                                    setTimeout(() => {
-                                        window.scrollTo({ top: 0, behavior: "smooth" });
-                                    }, 100);
-                                }}
-                                style={{ cursor: "pointer" }}
-                            >
-                                <div className="video-container position-relative">
-                                    {tutorial.video_url ? (
-                                        <video
-                                            src={tutorial.video_url}
-                                            autoPlay
-                                            muted
-                                            loop
-                                            playsInline
-                                            className="w-100"
-                                            style={{ height: "200px", objectFit: "cover" }}
-                                        />
-                                    ) : (
-                                        <img
-                                            src="https://via.placeholder.com/400x200"
-                                            className="card-img-top"
-                                            alt={tutorial.title}
-                                            style={{ height: "200px", objectFit: "cover" }}
-                                        />
-                                    )}
+                        ${usesChart
+                            ? `<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>`
+                            : ""
+                        }
+                    </head>
+                    <body>
+                        ${tutorial.html}
 
-                                    {isPremium && (
-                                        <div className="premium-badge-top-right">
-                                            <div className="dollor-box-top-right">
-                                                <i className="bi bi-currency-dollar"></i>
-                                            </div>
-                                            PREMIUM
+                        <script>
+                            try {
+                                ${tutorial.js.replace(/<\/script>/g, "<\\/script>")}
+                            } catch (err) {
+                                console.error("Preview JS Error:", err);
+                            }
+                        </script>
+                    </body>
+                    </html>
+                `;
+
+
+                return (
+                    <div key={tutorial.videoId}>
+                        <div
+                            className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                handleNavigate(tutorial.topicId, tutorial.videoId);
+                            }}
+                            style={{ cursor: "pointer" }}
+                        >
+                            <div className="video-container position-relative">
+
+                                {/* IFRAME FIXED HEIGHT */}
+                                <iframe
+                                    className="iframe-preview"
+                                    srcDoc={iframeDoc}
+                                    sandbox="allow-scripts allow-same-origin"
+                                ></iframe>
+
+                                {/* Premium Badge */}
+                                {isPremium && (
+                                    <div className="premium-badge-top-right">
+                                        <div className="dollor-box-top-right">
+                                            <i className="bi bi-currency-dollar"></i>
                                         </div>
-                                    )}
-                                </div>
+                                        PREMIUM
+                                    </div>
+                                )}
+                            </div>
 
-                                <div className="card-body py-2">
-                                    <h5 className="recent-card-title">&nbsp; {tutorial.topicName}</h5>
-                                    {/* <p className="recent-card-desc text-white">&nbsp;&nbsp; {tutorial.desc.slice(0, 25)} ....</p> */}
-                                    &nbsp;&nbsp;
-                                    <button
-                                        className="btn btn-outline-warning btn-sm rounded-pill"
-                                        onClick={(e) => {
-                                            e.stopPropagation(); 
-                                            handleNavigate(tutorial.topicId, tutorial.videoId);
+                            <div className="card-body py-2">
+                                <h5 className="recent-card-title">{tutorial.topicName}</h5>
 
-                                            // Scroll to top AFTER navigation
-                                            setTimeout(() => {
-                                                window.scrollTo({ top: 0, behavior: "smooth" });
-                                            }, 100);
-                                        }}
-                                    >
-                                        View Code →
-                                    </button>
-
-                                </div>
+                                <button
+                                    className="btn btn-outline-warning btn-sm rounded-pill"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleNavigate(tutorial.topicId, tutorial.videoId);
+                                    }}
+                                >
+                                    View Code →
+                                </button>
                             </div>
                         </div>
-                    );
-                })
-            )}
+                    </div>
+                );
+            })}
         </div>
     );
 }
-
-export default Recent_Contents;

@@ -32,7 +32,7 @@ export default function Design_Code({
     });
 
     /* ------------------------------------
-     🔥 Prism Highlight
+        🔥 Prism Highlight
      ------------------------------------ */
     const codeRef = useRef(null);
     useEffect(() => {
@@ -66,7 +66,7 @@ export default function Design_Code({
         freeAccessAllowed || premiumAccessAllowed;
 
     /* ------------------------------------
-     🔥 COPY LOGIC
+        🔥 COPY LOGIC
      ------------------------------------ */
     const [copied, setCopied] = useState(false);
 
@@ -89,7 +89,7 @@ export default function Design_Code({
     };
 
     /* ------------------------------------
-     🔥 Add line numbers
+        🔥 Add line numbers
      ------------------------------------ */
     const getNumberedCode = (code) =>
         code
@@ -98,10 +98,10 @@ export default function Design_Code({
             .join("\n");
 
     /* ------------------------------------
-     🔥 RENDER
+        🔥 RENDER
      ------------------------------------ */
     return (
-        <div className="design-code-section" style={{ marginTop: "2rem" }}>
+        <div className="design-code-section">
 
             {/* ============================
                 🔵 CODE TABS (HTML, CSS, JS)
@@ -179,8 +179,10 @@ export default function Design_Code({
                             background: "#1e1e1e",
                             color: "#f5f5f5",
                             padding: "1rem",
-                            borderRadius: "8px",
-                            maxHeight: "430px", // SAME HEIGHT AS PREVIEW
+                            borderRadius: "15px",
+                            border: "1px solid gray",
+                            minHeight: "400px",
+                            maxHeight: "500px", // SAME HEIGHT AS PREVIEW
                             overflowX: "auto",
                             overflowY: "auto",
                             filter: canViewCode ? "none" : "blur(8px)",
