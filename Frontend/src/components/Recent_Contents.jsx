@@ -75,7 +75,7 @@ function Recent_Contents() {
   });
 
   const handleNavigate = (topicId, sourceId) => {
-    navigate(`/Frontend_Tutorial_Solution/${topicId}/${sourceId}`);
+    navigate(`/Component-Designs/${topicId}/${sourceId}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
