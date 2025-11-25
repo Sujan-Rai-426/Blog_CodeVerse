@@ -15,7 +15,7 @@ import Backend_Tutorial_Topic from '../pages/Backend_Tutorial_Topic'
 
 // Frontend Or DESIGN Tutorials import
 import Components_Design from '../designs/Components_Design'
-import Frontend_Tutorial_Topic from '../pages/Frontend_Tutorial_Topic'
+import Components_Topic from '../designs/Components_Topic'
 
 // Login and Signup Pages imports
 import Admin_Login from '../admin/Admin_Login'
@@ -56,10 +56,9 @@ function Routes_List() {
 
 
                 {/* Frontend and Backend Tutorial routes */}
-                {/* <Route exact path='/Frontend_Tutorial_Solution/:topicID/:videoId?'  element={ <Frontend_Tutorial_Solution  />  } /> */}
-                <Route exact path='/Frontend_Tutorial_Solution/:topicID/:codeId?'  element={ <Components_Design />  } />
+                <Route exact path='/Component-Designs/:topicID/:codeId?'  element={ <Components_Design />  } />
+                <Route exact path='/Component-Topics/:languageID'  element={ <Components_Topic/> } />
                 <Route exact path='/Backend_Tutorial_Solution/:topicID'  element={ <Backend_Tutorial_Solution/> } />
-                <Route exact path='/Frontend_Tutorial_Topic/:languageID'  element={ <Frontend_Tutorial_Topic/> } />
                 <Route exact path='/Backend_Tutorial_Topic/:languageID'  element={ <Backend_Tutorial_Topic/> } />
 
 

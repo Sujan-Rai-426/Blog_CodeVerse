@@ -153,7 +153,7 @@ function Home() {
             </section>
 
 
-        {/* =============== Frontend Section =============== */}
+        {/* =============== Frontend Components Design Section =============== */}
             <section id="FRONTEND_TUTORIALS" className="tutorial-section">
                 <h2 className="home-section-title">Frontend Components Design</h2>
                 <p className="section-subtext">
@@ -177,7 +177,7 @@ function Home() {
                         : frontendLangs.map((lang) => (
                             <Link
                                 key={lang.id}
-                                to={`/Frontend_Tutorial_Topic/${lang.id}`}
+                                to={`/Component-Topics/${lang.id}`}
                                 className="grid-card"
                             >
                                 {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}

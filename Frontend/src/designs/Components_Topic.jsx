@@ -1,4 +1,4 @@
-// src/components/Frontend_Tutorial_Topic.jsx
+// src/components/Components_Topic.jsx
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -6,7 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
-const Frontend_Tutorial_Topic = () => {
+const Components_Topic = () => {
     const { languageID } = useParams();
     const navigate = useNavigate();
     const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
@@ -133,7 +133,7 @@ useEffect(() => {
                             return (
                                 <Link
                                   key={lang.id}
-                                  to={`/Frontend_Tutorial_Topic/${lang.id}`}
+                                  to={`/Component-Topics/${lang.id}`}
                                   className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
                                 >
                                     {lang.icon_class && (
@@ -171,7 +171,7 @@ useEffect(() => {
                                             language.topics.map((topic) => {
                                                 // compute first source code id (if exists)
                                                 const firstSourceId = (topic.source_codes && topic.source_codes[0] && topic.source_codes[0].id) || null;
-                                                const toPath = firstSourceId ? `/Frontend_Tutorial_Solution/${topic.id}/${firstSourceId}` : `/Frontend_Tutorial_Solution/${topic.id}`;
+                                                const toPath = firstSourceId ? `/Component-Designs/${topic.id}/${firstSourceId}` : `/Frontend_Tutorial_Solution/${topic.id}`;
                                                 return (
                                                     <Link
                                                       key={topic.id}
@@ -201,4 +201,4 @@ useEffect(() => {
     );
 };
 
-export default Frontend_Tutorial_Topic;
+export default Components_Topic;
