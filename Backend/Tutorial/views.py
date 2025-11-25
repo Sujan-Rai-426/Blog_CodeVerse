@@ -1,9 +1,9 @@
+# Tutorial/views.py
 from django.db import IntegrityError
 import cloudinary.uploader
 
 from rest_framework.decorators import action
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, status
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -11,35 +11,32 @@ from rest_framework.permissions import AllowAny
 
 from django.contrib.auth import authenticate
 from Tutorial.permissions import IsAdminOrReadOnly
-
 from rest_framework.decorators import api_view
 
 import re
 from django.core.mail import EmailMessage, BadHeaderError
 from Tutorial.utils import verify_email_exists
 
-
 from Tutorial.models import (
     Category, Topic, Language,
-    FrontendVideo, FrontendSourceCode, FrontendVideoInfo,
+    
     BackendStep, BackendImage, TemplateType, Template
 )
 from Tutorial.serializers import (
     CategorySerializer, TopicSerializer, LanguageSerializer,
-    FrontendVideoSerializer, FrontendSourceCodeSerializer, FrontendVideoInfoSerializer,
+ 
     BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
 
 # ------------------ CATEGORY & TOPIC ------------------
-class CategoryViewSet(viewsets.ModelViewSet):  # now allows POST, PUT, DELETE
+class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Category.objects.all().prefetch_related("sections__languages__topics__videos")
+    queryset = Category.objects.all().prefetch_related("sections__languages__topics__source_codes")
     serializer_class = CategorySerializer
-
 
 class TopicViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Topic.objects.all().prefetch_related("videos", "steps")
+    queryset = Topic.objects.all().prefetch_related("source_codes", "steps", "images")
     serializer_class = TopicSerializer
 
     def create(self, request, *args, **kwargs):
@@ -47,14 +44,12 @@ class TopicViewSet(viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         try:
             self.perform_create(serializer)
-        except IntegrityError as e:
+        except IntegrityError:
             return Response(
                 {"error": "A topic with this name already exists for the selected language."},
                 status=status.HTTP_400_BAD_REQUEST
             )
         return Response(serializer.data, status=201)
-
-
 
 # ------------------ LANGUAGE ------------------
 class LanguageViewSet(viewsets.ModelViewSet):
@@ -62,55 +57,24 @@ class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
-# ------------------ FRONTEND ------------------
-class FrontendVideoViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = FrontendVideo.objects.all()
-    serializer_class = FrontendVideoSerializer
-    
-    def perform_create(self, serializer):
-        if video_file := self.request.FILES.get('video_url'):
-            upload_result = cloudinary.uploader.upload(
-                video_file,
-                resource_type='video',
-                folder='Blog_CodeVerse/Frontend_videos/'
-            )
-            serializer.save(video_url=upload_result['secure_url'])
-        else:
-            serializer.save()
-
-
-
-class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = FrontendSourceCode.objects.all()
-    serializer_class = FrontendSourceCodeSerializer
-
-class FrontendVideoInfoViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = FrontendVideoInfo.objects.all()
-    serializer_class = FrontendVideoInfoSerializer
 
 # ------------------ BACKEND ------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendStep.objects.all()
     serializer_class = BackendStepSerializer
-    
+
     @action(detail=False, methods=["get"], url_path="occupied-steps/(?P<topic_id>[^/.]+)")
     def occupied_steps(self, request, topic_id=None):
         steps = BackendStep.objects.filter(topic_id=topic_id).values_list("step_number", flat=True)
         return Response({"occupied_steps": list(steps)}, status=status.HTTP_200_OK)
 
-
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
-    
 
-
-# View for logging in as admin
+# ------------------ ADMIN LOGIN VIEW ------------------
 class AdminLoginAPIView(APIView):
     permission_classes = [AllowAny]
     def post(self, request):
@@ -119,17 +83,10 @@ class AdminLoginAPIView(APIView):
 
         user = authenticate(username=username, password=password)
         if user is not None and user.is_superuser:
-            # Create the JWT token with the user as the subject
             refresh = RefreshToken.for_user(user)
-            
-            # Add a custom claim indicating if the user is an admin
             access_token = str(refresh.access_token)
             refresh_token = str(refresh)
-            
-            # Attach the 'is_admin' claim manually
-            refresh.access_token["is_admin"] = True  # Custom claim indicating admin status
-            
-            # Return the tokens
+            refresh.access_token["is_admin"] = True
             return Response({
                 "access_token": access_token,
                 "refresh_token": refresh_token,
@@ -137,9 +94,7 @@ class AdminLoginAPIView(APIView):
         else:
             return Response({"detail": "Invalid credentials or user is not admin."}, status=status.HTTP_401_UNAUTHORIZED)
 
-
-
-
+# ------------------ Contact form (unchanged) ------------------
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
 
 @api_view(['POST'])
@@ -149,20 +104,16 @@ def contact_form_view(request):
     subject = request.data.get('subject')
     message = request.data.get('message')
 
-    # 1. Check required fields
     if not name or not email or not subject or not message:
         return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 2. Validate email format
     if not re.match(EMAIL_REGEX, email):
         return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
 
-    # 3. Verify email exists (optional, can be slow)
     if not verify_email_exists(email):
         return Response({"error": "The email address does not exist or cannot receive emails."},
                         status=status.HTTP_400_BAD_REQUEST)
 
-    # 4. Prepare email content
     email_subject = f"Contact Form Message: {subject}"
     email_message = f"From: {name} <{email}>\n\nMessage:\n{message}"
 
@@ -170,20 +121,18 @@ def contact_form_view(request):
         email_obj = EmailMessage(
             subject=email_subject,
             body=email_message,
-            from_email='rsujan140.in@gmail.com',          # Verified SMTP email
-            to=['rsujan140.in@gmail.com'],               # Your email
-            reply_to=[email]                             # User email for reply
+            from_email='rsujan140.in@gmail.com',
+            to=['rsujan140.in@gmail.com'],
+            reply_to=[email]
         )
         email_obj.send(fail_silently=False)
         return Response({"message": "Message sent successfully!"}, status=status.HTTP_200_OK)
-
     except BadHeaderError:
         return Response({"error": "Invalid header found."}, status=status.HTTP_400_BAD_REQUEST)
     except Exception as e:
         return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-
-
+# ------------------ TEMPLATE viewsets (unchanged) ------------------
 class TemplateTypeViewSet(viewsets.ModelViewSet):
     queryset = TemplateType.objects.all()
     serializer_class = TemplateTypeSerializer

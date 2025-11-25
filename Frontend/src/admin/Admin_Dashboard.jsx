@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 const Admin_Dashboard = () => {
   const navigate = useNavigate();
 
-  // ---------- State ----------
+  // =================== GLOBAL STATE ===================
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -14,28 +14,31 @@ const Admin_Dashboard = () => {
   const [activeTab, setActiveTab] = useState("language");
   const [isUploading, setIsUploading] = useState(false);
 
-  // ---------- Language Form ----------
+  // =================== CATEGORY FORM ===================
+  const [categoryName, setCategoryName] = useState("");
+
+  // =================== LANGUAGE FORM ===================
   const [sectionType, setSectionType] = useState("Frontend");
   const [categoryId, setCategoryId] = useState("");
   const [languageName, setLanguageName] = useState("");
   const [icon, setIcon] = useState("");
 
-  // ---------- Topic Form ----------
+  // =================== TOPIC FORM ===================
   const [topicName, setTopicName] = useState("");
   const [topicLanguage, setTopicLanguage] = useState("");
 
-  // ---------- Frontend Form ----------
+  // =================== FRONTEND SOURCE CODE ===================
   const [frontendLanguage, setFrontendLanguage] = useState("");
   const [frontendTopic, setFrontendTopic] = useState("");
-  const [videoFile, setVideoFile] = useState(null);
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
   const [jsCode, setJsCode] = useState("");
+  const [frontendTitle, setFrontendTitle] = useState("");
   const [frontendDesc, setFrontendDesc] = useState("");
-  const [videoAccessType, setVideoAccessType] = useState("");
-  const [sourceCodeAccessType, setSourceCodeAccessType] = useState("");
+  const [sourceAccessType, setSourceAccessType] = useState("");
+  const [sourcePrice, setSourcePrice] = useState(0);
 
-  // ---------- Backend Form ----------
+  // =================== BACKEND STEP ===================
   const [backendLanguage, setBackendLanguage] = useState("");
   const [backendTopic, setBackendTopic] = useState("");
   const [imageFile, setImageFile] = useState(null);
@@ -45,7 +48,7 @@ const Admin_Dashboard = () => {
   const [stepCode, setStepCode] = useState("");
   const [occupiedSteps, setOccupiedSteps] = useState([]);
 
-  // ---------- Template Form ----------
+  // =================== TEMPLATE FORM ===================
   const [templateTitle, setTemplateTitle] = useState("");
   const [templateInfo, setTemplateInfo] = useState("");
   const [iframeUrl, setIframeUrl] = useState("");
@@ -55,26 +58,26 @@ const Admin_Dashboard = () => {
   const [price, setPrice] = useState(0);
   const [templateType, setTemplateType] = useState("");
 
-  // ---------- Fetch Categories ----------
+  // =================== FETCH ALL DATA ===================
   const fetchCategories = async () => {
     try {
       const res = await api.get("/api/categories/");
       const data = res.data || [];
       setCategories(data);
-      setSections(data.flatMap(c => c.sections || []));
-      setLanguages(data.flatMap(c => c.sections?.flatMap(s => s.languages) || []));
+      // sections come nested in categories according to your serializer
+      setSections(data.flatMap((c) => c.sections || []));
+      setLanguages(data.flatMap((c) => c.sections?.flatMap((s) => s.languages) || []));
     } catch (err) {
-      console.error("Error fetching categories:", err);
+      console.error("Category fetch error:", err);
     }
   };
 
-  // ---------- Fetch Template Types ----------
   const fetchTemplateTypes = async () => {
     try {
       const res = await api.get("/api/template-types/");
       setTemplateTypes(res.data || []);
     } catch (err) {
-      console.error("Error fetching template types:", err);
+      console.error("Template type fetch error:", err);
     }
   };
 
@@ -83,124 +86,207 @@ const Admin_Dashboard = () => {
     fetchTemplateTypes();
   }, []);
 
-  // ---------- Derived dropdown lists ----------
-  const frontendLanguages = sections.find(s => s.name?.toLowerCase() === "frontend")?.languages || [];
-  const backendLanguages = sections.find(s => s.name?.toLowerCase() === "backend")?.languages || [];
-  const frontendTopics = frontendLanguages.find(l => l.id === parseInt(frontendLanguage))?.topics || [];
-  const backendTopics = backendLanguages.find(l => l.id === parseInt(backendLanguage))?.topics || [];
-  const topicLangOptions = languages;
+  // =================== FILTERED DATA ===================
+  const frontendLanguages = sections.find((s) => s.name?.toLowerCase() === "frontend")?.languages || [];
+  const backendLanguages = sections.find((s) => s.name?.toLowerCase() === "backend")?.languages || [];
+  const frontendTopics = frontendLanguages.find((l) => l.id === parseInt(frontendLanguage))?.topics || [];
+  const backendTopics = backendLanguages.find((l) => l.id === parseInt(backendLanguage))?.topics || [];
 
-  // ---------- Logout ----------
+  // =================== LOGOUT ===================
   const handleLogout = () => {
+    // adjust key names to whatever you store (token / loggedIn etc)
     window.localStorage.removeItem("loggedIn");
+    window.localStorage.removeItem("access_token");
     navigate("/Admin_Login");
   };
 
-  // ---------- Add Language ----------
+  // =================== ADD CATEGORY ===================
+  const handleAddCategory = async (e) => {
+    e.preventDefault();
+    if (!categoryName.trim()) return alert("Category name required!");
+
+    try {
+      setIsUploading(true);
+      await api.post("/api/categories/", { name: categoryName });
+      setCategoryName("");
+      await fetchCategories();
+      alert("Category added!");
+    } catch (err) {
+      console.error(err);
+      alert("Error adding category!");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // =================== ADD LANGUAGE ===================
   const handleAddLanguage = async (e) => {
     e.preventDefault();
     try {
       setIsUploading(true);
-      const sec = sections.find(s => s.name === sectionType);
-      if (!sec) return alert("Section not selected");
-      if (!categoryId) return alert("Please select category");
 
-      await api.post("/api/languages/", { section: sec.id, name: languageName, icon_class: icon, category: parseInt(categoryId) });
-
-      setLanguageName(""); setIcon(""); setCategoryId("");
-      fetchCategories();
-      alert("Language added successfully!");
-    } catch (err) {
-      console.error(err.response ? err.response.data : err);
-      alert("Error adding language!");
-    } finally { setIsUploading(false); }
-  };
-
-  // ---------- Add Topic ----------
-  const handleAddTopic = async (e) => {
-    e.preventDefault();
-    if (!topicLanguage) return alert("Please select a language");
-    try {
-      setIsUploading(true);
-      await api.post("/api/topics/", { language: parseInt(topicLanguage), name: topicName });
-      setTopicName(""); setTopicLanguage("");
-      fetchCategories();
-      alert("Topic added successfully!");
-    } catch (err) {
-      console.error(err.response ? err.response.data : err);
-      alert(err.response?.data?.error || "Error adding topic!");
-    } finally { setIsUploading(false); }
-  };
-
-  // ---------- Add Frontend ----------
-  const handleAddFrontend = async (e) => {
-    e.preventDefault();
-    if (!frontendLanguage || !frontendTopic || !videoFile) return alert("Please select language, topic, and upload a video file");
-    if (!videoAccessType || !sourceCodeAccessType) return alert("Please select access types for video and source code");
-
-    try {
-      setIsUploading(true);
-      const videoFormData = new FormData();
-      videoFormData.append("topic", parseInt(frontendTopic));
-      videoFormData.append("title", String(frontendDesc || "Untitled Video"));
-      videoFormData.append("video_url", videoFile);
-      videoFormData.append("access_type", videoAccessType);
-
-      const videoRes = await api.post("/api/frontendvideos/", videoFormData, { headers: { "Content-Type": "multipart/form-data" } });
-      const videoId = videoRes.data.id;
-
-      if (frontendDesc) {
-        await api.post("/api/frontendvideoinfo/", { video: videoId, description: String(frontendDesc) });
+      // find section object (sections were set from categories)
+      const sec = sections.find((s) => s.name === sectionType) || {};
+      if (!sec.id) {
+        // If sections didn't exist yet, backend expects a section id; user must create section via admin panel or endpoint.
+        // But we still call API with sec.id (may be undefined) — backend will respond with error.
       }
 
-      if (htmlCode || cssCode || jsCode) {
-        await api.post("/api/frontendsourcecodes/", {
-          video: videoId,
-          html_code: htmlCode || "",
-          css_code: cssCode || "",
-          js_code: jsCode || "",
-          access_type: sourceCodeAccessType,
+      await api.post("/api/languages/", {
+        section: sec.id,
+        name: languageName,
+        icon_class: icon,
+        category: parseInt(categoryId),
+      });
+
+      setLanguageName("");
+      setIcon("");
+      setCategoryId("");
+      await fetchCategories();
+      alert("Language added!");
+    } catch (err) {
+      console.error(err);
+      alert("Error adding language!");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // =================== ADD TOPIC ===================
+  const handleAddTopic = async (e) => {
+    e.preventDefault();
+    if (!topicLanguage) return alert("Select language!");
+
+    try {
+      setIsUploading(true);
+      await api.post("/api/topics/", {
+        language: parseInt(topicLanguage),
+        name: topicName,
+      });
+
+      setTopicName("");
+      setTopicLanguage("");
+      await fetchCategories();
+      alert("Topic added!");
+    } catch (err) {
+      console.error(err);
+      alert("Error adding topic!");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // =================== ADD FRONTEND SOURCE CODE ===================
+  const handleAddFrontend = async (e) => {
+    e.preventDefault();
+    if (!frontendLanguage || !frontendTopic) return alert("Select language + topic");
+    if (!sourceAccessType) return alert("Select access type");
+
+    try {
+      setIsUploading(true);
+
+      const payload = {
+        topic: parseInt(frontendTopic),
+        title: frontendTitle || (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
+        description: frontendDesc || "",
+        html_code: htmlCode || "",
+        css_code: cssCode || "",
+        js_code: jsCode || "",
+        access_type: sourceAccessType,
+        price: parseFloat(sourcePrice) || 0,
+      };
+
+      await api.post("/api/frontendsourcecodes/", payload);
+
+      // reset
+      setFrontendLanguage("");
+      setFrontendTopic("");
+      setHtmlCode("");
+      setCssCode("");
+      setJsCode("");
+      setFrontendTitle("");
+      setFrontendDesc("");
+      setSourceAccessType("");
+      setSourcePrice(0);
+
+      alert("Frontend Source Code added!");
+    } catch (err) {
+      console.error("Frontend add error:", err);
+      alert("Error adding frontend content!");
+    } finally {
+      setIsUploading(false);
+    }
+  };
+
+  // =================== Fetch occupied steps for selected backend topic ===================
+  useEffect(() => {
+    const fetchSteps = async () => {
+      if (!backendTopic) return setOccupiedSteps([]);
+      try {
+        const res = await api.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
+        setOccupiedSteps(res.data.occupied_steps || []);
+      } catch (err) {
+        console.error("Error fetching occupied steps:", err);
+      }
+    };
+    fetchSteps();
+  }, [backendTopic]);
+
+  // =================== ADD BACKEND STEP ===================
+  const handleAddBackend = async (e) => {
+    e.preventDefault();
+    if (!backendLanguage || !backendTopic) return alert("Select both language and topic!");
+
+    try {
+      setIsUploading(true);
+
+      const stepPayload = {
+        topic: parseInt(backendTopic),
+        step_number: parseInt(stepNumber),
+        step_file_name: stepFileName,
+        step_description: stepDescription,
+        step_source_code: stepCode,
+      };
+
+      await api.post("/api/backendsteps/", stepPayload);
+
+      // upload image if provided
+      if (imageFile) {
+        const formData = new FormData();
+        formData.append("topic", backendTopic);
+        formData.append("image", imageFile);
+        await api.post("/api/backendimages/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         });
       }
 
-      setVideoFile(null); setHtmlCode(""); setCssCode(""); setJsCode(""); setFrontendDesc(""); setFrontendTopic(""); setFrontendLanguage(""); setVideoAccessType(""); setSourceCodeAccessType("");
-      alert("✅ Frontend content added successfully!");
+      setStepNumber(1);
+      setStepFileName("");
+      setStepDescription("");
+      setStepCode("");
+      setBackendLanguage("");
+      setBackendTopic("");
+      setImageFile(null);
+
+      // refresh categories to get latest steps/images if needed
+      await fetchCategories();
+      alert("Backend step added!");
     } catch (err) {
-      console.error("Error adding frontend content:", err.response ? err.response.data : err);
-      alert("❌ Error adding frontend content!");
-    } finally { setIsUploading(false); }
+      console.error("Backend add error:", err);
+      alert("Error adding backend step! (maybe step number conflict)");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  // ---------- Add Backend ----------
-  const handleAddBackend = async (e) => {
-    e.preventDefault();
-    if (!backendLanguage || !backendTopic) return alert("Please select language and topic");
-
-    try {
-      setIsUploading(true);
-      const stepPayload = { topic: parseInt(backendTopic), step_number: parseInt(stepNumber), step_file_name: stepFileName, step_description: stepDescription, step_source_code: stepCode };
-      await api.post("/api/backendsteps/", stepPayload);
-
-      if (imageFile) {
-        const formData = new FormData();
-        formData.append("topic", parseInt(backendTopic));
-        formData.append("image", imageFile);
-        await api.post("/api/backendimages/", formData, { headers: { "Content-Type": "multipart/form-data" } });
-      }
-
-      setStepNumber(1); setStepFileName(""); setStepDescription(""); setStepCode(""); setImageFile(null); setBackendLanguage(""); setBackendTopic("");
-      alert("Backend step and image added successfully!");
-    } catch (err) {
-      console.error("Backend add error:", err.response ? err.response.data : err);
-      alert("Error! Step number may already exist.");
-    } finally { setIsUploading(false); }
-  };
-
-  // ---------- Add Template ----------
+  // =================== ADD TEMPLATE ===================
   const handleAddTemplate = async (e) => {
     e.preventDefault();
+    if (!templateType) return alert("Select template type");
+
     try {
       setIsUploading(true);
+
       const payload = {
         title: templateTitle,
         project_info: templateInfo,
@@ -214,167 +300,458 @@ const Admin_Dashboard = () => {
 
       await api.post("/api/templates/", payload);
 
-      setTemplateTitle(""); setTemplateInfo(""); setIframeUrl(""); setDownloadRepoUrl(""); setDocumentationUrl(""); setAccessType(""); setPrice(0); setTemplateType("");
-      alert("✅ Template added successfully!");
+      setTemplateTitle("");
+      setTemplateInfo("");
+      setIframeUrl("");
+      setDownloadRepoUrl("");
+      setDocumentationUrl("");
+      setAccessType("");
+      setPrice(0);
+      setTemplateType("");
+
+      alert("Template added!");
     } catch (err) {
-      console.error(err.response ? err.response.data : err);
-      alert("❌ Error adding template!");
-    } finally { setIsUploading(false); }
+      console.error("Template add error:", err);
+      alert("Error adding template!");
+    } finally {
+      setIsUploading(false);
+    }
   };
 
-  // ---------- Fetch occupied steps ----------
-  useEffect(() => {
-    const fetchOccupiedSteps = async () => {
-      if (!backendTopic) return setOccupiedSteps([]);
-      try {
-        const res = await api.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
-        setOccupiedSteps(res.data.occupied_steps || []);
-      } catch (err) { console.error("Error fetching occupied steps:", err); }
-    };
-    fetchOccupiedSteps();
-  }, [backendTopic]);
+  // =================== STYLES ===================
+  const visibleInputStyle = {
+    background: "#121212",
+    color: "#fff",
+    border: "1px solid #555",
+  };
 
+  // =================== JSX RETURN ===================
   return (
     <div className="admin-dashboard my-5">
-      <h4 className="mb-4 text-center text-light">Admin Dashboard 💡</h4>
+      <h4 className="text-center text-light mb-4">Admin Dashboard ⚡</h4>
 
-      {/* Tabs */}
-      <div className="btn-group mb-4">
-        {["language", "topic", "frontend", "backend", "template"].map(tab => (
+      {/* TABS */}
+      <div className="btn-group mb-3">
+        {["category", "language", "topic", "frontend", "backend", "template"].map((tab) => (
           <button
             key={tab}
             className={`btn btn-outline-primary ${activeTab === tab ? "active" : ""}`}
             onClick={() => setActiveTab(tab)}
           >
-            {tab.charAt(0).toUpperCase() + tab.slice(1)}
+            {tab.toUpperCase()}
           </button>
         ))}
       </div>
 
-      {/* Forms */}
+      {/* uploading overlay */}
+      {isUploading && (
+        <div className="upload-overlay">
+          <div className="spinner" />
+          <div className="upload-text">Uploading…</div>
+        </div>
+      )}
+
+      {/* ================== CATEGORY FORM ================== */}
+      {activeTab === "category" && (
+        <form onSubmit={handleAddCategory}>
+          <h4>Add Category</h4>
+          <input
+            value={categoryName}
+            onChange={(e) => setCategoryName(e.target.value)}
+            className="form-control mb-2"
+            placeholder="Category Name"
+            style={visibleInputStyle}
+            required
+          />
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>Add Category</button>
+            <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
+          </div>
+        </form>
+      )}
+
+      {/* ================== LANGUAGE FORM ================== */}
       {activeTab === "language" && (
-        <form onSubmit={handleAddLanguage} className="mb-4">
+        <form onSubmit={handleAddLanguage}>
           <h4>Add Language</h4>
-          <select className="form-control mb-2" value={sectionType} onChange={(e) => setSectionType(e.target.value)}>
+
+          <label>Section</label>
+          <select
+            value={sectionType}
+            onChange={(e) => setSectionType(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          >
             <option value="Frontend">Frontend</option>
             <option value="Backend">Backend</option>
           </select>
-          <select className="form-control mb-2" value={categoryId} onChange={(e) => setCategoryId(e.target.value)} required>
+
+          <label>Category</label>
+          <select
+            value={categoryId}
+            onChange={(e) => setCategoryId(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          >
             <option value="">Select Category</option>
-            {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+            {categories.map((c) => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
           </select>
-          <input type="text" placeholder="Language Name" value={languageName} onChange={(e) => setLanguageName(e.target.value)} className="form-control mb-2" required />
-          <input type="text" placeholder="Icon Class" value={icon} onChange={(e) => setIcon(e.target.value)} className="form-control mb-2" required />
-          <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
-            <button type="submit" className="btn btn-success" disabled={isUploading}>
-              {isUploading ? <>Uploading...</> : "Add Language"}
-            </button>
+
+          <label>Language Name</label>
+          <input
+            value={languageName}
+            onChange={(e) => setLanguageName(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          />
+
+          <label>Icon Class</label>
+          <input
+            value={icon}
+            onChange={(e) => setIcon(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>Add Language</button>
             <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
           </div>
         </form>
       )}
 
+      {/* ================== TOPIC FORM ================== */}
       {activeTab === "topic" && (
-        <form onSubmit={handleAddTopic} className="mb-4">
+        <form onSubmit={handleAddTopic}>
           <h4>Add Topic</h4>
-          <select className="form-control mb-2" value={topicLanguage} onChange={(e) => setTopicLanguage(e.target.value)} required>
+
+          <label>Language</label>
+          <select
+            value={topicLanguage}
+            onChange={(e) => setTopicLanguage(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          >
             <option value="">Select Language</option>
-            {topicLangOptions.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+            {languages.map((l) => (
+              <option key={l.id} value={l.id}>{l.name}</option>
+            ))}
           </select>
-          <input type="text" placeholder="Topic Name" value={topicName} onChange={(e) => setTopicName(e.target.value)} className="form-control mb-2" required />
-          <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
-            <button type="submit" className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Topic"}</button>
+
+          <label>Topic Name</label>
+          <input
+            value={topicName}
+            onChange={(e) => setTopicName(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          />
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>Add Topic</button>
             <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
           </div>
         </form>
       )}
 
-      {/* Frontend Form */}
+      {/* ================== FRONTEND FORM ================== */}
       {activeTab === "frontend" && (
-        <form onSubmit={handleAddFrontend} className="mb-4">
-          <h4>Add Frontend Content</h4>
-          <select className="form-control mb-2" value={frontendLanguage} onChange={(e) => setFrontendLanguage(e.target.value)} required>
-            <option value="">Select Language</option>
-            {frontendLanguages.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
-          </select>
-          <select className="form-control mb-2" value={frontendTopic} onChange={(e) => setFrontendTopic(e.target.value)} required>
-            <option value="">Select Topic</option>
-            {frontendTopics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </select>
-          <input type="file" accept="video/*" onChange={(e) => setVideoFile(e.target.files[0])} className="form-control mb-2" required />
-          <div className="mb-2">
-            <select className="form-control mb-2" value={videoAccessType} onChange={(e) => setVideoAccessType(e.target.value)} required>
-              <option value="">Video Access Type</option>
-              <option value="Free">Free</option>
-              <option value="Premium">Premium</option>
-            </select>
-            <select className="form-control mb-2" value={sourceCodeAccessType} onChange={(e) => setSourceCodeAccessType(e.target.value)} required>
-              <option value="">Source Code Access Type</option>
-              <option value="Free">Free</option>
-              <option value="Premium">Premium</option>
-            </select>
-          </div>
-          <textarea placeholder="HTML Code" value={htmlCode} onChange={(e) => setHtmlCode(e.target.value)} className="form-control mb-2" />
-          <textarea placeholder="CSS Code" value={cssCode} onChange={(e) => setCssCode(e.target.value)} className="form-control mb-2" />
-          <textarea placeholder="JS Code" value={jsCode} onChange={(e) => setJsCode(e.target.value)} className="form-control mb-2" />
-          <textarea placeholder="Description" value={frontendDesc} onChange={(e) => setFrontendDesc(e.target.value)} className="form-control mb-2" />
-          <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
-            <button type="submit" className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Frontend Content"}</button>
-            <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
-          </div>
-        </form>
-      )}
+        <form onSubmit={handleAddFrontend}>
+          <h4>Add Frontend Source Code</h4>
 
-      {/* Backend Form */}
-      {activeTab === "backend" && (
-        <form onSubmit={handleAddBackend} className="mb-4">
-          <h4>Add Backend Step</h4>
-          <select className="form-control mb-2" value={backendLanguage} onChange={(e) => setBackendLanguage(e.target.value)} required>
-            <option value="">Select Backend Language</option>
-            {backendLanguages.map(l => <option key={l.id} value={l.id}>{l.name}</option>)}
+          <label>Language</label>
+          <select
+            className="form-control mb-2"
+            value={frontendLanguage}
+            onChange={(e) => setFrontendLanguage(e.target.value)}
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Frontend Language</option>
+            {frontendLanguages.map((l) => (
+              <option key={l.id} value={l.id}>{l.name}</option>
+            ))}
           </select>
-          <select className="form-control mb-2" value={backendTopic} onChange={(e) => setBackendTopic(e.target.value)} required>
-            <option value="">Select Topic</option>
-            {backendTopics.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </select>
-          <input type="file" onChange={(e) => setImageFile(e.target.files[0])} className="form-control mb-2" />
-          <div className="mb-3">
-            <label>Step Number</label>
-            <input type="number" value={stepNumber} onChange={(e) => setStepNumber(e.target.value)} className="form-control" placeholder="Enter Step Number" />
-            {occupiedSteps.length > 0 && <small className="text-muted">Occupied Step Numbers: {occupiedSteps.join(", ")}</small>}
-          </div>
-          <input type="text" placeholder="Step File Name" value={stepFileName} onChange={(e) => setStepFileName(e.target.value)} className="form-control mb-2" />
-          <textarea placeholder="Step Description" value={stepDescription} onChange={(e) => setStepDescription(e.target.value)} className="form-control mb-2" />
-          <textarea placeholder="Step Code" value={stepCode} onChange={(e) => setStepCode(e.target.value)} className="form-control mb-2" />
-          <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
-            <button type="submit" className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Backend Step"}</button>
-            <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
-          </div>
-        </form>
-      )}
 
-      {/* Template Form */}
-      {activeTab === "template" && (
-        <form onSubmit={handleAddTemplate} className="mb-4">
-          <h4>Add Template</h4>
-          <input type="text" placeholder="Title" value={templateTitle} onChange={(e) => setTemplateTitle(e.target.value)} className="form-control mb-2" required />
-          <textarea placeholder="Project Info" value={templateInfo} onChange={(e) => setTemplateInfo(e.target.value)} className="form-control mb-2" required />
-          <input type="url" placeholder="Iframe URL" value={iframeUrl} onChange={(e) => setIframeUrl(e.target.value)} className="form-control mb-2" required />
-          <input type="url" placeholder="Download Repo URL" value={downloadRepoUrl} onChange={(e) => setDownloadRepoUrl(e.target.value)} className="form-control mb-2" />
-          <input type="url" placeholder="Documentation URL" value={documentationUrl} onChange={(e) => setDocumentationUrl(e.target.value)} className="form-control mb-2" />
-          <select className="form-control mb-2" value={accessType} onChange={(e) => setAccessType(e.target.value)} required>
+          <label>Topic</label>
+          <select
+            className="form-control mb-2"
+            value={frontendTopic}
+            onChange={(e) => setFrontendTopic(e.target.value)}
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Topic</option>
+            {frontendTopics.map((t) => (
+              <option key={t.id} value={t.id}>{t.name}</option>
+            ))}
+          </select>
+
+          <label>Access Type</label>
+          <select
+            className="form-control mb-2"
+            value={sourceAccessType}
+            onChange={(e) => setSourceAccessType(e.target.value)}
+            style={visibleInputStyle}
+            required
+          >
             <option value="">Select Access Type</option>
             <option value="Free">Free</option>
             <option value="Premium">Premium</option>
           </select>
-          <select className="form-control mb-2" value={templateType} onChange={(e) => setTemplateType(e.target.value)} required>
-            <option value="">Select Template Type</option>
-            {templateTypes.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
-          </select>
-          <input type="number" placeholder="Price" value={price} onChange={(e) => setPrice(e.target.value)} className="form-control mb-2" min={0} />
-          <div style={{ display: "flex", justifyContent: "space-between", margin: "0 1vw" }}>
-            <button type="submit" className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Template"}</button>
+
+          <label>Price (if premium)</label>
+          <input
+            type="number"
+            min={0}
+            className="form-control mb-2"
+            value={sourcePrice}
+            onChange={(e) => setSourcePrice(e.target.value)}
+            style={visibleInputStyle}
+          />
+
+          <label>Title</label>
+          <input
+            value={frontendTitle}
+            onChange={(e) => setFrontendTitle(e.target.value)}
+            className="form-control mb-2"
+            placeholder="Optional title"
+            style={visibleInputStyle}
+          />
+
+          <label>Description</label>
+          <textarea
+            value={frontendDesc}
+            onChange={(e) => setFrontendDesc(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>HTML</label>
+          <textarea
+            value={htmlCode}
+            onChange={(e) => setHtmlCode(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>CSS</label>
+          <textarea
+            value={cssCode}
+            onChange={(e) => setCssCode(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>JS</label>
+          <textarea
+            value={jsCode}
+            onChange={(e) => setJsCode(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Frontend Code"}</button>
             <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
+          </div>
+        </form>
+      )}
+
+      {/* ================== BACKEND FORM ================== */}
+      {activeTab === "backend" && (
+        <form onSubmit={handleAddBackend}>
+          <h4>Add Backend Step</h4>
+
+          <label>Language</label>
+          <select
+            value={backendLanguage}
+            onChange={(e) => setBackendLanguage(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Backend Language</option>
+            {backendLanguages.map((l) => (
+              <option key={l.id} value={l.id}>{l.name}</option>
+            ))}
+          </select>
+
+          <label>Topic</label>
+          <select
+            value={backendTopic}
+            onChange={(e) => setBackendTopic(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Topic</option>
+            {backendTopics.map((t) => (
+              <option key={t.id} value={t.id}>{t.name}</option>
+            ))}
+          </select>
+
+          <label>Step Number</label>
+          <input
+            type="number"
+            value={stepNumber}
+            onChange={(e) => setStepNumber(e.target.value)}
+            min={1}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          />
+
+          <label>Step File Name</label>
+          <input
+            value={stepFileName}
+            onChange={(e) => setStepFileName(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          />
+
+          <label>Step Description</label>
+          <textarea
+            value={stepDescription}
+            onChange={(e) => setStepDescription(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Source Code</label>
+          <textarea
+            value={stepCode}
+            onChange={(e) => setStepCode(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Step Image (optional)</label>
+          <input
+            type="file"
+            className="form-control mb-2"
+            onChange={(e) => setImageFile(e.target.files[0])}
+            style={visibleInputStyle}
+          />
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>{isUploading ? "Uploading..." : "Add Backend Step"}</button>
+            <button type="button" className="btn btn-danger" onClick={handleLogout}>Logout</button>
+          </div>
+
+          {/* show occupied steps if available */}
+          {occupiedSteps.length > 0 && (
+            <div style={{ marginTop: 12 }}>
+              <small>Occupied steps for this topic: {occupiedSteps.join(", ")}</small>
+            </div>
+          )}
+        </form>
+      )}
+
+      {/* ================== TEMPLATE FORM ================== */}
+      {activeTab === "template" && (
+        <form onSubmit={handleAddTemplate}>
+          <h4>Add Template</h4>
+
+          <label>Title</label>
+          <input
+            value={templateTitle}
+            onChange={(e) => setTemplateTitle(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+            required
+          />
+
+          <label>Project Info</label>
+          <textarea
+            value={templateInfo}
+            onChange={(e) => setTemplateInfo(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Iframe URL</label>
+          <input
+            value={iframeUrl}
+            onChange={(e) => setIframeUrl(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Download Repo URL</label>
+          <input
+            value={downloadRepoUrl}
+            onChange={(e) => setDownloadRepoUrl(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Documentation URL</label>
+          <input
+            value={documentationUrl}
+            onChange={(e) => setDocumentationUrl(e.target.value)}
+            className="form-control mb-2"
+            style={visibleInputStyle}
+          />
+
+          <label>Access Type</label>
+          <select
+            className="form-control mb-2"
+            value={accessType}
+            onChange={(e) => setAccessType(e.target.value)}
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Access Type</option>
+            <option value="Free">Free</option>
+            <option value="Premium">Premium</option>
+          </select>
+
+          <label>Price (if premium)</label>
+          <input
+            type="number"
+            min="0"
+            className="form-control mb-2"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+            style={visibleInputStyle}
+          />
+
+          <label>Template Type</label>
+          <select
+            className="form-control mb-2"
+            value={templateType}
+            onChange={(e) => setTemplateType(e.target.value)}
+            style={visibleInputStyle}
+            required
+          >
+            <option value="">Select Template Type</option>
+            {templateTypes.map((t) => (
+              <option key={t.id} value={t.id}>
+                {t.name}
+              </option>
+            ))}
+          </select>
+
+          <div style={{ display: "flex", gap: 12 }}>
+            <button className="btn btn-success" disabled={isUploading}>
+              {isUploading ? "Uploading..." : "Add Template"}
+            </button>
+
+            <button
+              type="button"
+              className="btn btn-danger"
+              onClick={handleLogout}
+            >
+              Logout
+            </button>
           </div>
         </form>
       )}

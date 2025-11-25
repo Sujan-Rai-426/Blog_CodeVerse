@@ -13,11 +13,10 @@
 }
 
 /* Heading */
-.admin-dashboard h2 {
-  text-align: center;
-  font-size: 2rem;
+.admin-dashboard h2, .admin-dashboard h4 {
+  text-align: left;
   color: #bcac4c;
-  margin-bottom: 30px;
+  margin-bottom: 16px;
 }
 
 /* Tabs */
@@ -114,6 +113,42 @@ input[type="file"].form-control {
   padding: 6px 12px;
 }
 
+/* Upload overlay + spinner */
+.upload-overlay {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(10, 10, 10, 0.6);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spinner {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: 6px solid rgba(255, 255, 255, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.9);
+  animation: spin 0.9s linear infinite;
+}
+
+.upload-text {
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+/* Spinner animation */
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   .admin-dashboard {
@@ -133,7 +168,6 @@ input[type="file"].form-control {
   }
 }
 
-
 /* Responsive button sizing */
 @media (max-width: 992px) {
   .btn-group .btn {
@@ -142,12 +176,9 @@ input[type="file"].form-control {
   }
 }
 
-
 @media (max-width: 480px) {
   .btn-group .btn {
     padding: 8px 0;       /* even smaller on very small screens */
     font-size: 0.85rem;
   }
 }
-
-

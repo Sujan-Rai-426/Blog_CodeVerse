@@ -1,3 +1,4 @@
+# Tutorial/models.py
 from django.db import models
 from django.core.exceptions import ValidationError
 from cloudinary.models import CloudinaryField
@@ -9,7 +10,6 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name or "No Category"
-
 
 # -------------------- SECTION --------------------
 class Section(models.Model):
@@ -28,7 +28,6 @@ class Section(models.Model):
         section_name = self.name or 'No Section'
         return f"{category_name} - {section_name}"
 
-
 # -------------------- LANGUAGE --------------------
 class Language(models.Model):
     section = models.ForeignKey(Section, related_name="languages", on_delete=models.CASCADE)
@@ -43,7 +42,6 @@ class Language(models.Model):
         lang_name = self.name or 'Unnamed Language'
         return f"{lang_name} -- [{section_name}]"
 
-
 # -------------------- TOPIC --------------------
 class Topic(models.Model):
     language = models.ForeignKey(Language, related_name="topics", on_delete=models.CASCADE)
@@ -57,77 +55,33 @@ class Topic(models.Model):
         topic_name = self.name or 'Unnamed Topic'
         return f"{topic_name} --- [{lang_name}]"
 
-# -------------------- FRONTEND VIDEO --------------------
-class FrontendVideo(models.Model):
-    topic = models.ForeignKey(Topic, related_name="videos", on_delete=models.CASCADE)
-    title = models.CharField(max_length=1500)
-    video_url = CloudinaryField(
-        'video',
-        resource_type='video',
-        folder='Blog_CodeVerse/Frontend_videos/'
+# -------------------- FRONTEND SOURCE CODE (canonical) --------------------
+class FrontendSourceCode(models.Model):
+    topic = models.ForeignKey(
+        Topic, related_name="source_codes",
+        on_delete=models.CASCADE
     )
-    access_type = models.CharField(
-        max_length=10,
-        choices=[('Free', 'Free'), ('Premium', 'Premium')],
-        default='Free'
-    )
-
-    def clean(self):
-        if self.topic and getattr(self.topic.language.section, "name", None) != "Frontend":
-            raise ValidationError("Cannot add video to a Backend topic.")
-
-    def __str__(self):
-        try:
-            topic_name = getattr(self.topic, 'name', 'No Topic')
-            title_text = self.title or "Untitled"
-            if len(title_text) > 50:
-                title_text = f"{title_text[:50]}..."
-            return f"Topic: [{topic_name}] ---- {title_text}"
-        except Exception:
-            return "FrontendVideo object"
-
-
-# -------------------- FRONTEND VIDEO INFO --------------------
-class FrontendVideoInfo(models.Model):
-    video = models.OneToOneField(FrontendVideo, related_name="info", on_delete=models.CASCADE)
+    title = models.CharField(max_length=500, default="Untitled")
     description = models.TextField(blank=True, null=True)
 
-    def __str__(self):
-        try:
-            video_title = getattr(self.video, 'title', 'No Video')
-            return f"Description for Video: [{video_title}]"
-        except Exception:
-            return "FrontendVideoInfo object"
-
-
-
-# -------------------- FRONTEND SOURCE CODE --------------------
-class FrontendSourceCode(models.Model):
-    video = models.ForeignKey(FrontendVideo, related_name="source_codes", on_delete=models.CASCADE)
     html_code = models.TextField(blank=True, null=True)
     css_code = models.TextField(blank=True, null=True)
     js_code = models.TextField(blank=True, null=True)
+
     access_type = models.CharField(
         max_length=10,
-        choices=[('Free', 'Free'), ('Premium', 'Premium')],
-        default='Free'
+        choices=[("Free", "Free"), ("Premium", "Premium")],
+        default="Free"
     )
-    
+    price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+    hasBought = models.BooleanField(default=False)
 
     def __str__(self):
-        try:
-            video_title = getattr(self.video, 'title', 'No Video')
-            return f"Source code for Video: [{video_title}]"
-        except Exception:
-            return "FrontendSourceCode object"
+        return f"Code: {self.title}"
 
-# -------------------- BACKEND PART --------------------
+# -------------------- BACKEND PART (unchanged) --------------------
 class BackendImage(models.Model):
-    topic = models.ForeignKey(
-        'Topic',
-        related_name="images",
-        on_delete=models.CASCADE
-    )
+    topic = models.ForeignKey('Topic', related_name="images", on_delete=models.CASCADE)
     image = CloudinaryField(
         'image',
         folder='Blog_CodeVerse/Backend_img/',
@@ -142,7 +96,6 @@ class BackendImage(models.Model):
     def __str__(self):
         topic_name = getattr(self.topic, 'name', None) or "No Topic"
         return f"Image for Topic: [{topic_name}]"
-
 
 class BackendStep(models.Model):
     topic = models.ForeignKey('Topic', related_name="steps", on_delete=models.CASCADE)
@@ -171,18 +124,17 @@ class BackendStep(models.Model):
                     "step_number": f"Upto step no. {max_step} already exists in this topic."
                 })
 
-# models.py for contact form
+# -------------------- CONTACT --------------------
 class Contact(models.Model):
     name = models.CharField(max_length=25, null=False)
     email = models.EmailField(null=False)
     message = models.TextField(null=False)
     created_at = models.DateTimeField(auto_now_add=True, null=False)
+
     def __str__(self):
         return f"Message from {self.name} ({self.email})"
-    
 
-
-
+# -------------------- TEMPLATE/OTHER --------------------
 ACCESS_CHOICES = [
     ("Free", "Free"),
     ("Premium", "Premium"),
@@ -192,7 +144,6 @@ class TemplateType(models.Model):
     name = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
-
 
 class Template(models.Model):
     title = models.CharField(max_length=200)

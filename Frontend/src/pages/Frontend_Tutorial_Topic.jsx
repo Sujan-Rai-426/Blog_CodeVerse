@@ -1,5 +1,6 @@
+// src/components/Frontend_Tutorial_Topic.jsx
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
@@ -7,12 +8,12 @@ import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx"
 
 const Frontend_Tutorial_Topic = () => {
     const { languageID } = useParams();
+    const navigate = useNavigate();
     const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [frontendLangs, setFrontendLangs] = useState([]);
     const [activeLangID, setActiveLangID] = useState(languageID);
     const scrollRef = useRef(null);
-
 
   // Fetch all frontend languages separately
     useEffect(() => {
@@ -29,7 +30,6 @@ const Frontend_Tutorial_Topic = () => {
         }
       }
     }, [parentLoading, data]);
-
 
   // Filter categories by selected language
     useEffect(() => {
@@ -56,9 +56,7 @@ const Frontend_Tutorial_Topic = () => {
       }
     }, [parentLoading, data, languageID]);
 
-
   // Scroll selected language card to center on initial render
-// Robust centering of selected card inside horizontal scroll container
 useEffect(() => {
   if (!frontendLangs.length) return;
 
@@ -69,23 +67,18 @@ useEffect(() => {
   if (!container) return;
 
   const centerSelectedCard = (selectedCard) => {
-    // Use bounding rects (reliable even if offsetLeft is weird)
     const containerRect = container.getBoundingClientRect();
     const cardRect = selectedCard.getBoundingClientRect();
 
-    // card left relative to container's content (account for current scroll)
     const cardLeftWithinContainer = cardRect.left - containerRect.left + container.scrollLeft;
 
-    // target scrollLeft to center card
     const targetScrollLeft = Math.round(
       cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
     );
 
-    // clamp to valid range
     const maxScroll = container.scrollWidth - container.clientWidth;
     const finalScroll = Math.max(0, Math.min(targetScrollLeft, maxScroll));
 
-    // perform smooth scroll
     container.scrollTo({ left: finalScroll, behavior: "smooth" });
   };
 
@@ -101,19 +94,15 @@ useEffect(() => {
     }
   }, intervalMs);
 
-  // cleanup
   return () => clearInterval(intervalId);
 }, [frontendLangs, languageID]);
-
-
-
 
   // Intersection Observer to highlight language currently visible on screen
     useEffect(() => {
       if (!filteredCategories.length) return;
       const observerOptions = {
         root: null,
-        rootMargin: "-150px 0px -50% 0px", // adjust for navbar
+        rootMargin: "-150px 0px -50% 0px",
         threshold: 0,
       };
       const observerCallback = (entries) => {
@@ -128,7 +117,6 @@ useEffect(() => {
       sections.forEach((el) => observer.observe(el));
       return () => observer.disconnect();
     }, [filteredCategories]);
-
 
     return (
         <div className="tutorial-topic-page">
@@ -159,8 +147,7 @@ useEffect(() => {
                 </div>
             </div>
 
-
-          {/* Frontend Topics Based on Selected Language */}
+            {/* Frontend Topics Based on Selected Language */}
             {parentLoading ? (
                 <div className="topic-grid">
                     {[...Array(6)].map((_, i) => (
@@ -181,20 +168,25 @@ useEffect(() => {
                                     <h2 className="language-title">{language.name}</h2>
                                     <div className="topic-grid">
                                         {language.topics?.length > 0 ? (
-                                            language.topics.map((topic) => (
-                                                <Link
-                                                    key={topic.id}
-                                                    to={`/Frontend_Tutorial_Solution/${topic.id}`}
-                                                    className="topic-card"
-                                                >
-                                                    <div className="topic-content">
-                                                        <h3>{topic.name}</h3>
-                                                        <p>Click to view tutorial steps</p>
-                                                    </div>
-                                                </Link>
-                                            ))
-                                          ) : (
-                                              <p className="no-topic">Content will be uploaded very soon...</p>
+                                            language.topics.map((topic) => {
+                                                // compute first source code id (if exists)
+                                                const firstSourceId = (topic.source_codes && topic.source_codes[0] && topic.source_codes[0].id) || null;
+                                                const toPath = firstSourceId ? `/Frontend_Tutorial_Solution/${topic.id}/${firstSourceId}` : `/Frontend_Tutorial_Solution/${topic.id}`;
+                                                return (
+                                                    <Link
+                                                      key={topic.id}
+                                                      to={toPath}
+                                                      className="topic-card"
+                                                    >
+                                                        <div className="topic-content">
+                                                            <h3>{topic.name}</h3>
+                                                            <p>Click to view tutorial steps</p>
+                                                        </div>
+                                                    </Link>
+                                                );
+                                            })
+                                        ) : (
+                                            <p className="no-topic">Content will be uploaded very soon...</p>
                                         )}
                                     </div>
                                 </div>
