@@ -163,7 +163,7 @@ export default function Design_Code({
             {/* ============================
                 🔵 CODE BOX AREA
             ============================= */}
-            <div style={{ position: "relative" }}>
+            <div style={{ position: "relative", fontSize: "0.85rem" }}>
 
                 {/* ------------------------------------
                     🔥 FREE ITEM → Show Ads First

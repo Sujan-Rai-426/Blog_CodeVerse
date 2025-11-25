@@ -15,7 +15,6 @@ import Backend_Tutorial_Topic from '../pages/Backend_Tutorial_Topic'
 
 // Frontend Or DESIGN Tutorials import
 import Components_Design from '../designs/Components_Design'
-import Frontend_Tutorial_Solution from '../pages/Frontend_Tutorial_Solution'
 import Frontend_Tutorial_Topic from '../pages/Frontend_Tutorial_Topic'
 
 // Login and Signup Pages imports

@@ -133,9 +133,13 @@
     .iframe-container iframe { height: auto !important; padding: 0;   }
     .devices { display: none; }
     .related-videos-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .action-btn { font-size: 0.9rem; padding: 0.45rem 0.9rem; }
 }
 
 @media (max-width: 480px) {
+    .navigator-btns { gap: 0.5rem; }
+    .code-preview-open { gap: 0.5rem; justify-content: flex-start; }
+    .fullscreen-btn { align-self: flex-start; }
     /* .iframe-container iframe { height: 400px; } */
 }
 
@@ -268,23 +272,4 @@
     box-shadow: 0 6px 15px rgba(0,0,0,0.2);
 }
 
-/* Responsive Adjustments */
-@media (max-width: 768px) {
-    .action-btn {
-      font-size: 0.9rem;
-      padding: 0.45rem 0.9rem;
-    }
-}
 
-@media (max-width: 480px) {
-    .navigator-btns {
-      gap: 0.5rem;
-    }
-    .code-preview-open {
-      gap: 0.5rem;
-      justify-content: flex-start;
-    }
-    .fullscreen-btn {
-      align-self: flex-start; /* keeps it on left on mobile stacked */
-    }
-}
