@@ -2,18 +2,18 @@
 from rest_framework import serializers
 from Tutorial.models import (
     Category, Contact, Section, Language, Topic,
-     BackendImage, BackendStep, TemplateType, Template
+    FrontendSourceCode, BackendImage, BackendStep, TemplateType, Template
 )
 
 # -------------------- FRONTEND SERIALIZERS --------------------
-# class FrontendSourceCodeSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = FrontendSourceCode
-#         fields = [
-#             'id', 'topic', 'title', 'description',
-#             'html_code', 'css_code', 'js_code',
-#             'access_type', 'price', 'hasBought'
-#         ]
+class FrontendSourceCodeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = FrontendSourceCode
+        fields = [
+            'id', 'topic', 'title', 'description',
+            'html_code', 'css_code', 'js_code',
+            'access_type', 'price', 'hasBought'
+        ]
 
 # -------------------- BACKEND SERIALIZERS --------------------
 class BackendImageSerializer(serializers.ModelSerializer):
@@ -37,7 +37,7 @@ class BackendStepSerializer(serializers.ModelSerializer):
 
 # -------------------- COMMON TOPIC SERIALIZER --------------------
 class TopicSerializer(serializers.ModelSerializer):
-    # source_codes = FrontendSourceCodeSerializer(many=True, read_only=True)
+    source_codes = FrontendSourceCodeSerializer(many=True, read_only=True)
     images = BackendImageSerializer(many=True, read_only=True)
     steps = BackendStepSerializer(many=True, read_only=True)
 

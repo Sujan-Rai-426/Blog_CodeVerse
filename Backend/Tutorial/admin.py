@@ -2,7 +2,7 @@
 from django.contrib import admin
 from .models import (
     Category, Section, Language, Topic,
-     
+    FrontendSourceCode,
     BackendImage, BackendStep, Contact, TemplateType, Template
 )
 
@@ -19,11 +19,11 @@ class TemplateAdmin(admin.ModelAdmin):
     list_filter = ['access_type', 'template_type']
 
 # inlines
-# class FrontendSourceCodeInline(admin.StackedInline):
-#     model = FrontendSourceCode
-#     extra = 0
-#     can_delete = True
-#     classes = ['collapse']
+class FrontendSourceCodeInline(admin.StackedInline):
+    model = FrontendSourceCode
+    extra = 0
+    can_delete = True
+    classes = ['collapse']
 
 class BackendStepInline(admin.StackedInline):
     model = BackendStep
@@ -92,11 +92,11 @@ class CategoryAdmin(admin.ModelAdmin):
     search_fields = ("name",)
     inlines = [SectionInline]
 
-# @admin.register(FrontendSourceCode)
-# class FrontendSourceCodeAdmin(admin.ModelAdmin):
-#     list_display = ('title', 'topic', 'access_type', 'price')
-#     search_fields = ('title', 'topic__name')
-#     list_filter = ('access_type', 'topic__language__section__name')
+@admin.register(FrontendSourceCode)
+class FrontendSourceCodeAdmin(admin.ModelAdmin):
+    list_display = ('title', 'topic', 'access_type', 'price')
+    search_fields = ('title', 'topic__name')
+    list_filter = ('access_type', 'topic__language__section__name')
 
 @admin.register(BackendStep)
 class BackendStepAdmin(admin.ModelAdmin):

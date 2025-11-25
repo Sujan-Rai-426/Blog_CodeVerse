@@ -19,12 +19,12 @@ from Tutorial.utils import verify_email_exists
 
 from Tutorial.models import (
     Category, Topic, Language,
-    
+    FrontendSourceCode,
     BackendStep, BackendImage, TemplateType, Template
 )
 from Tutorial.serializers import (
     CategorySerializer, TopicSerializer, LanguageSerializer,
- 
+    FrontendSourceCodeSerializer,
     BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
 
@@ -57,6 +57,15 @@ class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
+# ------------------ FRONTEND SOURCE CODES ------------------
+class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = FrontendSourceCode.objects.all()
+    serializer_class = FrontendSourceCodeSerializer
+
+    def perform_create(self, serializer):
+        # No special file upload here (we moved away from video frames).
+        serializer.save()
 
 # ------------------ BACKEND ------------------
 class BackendStepViewSet(viewsets.ModelViewSet):

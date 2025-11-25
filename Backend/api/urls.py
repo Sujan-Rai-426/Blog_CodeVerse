@@ -4,7 +4,7 @@ from rest_framework.routers import DefaultRouter
 from Tutorial import views
 from Tutorial.views import (
     CategoryViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
-     
+    FrontendSourceCodeViewSet,
     BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView,
 )
 
@@ -14,7 +14,7 @@ router.register("topics", TopicViewSet, basename="topic")
 router.register("languages", LanguageViewSet, basename="language")
 
 # FRONTEND SOURCE CODES — canonical endpoint now
-# router.register("frontendsourcecodes", FrontendSourceCodeViewSet, basename="frontendsourcecode")
+router.register("frontendsourcecodes", FrontendSourceCodeViewSet, basename="frontendsourcecode")
 
 router.register("backendsteps", BackendStepViewSet, basename="backendstep")
 router.register("backendimages", BackendImageViewSet, basename="backendimage")
