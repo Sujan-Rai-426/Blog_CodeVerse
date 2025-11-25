@@ -123,73 +123,87 @@ export default function Components_Design() {
 
   return (
     <div className="template-preview-container">
-      <div className="template-preview">
-        <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div>
-            <h3 style={{ margin: 0 }}>{currentCodes.title}</h3>
-            <div className="access-info" style={{ marginTop: 6 }}>
-              <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
-                {currentCodes.access_type}
-                {currentCodes.access_type === "Premium" && currentCodes.price ? ` • $${currentCodes.price}` : ""}
-              </span>
+        <div className="template-preview">
+
+
+      {/* === Page Header [ Title + Access tyle --> Free or Premium ] ====== */}
+          <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div>
+              <h3 style={{ margin: 0 }}>{currentCodes.title}</h3>
+              <div className="access-info" style={{ marginTop: 6 }}>
+                <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
+                  {currentCodes.access_type}
+                  {currentCodes.access_type === "Premium" && currentCodes.price ? ` • $${currentCodes.price}` : ""}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="navigator-btns" style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <div className="code-preview-open">
-            <button className={`action-btn preview-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => scrollToSection("preview")}>
-              <i className="bi bi-eye-fill" /> Preview
-            </button>
-            <button className={`action-btn code-btn ${activeTab === "code" ? "active" : ""}`} onClick={() => scrollToSection("code")}>
-              <i className="bi bi-code-slash" /> Code
+
+      {/* ===== NAVIGATION BUTTONS [ Code + Preview + Full Screen ] ============ */}
+          <div className="navigator-btns" style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div className="code-preview-open">
+              <button className={`action-btn preview-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => scrollToSection("preview")}>
+                <i className="bi bi-eye-fill" /> Preview
+              </button>
+              <button className={`action-btn code-btn ${activeTab === "code" ? "active" : ""}`} onClick={() => scrollToSection("code")}>
+                <i className="bi bi-code-slash" /> Code
+              </button>
+            </div>
+            <button className="action-btn fullscreen-btn" onClick={openFullscreen}>
+              <i className="bi bi-arrows-fullscreen" /> Fullscreen
             </button>
           </div>
-          <button className="action-btn fullscreen-btn" onClick={openFullscreen}>
-            <i className="bi bi-arrows-fullscreen" /> Fullscreen
-          </button>
+
+
+
+          <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
+              <Design_Code
+                  html={currentCodes.html}
+                  css={currentCodes.css}
+                  js={currentCodes.js}
+                  access_type={currentCodes.access_type}
+                  price={currentCodes.price}
+                  hasBought={currentCodes.hasBought}
+              />
+          </div>
+
+          <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
+              <Design_Preview srcDoc={srcDoc} device={device} changeDevice={changeDevice} />
+          </div>
         </div>
 
-        <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
-          <Design_Code
-            html={currentCodes.html}
-            css={currentCodes.css}
-            js={currentCodes.js}
-            access_type={currentCodes.access_type}
-            price={currentCodes.price}
-            hasBought={currentCodes.hasBought}
-          />
-        </div>
 
-        <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
-          <Design_Preview srcDoc={srcDoc} device={device} changeDevice={changeDevice} />
-        </div>
-      </div>
 
-      <div className="related-videos-grid" style={{ marginTop: 20 }}>
-        {relatedItems
-          .filter((s) => s.id !== currentCodes.id)
-          .map((s) => {
-            const smallSrcDoc = buildIframeDoc(s.html_code || s.html || "", s.css_code || s.css || "", s.js_code || s.js || "");
-            return (
-              <div
-                key={s.id}
-                className="related-video-item"
-                onClick={() => handleRelatedClick(s)}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
-                style={{ position: "relative", cursor: "pointer", display: "flex", flexDirection: "column" }}
-              >
-                <iframe
-                  srcDoc={smallSrcDoc}
-                  sandbox="allow-scripts allow-same-origin allow-forms"
-                  title={s.title || `related-${s.id}`}
-                  style={{ pointerEvents: "none", width: "100%", height: 180, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8 }}
-                />
-              </div>
-            );
-          })}
+{/* ============ RELATED DESIGNS ============= */}
+      <div className="related-topic-container">
+          <h1 className="home-section-title" > - Recommended - </h1>
+          <div className="related-videos-grid">
+
+              {relatedItems
+                  .filter((s) => s.id !== currentCodes.id)
+                  .map((s) => {
+                      const smallSrcDoc = buildIframeDoc(s.html_code || s.html || "", s.css_code || s.css || "", s.js_code || s.js || "");
+                      return (
+                          <div
+                              key={s.id}
+                              className="related-video-item"
+                              onClick={() => handleRelatedClick(s)}
+                              role="button"
+                              tabIndex={0}
+                              onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
+                              style={{ position: "relative", cursor: "pointer", display: "flex", flexDirection: "column" }}
+                          >
+                            <iframe
+                                srcDoc={smallSrcDoc}
+                                sandbox="allow-scripts allow-same-origin allow-forms"
+                                title={s.title || `related-${s.id}`}
+                                style={{ pointerEvents: "none", width: "100%", height: 180, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8 }}
+                            />
+                          </div>
+                      );
+                  })}
+          </div>
       </div>
     </div>
   );
