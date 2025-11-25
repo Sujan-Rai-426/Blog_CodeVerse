@@ -56,28 +56,28 @@ class Topic(models.Model):
         return f"{topic_name} --- [{lang_name}]"
 
 # -------------------- FRONTEND SOURCE CODE (canonical) --------------------
-class FrontendSourceCode(models.Model):
-    topic = models.ForeignKey(
-        Topic, related_name="source_codes",
-        on_delete=models.CASCADE
-    )
-    title = models.CharField(max_length=500, default="Untitled")
-    description = models.TextField(blank=True, null=True)
+# class FrontendSourceCode(models.Model):
+#     topic = models.ForeignKey(
+#         Topic, related_name="source_codes",
+#         on_delete=models.CASCADE
+#     )
+#     title = models.CharField(max_length=500, default="Untitled")
+#     description = models.TextField(blank=True, null=True)
 
-    html_code = models.TextField(blank=True, null=True)
-    css_code = models.TextField(blank=True, null=True)
-    js_code = models.TextField(blank=True, null=True)
+#     html_code = models.TextField(blank=True, null=True)
+#     css_code = models.TextField(blank=True, null=True)
+#     js_code = models.TextField(blank=True, null=True)
 
-    access_type = models.CharField(
-        max_length=10,
-        choices=[("Free", "Free"), ("Premium", "Premium")],
-        default="Free"
-    )
-    price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
-    hasBought = models.BooleanField(default=False)
+#     access_type = models.CharField(
+#         max_length=10,
+#         choices=[("Free", "Free"), ("Premium", "Premium")],
+#         default="Free"
+#     )
+#     price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
+#     hasBought = models.BooleanField(default=False)
 
-    def __str__(self):
-        return f"Code: {self.title}"
+#     def __str__(self):
+#         return f"Code: {self.title}"
 
 # -------------------- BACKEND PART (unchanged) --------------------
 class BackendImage(models.Model):
