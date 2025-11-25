@@ -140,6 +140,11 @@ cloudinary.config(
     secure=True
 )
 
+CSRF_TRUSTED_ORIGINS = [
+    "https://codevora140.vercel.app",
+    "http://localhost:5173",
+]
+
 # ---------------- CORS ----------------
 CORS_ALLOWED_ORIGINS = [
     "https://codevora140.vercel.app", "http://localhost:5173",

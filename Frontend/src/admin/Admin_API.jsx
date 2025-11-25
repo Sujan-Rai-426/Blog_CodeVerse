@@ -9,7 +9,7 @@ const apiURL = isProduction
 // Create Axios instance
 const Admin_API = axios.create({
     baseURL: apiURL,
-    timeout: 10000, // 10 seconds
+    timeout: 30000, // 10 seconds
     headers: { "Content-Type": "application/json" },
 });
 
