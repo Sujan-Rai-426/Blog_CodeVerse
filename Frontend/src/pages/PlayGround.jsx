@@ -452,7 +452,7 @@ const generatedCode = (() => {
             <button className="cv-btn-viewcode" onClick={() => {
               const codeSection = document.getElementById("CODE");
               if (codeSection) codeSection.scrollIntoView({ behavior: "smooth", block: "start" });
-            }}>View Code</button>
+            }}>Create Code</button>
           </div>
           {selectedBoxId && <>
             <div className="cv-control-container">

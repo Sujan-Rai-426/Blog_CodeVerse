@@ -132,7 +132,7 @@ function Home() {
                                 className="share-btn text-light"
                                 onClick={() => {
                                     const loggedIn = window.localStorage.getItem("loggedIn") === "true";
-                                    navigate(loggedIn ? "/Admin_Dashboard" : "/Admin_Login");
+                                    navigate(loggedIn ? "/Admin" : "/Admin_Login");
                                 }}
                             >
                                 <i className="bi bi-share"></i> Share Code

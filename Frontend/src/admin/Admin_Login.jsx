@@ -33,7 +33,7 @@ function Admin_Login() {
             localStorage.setItem("loggedIn", "true");
 
             // Redirect to Admin Dashboard
-            navigate("/Admin_Dashboard");
+            navigate("/Admin");
         } else {
             setError("Invalid credentials or not an admin.");
         }

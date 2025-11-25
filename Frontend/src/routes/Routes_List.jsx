@@ -17,12 +17,9 @@ import Backend_Tutorial_Topic from '../pages/Backend_Tutorial_Topic'
 import Components_Design from '../designs/Components_Design'
 import Components_Topic from '../designs/Components_Topic'
 
-// Login and Signup Pages imports
-import Admin_Login from '../admin/Admin_Login'
 
 // Protected Dashboard Pages imports
 import Protected_Route from '../context/Protected_Route'
-import Admin_Dashboard from '../admin/Admin_Dashboard'
 import User_Profile from '../clients/User_Profile'
 
 // Payment Pages imports
@@ -37,6 +34,12 @@ import Template_Preview from '../template_Pages/Template_Preview'
 
 // Unavailable Page imports
 import Unavailable_Page from '../components/Unavailable_Page'
+
+
+// Admin Pages imports
+import Admin_Login from '../admin/Admin_Login'
+import Admin_Home from '../admin/Admin_Home'
+
 
 function Routes_List() {
     return (
@@ -64,11 +67,14 @@ function Routes_List() {
 
                 {/* Login and Signup Routes */}
                 <Route exact path="/Admin_Login" element={<Admin_Login />} />
+                <Route element={<Protected_Route />}>
+                    <Route exact path='/Admin' element={<Admin_Home />} />
+                </Route>
+
 
 
                 {/* Protected Dashboard Routes */}
                 <Route element={<Protected_Route />}>
-                    <Route  exact path="/Admin_Dashboard" element={<Admin_Dashboard />} />
                     <Route exact path='/User-Profile' element={<User_Profile />} />
                 </Route>
 
