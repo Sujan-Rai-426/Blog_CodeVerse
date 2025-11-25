@@ -7,39 +7,38 @@ import Admin_Add_Data from "./Admin_Add_Data";
 import Admin_Update_Data from "./Admin_Update_Data";
 import Admin_Settings from "./Admin_Settings";
 import Admin_View_Data from "./Admin_View_Data";
-import { useNavigate } from "react-router-dom";
-
+import { useNavigate, useOutletContext } from "react-router-dom";
 
 export default function Admin_Home() {
-    const navigate = useNavigate();
-    const [sidebarOpen, setSidebarOpen] = useState(true);
-    const [activePage, setActivePage] = useState("dashboard"); // current content
+  const navigate = useNavigate();
+  const { adminData } = useOutletContext(); // Get all DB data from Protected Route
+  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [activePage, setActivePage] = useState("dashboard"); // current content
 
-      // =================== LOGOUT ===================
-    const handleLogout = () => {
-        // adjust key names to whatever you store (token / loggedIn etc)
-        window.localStorage.removeItem("loggedIn");
-        window.localStorage.removeItem("access_token");
-        navigate("/Admin_Login");
-    };
+  // =================== LOGOUT ===================
+  const handleLogout = () => {
+    window.localStorage.removeItem("loggedIn"); // optional
+    window.localStorage.removeItem("access_token"); // optional
+    navigate("/Admin_Login");
+  };
 
-    // Render main content based on activePage
-    const renderContent = () => {
-        switch (activePage) {
-            case "dashboard":
-                return <Admin_Dashboard />;
-            case "add":
-                return <Admin_Add_Data />;
-            case "view":
-                return <Admin_View_Data />;
-            case "update":
-                return <Admin_Update_Data />;
-            case "settings":
-                return <Admin_Settings />;
-            default:
-                return <Admin_Dashboard />;
-        }
-    };
+  // Render main content based on activePage
+  const renderContent = () => {
+    switch (activePage) {
+      case "dashboard":
+        return <Admin_Dashboard adminData={adminData} />; // pass adminData
+      case "add":
+        return <Admin_Add_Data adminData={adminData} />;
+      case "view":
+        return <Admin_View_Data adminData={adminData} />;
+      case "update":
+        return <Admin_Update_Data adminData={adminData} />;
+      case "settings":
+        return <Admin_Settings />;
+      default:
+        return <Admin_Dashboard adminData={adminData} />;
+    }
+  };
 
   return (
     <div className="admin-container">
@@ -53,21 +52,20 @@ export default function Admin_Home() {
         </button>
         <h1 className="admin-title">CodeVora Admin</h1>
 
-            <button
-              type="button"
-              className="logout-btn"
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
-
+        <button
+          type="button"
+          className="logout-btn"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
       </nav>
 
       <div className="admin-body">
         <Admin_Sidebar
           sidebarOpen={sidebarOpen}
           setSidebarOpen={setSidebarOpen}
-          setActivePage={setActivePage} // pass function to update content
+          setActivePage={setActivePage}
           activePage={activePage}
         />
 

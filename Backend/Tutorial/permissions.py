@@ -1,10 +1,12 @@
-from rest_framework.permissions import SAFE_METHODS, BasePermission
+# permissions.py
+from rest_framework import permissions
 
-class IsAdminOrReadOnly(BasePermission):
+class IsAdminOrReadOnly(permissions.BasePermission):
+    """
+    Admin can do everything.
+    Normal user can only read (GET, HEAD, OPTIONS).
+    """
     def has_permission(self, request, view):
-        # SAFE for GET, HEAD, OPTIONS
-        if request.method in SAFE_METHODS:
+        if request.method in permissions.SAFE_METHODS:
             return True
-
-        # Only allow admins for POST, PUT, DELETE
-        return request.user and request.user.is_authenticated and request.user.is_superuser
+        return request.user and request.user.is_staff

@@ -1,4 +1,5 @@
 import React from 'react'
+import "../assets/css/Admin_Update_Data.css"
 
 function Admin_Update_Data() {
     return (

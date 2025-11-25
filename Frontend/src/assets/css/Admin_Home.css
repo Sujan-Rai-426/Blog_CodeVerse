@@ -23,6 +23,10 @@ body {
     flex-direction: column;
 }
 
+.home-wrapper {
+    padding: 0 1rem;
+}
+
 /* NAVBAR */
 .admin-navbar {
     background: #111;
@@ -38,7 +42,7 @@ body {
     z-index: 20;
 }
 .toggle-btn {
-    background: #222;
+    background: transparent;
     color: white;
     padding: 8px 10px;
     border: none;
@@ -145,22 +149,16 @@ body {
 }
 
 /* MAIN CONTENT */
-.admin-content {
-    flex-grow: 1;
-    padding: 2rem;
-    color: white;
-    height: 100%;
-    overflow-y: auto;
-}
 
 .sidebar-menu li.active {
-  background: #222;
-  color: #fff;
+    background: #222;
+    color: #fff;
 }
 
 
 /* RESPONSIVE */
 @media (max-width: 768px) {
+    .home-wrapper { padding: 0 0.5rem; }
     .admin-sidebar, .admin-sidebar.collapsed { position: fixed; top: 70px; left: -260px; width: 220px !important; padding: 1.5rem 1rem; height: calc(100vh - 70px); z-index: 99; transition: all 0.3s ease; }
     .admin-navbar { padding: 0.8rem 0.5rem !important; }
     .admin-sidebar.open { left: 0; }

@@ -3,7 +3,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from Tutorial import views
 from Tutorial.views import (
-    CategoryViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
+    AdminAllDataAPIView, CategoryViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
     FrontendSourceCodeViewSet,
     BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView,
 )
@@ -23,6 +23,7 @@ router.register(r"templates", TemplateViewSet, basename="templates")
 
 urlpatterns = [
     path('admin-login/', AdminLoginAPIView.as_view(), name='admin-login'),
+    path("admin/all-data/", AdminAllDataAPIView.as_view(), name="admin-all-data"),
     path('contact/', views.contact_form_view, name='contact_form'),
     path("", include(router.urls)),
 ]

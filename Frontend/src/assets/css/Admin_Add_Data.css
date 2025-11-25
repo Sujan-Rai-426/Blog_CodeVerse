@@ -1,10 +1,15 @@
 /* Admin_Dashboard.css */
 
 /* Container */
+.admin-content {
+    flex-grow: 1;
+    color: white;
+    height: 100%;
+    overflow-y: auto;
+}
 .admin-dashboard {
   color: white;
-  max-width: 900px;
-  margin: 0 auto;
+  min-height: 90vh;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background: linear-gradient(145deg, #4e4b4b 0%, #473e3e 50% 50%, #000000 100%);
@@ -21,9 +26,9 @@
 
 /* Tabs */
 .btn-group {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 30px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
 }
 
 .btn-group .btn {
@@ -57,6 +62,7 @@ form h4 {
 
 /* Inputs & Selects & Textareas */
 .form-control {
+  color: gray !important;
   border-radius: 8px;
   padding: 10px 12px;
   border: 1px solid #ccc;
@@ -151,34 +157,17 @@ input[type="file"].form-control {
 
 /* Responsive */
 @media (max-width: 768px) {
-  .admin-dashboard {
-    padding: 15px;
-  }
-
-  .btn-group {
-    flex-direction: column;
-    align-items: stretch; /* make buttons full width */
-  }
-
-  .btn-group .btn {
-    width: 100%;          /* full width on mobile */
-    padding: 10px 0;      /* adjust vertical padding */
-    font-size: 0.9rem;
-    margin: 5px 0;        /* spacing between stacked buttons */
-  }
+  .admin-dashboard { padding: 15px; }
+  .btn-group { gap: 8px; margin: 0 !important; }
+  .btn-group .btn { width: 100%; padding: 10px 0; font-size: 0.9rem; }
 }
 
 /* Responsive button sizing */
 @media (max-width: 992px) {
-  .btn-group .btn {
-    padding: 8px 16px;  /* slightly smaller on tablets */
-    font-size: 0.95rem;
-  }
+  .btn-group .btn { padding: 8px 16px; font-size: 0.95rem; }
+  form { background: transparent; padding: 25px 0px;}
 }
 
 @media (max-width: 480px) {
-  .btn-group .btn {
-    padding: 8px 0;       /* even smaller on very small screens */
-    font-size: 0.85rem;
-  }
+  .btn-group .btn { padding: 8px 0; font-size: 0.85rem; }
 }

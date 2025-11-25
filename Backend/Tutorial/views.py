@@ -1,6 +1,5 @@
 # Tutorial/views.py
 from django.db import IntegrityError
-import cloudinary.uploader
 
 from rest_framework.decorators import action
 from rest_framework import viewsets, status
@@ -9,13 +8,21 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.permissions import AllowAny
 
+# Tutorial/views.py
+from rest_framework.views import APIView
+from rest_framework.permissions import IsAdminUser
+
 from django.contrib.auth import authenticate
+from Backend import settings
 from Tutorial.permissions import IsAdminOrReadOnly
 from rest_framework.decorators import api_view
 
 import re
 from django.core.mail import EmailMessage, BadHeaderError
 from Tutorial.utils import verify_email_exists
+
+from datetime import timedelta
+from django.utils import timezone
 
 from Tutorial.models import (
     Category, Topic, Language,
@@ -57,6 +64,7 @@ class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
+
 # ------------------ FRONTEND SOURCE CODES ------------------
 class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
@@ -66,6 +74,7 @@ class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         # No special file upload here (we moved away from video frames).
         serializer.save()
+
 
 # ------------------ BACKEND ------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
@@ -78,10 +87,12 @@ class BackendStepViewSet(viewsets.ModelViewSet):
         steps = BackendStep.objects.filter(topic_id=topic_id).values_list("step_number", flat=True)
         return Response({"occupied_steps": list(steps)}, status=status.HTTP_200_OK)
 
+
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
+
 
 # ------------------ ADMIN LOGIN VIEW ------------------
 class AdminLoginAPIView(APIView):
@@ -89,19 +100,41 @@ class AdminLoginAPIView(APIView):
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-
         user = authenticate(username=username, password=password)
         if user is not None and user.is_superuser:
-            refresh = RefreshToken.for_user(user)
-            access_token = str(refresh.access_token)
-            refresh_token = str(refresh)
-            refresh.access_token["is_admin"] = True
-            return Response({
-                "access_token": access_token,
-                "refresh_token": refresh_token,
-            }, status=status.HTTP_200_OK)
+            return self.create_token_response(user)
         else:
-            return Response({"detail": "Invalid credentials or user is not admin."}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"detail": "Invalid credentials or not admin."}, status=401)
+    def create_token_response(self, user):
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        expires = timezone.now() + timedelta(days=7)
+        response = Response({
+            "detail": "Login successful",
+            "access_token": access_token,
+            "refresh_token": str(refresh)
+        }, status=200)
+        # Set cookies (optional)
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
+            expires=expires
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
+            expires=expires
+        )
+        return response
+
+
+
 
 # ------------------ Contact form (unchanged) ------------------
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
@@ -151,3 +184,35 @@ class TemplateViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Template.objects.all().order_by("-created_at")
     serializer_class = TemplateSerializer
+
+
+
+
+
+
+
+#  To fetch all data
+class AdminAllDataAPIView(APIView):
+    permission_classes = [IsAdminUser]
+
+    def get(self, request):
+        # Fetch all content data
+        categories = CategorySerializer(Category.objects.all(), many=True).data
+        topics = TopicSerializer(Topic.objects.all(), many=True).data
+        languages = LanguageSerializer(Language.objects.all(), many=True).data
+        templates = TemplateSerializer(Template.objects.all(), many=True).data
+        template_types = TemplateTypeSerializer(TemplateType.objects.all(), many=True).data
+        frontend_codes = FrontendSourceCodeSerializer(FrontendSourceCode.objects.all(), many=True).data
+        backend_steps = BackendStepSerializer(BackendStep.objects.all(), many=True).data
+        backend_images = BackendImageSerializer(BackendImage.objects.all(), many=True).data
+
+        return Response({
+            "categories": categories,
+            "topics": topics,
+            "languages": languages,
+            "templates": templates,
+            "template_types": template_types,
+            "frontend_codes": frontend_codes,
+            "backend_steps": backend_steps,
+            "backend_images": backend_images,
+        })
