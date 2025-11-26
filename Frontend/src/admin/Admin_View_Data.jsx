@@ -399,8 +399,8 @@ const Admin_View_Data = () => {
                     </select>
 
                     <div className="avd-card-buttons">
-                      <button className="avd-save-btn" onClick={() => handleUpdate("backendsteps", step.id, setBackend)}>Save</button>className="avd-cancel-btn" 
-                      <button onClick={handleCancel}>Cancel</button>
+                      <button className="avd-save-btn" onClick={() => handleUpdate("backendsteps", step.id, setBackend)}>Save</button> 
+                      <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                     </div>
                   </>
                 ) : (

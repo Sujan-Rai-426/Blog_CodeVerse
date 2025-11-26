@@ -27,7 +27,7 @@
 /* Tabs */
 .btn-group {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(6, 1fr);
   gap: 10px;
 }
 
@@ -156,16 +156,16 @@ input[type="file"].form-control {
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+  .btn-group { grid-template-columns: repeat(3, 1fr); gap:8px; }
+  .btn-group .btn { padding: 8px 16px; font-size: 0.95rem; }
+  form { background: transparent; padding: 25px 0px;}
+}
+
 @media (max-width: 768px) {
   .admin-dashboard { padding: 15px; }
   .btn-group { gap: 8px; margin: 0 !important; }
   .btn-group .btn { width: 100%; padding: 10px 0; font-size: 0.9rem; }
-}
-
-/* Responsive button sizing */
-@media (max-width: 992px) {
-  .btn-group .btn { padding: 8px 16px; font-size: 0.95rem; }
-  form { background: transparent; padding: 25px 0px;}
 }
 
 @media (max-width: 480px) {
