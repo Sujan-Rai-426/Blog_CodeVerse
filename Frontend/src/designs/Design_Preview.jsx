@@ -14,8 +14,8 @@ export default function Design_Preview({ srcDoc, device, changeDevice }) {
     ];
 
     return (
-        <div className="design-preview-section">
-            {/* Device Selector */}
+        <div className="design-preview-section" >
+        {/* Device Selector */}
             <div className="device-download-documentation">
                 <div className="device-buttons">
                     <div className="devices">
@@ -32,16 +32,14 @@ export default function Design_Preview({ srcDoc, device, changeDevice }) {
                 </div>
             </div>
 
-            {/* Iframe */}
+        {/* Iframe */}
             <div className="iframe-container">
                 <iframe
                     srcDoc={srcDoc}
-                    sandbox="allow-scripts allow-forms allow-modals"
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
                     style={{
                         width: deviceSizes[device].width,
                         height: deviceSizes[device].height,
-                        border: "1px solid #ccc",
-                        borderRadius: "8px",
                     }}
                     title="Preview"
                 />
