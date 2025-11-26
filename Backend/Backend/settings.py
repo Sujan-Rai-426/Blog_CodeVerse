@@ -26,7 +26,9 @@ INSTALLED_APPS = [
 
     # Custom apps
     'Home',
-    'Tutorial',
+    
+        # IMPORTANT: Load signals via AppConfig [ For loading Tutorial from signals.py for caching ]
+    'Tutorial.apps.TutorialConfig',
 
     # Third-party apps
     'rest_framework',
@@ -42,12 +44,24 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-
+# JWT token for authentication
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
+
+# settings.py - Redis cache example
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": config("REDIS_URL", default="redis://127.0.0.1:6379/1"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
+
 
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [

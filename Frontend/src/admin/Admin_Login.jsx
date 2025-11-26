@@ -9,24 +9,18 @@ function Admin_Login() {
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
-
     const handleLogin = async (e) => {
         e.preventDefault();
         setIsUploading(true);
         setError("");
-
         try {
             const response = await Admin_API.post("/api/admin-login/", {
                 username,
                 password,
             });
-
             if (response.status === 200) {
                 const { access_token } = response.data;
-
-                // Save JWT to localStorage
-                localStorage.setItem("admin_token", access_token);
-
+                localStorage.setItem("admin_token", access_token); // Save JWT to localStorage
                 navigate("/Admin"); // redirect to Admin Dashboard
             } else {
                 setError("Invalid credentials or not an admin.");

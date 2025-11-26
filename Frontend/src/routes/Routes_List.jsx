@@ -32,16 +32,18 @@ import Template_Preview from "../template_Pages/Template_Preview";
 
 // Unavailable Page imports
 import Unavailable_Page from "../components/Unavailable_Page";
-
-// Admin Pages imports
-import Admin_Login from "../admin/Admin_Login";
-import Admin_Home from "../admin/Admin_Home";
-import { Admin_API_Provider } from "../admin/Admin_API_Provider";
-import Admin_Protected_Route from "../admin/Admin_Protected_Route";
+import Admin_Routes from "../admin/Admin_Routes";
+import { Parent_Api_Provider } from "../context/Parent_API_Provider";
+import { Templates_API_Provider } from "../template_Pages/Template_API";
+import { Payment_Provider } from "../payment/payment_status/Payment_Context";
 
 function Routes_List() {
     return (
         <div className="container" style={{ minHeight: "100vh" }}>
+
+                <Parent_Api_Provider> {/* <---- To fetch API once by parent and use it all over the frontend to overcome repeatative api fetch*/}
+                    <Templates_API_Provider>
+                          <Payment_Provider> {/* <---- For payment */}
             <Routes>
                 {/* Normal Routes */}
                 <Route exact path="/" element={<Home />} />
@@ -61,16 +63,6 @@ function Routes_List() {
                 <Route exact path="/Backend_Tutorial_Topic/:languageID" element={<Backend_Tutorial_Topic />} />
 
 
-                {/* Admin Login */}
-                <Route path="/Admin_Login" element={<Admin_Login />} />
-
-                {/* Protected admin routes */}
-                <Route element={<Admin_Protected_Route />}>
-                    <Route path="/Admin" element={<Admin_Home />} />
-                </Route>
-
-
-
                 {/* Protected User Dashboard Routes */}
                 <Route element={<User_Protected_Route />}>
                     <Route exact path="/User-Profile" element={<User_Profile />} />
@@ -84,6 +76,10 @@ function Routes_List() {
                 {/* Unavailable Page */}
                 <Route exact path="/Unavailable" element={<Unavailable_Page />} />
             </Routes>
+
+                              </ Payment_Provider>
+                        </Templates_API_Provider>
+                    </ Parent_Api_Provider>
         </div>
     );
 }

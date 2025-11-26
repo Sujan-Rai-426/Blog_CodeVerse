@@ -171,7 +171,7 @@ useEffect(() => {
                                             language.topics.map((topic) => {
                                                 // compute first source code id (if exists)
                                                 const firstSourceId = (topic.source_codes && topic.source_codes[0] && topic.source_codes[0].id) || null;
-                                                const toPath = firstSourceId ? `/Component-Designs/${topic.id}/${firstSourceId}` : `/Frontend_Tutorial_Solution/${topic.id}`;
+                                                const toPath = firstSourceId ? `/Component-Designs/${topic.id}/${firstSourceId}` : `/Component-Designs/${topic.id}`;
                                                 return (
                                                     <Link
                                                       key={topic.id}

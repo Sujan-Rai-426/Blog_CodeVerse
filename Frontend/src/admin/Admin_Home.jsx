@@ -19,7 +19,7 @@ export default function Admin_Home() {
   const handleLogout = () => {
     window.localStorage.removeItem("loggedIn"); // optional
     window.localStorage.removeItem("access_token"); // optional
-    navigate("/Admin_Login");
+    navigate("/Admin/Admin_Login");
   };
 
   // Render main content based on activePage

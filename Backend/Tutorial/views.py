@@ -192,27 +192,27 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 #  To fetch all data
+from django.core.cache import cache
+
 class AdminAllDataAPIView(APIView):
     permission_classes = [IsAdminUser]
 
     def get(self, request):
-        # Fetch all content data
-        categories = CategorySerializer(Category.objects.all(), many=True).data
-        topics = TopicSerializer(Topic.objects.all(), many=True).data
-        languages = LanguageSerializer(Language.objects.all(), many=True).data
-        templates = TemplateSerializer(Template.objects.all(), many=True).data
-        template_types = TemplateTypeSerializer(TemplateType.objects.all(), many=True).data
-        frontend_codes = FrontendSourceCodeSerializer(FrontendSourceCode.objects.all(), many=True).data
-        backend_steps = BackendStepSerializer(BackendStep.objects.all(), many=True).data
-        backend_images = BackendImageSerializer(BackendImage.objects.all(), many=True).data
+        data = cache.get("admin_all_data")
 
-        return Response({
-            "categories": categories,
-            "topics": topics,
-            "languages": languages,
-            "templates": templates,
-            "template_types": template_types,
-            "frontend_codes": frontend_codes,
-            "backend_steps": backend_steps,
-            "backend_images": backend_images,
-        })
+        if not data:
+            data = {
+                "categories": CategorySerializer(Category.objects.all(), many=True).data,
+                "topics": TopicSerializer(Topic.objects.all(), many=True).data,
+                "languages": LanguageSerializer(Language.objects.all(), many=True).data,
+                "templates": TemplateSerializer(Template.objects.all(), many=True).data,
+                "template_types": TemplateTypeSerializer(TemplateType.objects.all(), many=True).data,
+                "frontend_codes": FrontendSourceCodeSerializer(FrontendSourceCode.objects.all(), many=True).data,
+                "backend_steps": BackendStepSerializer(BackendStep.objects.all(), many=True).data,
+                "backend_images": BackendImageSerializer(BackendImage.objects.all(), many=True).data,
+            }
+
+            # Cache for 10 minutes
+            cache.set("admin_all_data", data, timeout=600)
+
+        return Response(data)
