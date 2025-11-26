@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Admin_API from "./Admin_API";
 import "../assets/css/Admin_View_Data.css";
+import { FaEdit, FaTrash } from "react-icons/fa";
 
 const Admin_View_Data = () => {
   const [activeTab, setActiveTab] = useState("categories");
@@ -174,6 +175,8 @@ const Admin_View_Data = () => {
     const card = "avd-card";
 
     switch(activeTab) {
+
+
       // ---------- Categories ----------
       case "categories":
         return categories.map(cat => (
@@ -185,8 +188,8 @@ const Admin_View_Data = () => {
                 <label> Description </label>
                 <textarea className="avd-input" value={formData.description || ""} onChange={e => setFormData({...formData, description: e.target.value})} placeholder="Category description"/>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("categories", cat.id, setCategories)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("categories", cat.id, setCategories)}>Save</button>
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
@@ -194,13 +197,16 @@ const Admin_View_Data = () => {
                 <p><strong>{cat.name}</strong></p>
                 <p>{cat.description}</p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(cat)}>Edit</button>
-                  <button onClick={() => handleDelete("categories", cat.id, setCategories)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(cat)}> <FaEdit/> Edit</button>
+                  {/* <button className="avd-delete-btn" onClick={() => handleDelete("categories", cat.id, setCategories)}> <FaTrash/> Delete</button> */}
                 </div>
               </>
             )}
           </div>
         ));
+
+
+
 
       // ---------- Sections ----------
       case "sections":
@@ -221,21 +227,23 @@ const Admin_View_Data = () => {
                 </select>
 
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("sections", sec.id, setSections)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("sections", sec.id, setSections)}>Save</button>
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
               <>
                 <p><strong>{sec.name}</strong> <em>({getCategoryName(sec.category)})</em></p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(sec)}>Edit</button>
-                  <button onClick={() => handleDelete("sections", sec.id, setSections)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(sec)}> <FaEdit/> Edit</button>
+                  {/* <button className="avd-delete-btn" onClick={() => handleDelete("sections", sec.id, setSections)}> <FaTrash/> Delete</button> */}
                 </div>
               </>
             )}
           </div>
         ));
+
+
 
       // ---------- Languages ----------
       case "languages":
@@ -254,21 +262,24 @@ const Admin_View_Data = () => {
                 </select>
 
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("languages", lang.id, setLanguages)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("languages", lang.id, setLanguages)}>Save</button>
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
               <>
                 <p><strong>{lang.name}</strong> <em>[{getSectionName(lang.section)}]</em></p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(lang)}>Edit</button>
-                  <button onClick={() => handleDelete("languages", lang.id, setLanguages)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(lang)}> <FaEdit/> Edit</button>
+                  {/* <button className="avd-delete-btn" onClick={() => handleDelete("languages", lang.id, setLanguages)}> <FaTrash/> Delete</button> */}
                 </div>
               </>
             )}
           </div>
         ));
+
+
+
 
       // ---------- Topics ----------
       case "topics":
@@ -284,23 +295,25 @@ const Admin_View_Data = () => {
                   {languages.map(l => <option key={l.id} value={l.id}>{l.name} [{getSectionName(l.section)}]</option>)}
                 </select>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("topics", topic.id, setTopics)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("topics", topic.id, setTopics)}>Save</button>
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
               <>
                 <p><strong>{topic.name}</strong> <em>[{getLanguageName(topic.language)}]</em></p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(topic)}>Edit</button>
-                  <button onClick={() => handleDelete("topics", topic.id, setTopics)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(topic)}> <FaEdit/> Edit</button>
+                  <button className="avd-delete-btn" onClick={() => handleDelete("topics", topic.id, setTopics)}> <FaTrash/> Delete</button>
                 </div>
               </>
             )}
           </div>
         ));
 
-      // ---------- Frontend Source Codes ----------
+
+
+      // ----------Components / Frontend Source Codes ----------
       case "frontend":
         return frontend.map(f => (
           <div key={f.id} className={card}>
@@ -340,23 +353,25 @@ const Admin_View_Data = () => {
                 </select>
 
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("frontendsourcecodes", f.id, setFrontend)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("frontendsourcecodes", f.id, setFrontend)}>Save</button> 
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
               <>
                 <p><strong>{f.title}</strong> <em>[{getTopicName(f.topic)}]</em></p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(f)}>Edit</button>
-                  <button onClick={() => handleDelete("frontendsourcecodes", f.id, setFrontend)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(f)}> <FaEdit/> Edit</button>
+                  <button className="avd-delete-btn" onClick={() => handleDelete("frontendsourcecodes", f.id, setFrontend)}> <FaTrash/> Delete</button>
                 </div>
               </>
             )}
           </div>
         ));
 
-      // ---------- Backend Steps (grouped by topic) ----------
+
+
+      // ---------- Code Guide /  Backend Steps (grouped by topic) ----------
       case "backend":
         return Object.entries(groupedBackend).map(([topicId, steps]) => (
           <div key={topicId} className={card}>
@@ -384,7 +399,7 @@ const Admin_View_Data = () => {
                     </select>
 
                     <div className="avd-card-buttons">
-                      <button onClick={() => handleUpdate("backendsteps", step.id, setBackend)}>Save</button>
+                      <button className="avd-save-btn" onClick={() => handleUpdate("backendsteps", step.id, setBackend)}>Save</button>className="avd-cancel-btn" 
                       <button onClick={handleCancel}>Cancel</button>
                     </div>
                   </>
@@ -393,8 +408,8 @@ const Admin_View_Data = () => {
                     <p><strong>Step {step.step_number}</strong> — {step.step_file_name}</p>
                     <small>{step.step_description}</small>
                     <div className="avd-card-buttons">
-                      <button onClick={() => handleEdit(step)}>Edit</button>
-                      <button onClick={() => handleDelete("backendsteps", step.id, setBackend)}>Delete</button>
+                      <button className="avd-edit-btn" onClick={() => handleEdit(step)}> <FaEdit/> Edit</button>
+                      <button className="avd-delete-btn" onClick={() => handleDelete("backendsteps", step.id, setBackend)}> <FaTrash/> Delete</button>
                     </div>
                   </>
                 )}
@@ -402,6 +417,8 @@ const Admin_View_Data = () => {
             ))}
           </div>
         ));
+
+
 
       // ---------- Templates ----------
       case "templates":
@@ -436,16 +453,16 @@ const Admin_View_Data = () => {
                 <input className="avd-input" type="number" value={formData.price ?? 0} onChange={e => setFormData({...formData, price: e.target.value})} />
 
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleUpdate("templates", t.id, setTemplates)}>Save</button>
-                  <button onClick={handleCancel}>Cancel</button>
+                  <button className="avd-save-btn" onClick={() => handleUpdate("templates", t.id, setTemplates)}>Save</button>
+                  <button className="avd-cancel-btn" onClick={handleCancel}>Cancel</button>
                 </div>
               </>
             ) : (
               <>
                 <p><strong>{t.title}</strong> <em>[{t.template_type?.name || "—"}]</em></p>
                 <div className="avd-card-buttons">
-                  <button onClick={() => handleEdit(t)}>Edit</button>
-                  <button onClick={() => handleDelete("templates", t.id, setTemplates)}>Delete</button>
+                  <button className="avd-edit-btn" onClick={() => handleEdit(t)}> <FaEdit/> Edit</button>
+                  <button className="avd-delete-btn" onClick={() => handleDelete("templates", t.id, setTemplates)}> <FaTrash/> Delete</button>
                 </div>
               </>
             )}

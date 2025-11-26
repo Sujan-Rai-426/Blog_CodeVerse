@@ -196,7 +196,7 @@ export default function Components_Design() {
                           >
                             <iframe
                                 srcDoc={smallSrcDoc}
-                                sandbox="allow-scripts allow-same-origin allow-forms"
+                                sandbox="allow-scripts allow-forms allow-modals"
                                 title={s.title || `related-${s.id}`}
                                 style={{ pointerEvents: "none", width: "100%", height: 180, border: "1px solid rgba(255,255,255,0.08)", borderRadius: 8 }}
                             />

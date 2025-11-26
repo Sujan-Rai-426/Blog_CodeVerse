@@ -101,7 +101,7 @@ function Recent_Contents() {
                     title={`preview-${t.sourceId}`}
                     srcDoc={iframeDoc}
                     className="iframe-preview"
-                    sandbox="allow-scripts allow-same-origin"
+                    sandbox="allow-scripts allow-modals"
                     style={{ height: 200, width: "100%", border: "none", display: "block" }}
                   />
                   {isPremium && (
