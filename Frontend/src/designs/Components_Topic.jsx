@@ -1,6 +1,6 @@
 // src/components/Components_Topic.jsx
 import React, { useState, useEffect, useContext, useRef } from "react";
-import { Link, useParams, useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
@@ -8,7 +8,6 @@ import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx"
 
 const Components_Topic = () => {
     const { languageID } = useParams();
-    const navigate = useNavigate();
     const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [frontendLangs, setFrontendLangs] = useState([]);

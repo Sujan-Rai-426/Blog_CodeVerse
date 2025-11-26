@@ -20,11 +20,11 @@
   padding: 1.5rem;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 0.8rem;
 }
 
 /* Header */
-.preview-header h3 {
+.preview-header h2 {
   margin: 0;
   margin: 1.5rem 0 0.5rem 0 !important;
   font-size: 1.8rem;
@@ -311,7 +311,7 @@
     .run-instructions code { font-size: 0.85rem; }
     .run-instructions .case { padding: 0.5rem; }
     .devices{display: none;}
-    .preview-header h3 { font-size: 1.34rem; }
+    .preview-header h2 { font-size: 1.34rem; }
     .preview-header p { font-size: 0.85rem; }
     .device-buttons button { display: none !important; }
     .device-download-documentation { padding: 0.2rem 0.8rem !important; }

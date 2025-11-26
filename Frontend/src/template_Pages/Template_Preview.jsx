@@ -53,7 +53,7 @@ const Template_Preview = () => {
     <div className="template-preview-container">
       <div className="template-preview">
         <div className="preview-header">
-          <h3>{template.title}</h3>
+          <h2>{template.title}</h2>
           <p>{template.project_info}</p>
 
             {/* price tag and download guide*/}

@@ -128,8 +128,9 @@ export default function Components_Design() {
 
       {/* === Page Header [ Title + Access tyle --> Free or Premium ] ====== */}
           <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-            <div>
-              <h3 style={{ margin: 0 }}>{currentCodes.title}</h3>
+            <div className="cd-header">
+              <h3 >{currentCodes.title}</h3>
+              <p>{currentCodes.description}</p>
               <div className="access-info" style={{ marginTop: 6 }}>
                 <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
                   {currentCodes.access_type}
