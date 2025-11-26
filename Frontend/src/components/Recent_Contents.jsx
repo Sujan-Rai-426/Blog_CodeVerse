@@ -6,31 +6,13 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
 
-// Build a fully self-contained iframe doc
 const buildIframeDoc = (html = "", css = "", js = "") => {
   const trimmedJs = (js || "").toString().trim();
-  // Escape closing </script> tags
   const safeJs = trimmedJs ? trimmedJs.replace(/<\/script>/gi, "<\\/script>") : "";
   const scriptTag = safeJs
-    ? `<script>try{${safeJs}}catch(e){console.error("Preview JS error:", e);}</script>`
+    ? `<script>try{${safeJs}}catch(e){console.error("Preview JS error:",e);}</script>`
     : "";
-  return `
-    <!DOCTYPE html>
-    <html lang="en">
-      <head>
-        <meta charset="UTF-8"/>
-        <meta name="viewport" content="width=device-width,initial-scale=1"/>
-        <style>
-          html, body { margin:0; padding:0; width:100%; height:100%; overflow:hidden; }
-          ${css || ""}
-        </style>
-      </head>
-      <body>
-        ${html || ""}
-        ${scriptTag}
-      </body>
-    </html>
-  `;
+  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><style>html,body{margin:0;padding:0;width:100%;height:100%;} ${css || ""}</style></head><body>${html || ""}${scriptTag}</body></html>`;
 };
 
 function Recent_Contents() {
@@ -68,23 +50,29 @@ function Recent_Contents() {
       (section.languages || []).flatMap((language) =>
         (language.topics || []).flatMap((topic) => {
           const items = topic.source_codes || [];
-          return (items || []).map((item) => ({
-            sourceId: item.id,
-            topicId: topic.id,
-            topicName: topic.name,
-            title: item.title || topic.name,
-            infoDesc: item.description || "",
-            html: item.html_code || item.html || "",
-            css: item.css_code || item.css || "",
-            js: item.js_code || item.js || "",
-            access_type: item.access_type || "Free",
-          }));
+          return (items || []).map((item) => {
+            return {
+              sourceId: item.id,
+              topicId: topic.id,
+              topicName: topic.name,
+              title: item.title || topic.name,
+              infoDesc: item.description || "",
+              html: item.html_code || item.html || "",
+              css: item.css_code || item.css || "",
+              js: item.js_code || item.js || "",
+              access_type: item.access_type || "Free",
+            };
+          });
         })
       )
     )
   );
 
-  const sorted = tutorials.sort((a, b) => (Number(b.sourceId) || 0) - (Number(a.sourceId) || 0));
+  const sorted = tutorials.sort((a, b) => {
+    const ai = Number(a.sourceId) || 0;
+    const bi = Number(b.sourceId) || 0;
+    return bi - ai;
+  });
 
   const handleNavigate = (topicId, sourceId) => {
     navigate(`/Component-Designs/${topicId}/${sourceId}`);
@@ -97,7 +85,8 @@ function Recent_Contents() {
         <p className="text-center text-muted py-5">No recent tutorials found.</p>
       ) : (
         sorted.slice(0, 6).map((t) => {
-          const isPremium = (t.access_type || "").toLowerCase().trim() === "premium";
+          const accessTypeString = (t.access_type || "").toString();
+          const isPremium = accessTypeString.trim().toLowerCase() === "premium";
           const iframeDoc = buildIframeDoc(t.html, t.css, t.js);
 
           return (
@@ -108,13 +97,12 @@ function Recent_Contents() {
                 style={{ cursor: "pointer" }}
               >
                 <div className="video-container position-relative">
-                  {/* Fully self-contained iframe with onLoad logging */}
                   <iframe
                     title={`preview-${t.sourceId}`}
                     srcDoc={iframeDoc}
-                    sandbox="allow-scripts allow-modals"
+                    className="iframe-preview"
+                    sandbox="allow-scripts allow-same-origin"
                     style={{ height: 200, width: "100%", border: "none", display: "block" }}
-                    onLoad={() => console.log("Iframe loaded:", t.sourceId)}
                   />
                   {isPremium && (
                     <div className="premium-badge-top-right">
