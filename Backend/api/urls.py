@@ -3,13 +3,14 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from Tutorial import views
 from Tutorial.views import (
-    AdminAllDataAPIView, CategoryViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
+    AdminAllDataAPIView, CategoryViewSet, SectionViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
     FrontendSourceCodeViewSet,
     BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView,
 )
 
 router = DefaultRouter()
 router.register("categories", CategoryViewSet, basename="category")
+router.register(r'sections', SectionViewSet, basename='sections')
 router.register("topics", TopicViewSet, basename="topic")
 router.register("languages", LanguageViewSet, basename="language")
 

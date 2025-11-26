@@ -23,14 +23,16 @@ from Tutorial.utils import verify_email_exists
 
 from datetime import timedelta
 from django.utils import timezone
+from django.core.cache import cache
+
 
 from Tutorial.models import (
-    Category, Topic, Language,
+    Category, Section, Topic, Language,
     FrontendSourceCode,
     BackendStep, BackendImage, TemplateType, Template
 )
 from Tutorial.serializers import (
-    CategorySerializer, TopicSerializer, LanguageSerializer,
+    CategorySerializer, SectionSerializer, TopicSerializer, LanguageSerializer,
     FrontendSourceCodeSerializer,
     BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
@@ -58,6 +60,14 @@ class TopicViewSet(viewsets.ModelViewSet):
             )
         return Response(serializer.data, status=201)
 
+
+# ---------------- SECTION -------------
+class SectionViewSet(viewsets.ModelViewSet):
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
+    permission_classes = [IsAdminOrReadOnly] 
+
+
 # ------------------ LANGUAGE ------------------
 class LanguageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
@@ -81,7 +91,6 @@ class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendStep.objects.all()
     serializer_class = BackendStepSerializer
-
     @action(detail=False, methods=["get"], url_path="occupied-steps/(?P<topic_id>[^/.]+)")
     def occupied_steps(self, request, topic_id=None):
         steps = BackendStep.objects.filter(topic_id=topic_id).values_list("step_number", flat=True)
@@ -92,6 +101,7 @@ class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
+
 
 
 # ------------------ ADMIN LOGIN VIEW ------------------
@@ -174,11 +184,13 @@ def contact_form_view(request):
     except Exception as e:
         return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+
 # ------------------ TEMPLATE viewsets (unchanged) ------------------
 class TemplateTypeViewSet(viewsets.ModelViewSet):
     queryset = TemplateType.objects.all()
     serializer_class = TemplateTypeSerializer
     permission_classes = [IsAdminOrReadOnly]
+
 
 class TemplateViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
@@ -187,13 +199,7 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 
-
-
-
-
 #  To fetch all data
-from django.core.cache import cache
-
 class AdminAllDataAPIView(APIView):
     permission_classes = [IsAdminUser]
 

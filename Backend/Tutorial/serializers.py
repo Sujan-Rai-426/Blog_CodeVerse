@@ -15,25 +15,28 @@ class FrontendSourceCodeSerializer(serializers.ModelSerializer):
             'access_type', 'price', 'hasBought'
         ]
 
+
 # -------------------- BACKEND SERIALIZERS --------------------
 class BackendImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackendImage
         fields = ['id', 'image', 'topic',]
 
+
 class BackendStepSerializer(serializers.ModelSerializer):
     class Meta:
         model = BackendStep
         fields = ['id', 'topic', 'step_number', 'step_file_name', 'step_description', 'step_source_code']
-
     def validate(self, data):
         topic = data.get("topic")
         step_number = data.get("step_number")
-        if BackendStep.objects.filter(topic=topic, step_number=step_number).exists():
+        step_id = self.instance.id if self.instance else None  # current step being updated
+        if BackendStep.objects.filter(topic=topic, step_number=step_number).exclude(id=step_id).exists():
             raise serializers.ValidationError(
                 {"step_number": f"Step number {step_number} already exists for this topic."}
             )
         return data
+
 
 # -------------------- COMMON TOPIC SERIALIZER --------------------
 class TopicSerializer(serializers.ModelSerializer):
@@ -49,6 +52,7 @@ class TopicSerializer(serializers.ModelSerializer):
         model = Topic
         fields = ['id', 'name', 'language', 'section', 'category', 'source_codes', 'images', 'steps']
 
+
 # -------------------- LANGUAGE, SECTION, CATEGORY --------------------
 class LanguageSerializer(serializers.ModelSerializer):
     topics = TopicSerializer(many=True, read_only=True)
@@ -56,11 +60,13 @@ class LanguageSerializer(serializers.ModelSerializer):
         model = Language
         fields = ['id', 'name', 'topics', 'icon_class', 'section']
 
+
 class SectionSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True, read_only=True)
     class Meta:
         model = Section
         fields = ['id', 'name', 'languages']
+
 
 class CategorySerializer(serializers.ModelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
@@ -68,15 +74,18 @@ class CategorySerializer(serializers.ModelSerializer):
         model = Category
         fields = ['id', 'name', 'description', 'sections']
 
+
 class ContactSerializer(serializers.ModelSerializer):
     class Meta:
         model = Contact
         fields = '__all__'
 
+
 class TemplateTypeSerializer(serializers.ModelSerializer):
     class Meta:
         model = TemplateType
         fields = ["id", "name"]
+
 
 class TemplateSerializer(serializers.ModelSerializer):
     template_type = TemplateTypeSerializer(read_only=True)

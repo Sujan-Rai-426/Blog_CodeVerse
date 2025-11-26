@@ -114,7 +114,7 @@ export default function Components_Design() {
   };
 
   const handleRelatedClick = (code) => {
-    navigate(`/Frontend_Tutorial_Solution/${topicID}/${code.id}`);
+    navigate(`/Component-Designs/${topicID}/${code.id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 

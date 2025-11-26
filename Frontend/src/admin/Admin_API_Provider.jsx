@@ -1,3 +1,6 @@
+
+// THIS FETCH API FROM BACKEND DB
+
 import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
 import Admin_API from "./Admin_API";
 
@@ -8,10 +11,7 @@ export const Admin_API_Provider = ({ children }) => {
     const CACHE_TIME_KEY = "admin_api_cache_time";
     const MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
 
-    const [adminData, setAdminData] = useState(() => loadFromCache());
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
+    // ------------------ define function first ------------------
     const loadFromCache = () => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
@@ -28,6 +28,10 @@ export const Admin_API_Provider = ({ children }) => {
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     };
+
+    const [adminData, setAdminData] = useState(() => loadFromCache());
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
 
     const fetchAdminData = useCallback(async () => {
         setLoading(true);
