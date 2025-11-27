@@ -89,7 +89,7 @@ const Admin_View_Data = () => {
   };
 
 
-// <------------- [ Handle UPDATE ] ------------->
+// ==================== Handle UPDATE ====================
   const handleUpdate = async (endpoint, id, setStateFn) => {
     try {
       setSavingId(id);
@@ -101,26 +101,33 @@ const Admin_View_Data = () => {
         if (payload[key] === "") payload[key] = null;
       });
 
-      // Convert numeric/foreign key fields
-      const fkFields = [
-        "category",
-        "section",
-        "language",
-        "template_type_id",
-        "step_number",
-        "price",
-      ];
-      fkFields.forEach((f) => {
-        if (payload[f] != null) payload[f] = Number(payload[f]);
+      // Ensure numeric fields are numbers
+      ["language", "price"].forEach((field) => {
+        if (payload[field] != null) payload[field] = Number(payload[field]);
       });
 
+      // Fix access_type to match Django choices
+      if (payload.access_type) {
+        const type = payload.access_type.toLowerCase();
+        if (type === "free") payload.access_type = "Free";
+        else if (type === "premium") payload.access_type = "Premium";
+        else {
+          alert("Access type must be Free or Premium");
+          setSavingId(null);
+          return;
+        }
+      }
+
       const res = await Admin_API.patch(`/api/${endpoint}/${id}/`, payload);
+
+      // Update frontend state
       setStateFn((prev) => prev.map((i) => (i.id === id ? res.data : i)));
+
       handleCancel();
-      alert("Updated successfully");
+      alert("Updated successfully!");
     } catch (err) {
       console.error(err.response || err);
-      alert("Update failed. Check console for details.");
+      alert("Update failed! Check console.");
     } finally {
       setSavingId(null);
     }
@@ -284,7 +291,6 @@ const renderCategoryTab = () =>
     });
 
 
-
 // =========== SECTION RENDER with -> { languages } ===============
 const renderSectionTab = () =>
   sections
@@ -355,7 +361,6 @@ const renderSectionTab = () =>
     });
 
 
-
 // =========== LANGUAGE RENDER with -> { topics } ===============
   const renderLanguageTab = () =>
     languages
@@ -423,21 +428,19 @@ const renderSectionTab = () =>
       });
 
 
-
-// =========== TOPIC RENDER with -> { components grouped by topic + language } ===============
+// =========== RENDER TOPICS & COMPONENTS WITH PRICE / ACCESS TYPE ===============
   const renderTopicTab = () => {
     if (!languages.length || !topics.length) return null;
+
     return languages
       .slice()
-      .sort((a, b) => b.id - a.id) // Latest language first
+      .sort((a, b) => b.id - a.id)
       .map((lang) => {
-        // Get topics under this language
         const langTopics = topics
           .filter((t) => t.language === lang.id)
           .slice()
-          .sort((a, b) => b.id - a.id); // Latest topic first
+          .sort((a, b) => b.id - a.id);
 
-        // Always return the language card, even if no topics
         return (
           <div key={lang.id} className="avd-card">
             {/* Language Header */}
@@ -452,14 +455,13 @@ const renderSectionTab = () =>
               {expandedSub[`lang-${lang.id}`] ? <FaChevronUp /> : <FaChevronDown />}
             </div>
 
-            {/* Topics under this language */}
             {expandedSub[`lang-${lang.id}`] &&
               (langTopics.length ? (
                 langTopics.map((topic) => {
                   const topicComponents = frontend
                     .filter((f) => f.topic === topic.id)
                     .slice()
-                    .sort((a, b) => b.id - a.id); // Latest component first
+                    .sort((a, b) => b.id - a.id);
 
                   return (
                     <div key={topic.id} className="avd-sub-card" style={{ marginTop: "10px" }}>
@@ -467,24 +469,20 @@ const renderSectionTab = () =>
                       <div
                         className="avd-card-header"
                         onClick={() => toggleSub(`topic-${topic.id}`)}
-                        style={{
-                          cursor: "pointer",
-                          display: "flex",
-                          justifyContent: "space-between",
-                        }}
+                        style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
                       >
                         <strong>{topic.name}</strong>
                         {expandedSub[`topic-${topic.id}`] ? <FaChevronUp /> : <FaChevronDown />}
                       </div>
 
-                      {/* Components under topic */}
+                      {/* Components */}
                       {expandedSub[`topic-${topic.id}`] &&
                         (topicComponents.length ? (
                           topicComponents.map((comp) => (
                             <div key={comp.id} className="avd-sub-card">
                               {editingId === comp.id ? (
                                 <>
-                                  {/* FULL UPDATE FIELDS */}
+                                  {/* EDIT MODE */}
                                   <label>Title</label>
                                   <input
                                     className="avd-input"
@@ -493,25 +491,6 @@ const renderSectionTab = () =>
                                       setFormData({ ...formData, title: e.target.value })
                                     }
                                   />
-
-                                  <label>Language</label>
-                                  <select
-                                    className="avd-input"
-                                    value={formData.language || ""}
-                                    onChange={(e) =>
-                                      setFormData({
-                                        ...formData,
-                                        language: Number(e.target.value),
-                                      })
-                                    }
-                                  >
-                                    <option value="">Select Language</option>
-                                    {languages.map((l) => (
-                                      <option key={l.id} value={l.id}>
-                                        {l.name}
-                                      </option>
-                                    ))}
-                                  </select>
 
                                   <label>Description</label>
                                   <textarea
@@ -549,25 +528,49 @@ const renderSectionTab = () =>
                                     }
                                   />
 
-                                  <label>Documentation</label>
-                                  <textarea
-                                    className="avd-textarea"
-                                    value={formData.documentation || ""}
+                                  <label>Access Type</label>
+                                  <select
+                                    className="avd-input"
+                                    value={formData.access_type || "Free"}
                                     onChange={(e) =>
-                                      setFormData({ ...formData, documentation: e.target.value })
+                                      setFormData({ ...formData, access_type: e.target.value })
                                     }
-                                  />
+                                  >
+                                    <option value="Free">Free</option>
+                                    <option value="Premium">Premium</option>
+                                  </select>
+
+                                  {formData.access_type === "Premium" && (
+                                    <>
+                                      <label>Price (USD)</label>
+                                      <input
+                                        type="number"
+                                        className="avd-input"
+                                        min="1"
+                                        value={formData.price || ""}
+                                        onChange={(e) =>
+                                          setFormData({
+                                            ...formData,
+                                            price: Number(e.target.value),
+                                          })
+                                        }
+                                      />
+                                    </>
+                                  )}
 
                                   <div className="avd-card-buttons">
                                     <button
                                       className="avd-save-btn"
                                       onClick={() =>
-                                        handleUpdate("frontendsourcecodes", comp.id, setFrontend)
+                                        handleUpdate(
+                                          "frontendsourcecodes",
+                                          comp.id,
+                                          setFrontend
+                                        )
                                       }
                                     >
                                       {savingId === comp.id ? "Saving..." : "Save"}
                                     </button>
-
                                     <button className="avd-cancel-btn" onClick={handleCancel}>
                                       Cancel
                                     </button>
@@ -575,19 +578,28 @@ const renderSectionTab = () =>
                                 </>
                               ) : (
                                 <>
-                                  <p>{comp.title}</p>
+                                  {/* Display Mode */}
+                                  <p>
+                                    {comp.title} -{" "}
+                                    <strong>
+                                      {comp.access_type === "Premium"
+                                        ? `$${comp.price} Premium`
+                                        : "Free"}
+                                    </strong>
+                                  </p>
+
                                   <div className="avd-card-buttons">
                                     <button
                                       className="avd-edit-btn"
                                       onClick={() =>
                                         handleEdit(comp, [
                                           "title",
-                                          "language",
                                           "description",
                                           "html_code",
                                           "css_code",
                                           "js_code",
-                                          "documentation",
+                                          "access_type",
+                                          "price",
                                         ])
                                       }
                                     >
@@ -596,7 +608,11 @@ const renderSectionTab = () =>
                                     <button
                                       className="avd-delete-btn"
                                       onClick={() =>
-                                        handleDelete("frontendsourcecodes", comp.id, setFrontend)
+                                        handleDelete(
+                                          "frontendsourcecodes",
+                                          comp.id,
+                                          setFrontend
+                                        )
                                       }
                                     >
                                       <FaTrash /> Delete
@@ -619,7 +635,6 @@ const renderSectionTab = () =>
         );
       });
   };
-
 
 
 // =========== Code Guide / BACKEND RENDER grouped by Language & Topic ===============
@@ -755,7 +770,6 @@ const renderSectionTab = () =>
         );
       });
   };
-
 
 
 // =========== Template Types RENDER with -> { template } ===============
