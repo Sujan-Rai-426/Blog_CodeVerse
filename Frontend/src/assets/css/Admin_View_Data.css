@@ -25,26 +25,29 @@ html {
 /* ======================
         TABS (BUTTON GROUP)
 ========================= */
-.avd-btn-group {
-    display: grid;
-    gap: 0.6rem;
-    grid-template-columns: repeat(6, 1fr);
+.avd-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
 }
-.avd-btn {
+.avd-tabs button {
     background-color: #151515;
     border: 1px solid #f5ba25;
     color: #f5ba25;
-    padding: 0.6rem 1.1rem;
+    padding: 0.55rem 1rem;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.25s ease;
     font-size: 0.95rem;
+    flex: 1;
+    min-width: 100px;
 }
-.avd-btn:hover {
+.avd-tabs button:hover {
     background-color: #f5ba25;
     color: #0f0f0f;
 }
-.avd-active {
+.avd-tabs button.active {
     background-color: #f5ba25;
     color: #0f0f0f;
     font-weight: 600;
@@ -57,7 +60,7 @@ html {
     background-color: #1a1a1a;
     padding: 1rem 1.2rem;
     border-radius: 12px;
-    margin-bottom: 1.2rem;
+    margin-bottom: 1rem;
     border: 1px solid #292929;
     box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.45);
     transition: all 0.3s ease;
@@ -76,6 +79,27 @@ html {
 }
 
 /* ======================
+        SUB-CARDS (Nested)
+========================= */
+.avd-sub-card {
+    background-color: #212121;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    margin-top: 0.6rem;
+    border: 1px solid #333;
+}
+.avd-sub-card:hover {
+    background-color: #2a2a2a;
+}
+
+/* Sub-content container */
+.avd-sub-content {
+    margin-top: 0.5rem;
+    padding-left: 0.6rem;
+    border-left: 2px solid #444;
+}
+
+/* ======================
         CARD BUTTONS
 ========================= */
 .avd-card-buttons {
@@ -91,22 +115,24 @@ html {
     cursor: pointer;
     font-size: 0.9rem;
     transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
 }
-.avd-delete-btn { color: red; border: 1px solid red; }
-.avd-delete-btn:hover { background-color: red; color: #f0e9e9; }
+.avd-delete-btn { color: #ff4d4f; border: 1px solid #ff4d4f; }
+.avd-delete-btn:hover { background-color: #ff4d4f; color: #fff; }
 
 .avd-edit-btn { color: #4cafee; border: 1px solid #4cafee; }
 .avd-edit-btn:hover { background-color: #4cafee; color: #0f0f0f; }
 
 .avd-save-btn { color: #47f56d; border: 1px solid #47f56d; }
-.avd-save-btn:hover { background-color: #47f56d; color: #0f0f0f;}
+.avd-save-btn:hover { background-color: #47f56d; color: #0f0f0f; }
 
 .avd-cancel-btn { color: #ee644c; border: 1px solid #ee644c; }
 .avd-cancel-btn:hover { background-color: #ee644c; color: #0f0f0f; }
 
-
 /* ======================
-        INPUTS + TEXTAREA
+        INPUTS + TEXTAREA + SELECT
 ========================= */
 .avd-input,
 .avd-select,
@@ -120,23 +146,19 @@ html {
     color: #fff;
     font-size: 0.95rem;
     outline: none;
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
-
-/* On input focus */
 .avd-input:focus,
 .avd-select:focus,
 .avd-textarea:focus {
     border-color: #74d2ff;
+    box-shadow: 0 0 6px rgba(116, 210, 255, 0.5);
 }
 
 /* Textarea height */
-.avd-textarea {
-    min-height: 110px;
-    resize: vertical;
-}
+.avd-textarea { min-height: 110px; resize: vertical; }
 
-/* Beautiful professional select dropdown */
+/* Beautiful select dropdown */
 .avd-select {
     appearance: none;
     background-image: url("data:image/svg+xml;utf8,<svg fill='%23aaa' height='24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/></svg>");
@@ -146,12 +168,36 @@ html {
     cursor: pointer;
 }
 
-/* ======================
-        TAB CONTENT
-========================= */
-.avd-tab-content {
-    margin-top: 1rem;
+.avd-codearea, 
+.avd-code-editor {
+    width: 100%;
+    min-height: 160px;
+    background: #0d1117;
+    color: #e6edf3;
+    padding: 12px;
+    border-radius: 8px;
+    font-family: "Fira Code", monospace;
+    white-space: pre-wrap;
+    line-height: 1.4;
+    border: 1px solid #30363d;
 }
+
+.avd-textarea {
+    min-height: 120px;
+    background: transparent;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+}
+
+.avd-code-block {
+    background: transparent;
+    padding: 10px;
+    border-radius: 6px;
+    white-space: pre-wrap;
+    line-height: 1.4;
+}
+
 
 /* ======================
         RESPONSIVENESS
@@ -159,8 +205,7 @@ html {
 
 /* Tablets (max 900px) */
 @media (max-width: 900px) {
-    .avd-btn-group{grid-template-columns: repeat(3, 1fr);}
-    .avd-btn { padding: 0.55rem 0.9rem; font-size: 0.9rem; }
+    .avd-tabs button { font-size: 0.9rem; padding: 0.5rem 0.9rem; }
     .avd-card { padding: 0.9rem; }
     .avd-card-title { font-size: 1rem; }
 }
@@ -169,8 +214,8 @@ html {
 @media (max-width: 600px) {
     html { font-size: 15px; }
     .avd-dashboard { padding: 0.8rem; }
-    .avd-btn-group { gap: 0.4rem; }
-    .avd-btn { padding: 0.45rem 0.8rem; font-size: 0.88rem; }
+    .avd-tabs { gap: 0.4rem; flex-wrap: wrap; }
+    .avd-tabs button { padding: 0.45rem 0.8rem; font-size: 0.88rem; flex: 1; }
     .avd-card { padding: 0.8rem; }
     .avd-input, .avd-select, .avd-textarea { font-size: 0.9rem; padding: 0.55rem; }
 }
@@ -178,5 +223,5 @@ html {
 /* Small Mobile (max 420px) */
 @media (max-width: 420px) {
     html { font-size: 14px; }
-    .avd-btn { width: 100%; text-align: center; }
+    .avd-tabs button { width: 100%; text-align: center; }
 }
