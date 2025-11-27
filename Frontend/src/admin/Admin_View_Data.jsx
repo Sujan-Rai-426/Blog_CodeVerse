@@ -19,6 +19,8 @@ const Admin_View_Data = () => {
   const [backend, setBackend] = useState([]);
   const [templates, setTemplates] = useState([]);
   const [templateTypes, setTemplateTypes] = useState([]);
+  const sortedCategories = [...categories].sort((a, b) => b.id - a.id);
+
 
 
 // <------------- [ Handle FETCH DATA from Admin_API ] ------------->
@@ -140,7 +142,9 @@ const Admin_View_Data = () => {
   };
 
 
-  // ===== Render Form Fields =====
+
+
+  // <<<<===== Render Form Fields ===== >>>>
   const renderFormFields = (fields) =>
     fields.map((field) => {
       const multilineFields = [
@@ -212,12 +216,16 @@ const Admin_View_Data = () => {
     });
 
 
-
-
 // =========== CATEGORY RENDER with -> { sections } ===============
-  const renderCategoryTab = () =>
-    categories.map((cat) => {
-      const catSections = sections.filter((s) => s.category === cat.id);
+const renderCategoryTab = () =>
+  categories
+    .slice()
+    .sort((a, b) => b.id - a.id) // Latest category first
+    .map((cat) => {
+      const catSections = sections
+        .filter((s) => s.category === cat.id)
+        .slice()
+        .sort((a, b) => b.id - a.id); // Latest section first
       return (
         <div key={cat.id} className="avd-card">
           <div className="avd-card-header" onClick={() => toggleSub(cat.id)}>
@@ -278,9 +286,15 @@ const Admin_View_Data = () => {
 
 
 // =========== SECTION RENDER with -> { languages } ===============
-  const renderSectionTab = () =>
-    sections.map((sec) => {
-      const secLanguages = languages.filter((l) => l.section === sec.id);
+const renderSectionTab = () =>
+  sections
+    .slice()
+    .sort((a, b) => b.id - a.id) // Latest section first
+    .map((sec) => {
+      const secLanguages = languages
+        .filter((l) => l.section === sec.id)
+        .slice()
+        .sort((a, b) => b.id - a.id); // Latest language first
       return (
         <div key={sec.id} className="avd-card">
           <div className="avd-card-header" onClick={() => toggleSub(sec.id)}>
@@ -344,443 +358,491 @@ const Admin_View_Data = () => {
 
 // =========== LANGUAGE RENDER with -> { topics } ===============
   const renderLanguageTab = () =>
-    languages.map((lang) => {
-      const langTopics = topics.filter((t) => t.language === lang.id);
-      return (
-        <div key={lang.id} className="avd-card">
-          <div className="avd-card-header" onClick={() => toggleSub(lang.id)}>
-            <strong>{lang.name}</strong>
-            {expandedSub[lang.id] ? <FaChevronUp /> : <FaChevronDown />}
+    languages
+      .slice()
+      .sort((a, b) => b.id - a.id)
+      .map((lang) => {
+        const langTopics = topics
+          .filter((t) => t.language === lang.id)
+          .slice()
+          .sort((a, b) => b.id - a.id);
+
+        return (
+          <div key={lang.id} className="avd-card">
+            <div className="avd-card-header" onClick={() => toggleSub(lang.id)}>
+              <strong>{lang.name}</strong>
+              {expandedSub[lang.id] ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+            {expandedSub[lang.id] &&
+              (langTopics.length ? (
+                langTopics.map((topic) => (
+                  <div key={topic.id} className="avd-sub-card">
+                    {editingId === topic.id ? (
+                      <>
+                        {renderFormFields(["name", "language", "section", "category"])}
+                        <div className="avd-card-buttons">
+                          <button
+                            className="avd-save-btn"
+                            onClick={() => handleUpdate("topics", topic.id, setTopics)}
+                          >
+                            {savingId === topic.id ? "Saving..." : "Save"}
+                          </button>
+                          <button className="avd-cancel-btn" onClick={handleCancel}>
+                            Cancel
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p>{topic.name}</p>
+                        <div className="avd-card-buttons">
+                          <button
+                            className="avd-edit-btn"
+                            onClick={() =>
+                              handleEdit(topic, ["name", "language", "section", "category"])
+                            }
+                          >
+                            <FaEdit /> Edit
+                          </button>
+                          <button
+                            className="avd-delete-btn"
+                            onClick={() => handleDelete("topics", topic.id, setTopics)}
+                          >
+                            <FaTrash /> Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))
+              ) : (
+                "No Topics"
+              ))}
           </div>
-          {expandedSub[lang.id] &&
-            (langTopics.length ? (
-              langTopics.map((topic) => (
-                <div key={topic.id} className="avd-sub-card">
-                  {editingId === topic.id ? (
-                    <>
-                      {renderFormFields([
-                        "name",
-                        "language",
-                        "section",
-                        "category",
-                      ])}
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-save-btn"
-                          onClick={() =>
-                            handleUpdate("topics", topic.id, setTopics)
-                          }
-                        >
-                          {savingId === topic.id ? "Saving..." : "Save"}
-                        </button>
-                        <button className="avd-cancel-btn" onClick={handleCancel}>
-                          Cancel
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>{topic.name}</p>
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-edit-btn"
-                          onClick={() =>
-                            handleEdit(topic, [
-                              "name",
-                              "language",
-                              "section",
-                              "category",
-                            ])
-                          }
-                        >
-                          <FaEdit /> Edit
-                        </button>
-                        <button
-                          className="avd-delete-btn"
-                          onClick={() =>
-                            handleDelete("topics", topic.id, setTopics)
-                          }
-                        >
-                          <FaTrash /> Delete
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            ) : (
-              "No Topics"
-            ))}
-        </div>
-      );
-    });
+        );
+      });
 
 
-// =========== TOPIC RENDER with -> { components } ===============
-  const renderTopicTab = () =>
-    topics.map((topic) => {
-      const topicComponents = frontend.filter((f) => f.topic === topic.id);
-      const topicLanguage = languages.find((l) => l.id === topic.language);
 
-      return (
-        <div key={topic.id} className="avd-card">
-          {/* -------- Topic Header -------- */}
-          <div
-            className="avd-card-header"
-            onClick={() => toggleSub(topic.id)}
-            style={{
-              cursor: "pointer",
-              display: "flex",
-              justifyContent: "space-between",
-            }}
-          >
-            <strong>
-              {topic.name}{" "}
-              {topicLanguage && (
-                <span style={{ fontStyle: "italic" }}>
-                  ({topicLanguage.name})
-                </span>
-              )}
-            </strong>
-            {expandedSub[topic.id] ? <FaChevronUp /> : <FaChevronDown />}
-          </div>
+// =========== TOPIC RENDER with -> { components grouped by topic + language } ===============
+  const renderTopicTab = () => {
+    if (!languages.length || !topics.length) return null;
+    return languages
+      .slice()
+      .sort((a, b) => b.id - a.id) // Latest language first
+      .map((lang) => {
+        // Get topics under this language
+        const langTopics = topics
+          .filter((t) => t.language === lang.id)
+          .slice()
+          .sort((a, b) => b.id - a.id); // Latest topic first
 
-          {/* -------- Topic Content -------- */}
-          {expandedSub[topic.id] &&
-            (topicComponents.length ? (
-              topicComponents.map((comp) => (
-                <div key={comp.id} className="avd-sub-card">
-                  {editingId === comp.id ? (
-                    <>
-                      {/* FULL UPDATE FIELDS */}
-                      <label>Title</label>
-                      <input
-                        className="avd-input"
-                        value={formData.title || ""}
-                        onChange={(e) =>
-                          setFormData({ ...formData, title: e.target.value })
-                        }
-                      />
+        // Always return the language card, even if no topics
+        return (
+          <div key={lang.id} className="avd-card">
+            {/* Language Header */}
+            <div
+              className="avd-card-header"
+              onClick={() => toggleSub(`lang-${lang.id}`)}
+              style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
+            >
+              <strong>
+                Language: <span style={{ fontStyle: "italic" }}>{lang.name}</span>
+              </strong>
+              {expandedSub[`lang-${lang.id}`] ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
 
-                      <label>Language</label>
-                      <select
-                        className="avd-input"
-                        value={formData.language || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            language: Number(e.target.value),
-                          })
-                        }
+            {/* Topics under this language */}
+            {expandedSub[`lang-${lang.id}`] &&
+              (langTopics.length ? (
+                langTopics.map((topic) => {
+                  const topicComponents = frontend
+                    .filter((f) => f.topic === topic.id)
+                    .slice()
+                    .sort((a, b) => b.id - a.id); // Latest component first
+
+                  return (
+                    <div key={topic.id} className="avd-sub-card" style={{ marginTop: "10px" }}>
+                      {/* Topic Header */}
+                      <div
+                        className="avd-card-header"
+                        onClick={() => toggleSub(`topic-${topic.id}`)}
+                        style={{
+                          cursor: "pointer",
+                          display: "flex",
+                          justifyContent: "space-between",
+                        }}
                       >
-                        <option value="">Select Language</option>
-                        {languages.map((l) => (
-                          <option key={l.id} value={l.id}>
-                            {l.name}
-                          </option>
+                        <strong>{topic.name}</strong>
+                        {expandedSub[`topic-${topic.id}`] ? <FaChevronUp /> : <FaChevronDown />}
+                      </div>
+
+                      {/* Components under topic */}
+                      {expandedSub[`topic-${topic.id}`] &&
+                        (topicComponents.length ? (
+                          topicComponents.map((comp) => (
+                            <div key={comp.id} className="avd-sub-card">
+                              {editingId === comp.id ? (
+                                <>
+                                  {/* FULL UPDATE FIELDS */}
+                                  <label>Title</label>
+                                  <input
+                                    className="avd-input"
+                                    value={formData.title || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, title: e.target.value })
+                                    }
+                                  />
+
+                                  <label>Language</label>
+                                  <select
+                                    className="avd-input"
+                                    value={formData.language || ""}
+                                    onChange={(e) =>
+                                      setFormData({
+                                        ...formData,
+                                        language: Number(e.target.value),
+                                      })
+                                    }
+                                  >
+                                    <option value="">Select Language</option>
+                                    {languages.map((l) => (
+                                      <option key={l.id} value={l.id}>
+                                        {l.name}
+                                      </option>
+                                    ))}
+                                  </select>
+
+                                  <label>Description</label>
+                                  <textarea
+                                    className="avd-textarea"
+                                    value={formData.description || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, description: e.target.value })
+                                    }
+                                  />
+
+                                  <label>HTML Code</label>
+                                  <textarea
+                                    className="avd-codearea"
+                                    value={formData.html_code || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, html_code: e.target.value })
+                                    }
+                                  />
+
+                                  <label>CSS Code</label>
+                                  <textarea
+                                    className="avd-codearea"
+                                    value={formData.css_code || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, css_code: e.target.value })
+                                    }
+                                  />
+
+                                  <label>JS Code</label>
+                                  <textarea
+                                    className="avd-codearea"
+                                    value={formData.js_code || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, js_code: e.target.value })
+                                    }
+                                  />
+
+                                  <label>Documentation</label>
+                                  <textarea
+                                    className="avd-textarea"
+                                    value={formData.documentation || ""}
+                                    onChange={(e) =>
+                                      setFormData({ ...formData, documentation: e.target.value })
+                                    }
+                                  />
+
+                                  <div className="avd-card-buttons">
+                                    <button
+                                      className="avd-save-btn"
+                                      onClick={() =>
+                                        handleUpdate("frontendsourcecodes", comp.id, setFrontend)
+                                      }
+                                    >
+                                      {savingId === comp.id ? "Saving..." : "Save"}
+                                    </button>
+
+                                    <button className="avd-cancel-btn" onClick={handleCancel}>
+                                      Cancel
+                                    </button>
+                                  </div>
+                                </>
+                              ) : (
+                                <>
+                                  <p>{comp.title}</p>
+                                  <div className="avd-card-buttons">
+                                    <button
+                                      className="avd-edit-btn"
+                                      onClick={() =>
+                                        handleEdit(comp, [
+                                          "title",
+                                          "language",
+                                          "description",
+                                          "html_code",
+                                          "css_code",
+                                          "js_code",
+                                          "documentation",
+                                        ])
+                                      }
+                                    >
+                                      <FaEdit /> Edit
+                                    </button>
+                                    <button
+                                      className="avd-delete-btn"
+                                      onClick={() =>
+                                        handleDelete("frontendsourcecodes", comp.id, setFrontend)
+                                      }
+                                    >
+                                      <FaTrash /> Delete
+                                    </button>
+                                  </div>
+                                </>
+                              )}
+                            </div>
+                          ))
+                        ) : (
+                          <p style={{ padding: "10px" }}>No Components</p>
                         ))}
-                      </select>
-
-                      <label>Description</label>
-                      <textarea
-                        className="avd-textarea"
-                        value={formData.description || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            description: e.target.value,
-                          })
-                        }
-                      />
-
-                      <label>HTML Code</label>
-                      <textarea
-                        className="avd-codearea"
-                        value={formData.html_code || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            html_code: e.target.value,
-                          })
-                        }
-                      />
-
-                      <label>CSS Code</label>
-                      <textarea
-                        className="avd-codearea"
-                        value={formData.css_code || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            css_code: e.target.value,
-                          })
-                        }
-                      />
-
-                      <label>JS Code</label>
-                      <textarea
-                        className="avd-codearea"
-                        value={formData.js_code || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            js_code: e.target.value,
-                          })
-                        }
-                      />
-
-                      <label>Documentation</label>
-                      <textarea
-                        className="avd-textarea"
-                        value={formData.documentation || ""}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            documentation: e.target.value,
-                          })
-                        }
-                      />
-
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-save-btn"
-                          onClick={() =>
-                            handleUpdate("frontendsourcecodes", comp.id, setFrontend)
-                          }
-                        >
-                          {savingId === comp.id ? "Saving..." : "Save"}
-                        </button>
-
-                        <button className="avd-cancel-btn" onClick={handleCancel}>
-                          Cancel
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>{comp.title}</p>
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-edit-btn"
-                          onClick={() =>
-                            handleEdit(comp, [
-                              "title",
-                              "language",
-                              "description",
-                              "html_code",
-                              "css_code",
-                              "js_code",
-                              "documentation",
-                            ])
-                          }
-                        >
-                          <FaEdit /> Edit
-                        </button>
-                        <button
-                          className="avd-delete-btn"
-                          onClick={() =>
-                            handleDelete("frontendsourcecodes", comp.id, setFrontend)
-                          }
-                        >
-                          <FaTrash /> Delete
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            ) : (
-              "No Components"
-            ))}
-        </div>
-      );
-    });
+                    </div>
+                  );
+                })
+              ) : (
+                <p style={{ padding: "10px" }}>No Topics</p>
+              ))}
+          </div>
+        );
+      });
+  };
 
 
 
-
-// =========== Code Guide / BACKEND RENDER with -> { backend steps } ===============
+// =========== Code Guide / BACKEND RENDER grouped by Language & Topic ===============
   const renderCodeGuideTab = () => {
-    // Group by backend topic
-    const groupedBackend = backend.reduce((acc, step) => {
-      if (!acc[step.topic]) acc[step.topic] = [];
-      acc[step.topic].push(step);
+    if (!backend.length || !topics.length || !languages.length) return null;
+
+    const backendByLanguage = backend.reduce((acc, step) => {
+      const topicObj = topics.find((t) => t.id === step.topic);
+      if (!topicObj) return acc;
+
+      const langId = topicObj.language;
+      if (!acc[langId]) acc[langId] = [];
+      acc[langId].push(step);
+
       return acc;
     }, {});
 
-    return Object.keys(groupedBackend).map((topicId) => {
-      const steps = groupedBackend[topicId]
-        .sort((a, b) => a.step_number - b.step_number); // SORT HERE ✅
+    return Object.keys(backendByLanguage)
+      .sort((a, b) => b - a) // descending language ids
+      .map((langId) => {
+        const language = languages.find((l) => l.id === Number(langId));
 
-      const backendTopic = topics.find((t) => t.id === Number(topicId));
+        const stepsByTopic = backendByLanguage[langId].reduce((acc, step) => {
+          if (!acc[step.topic]) acc[step.topic] = [];
+          acc[step.topic].push(step);
+          return acc;
+        }, {});
 
-      return (
-        <div key={topicId} className="avd-card">
-          {/* Header */}
-          <div className="avd-card-header" onClick={() => toggleSub(topicId)}>
-            <strong>
-              Backend Topic:{" "}
-              {backendTopic ? backendTopic.name : "Unknown Topic"}
-            </strong>
-            {expandedSub[topicId] ? <FaChevronUp /> : <FaChevronDown />}
+        return (
+          <div key={langId} className="avd-card">
+            <div
+              className="avd-card-header"
+              onClick={() => toggleSub(`lang-${langId}`)}
+              style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
+            >
+              <strong>
+                Language:{" "}
+                <span style={{ fontStyle: "italic" }}>
+                  {language ? language.name : "Unknown Language"}
+                </span>
+              </strong>
+              {expandedSub[`lang-${langId}`] ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+
+            {expandedSub[`lang-${langId}`] &&
+              Object.keys(stepsByTopic)
+                .sort((a, b) => b - a) // descending topic ids
+                .map((topicId) => {
+                  const topic = topics.find((t) => t.id === Number(topicId));
+
+                  const sortedSteps = stepsByTopic[topicId]
+                    .slice()
+                    .sort((a, b) => b.step_number - a.step_number); // latest steps first
+
+                  return (
+                    <div key={topicId} className="avd-sub-card" style={{ marginTop: "10px" }}>
+                      <div
+                        className="avd-card-header"
+                        onClick={() => toggleSub(`topic-${topicId}`)}
+                        style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
+                      >
+                        <strong>
+                          Backend Topic: {topic ? topic.name : "Unknown Topic"}{" "}
+                          {language && <span style={{ fontStyle: "italic" }}>({language.name})</span>}
+                        </strong>
+                        {expandedSub[`topic-${topicId}`] ? <FaChevronUp /> : <FaChevronDown />}
+                      </div>
+
+                      {expandedSub[`topic-${topicId}`] &&
+                        sortedSteps.map((step) => (
+                          <div key={step.id} className="avd-sub-card">
+                            {editingId === step.id ? (
+                              <>
+                                {renderFormFields([
+                                  "step_number",
+                                  "step_file_name",
+                                  "step_description",
+                                  "step_source_code",
+                                ])}
+                                <div className="avd-card-buttons">
+                                  <button
+                                    className="avd-save-btn"
+                                    onClick={() =>
+                                      handleUpdate("backendsteps", step.id, setBackend)
+                                    }
+                                  >
+                                    {savingId === step.id ? "Saving..." : "Save"}
+                                  </button>
+                                  <button className="avd-cancel-btn" onClick={handleCancel}>
+                                    Cancel
+                                  </button>
+                                </div>
+                              </>
+                            ) : (
+                              <>
+                                <p style={{ fontWeight: "bold" }}>
+                                  Step {step.step_number}: {step.step_file_name}
+                                </p>
+                                <pre className="avd-code-block">{step.step_description}</pre>
+                                <pre className="avd-code-editor">{step.step_source_code}</pre>
+
+                                <div className="avd-card-buttons">
+                                  <button
+                                    className="avd-edit-btn"
+                                    onClick={() =>
+                                      handleEdit(step, [
+                                        "step_number",
+                                        "step_file_name",
+                                        "step_description",
+                                        "step_source_code",
+                                      ])
+                                    }
+                                  >
+                                    <FaEdit /> Edit
+                                  </button>
+                                  <button
+                                    className="avd-delete-btn"
+                                    onClick={() =>
+                                      handleDelete("backendsteps", step.id, setBackend)
+                                    }
+                                  >
+                                    <FaTrash /> Delete
+                                  </button>
+                                </div>
+                              </>
+                            )}
+                          </div>
+                        ))}
+                    </div>
+                  );
+                })}
           </div>
-
-          {/* Steps */}
-          {expandedSub[topicId] &&
-            steps.map((step) => (
-              <div key={step.id} className="avd-sub-card">
-                {editingId === step.id ? (
-                  <>
-                    {renderFormFields([
-                      "step_number",
-                      "step_file_name",
-                      "step_description",
-                      "step_source_code",
-                    ])}
-
-                    <div className="avd-card-buttons">
-                      <button
-                        className="avd-save-btn"
-                        onClick={() =>
-                          handleUpdate("backendsteps", step.id, setBackend)
-                        }
-                      >
-                        {savingId === step.id ? "Saving..." : "Save"}
-                      </button>
-                      <button className="avd-cancel-btn" onClick={handleCancel}>
-                        Cancel
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <p style={{ fontWeight: "bold" }}>
-                      Step {step.step_number}: {step.step_file_name}
-                    </p>
-
-                    <pre className="avd-code-block">
-  {step.step_description}
-                    </pre>
-
-                    <pre className="avd-code-editor">
-  {step.step_source_code}
-                    </pre>
-
-                    <div className="avd-card-buttons">
-                      <button
-                        className="avd-edit-btn"
-                        onClick={() =>
-                          handleEdit(step, [
-                            "step_number",
-                            "step_file_name",
-                            "step_description",
-                            "step_source_code",
-                          ])
-                        }
-                      >
-                        <FaEdit /> Edit
-                      </button>
-
-                      <button
-                        className="avd-delete-btn"
-                        onClick={() =>
-                          handleDelete("backendsteps", step.id, setBackend)
-                        }
-                      >
-                        <FaTrash /> Delete
-                      </button>
-                    </div>
-                  </>
-                )}
-              </div>
-            ))}
-        </div>
-      );
-    });
+        );
+      });
   };
 
 
 
 // =========== Template Types RENDER with -> { template } ===============
   const renderTemplateTypesTab = () =>
-    templateTypes.map((tt) => {
-      const ttTemplates = templates.filter((t) => t.template_type.id === tt.id);
-      return (
-        <div key={tt.id} className="avd-card">
-          <div className="avd-card-header" onClick={() => toggleSub(tt.id)}>
-            <strong>{tt.name}</strong>
-            {expandedSub[tt.id] ? <FaChevronUp /> : <FaChevronDown />}
+    templateTypes
+      .slice()
+      .sort((a, b) => b.id - a.id)
+      .map((tt) => {
+        const ttTemplates = templates
+          .filter((t) => t.template_type.id === tt.id)
+          .slice()
+          .sort((a, b) => b.id - a.id);
+
+        return (
+          <div key={tt.id} className="avd-card">
+            <div className="avd-card-header" onClick={() => toggleSub(tt.id)}>
+              <strong>{tt.name}</strong>
+              {expandedSub[tt.id] ? <FaChevronUp /> : <FaChevronDown />}
+            </div>
+            {expandedSub[tt.id] &&
+              (ttTemplates.length ? (
+                ttTemplates.map((tpl) => (
+                  <div key={tpl.id} className="avd-sub-card">
+                    {editingId === tpl.id ? (
+                      <>
+                        {renderFormFields([
+                          "title",
+                          "project_info",
+                          "iframe_url",
+                          "download_repo_url",
+                          "documentation",
+                          "access_type",
+                          "price",
+                          "template_type_id",
+                        ])}
+                        <div className="avd-card-buttons">
+                          <button
+                            className="avd-save-btn"
+                            onClick={() => handleUpdate("templates", tpl.id, setTemplates)}
+                          >
+                            {savingId === tpl.id ? "Saving..." : "Save"}
+                          </button>
+                          <button className="avd-cancel-btn" onClick={handleCancel}>
+                            Cancel
+                          </button>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <p>{tpl.title}</p>
+                        <div className="avd-card-buttons">
+                          <button
+                            className="avd-edit-btn"
+                            onClick={() =>
+                              handleEdit(tpl, [
+                                "title",
+                                "project_info",
+                                "iframe_url",
+                                "download_repo_url",
+                                "documentation",
+                                "access_type",
+                                "price",
+                                "template_type_id",
+                              ])
+                            }
+                          >
+                            <FaEdit /> Edit
+                          </button>
+                          <button
+                            className="avd-delete-btn"
+                            onClick={() =>
+                              handleDelete("templates", tpl.id, setTemplates)
+                            }
+                          >
+                            <FaTrash /> Delete
+                          </button>
+                        </div>
+                      </>
+                    )}
+                  </div>
+                ))
+              ) : (
+                "No Templates"
+              ))}
           </div>
-          {expandedSub[tt.id] &&
-            (ttTemplates.length ? (
-              ttTemplates.map((tpl) => (
-                <div key={tpl.id} className="avd-sub-card">
-                  {editingId === tpl.id ? (
-                    <>
-                      {renderFormFields([
-                        "title",
-                        "project_info",
-                        "iframe_url",
-                        "download_repo_url",
-                        "documentation",
-                        "access_type",
-                        "price",
-                        "template_type_id",
-                      ])}
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-save-btn"
-                          onClick={() =>
-                            handleUpdate("templates", tpl.id, setTemplates)
-                          }
-                        >
-                          {savingId === tpl.id ? "Saving..." : "Save"}
-                        </button>
-                        <button className="avd-cancel-btn" onClick={handleCancel}>
-                          Cancel
-                        </button>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <p>{tpl.title}</p>
-                      <div className="avd-card-buttons">
-                        <button
-                          className="avd-edit-btn"
-                          onClick={() =>
-                            handleEdit(tpl, [
-                              "title",
-                              "project_info",
-                              "iframe_url",
-                              "download_repo_url",
-                              "documentation",
-                              "access_type",
-                              "price",
-                              "template_type_id",
-                            ])
-                          }
-                        >
-                          <FaEdit /> Edit
-                        </button>
-                        <button
-                          className="avd-delete-btn"
-                          onClick={() =>
-                            handleDelete("templates", tpl.id, setTemplates)
-                          }
-                        >
-                          <FaTrash /> Delete
-                        </button>
-                      </div>
-                    </>
-                  )}
-                </div>
-              ))
-            ) : (
-              "No Templates"
-            ))}
-        </div>
-      );
-    });
+        );
+      });
 
 
 
