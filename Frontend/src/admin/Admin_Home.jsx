@@ -64,16 +64,15 @@ export default function Admin_Home() {
         </button>
       </nav>
 
-      <div className="admin-body">
-        <Admin_Sidebar
-          sidebarOpen={sidebarOpen}
-          setSidebarOpen={setSidebarOpen}
-          setActivePage={setActivePage}
-          activePage={activePage}
-        />
-
-        <div className="admin-content">{renderContent()}</div>
-      </div>
+        <div className="admin-body">
+            <Admin_Sidebar
+              sidebarOpen={sidebarOpen}
+              setSidebarOpen={setSidebarOpen}
+              setActivePage={setActivePage}
+              activePage={activePage}
+            />
+              <div className="container admin-content">{renderContent()}</div>
+        </div>
     </div>
   );
 }

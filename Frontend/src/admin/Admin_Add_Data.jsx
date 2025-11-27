@@ -98,6 +98,7 @@ const Admin_Add_Data = () => {
   // =================== COMMON STYLES ===================
   const formInputStyle = { background: "#121212", color: "#fff", border: "1px solid #555" };
 
+
   // =================== HANDLERS ===================
   const handleAddCategory = async e => {
     e.preventDefault();
@@ -115,6 +116,7 @@ const Admin_Add_Data = () => {
       setIsUploading(false);
     }
   };
+
 
   const handleAddLanguage = async e => {
     e.preventDefault();
@@ -138,6 +140,7 @@ const Admin_Add_Data = () => {
     }
   };
 
+
   const handleAddTopic = async e => {
     e.preventDefault();
     if (!topicLanguage) return alert("Select language!");
@@ -154,6 +157,7 @@ const Admin_Add_Data = () => {
       setIsUploading(false);
     }
   };
+
 
   const handleAddFrontend = async e => {
     e.preventDefault();
@@ -181,6 +185,7 @@ const Admin_Add_Data = () => {
       setIsUploading(false);
     }
   };
+
 
   const handleAddBackend = async e => {
     e.preventDefault();
@@ -211,6 +216,7 @@ const Admin_Add_Data = () => {
       setIsUploading(false);
     }
   };
+
 
   const handleAddTemplate = async e => {
     e.preventDefault();
@@ -243,7 +249,7 @@ const Admin_Add_Data = () => {
     <div className="admin-dashboard p-3">
       {/* Tabs */}
       <div className="btn-group mb-3">
-        {["category","language","topic","frontend","backend","template"].map(tab => (
+        {["category","language","topic","designs","code-guides","template"].map(tab => (
           <button key={tab} className={`btn btn-outline-primary ${activeTab===tab?"active":""}`} onClick={()=>setActiveTab(tab)}>
             {tab.toUpperCase()}
           </button>
@@ -255,12 +261,15 @@ const Admin_Add_Data = () => {
 
       {/* ================== FORMS ================== */}
 
+{/* ------------- ADD CATEGORY ------------- */}
       {activeTab === "category" && <form onSubmit={handleAddCategory}>
         <h4>Add Category</h4>
         <input value={categoryName} onChange={e=>setCategoryName(e.target.value)} className="form-control mb-2" style={formInputStyle} placeholder="Category Name" required/>
         <button className="btn btn-success" disabled={isUploading}>Add Category</button>
       </form>}
 
+
+{/* ------------- ADD LANGUAGE ------------- */}
       {activeTab === "language" && <form onSubmit={handleAddLanguage}>
         <h4>Add Language</h4>
         <label>Section</label>
@@ -280,6 +289,8 @@ const Admin_Add_Data = () => {
         <button className="btn btn-success" disabled={isUploading}>Add Language</button>
       </form>}
 
+
+{/* ------------- ADD TOPIC ------------- */}
       {activeTab === "topic" && <form onSubmit={handleAddTopic}>
         <h4>Add Topic</h4>
         <label>Language</label>
@@ -292,9 +303,11 @@ const Admin_Add_Data = () => {
         <button className="btn btn-success" disabled={isUploading}>Add Topic</button>
       </form>}
 
-      {activeTab === "frontend" && <form onSubmit={handleAddFrontend}>
+
+{/* ------------- ADD Frontend DESIGNS ------------- */}
+      {activeTab === "designs" && <form onSubmit={handleAddFrontend}>
         <h4>Add Frontend Design</h4>
-        <label>Language</label>
+        <labeL>Language</labeL>
         <select value={frontendLanguage} onChange={e=>setFrontendLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Frontend Language</option>
           {frontendLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
@@ -325,7 +338,9 @@ const Admin_Add_Data = () => {
         <button className="btn btn-success" disabled={isUploading}>{isUploading?"Uploading...":"Add Frontend Code"}</button>
       </form>}
 
-      {activeTab === "backend" && <form onSubmit={handleAddBackend}>
+
+{/* ------------- ADD Backend CODING GUIDE ------------- */}
+      {activeTab === "code-guides" && <form onSubmit={handleAddBackend}>
         <h4>Add Backend Step</h4>
         <label>Language</label>
         <select value={backendLanguage} onChange={e=>setBackendLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
@@ -357,6 +372,8 @@ const Admin_Add_Data = () => {
         <button className="btn btn-success" disabled={isUploading}>{isUploading?"Uploading...":"Add Backend Step"}</button>
       </form>}
 
+
+{/* ------------- ADD TEMPLATE ------------- */}
             {activeTab === "template" && <form onSubmit={handleAddTemplate}>
         <h4>Add Template</h4>
         <label>Template Type</label>

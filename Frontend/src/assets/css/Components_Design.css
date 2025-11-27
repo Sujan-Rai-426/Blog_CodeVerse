@@ -118,7 +118,7 @@
 
 /* Iframe */
 .iframe-container iframe {
-    border: none;
+    border: 1px solid !important;
     border-radius: 12px;
     transition: all 0.3s ease;
     width: 100%;
