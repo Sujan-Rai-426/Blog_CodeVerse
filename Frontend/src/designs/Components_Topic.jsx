@@ -179,7 +179,7 @@ useEffect(() => {
                                                     >
                                                         <div className="topic-content">
                                                             <h3>{topic.name}</h3>
-                                                            <p>Click to view tutorial steps</p>
+                                                            {/* <p>Click to view tutorial steps</p> */}
                                                         </div>
                                                     </Link>
                                                 );
