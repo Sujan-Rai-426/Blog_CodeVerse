@@ -188,7 +188,7 @@ function Home() {
             </section>
 
 
-        {/* =============== Backend Section =============== */}
+        {/* =============== Coding_Guide Section =============== */}
             <section id="CODING_GUIDE" className="tutorial-section">
                 <h2 className="home-section-title">Coding Guide</h2>
                 <p className="section-subtext">
@@ -212,7 +212,7 @@ function Home() {
                         : backendLangs.map((lang) => (
                             <Link
                                 key={lang.id}
-                                to={`/Backend_Tutorial_Topic/${lang.id}`}
+                                to={`/Coding_Guide_Topic/${lang.id}`}
                                 className="grid-card"
                             >
                                 {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}

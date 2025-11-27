@@ -5,14 +5,14 @@ import "prismjs/themes/prism-okaidia.css";
 import "prismjs/components/prism-javascript";
 import "prismjs/components/prism-python";
 import { Copy } from "lucide-react";
-import "../assets/css/Backend_Tutorial_Solution.css";
+import "../assets/css/Coding_Guide.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider"; 
 
 // Make url clickable in any text field or description
 import Linkify from "react-linkify";
 
 
-const Backend_Tutorial_Solution = () => {
+const Coding_Guide = () => {
     const { topicID } = useParams();
     const { data, loading, error } = useContext(Parent_API_Provider_Context);
     const [topic, setTopic] = useState(null);
@@ -161,4 +161,4 @@ const Backend_Tutorial_Solution = () => {
     );
 };
 
-export default Backend_Tutorial_Solution;
+export default Coding_Guide;

@@ -9,8 +9,8 @@ import Privacy_Policy from "../pages/Privacy_Policy";
 import PlayGround from "../pages/PlayGround";
 
 // Frontend and Backend Tutorial Pages imports
-import Backend_Tutorial_Solution from "../pages/Backend_Tutorial_Solution";
-import Backend_Tutorial_Topic from "../pages/Backend_Tutorial_Topic";
+import Coding_Guide from "../coding_Guide/Coding_Guide";
+import Coding_Guide_Topic from "../coding_Guide/Coding_Guide_Topic";
 
 // Frontend Or DESIGN Tutorials import
 import Components_Design from "../designs/Components_Design";
@@ -59,8 +59,8 @@ function Routes_List() {
                 {/* Frontend and Backend Tutorial routes */}
                 <Route exact path="/Component-Designs/:topicID/:codeId?" element={<Components_Design />} />
                 <Route exact path="/Component-Topics/:languageID" element={<Components_Topic />} />
-                <Route exact path="/Backend_Tutorial_Solution/:topicID" element={<Backend_Tutorial_Solution />} />
-                <Route exact path="/Backend_Tutorial_Topic/:languageID" element={<Backend_Tutorial_Topic />} />
+                <Route exact path="/Coding_Guide/:topicID" element={<Coding_Guide />} />
+                <Route exact path="/Coding_Guide_Topic/:languageID" element={<Coding_Guide_Topic />} />
 
 
                 {/* Protected User Dashboard Routes */}

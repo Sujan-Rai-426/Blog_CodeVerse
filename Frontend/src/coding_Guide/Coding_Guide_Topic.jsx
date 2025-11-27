@@ -5,7 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
-const Backend_Tutorial_Topic = () => {
+const Coding_Guide_Topic = () => {
 
     const { languageID } = useParams();
     const { data, loading: parentLoading } = useContext(Parent_API_Provider_Context);
@@ -117,7 +117,7 @@ const Backend_Tutorial_Topic = () => {
                             return (
                                 <Link
                                     key={lang.id}
-                                    to={`/Backend_Tutorial_Topic/${lang.id}`}
+                                    to={`/Coding_Guide_Topic/${lang.id}`}
                                     className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
                                 >
                                     {lang.icon_class && <i className={`${lang.icon_class} fs-card-icon`}></i>}
@@ -159,7 +159,7 @@ const Backend_Tutorial_Topic = () => {
                                             language.topics.map((topic) => (
                                                 <Link
                                                     key={topic.id}
-                                                    to={`/Backend_Tutorial_Solution/${topic.id}`}
+                                                    to={`/Coding_Guide/${topic.id}`}
                                                     className="topic-card"
                                                 >
                                                     <div className="topic-content">
@@ -184,4 +184,4 @@ const Backend_Tutorial_Topic = () => {
     );
 };
 
-export default Backend_Tutorial_Topic;
+export default Coding_Guide_Topic;
