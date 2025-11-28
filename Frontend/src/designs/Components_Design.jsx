@@ -143,12 +143,18 @@ export default function Components_Design() {
   // ------------------------------
   // FAVOURITE HANDLERS
   // ------------------------------
-  useEffect(() => {
-    const savedFavourites = JSON.parse(localStorage.getItem("favouriteCodes") || "[]");
-    setFavouriteIds(savedFavourites);
-  }, []);
+useEffect(() => {
+  if (!currentCodes) return;
 
-  const isFavourite = (id) => favouriteIds.includes(id);
+  const savedFavourites = JSON.parse(localStorage.getItem("favouriteCodes") || "[]");
+  setFavouriteIds(savedFavourites);
+
+  console.log(currentCodes.id); // logs every time snippet changes
+}, [currentCodes]);
+
+const isFavourite = (id) => favouriteIds.includes(id);
+
+
 
 // <------- handle ADD FAVOURITE ------>
   const addToFavourite = (id) => {
@@ -400,6 +406,7 @@ const openFullscreen = () => {
               {/* ==== Code Section [ Design_Code.jsx ] ==== */}
                 <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
                     <Design_Code
+                      codeId={currentCodes.id}      // 🔹 ADD THIS
                       html={currentCodes.html}
                       css={currentCodes.css}
                       js={currentCodes.js}

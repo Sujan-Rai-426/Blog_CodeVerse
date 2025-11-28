@@ -9,31 +9,26 @@ export default function Design_Code({
     html = "",
     css = "",
     js = "",
-    access_type = "Free",   // "Free" | "Premium"
+    codeId,               // 🔹 REQUIRED
+    access_type = "Free", 
     price = 100,
-    hasBought = false        // provided by your API
+    hasBought = false
 }) {
+    if (!codeId) throw new Error("codeId prop is required for Design_Code");
+
     const navigate = useNavigate();
 
-    /* ------------------------------------
-        🔥 Active Tab
-     ------------------------------------ */
+    // 🔹 Active tab
     const [activeTab, setActiveTab] = useState("html");
 
-    /* ------------------------------------
-        🔥 Ads completion (for FREE items)
-        - html   = free always
-        - css/js = ads unlock (like your video logic)
-     ------------------------------------ */
+    // 🔹 Ad completion per tab
     const [adCompleted, setAdCompleted] = useState({
         html: true,
         css: false,
         js: false,
     });
 
-    /* ------------------------------------
-        🔥 Prism Highlight
-     ------------------------------------ */
+    // 🔹 Prism highlight
     const codeRef = useRef(null);
     useEffect(() => {
         if (codeRef.current) {
@@ -41,71 +36,53 @@ export default function Design_Code({
         }
     }, [activeTab, adCompleted]);
 
-    /* ------------------------------------
-        🔥 Get code depending on active tab
-     ------------------------------------ */
+    // 🔹 Get code depending on tab
     const getCode = () =>
         activeTab === "html" ? html : activeTab === "css" ? css : js;
 
-    /* ------------------------------------
-        🔥 Access Logic
-     ------------------------------------ */
+    // 🔹 Access Logic
     const isFree = access_type === "Free";
     const isPremium = access_type === "Premium";
 
-    // Free logic → must also complete ads (only css/js)
-    const freeAccessAllowed =
-        isFree && adCompleted[activeTab];
+    const freeAccessAllowed = isFree && adCompleted[activeTab];
+    const premiumAccessAllowed = isPremium && hasBought;
+    const canViewCode = freeAccessAllowed || premiumAccessAllowed;
 
-    // Premium logic → must have bought
-    const premiumAccessAllowed =
-        isPremium && hasBought;
-
-    // Final check
-    const canViewCode =
-        freeAccessAllowed || premiumAccessAllowed;
-
-    /* ------------------------------------
-        🔥 COPY LOGIC
-     ------------------------------------ */
+    // 🔹 Copy logic
     const [copied, setCopied] = useState(false);
-
     const handleCopy = () => {
         if (!canViewCode) return;
 
         const code = getCode();
-
-        const commentStart =
-            activeTab === "html" ? "<!-- " : activeTab === "css" ? "/* " : "// ";
-        const commentEnd =
-            activeTab === "html" ? " -->" : activeTab === "css" ? " */" : "";
-
+        const commentStart = activeTab === "html" ? "<!-- " : activeTab === "css" ? "/* " : "// ";
+        const commentEnd = activeTab === "html" ? " -->" : activeTab === "css" ? " */" : "";
         const promo = `${commentStart}Code by CodeVora — https://codevora140.vercel.app ${commentEnd}\n`;
 
         navigator.clipboard.writeText(`${promo}${code}\n${promo}`);
-
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
 
-    /* ------------------------------------
-        🔥 Add line numbers
-     ------------------------------------ */
+    // 🔹 Line numbers
     const getNumberedCode = (code) =>
         code
             .split("\n")
             .map((line, i) => `${i + 1}   ${line}`)
             .join("\n");
 
-    /* ------------------------------------
-        🔥 RENDER
-     ------------------------------------ */
+    // 🔹 Reset ads when switching codeId
+    useEffect(() => {
+        setAdCompleted({
+            html: true,
+            css: false,
+            js: false,
+        });
+    }, [codeId]);
+
+    // 🔹 Render
     return (
         <div className="design-code-section">
-
-            {/* ============================
-                🔵 CODE TABS (HTML, CSS, JS)
-            ============================= */}
+            {/* ==== Tabs ==== */}
             <div
                 className="code-tabs"
                 style={{
@@ -134,43 +111,37 @@ export default function Design_Code({
                     </button>
                 ))}
 
-                {/* 🔸 COPY BUTTON */}
-                    <button
-                        onClick={handleCopy}
-                        disabled={!canViewCode}
-                        style={{
-                            marginLeft: "auto",
-                            padding: "0.5rem 1rem",
-                            borderRadius: "6px",
-                            border: "none",
-                            background: canViewCode ? "#f7971e" : "#b5b5b5",  // disabled color
-                            color: "black",
-                            cursor: canViewCode ? "pointer" : "not-allowed",
-                            fontWeight: "bold",
-                            display: "flex",
-                            alignItems: "center",
-                            gap: "6px",
-                            transition: "0.2s ease-in-out",
-                            opacity: canViewCode ? 1 : 0.6,
-                        }}
-                    >
-                        <FaCopy />
-                        {copied ? "Copied!" : "Copy"}
-                    </button>
-
+                {/* 🔹 Copy button */}
+                <button
+                    onClick={handleCopy}
+                    disabled={!canViewCode}
+                    style={{
+                        marginLeft: "auto",
+                        padding: "0.5rem 1rem",
+                        borderRadius: "6px",
+                        border: "none",
+                        background: canViewCode ? "#f7971e" : "#b5b5b5",
+                        color: "black",
+                        cursor: canViewCode ? "pointer" : "not-allowed",
+                        fontWeight: "bold",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "6px",
+                        transition: "0.2s ease-in-out",
+                        opacity: canViewCode ? 1 : 0.6,
+                    }}
+                >
+                    <FaCopy />
+                    {copied ? "Copied!" : "Copy"}
+                </button>
             </div>
 
-            {/* ============================
-                🔵 CODE BOX AREA
-            ============================= */}
+            {/* ==== Code box / Ads ==== */}
             <div style={{ position: "relative", fontSize: "0.85rem" }}>
-
-                {/* ------------------------------------
-                    🔥 FREE ITEM → Show Ads First
-                ------------------------------------ */}
                 {isFree && !adCompleted[activeTab] ? (
                     <Ads_Container
                         boxType={activeTab}
+                        adId={`${codeId}-${activeTab}`} // unique
                         onComplete={() =>
                             setAdCompleted((prev) => ({
                                 ...prev,
@@ -188,25 +159,20 @@ export default function Design_Code({
                             borderRadius: "15px",
                             border: "1px solid gray",
                             minHeight: "400px",
-                            maxHeight: "500px", // SAME HEIGHT AS PREVIEW
+                            maxHeight: "500px",
                             overflowX: "auto",
                             overflowY: "auto",
                             filter: canViewCode ? "none" : "blur(8px)",
                             pointerEvents: canViewCode ? "auto" : "none",
                         }}
                     >
-                        <code
-                            ref={codeRef}
-                            className={`language-${activeTab}`}
-                        >
+                        <code ref={codeRef} className={`language-${activeTab}`}>
                             {getNumberedCode(getCode())}
                         </code>
                     </pre>
                 )}
 
-                {/* ------------------------------------
-                    🔥 PREMIUM LOCK OVERLAY
-                ------------------------------------ */}
+                {/* 🔹 Premium lock */}
                 {isPremium && !hasBought && (
                     <div
                         style={{
@@ -223,10 +189,7 @@ export default function Design_Code({
                         <button
                             onClick={() =>
                                 navigate("/Payment_Page", {
-                                    state: {
-                                        amount: price,
-                                        sourceId: "design-code",
-                                    },
+                                    state: { amount: price, sourceId: "design-code" },
                                 })
                             }
                             style={{
