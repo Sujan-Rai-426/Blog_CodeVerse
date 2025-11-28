@@ -316,7 +316,7 @@ const openFullscreen = () => {
                 <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   {/* <------ [ Title + Descripton ] -----> */}
                     <div className="cd-header">
-                      <h3>{currentCodes.title}</h3>
+                      <h3 className="text-infro">{currentCodes.title}</h3>
                       <p>{currentCodes.description}</p>
                       <div className="access-info" style={{ marginTop: 6 }}>
                           <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>

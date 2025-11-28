@@ -16,14 +16,14 @@ export default function Design_Code({
     const navigate = useNavigate();
 
     /* ------------------------------------
-     🔥 Active Tab
+        🔥 Active Tab
      ------------------------------------ */
     const [activeTab, setActiveTab] = useState("html");
 
     /* ------------------------------------
-     🔥 Ads completion (for FREE items)
-     - html   = free always
-     - css/js = ads unlock (like your video logic)
+        🔥 Ads completion (for FREE items)
+        - html   = free always
+        - css/js = ads unlock (like your video logic)
      ------------------------------------ */
     const [adCompleted, setAdCompleted] = useState({
         html: true,
@@ -42,13 +42,13 @@ export default function Design_Code({
     }, [activeTab, adCompleted]);
 
     /* ------------------------------------
-     🔥 Get code depending on active tab
+        🔥 Get code depending on active tab
      ------------------------------------ */
     const getCode = () =>
         activeTab === "html" ? html : activeTab === "css" ? css : js;
 
     /* ------------------------------------
-     🔥 Access Logic
+        🔥 Access Logic
      ------------------------------------ */
     const isFree = access_type === "Free";
     const isPremium = access_type === "Premium";
