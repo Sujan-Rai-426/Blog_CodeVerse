@@ -240,7 +240,7 @@ const renderCategoryTab = () =>
       return (
         <div key={cat.id} className="avd-card">
           <div className="avd-card-header" onClick={() => toggleSub(cat.id)}>
-            <strong>{cat.name}</strong>
+            <strong className="text-danger" >{cat.name}</strong>
             {expandedSub[cat.id] ? <FaChevronUp /> : <FaChevronDown />}
           </div>
           {expandedSub[cat.id] &&
@@ -308,7 +308,7 @@ const renderSectionTab = () =>
       return (
         <div key={sec.id} className="avd-card">
           <div className="avd-card-header" onClick={() => toggleSub(sec.id)}>
-            <strong>{sec.name}</strong>
+            <strong className="text-danger">{sec.name}</strong>
             {expandedSub[sec.id] ? <FaChevronUp /> : <FaChevronDown />}
           </div>
           {expandedSub[sec.id] &&
@@ -328,13 +328,13 @@ const renderSectionTab = () =>
                           {savingId === lang.id ? "Saving..." : "Save"}
                         </button>
                         <button className="avd-cancel-btn" onClick={handleCancel}>
-                          Cancel
+                            Cancel
                         </button>
                       </div>
                     </>
                   ) : (
                     <>
-                      <p>{lang.name}</p>
+                      <p><b>Language :</b> {lang.name}</p>
                       <div className="avd-card-buttons">
                         <button
                           className="avd-edit-btn"
@@ -379,7 +379,7 @@ const renderSectionTab = () =>
         return (
           <div key={lang.id} className="avd-card">
             <div className="avd-card-header" onClick={() => toggleSub(lang.id)}>
-              <strong>{lang.name}</strong>
+              <strong className="text-danger" >{lang.name}</strong>
               {expandedSub[lang.id] ? <FaChevronUp /> : <FaChevronDown />}
             </div>
             {expandedSub[lang.id] &&
@@ -403,7 +403,7 @@ const renderSectionTab = () =>
                       </>
                     ) : (
                       <>
-                        <p>{topic.name}</p>
+                        <p> <b>Topic:</b> {topic.name}</p>
                         <div className="avd-card-buttons">
                           <button
                             className="avd-edit-btn"
@@ -453,8 +453,8 @@ const renderSectionTab = () =>
               onClick={() => toggleSub(`lang-${lang.id}`)}
               style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
             >
-              <strong>
-                Language: <span style={{ fontStyle: "italic" }}>{lang.name}</span>
+              <strong  className="text-danger">
+                  Language: <span style={{ fontStyle: "italic" }} >{lang.name}</span>
               </strong>
               {expandedSub[`lang-${lang.id}`] ? <FaChevronUp /> : <FaChevronDown />}
             </div>
@@ -475,7 +475,7 @@ const renderSectionTab = () =>
                         onClick={() => toggleSub(`topic-${topic.id}`)}
                         style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
                       >
-                        <strong>{topic.name}</strong>
+                        <strong className="text-info" >Topic: {topic.name}</strong>
                         {expandedSub[`topic-${topic.id}`] ? <FaChevronUp /> : <FaChevronDown />}
                       </div>
 
@@ -674,7 +674,7 @@ const renderSectionTab = () =>
               onClick={() => toggleSub(`lang-${langId}`)}
               style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
             >
-              <strong>
+              <strong className="text-danger" >
                 Language:{" "}
                 <span style={{ fontStyle: "italic" }}>
                   {language ? language.name : "Unknown Language"}
@@ -700,9 +700,9 @@ const renderSectionTab = () =>
                         onClick={() => toggleSub(`topic-${topicId}`)}
                         style={{ cursor: "pointer", display: "flex", justifyContent: "space-between" }}
                       >
-                        <strong>
-                          Backend Topic: {topic ? topic.name : "Unknown Topic"}{" "}
-                          {language && <span style={{ fontStyle: "italic" }}>({language.name})</span>}
+                        <strong className="text-info">
+                            Backend Topic: {topic ? topic.name : "Unknown Topic"}{" "}
+                            {language && <span style={{ fontStyle: "italic" }}>({language.name})</span>}
                         </strong>
                         {expandedSub[`topic-${topicId}`] ? <FaChevronUp /> : <FaChevronDown />}
                       </div>
@@ -735,9 +735,9 @@ const renderSectionTab = () =>
                             ) : (
                               <>
                                 <p style={{ fontWeight: "bold" }}>
-                                  Step {step.step_number}: {step.step_file_name}
+                                    Step {step.step_number}: {step.step_file_name}
                                 </p>
-                                <pre className="avd-code-block">{step.step_description}</pre>
+                                <pre className="avd-code-block" style={{color: 'gray',}}>{step.step_description}</pre>
                                 <pre className="avd-code-editor">{step.step_source_code}</pre>
 
                                 <div className="avd-card-buttons">
@@ -788,72 +788,41 @@ const renderSectionTab = () =>
           .sort((a, b) => b.id - a.id);
 
         return (
-          <div key={tt.id} className="avd-card">
+          <div key={tt.id} className="avd-card text-danger">
             <div className="avd-card-header" onClick={() => toggleSub(tt.id)}>
-              <strong>{tt.name}</strong>
-              {expandedSub[tt.id] ? <FaChevronUp /> : <FaChevronDown />}
+                <strong>{tt.name}</strong>
+                {expandedSub[tt.id] ? <FaChevronUp /> : <FaChevronDown />}
             </div>
             {expandedSub[tt.id] &&
               (ttTemplates.length ? (
                 ttTemplates.map((tpl) => (
-                  <div key={tpl.id} className="avd-sub-card">
-                    {editingId === tpl.id ? (
-                      <>
-                        {renderFormFields([
-                          "title",
-                          "project_info",
-                          "iframe_url",
-                          "download_repo_url",
-                          "documentation",
-                          "access_type",
-                          "price",
-                          "template_type",
-                        ])}
-                        <div className="avd-card-buttons">
-                          <button
-                            className="avd-save-btn"
-                            onClick={() => handleUpdate("templates", tpl.id, setTemplates)}
-                          >
-                            {savingId === tpl.id ? "Saving..." : "Save"}
-                          </button>
-                          <button className="avd-cancel-btn" onClick={handleCancel}>
-                            Cancel
-                          </button>
-                        </div>
-                      </>
-                    ) : (
-                      <>
-                        <p>{tpl.title}</p>
-                        <div className="avd-card-buttons">
-                          <button
-                            className="avd-edit-btn"
-                            onClick={() =>
-                              handleEdit(tpl, [
-                                "title",
-                                "project_info",
-                                "iframe_url",
-                                "download_repo_url",
-                                "documentation",
-                                "access_type",
-                                "price",
-                                "template_type",
-                              ])
-                            }
-                          >
-                            <FaEdit /> Edit
-                          </button>
-                          <button
-                            className="avd-delete-btn"
-                            onClick={() =>
-                              handleDelete("templates", tpl.id, setTemplates)
-                            }
-                          >
-                            <FaTrash /> Delete
-                          </button>
-                        </div>
-                      </>
-                    )}
-                  </div>
+                    <div key={tpl.id} className="avd-sub-card">
+                        {editingId === tpl.id ? (
+                            <>
+                              {renderFormFields([ "title", "project_info", "iframe_url", "download_repo_url", "documentation", "access_type", "price", "template_type", ])}
+                              <div className="avd-card-buttons">
+                                  <button className="avd-save-btn" onClick={() => handleUpdate("templates", tpl.id, setTemplates)} >
+                                      {savingId === tpl.id ? "Saving..." : "Save"}
+                                  </button>
+                                  <button className="avd-cancel-btn" onClick={handleCancel}>
+                                      Cancel
+                                  </button>
+                              </div>
+                            </>
+                        ) : (
+                          <>
+                            <div className="text-info" ><p>{tpl.title}</p></div>
+                              <div className="avd-card-buttons">
+                                  <button className="avd-edit-btn" onClick={() => handleEdit(tpl, [ "title", "project_info", "iframe_url", "download_repo_url", "documentation", "access_type", "price", "template_type", ]) } >
+                                      <FaEdit /> Edit
+                                  </button>
+                                  <button className="avd-delete-btn" onClick={() => handleDelete("templates", tpl.id, setTemplates) } >
+                                      <FaTrash /> Delete
+                                  </button>
+                              </div>
+                          </>
+                        )}
+                    </div>
                 ))
               ) : (
                 "No Templates"
