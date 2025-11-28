@@ -20,7 +20,7 @@ export default function Floating_Share_Btn() {
 
   // handle share click for each platform
   const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent("https://blog-code-verse.vercel.app");
+    const pageUrl = encodeURIComponent("https://codevora140.vercel.app");
     const pageTitle = encodeURIComponent(document.title);
     let shareUrl = "";
 
