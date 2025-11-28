@@ -28,7 +28,7 @@
   cursor: pointer;
   border-radius: 14px;
   overflow: hidden;
-  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  background: linear-gradient(135deg, #494949, #bdbdbd);
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
   transition: transform 0.3s, box-shadow 0.3s;
 }
@@ -96,19 +96,45 @@
 .view-code-btn {
   margin-top: 10px;
   display: inline-block;
-  padding: 8px 14px;
+  padding: 6px 10px;
   font-size: 14px;
   border-radius: 8px;
-  background: #007bff;
-  color: white;
   font-weight: 600;
   cursor: pointer;
   transition: 0.3s;
+  background: transparent;
+  color: blue;
+  border: 2px solid blue;
 }
 
 .view-code-btn:hover {
+  color: white;
   background: #0056b3;
 }
+
+/* Iframe Premium Badge */
+.tpl-premium-badge {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  background: rgba(255, 215, 0, 0.95);
+  color: #000;
+  font-weight: 700;
+  font-size: 13px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 50;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.18);
+}
+
+.tpl-gem-icon {
+  color: black;
+  font-size: 14px;
+}
+
 
 /* Responsive */
 @media (max-width: 1024px) {

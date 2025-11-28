@@ -169,7 +169,11 @@ const Admin_View_Data = () => {
         category: categories,
         section: sections,
         language: languages,
-        template_type_id: templateTypes,
+        template_type: templateTypes,
+        access_type: [     
+          { id: "Free", name: "Free" },
+          { id: "Premium", name: "Premium" },
+        ],
       };
 
       // Select fields
@@ -803,7 +807,7 @@ const renderSectionTab = () =>
                           "documentation",
                           "access_type",
                           "price",
-                          "template_type_id",
+                          "template_type",
                         ])}
                         <div className="avd-card-buttons">
                           <button
@@ -832,7 +836,7 @@ const renderSectionTab = () =>
                                 "documentation",
                                 "access_type",
                                 "price",
-                                "template_type_id",
+                                "template_type",
                               ])
                             }
                           >

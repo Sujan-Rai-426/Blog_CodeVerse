@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useTemplates } from "./Template_API.jsx";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/Template.css";
+import { FaGem } from "react-icons/fa";
 
 const Templates = () => {
   const { templates: apiTemplates, loading: apiLoading } = useTemplates();
@@ -154,6 +155,14 @@ const Templates = () => {
                   ref={(el) => (wrapperRefs.current[t.id] = el)}
                   onClick={() => navigate(`/Templates/${t.id}`)}
                 >
+                  
+                  {/* ⭐ PREMIUM BADGE TOP RIGHT */}
+                  {access === "Premium" && (
+                    <div className="tpl-premium-badge">
+                      <FaGem className="tpl-gem-icon" /> &nbsp; ${t.price}
+                    </div>
+                  )}
+
                   <iframe
                     ref={(el) => (iframeRefs.current[t.id] = el)}
                     className="template-cover-iframe"
@@ -164,21 +173,14 @@ const Templates = () => {
 
                 {/* Title */}
                 <div className="tpl-info" onClick={() => navigate(`/Templates/${t.id}`)}>
-                  <strong>{title}</strong>
+                    <div >
+                        <strong>{title}</strong>
+                    </div>
 
-                  {/* Badges */}
-
-                    <span className={`badge ${access.toLowerCase()}`}>
-                      {access}
-                    </span>
-
-                  {/* View Code Button */}
-                  <div
-                    className="view-code-btn"
-                    onClick={() => navigate(`/Templates/${t.id}`)}
-                  >
-                    View Code →
-                  </div>
+                    {/* View Code Button */}
+                    <div className="view-code-btn" onClick={() => navigate(`/Templates/${t.id}`)} >
+                        View Template →
+                    </div>
                 </div>
 
               </div>
