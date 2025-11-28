@@ -5,6 +5,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
+import { FaGem } from "react-icons/fa";
 
 const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
   const trimmedJs = (js || "").toString().trim();
@@ -142,12 +143,15 @@ function Recent_Contents() {
               css: item.css_code || item.css || "",
               js: item.js_code || item.js || "",
               access_type: item.access_type || "Free",
+              price: item.price || 0,       
+              hasBought: !!item.hasBought,
             };
           });
         })
       )
     )
   );
+
 
   const sorted = tutorials.sort((a, b) => {
     const ai = Number(a.sourceId) || 0;
@@ -185,12 +189,26 @@ function Recent_Contents() {
                     sandbox="allow-scripts allow-same-origin"
                     style={{ height: 200, width: "100%", border: "none", display: "block" }}
                   />
+
                   {isPremium && (
-                    <div className="premium-badge-top-right">
-                      <div className="dollor-box-top-right">
-                        <i className="bi bi-currency-dollar"></i>
-                      </div>
-                      PREMIUM
+                    <div 
+                      style={{ 
+                        position: 'absolute', 
+                        top: 8, 
+                        right: 8, 
+                        background: 'gold', 
+                        color: '#000', 
+                        padding: '4px 8px', 
+                        borderRadius: '4px', 
+                        fontSize: 12, 
+                        fontWeight: 'bold', 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: 4,
+                        zIndex: 10
+                      }}
+                    >
+                      <FaGem /> &nbsp; ${t.price || 0}
                     </div>
                   )}
                 </div>
