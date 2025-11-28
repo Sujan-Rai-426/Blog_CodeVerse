@@ -435,27 +435,30 @@ const openFullscreen = () => {
                   />
               </div>
 
-              {/* === Filter Buttons === */}
+              {/* === Filter Buttons [ALL, Free, Premium, Latest, Oldest, Unwatched, Favourite, Clicked] === */}
               <div style={{ marginBottom: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button className={`cd-filter-btns ${activeFilter === "all" ? "active" : ""}`} onClick={() => setActiveFilter("all")}>
-                    <i className="fa fa-list" /> All
+                      <i className="fa fa-list" /> All
                   </button>
                   <button className={`cd-filter-btns ${activeFilter === "free" ? "active" : ""}`} onClick={() => setActiveFilter("free")}>
-                    <i className="fa fa-unlock" /> Free
+                      <i className="fa fa-unlock" /> Free
                   </button>
                   <button className={`cd-filter-btns premium ${activeFilter === "premium" ? "active" : ""}`} onClick={() => setActiveFilter("premium")}>
-                    <i className="fa fa-star" /> Premium
+                      <FaGem /> Premium
                   </button>
                   <button className={`cd-filter-btns ${activeFilter === "latest" ? "active" : ""}`} onClick={() => setActiveFilter("latest")}>
-                    <i className="fa fa-clock" /> Latest
+                      <i className="fa fa-clock" /> Latest
                   </button>
                   <button className={`cd-filter-btns ${activeFilter === "oldest" ? "active" : ""}`} onClick={() => setActiveFilter("oldest")}>
-                    <i className="fa fa-history" /> Oldest
+                      <i className="fa fa-history" /> Oldest
                   </button>
                   <button className={`cd-filter-btns ${activeFilter === "unwatched" ? "active" : ""}`} onClick={() => setActiveFilter("unwatched")}>
-                    <i className="fa fa-eye-slash" /> Unwatched
+                      <i className="fa fa-eye-slash" /> Unwatched
                   </button>
-                  <button className="cd-filter-btns" disabled><i className="fa fa-heart" /> Favourite</button>
+                  <button  className={`cd-filter-btns ${activeFilter === "favourite" ? "active" : ""}`} onClick={() => setActiveFilter("favourite")} >
+                      <i className="fa fa-heart" /> Favourite
+                  </button>
+
                   <button className="cd-filter-btns" disabled><i className="fa fa-chart-bar" /> Clicked</button>
               </div>
 
@@ -463,21 +466,30 @@ const openFullscreen = () => {
               <div className="related-videos-grid">
                   {relatedItems
                       .filter((s) => s.id !== currentCodes.id)
+
+                      // SEARCH filter
                       .filter((s) => {
                           if (!searchTerm) return true;
                           return (s.title || "").toLowerCase().includes(searchTerm.toLowerCase());
                       })
+
+                      //  Access_Type + Favourite filter
                       .filter((s) => {
                           if (activeFilter === "all") return true;
                           if (activeFilter === "free") return s.access_type === "Free";
                           if (activeFilter === "premium") return s.access_type === "Premium";
+                          if (activeFilter === "favourite") return favouriteIds.includes(s.id);
                           return true;
                       })
+
+                      // SORT filter
                       .sort((a, b) => {
                           if (activeFilter === "latest") return b.id - a.id;
                           if (activeFilter === "oldest") return a.id - b.id;
                           return 0;
                       })
+
+                      // Final Mapping
                       .map((s) => {
                           const smallSrcDoc = buildRecommendedIframeDoc(
                               s.html_code || s.html || "",

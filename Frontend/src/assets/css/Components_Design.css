@@ -352,46 +352,32 @@
     padding: 8px 14px;
     border-radius: 6px;
     border: 1px solid #ccc;
-    background-color: #f5f5f5;
     font-size: 14px;
     cursor: pointer;
     transition: all 0.2s ease;
     display: inline-flex;
     align-items: center;
     gap: 6px;
+    color: #0072ff;
+    border-color: #0072ff;
+    background-color: transparent;
 }
 
-.cd-filter-btns i {
-    font-size: 12px;
-}
 
-.cd-filter-btns:hover {
-    background-color: #e0e0e0;
-    border-color: #999;
-}
+.cd-filter-btns i {font-size: 12px;}
+.cd-filter-btns:hover {background-color: black;border-color: #007bff;color: #007bff;}
+.cd-filter-btns.active {background-color: #007bff;color: white;border-color: #007bff;}
 
-.cd-filter-btns.active {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
-}
 
-.cd-filter-btns.active.premium {
-    background-color: #ff6b6b;
-    border-color: #ff6b6b;
-    color: white;
-}
-
-.cd-filter-btns.premium {
-    background-color: #ffe6e6;
-    border-color: #ff6b6b;
-    color: #ff3b3b;
-}
+.cd-filter-btns.premium { background-color: transparent !important; border-color: rgb(159, 147, 77); color: white; }
+.cd-filter-btns.premium:hover { background-color: black; border-color: gold; color: gold; }
+.cd-filter-btns.premium.active { background-color: gold !important; border-color: gold; color: black; }
 
 .cd-filter-btns:disabled {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
 
 /* =================== SEARCH BAR =================== */
 .cd-search-bar-wrapper {
