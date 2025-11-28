@@ -1,13 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useTemplates } from "./Template_API.jsx";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/Template.css";
 
 const Templates = () => {
   const { templates: apiTemplates, loading: apiLoading } = useTemplates();
+
   const [templates, setTemplates] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ access: "All", type: "All Category", maxPrice: null });
+
+  const [filters, setFilters] = useState({
+    access: "All",
+    type: "All Category",
+    maxPrice: null
+  });
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -17,10 +24,46 @@ const Templates = () => {
     setLoading(apiLoading);
   }, [apiTemplates, apiLoading]);
 
-  // Filter templates based on selected filters
+
+  // ===========================
+  // SCALE REAL LAPTOP FRAME
+  // ===========================
+  const iframeRefs = useRef({});
+  const wrapperRefs = useRef({});
+
+  const applyScale = () => {
+    Object.keys(wrapperRefs.current).forEach((id) => {
+      const wrapper = wrapperRefs.current[id];
+      const iframe = iframeRefs.current[id];
+      if (!wrapper || !iframe) return;
+
+      const wrapperWidth = wrapper.offsetWidth;
+      const scale = wrapperWidth / 1366; // laptop width
+
+      iframe.style.transform = `scale(${scale})`;
+    });
+  };
+
+  useEffect(() => {
+    applyScale();
+    window.addEventListener("resize", applyScale);
+
+    return () => window.removeEventListener("resize", applyScale);
+  }, [templates]);
+
+
+  // ==========================
+  // FILTERING
+  // ==========================
   const filteredTemplates = templates.filter((t) => {
-    const access = typeof t.access_type === "string" ? t.access_type : t.access_type?.name || "Free";
-    const type = typeof t.template_type === "string" ? t.template_type : t.template_type?.name || "General";
+    const access = typeof t.access_type === "string"
+      ? t.access_type
+      : t.access_type?.name || "Free";
+
+    const type = typeof t.template_type === "string"
+      ? t.template_type
+      : t.template_type?.name || "General";
+
     const price = t.price || 0;
 
     const matchAccess = filters.access === "All" || access === filters.access;
@@ -30,104 +73,120 @@ const Templates = () => {
     return matchAccess && matchType && matchPrice;
   });
 
-  // Unique access types (strings)
   const accessTypes = ["All", ...Array.from(new Set(
-    templates.map((t) => (typeof t.access_type === "string" ? t.access_type : t.access_type?.name))
+    templates.map((t) =>
+      typeof t.access_type === "string"
+        ? t.access_type
+        : t.access_type?.name
+    )
   ))];
 
-  // Unique template types (strings)
   const templateTypes = ["All Category", ...Array.from(new Set(
-    templates.map((t) => (typeof t.template_type === "string" ? t.template_type : t.template_type?.name))
+    templates.map((t) =>
+      typeof t.template_type === "string"
+        ? t.template_type
+        : t.template_type?.name
+    )
   ))];
 
   return (
     <div id="TEMPLATES" className="template-page">
+
       <h2 style={{ marginBottom: "20px" }}>Choose a Template</h2>
 
       {/* Filters */}
       <div className="template-filters">
-        {/* Access Type */}
         <select
           onChange={(e) => setFilters({ ...filters, access: e.target.value })}
           value={filters.access}
         >
           {accessTypes.map((a) => (
-            <option key={a} value={a}>
-              {a}
-            </option>
+            <option key={a} value={a}>{a}</option>
           ))}
         </select>
 
-        {/* Template Type */}
         <select
           onChange={(e) => setFilters({ ...filters, type: e.target.value })}
           value={filters.type}
         >
           {templateTypes.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
+            <option key={t} value={t}>{t}</option>
           ))}
         </select>
 
-        {/* Max Price */}
         <input
           type="number"
           placeholder="Max Price"
           value={filters.maxPrice ?? ""}
           onChange={(e) =>
-            setFilters({ ...filters, maxPrice: e.target.value ? Number(e.target.value) : null })
+            setFilters({
+              ...filters,
+              maxPrice: e.target.value ? Number(e.target.value) : null
+            })
           }
         />
       </div>
 
       {/* Templates Grid */}
-      <div className="list-and-view">
+      <div className="templates-grid">
         {loading ? (
-          Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="tpl-item skeleton">
-              <div className="tpl-placeholder skeleton-box"></div>
-              <div className="tpl-info">
-                <div className="skeleton-text"></div>
-                <div className="tpl-badges">
-                  <div className="skeleton-badge"></div>
-                  <div className="skeleton-badge"></div>
-                </div>
-              </div>
-            </div>
-          ))
+          <p>Loading...</p>
         ) : filteredTemplates.length === 0 ? (
           <p>No templates found.</p>
         ) : (
           filteredTemplates.map((t) => {
-            const access = typeof t.access_type === "string" ? t.access_type : t.access_type?.name || "Free";
-            const type = typeof t.template_type === "string" ? t.template_type : t.template_type?.name || "General";
-            const price = t.price || 0;
+            const access = typeof t.access_type === "string"
+              ? t.access_type
+              : t.access_type?.name || "Free";
+
+            const type = typeof t.template_type === "string"
+              ? t.template_type
+              : t.template_type?.name || "General";
+
             const title = t.title || "Untitled";
 
             return (
-              <div
-                key={t.id}
-                className="tpl-item"
-                onClick={() => navigate(`/Templates/${t.id}`)}
-              >
-                <div className="tpl-placeholder">
-                  <span>{title}</span>
+              <div key={t.id} className="tpl-item">
+
+                {/* Laptop-style thumbnail iframe */}
+                <div
+                  className="iframe-wrapper"
+                  ref={(el) => (wrapperRefs.current[t.id] = el)}
+                  onClick={() => navigate(`/Templates/${t.id}`)}
+                >
+                  <iframe
+                    ref={(el) => (iframeRefs.current[t.id] = el)}
+                    className="template-cover-iframe"
+                    src={t.iframe_url}
+                    title={title}
+                  />
                 </div>
-                <div className="tpl-info">
-                  <div className="tpl-badges">
+
+                {/* Title */}
+                <div className="tpl-info" onClick={() => navigate(`/Templates/${t.id}`)}>
+                  <strong>{title}</strong>
+
+                  {/* Badges */}
+
                     <span className={`badge ${access.toLowerCase()}`}>
                       {access}
-                      {access === "Premium" && price ? ` • $${price}` : ""}
                     </span>
-                    <span className="badge type-badge">{type}</span>
+
+                  {/* View Code Button */}
+                  <div
+                    className="view-code-btn"
+                    onClick={() => navigate(`/Templates/${t.id}`)}
+                  >
+                    View Code →
                   </div>
                 </div>
+
               </div>
             );
           })
         )}
       </div>
+
     </div>
   );
 };
