@@ -6,14 +6,95 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
 
-const buildIframeDoc = (html = "", css = "", js = "") => {
+const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
   const trimmedJs = (js || "").toString().trim();
   const safeJs = trimmedJs ? trimmedJs.replace(/<\/script>/gi, "<\\/script>") : "";
-  const scriptTag = safeJs
-    ? `<script>try{${safeJs}}catch(e){console.error("Preview JS error:",e);}</script>`
-    : "";
-  return `<!doctype html><html><head><meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><style>html,body{margin:0;padding:0;width:100%;height:100%;} ${css || ""}</style></head><body>${html || ""}${scriptTag}</body></html>`;
+
+  return `
+  <!doctype html>
+  <html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <style>
+      html, body {
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: transparent;
+        overflow: hidden;
+      }
+
+      /* Outer wrapper keeps everything perfectly centered */
+      .scaleWrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      /* Inner wrapper: actual scaled content */
+      .scaleInner {
+        width: ${aspectWidth}px;
+        height: ${aspectHeight}px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transform-origin: center center;
+      }
+
+      ${css || ""}
+    </style>
+  </head>
+  <body>
+    <div class="scaleWrapper">
+      <div class="scaleInner" id="scaleInner">
+        ${html || ""}
+      </div>
+    </div>
+
+    <script>
+      try {
+        ${safeJs}
+      } catch(err) {
+        console.error("Preview JS error:", err);
+      }
+
+      function resizeScale() {
+        const inner = document.getElementById("scaleInner");
+        if (!inner) return;
+
+        const naturalWidth = inner.offsetWidth;
+        const naturalHeight = inner.offsetHeight;
+
+        const availableWidth = window.innerWidth;
+        const availableHeight = window.innerHeight;
+
+        // Keep aspect ratio intact
+        const scale = Math.min(
+          availableWidth / naturalWidth,
+          availableHeight / naturalHeight
+        );
+
+        // Apply scale without shifting visual center
+        inner.style.transform = 'scale(' + scale + ')';
+      }
+
+      window.addEventListener('load', resizeScale);
+      window.addEventListener('resize', resizeScale);
+    </script>
+  </body>
+  </html>
+  `;
 };
+
+
 
 function Recent_Contents() {
   const { data, loading, error } = useContext(Parent_API_Provider_Context);

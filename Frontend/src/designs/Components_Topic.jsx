@@ -56,45 +56,45 @@ const Components_Topic = () => {
     }, [parentLoading, data, languageID]);
 
   // Scroll selected language card to center on initial render
-useEffect(() => {
-  if (!frontendLangs.length) return;
+  useEffect(() => {
+    if (!frontendLangs.length) return;
 
-  let attempts = 0;
-  const maxAttempts = 40; // 40 * interval(25ms) = 1000ms max
-  const intervalMs = 25;
-  const container = scrollRef.current;
-  if (!container) return;
+    let attempts = 0;
+    const maxAttempts = 40; // 40 * interval(25ms) = 1000ms max
+    const intervalMs = 25;
+    const container = scrollRef.current;
+    if (!container) return;
 
-  const centerSelectedCard = (selectedCard) => {
-    const containerRect = container.getBoundingClientRect();
-    const cardRect = selectedCard.getBoundingClientRect();
+    const centerSelectedCard = (selectedCard) => {
+      const containerRect = container.getBoundingClientRect();
+      const cardRect = selectedCard.getBoundingClientRect();
 
-    const cardLeftWithinContainer = cardRect.left - containerRect.left + container.scrollLeft;
+      const cardLeftWithinContainer = cardRect.left - containerRect.left + container.scrollLeft;
 
-    const targetScrollLeft = Math.round(
-      cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
-    );
+      const targetScrollLeft = Math.round(
+        cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
+      );
 
-    const maxScroll = container.scrollWidth - container.clientWidth;
-    const finalScroll = Math.max(0, Math.min(targetScrollLeft, maxScroll));
+      const maxScroll = container.scrollWidth - container.clientWidth;
+      const finalScroll = Math.max(0, Math.min(targetScrollLeft, maxScroll));
 
-    container.scrollTo({ left: finalScroll, behavior: "smooth" });
-  };
+      container.scrollTo({ left: finalScroll, behavior: "smooth" });
+    };
 
-  const intervalId = setInterval(() => {
-    attempts += 1;
-    const selectedCard = document.querySelector(".fs-card.selected-card");
+    const intervalId = setInterval(() => {
+      attempts += 1;
+      const selectedCard = document.querySelector(".fs-card.selected-card");
 
-    if (selectedCard && container) {
-      centerSelectedCard(selectedCard);
-      clearInterval(intervalId);
-    } else if (attempts >= maxAttempts) {
-      clearInterval(intervalId);
-    }
-  }, intervalMs);
+      if (selectedCard && container) {
+        centerSelectedCard(selectedCard);
+        clearInterval(intervalId);
+      } else if (attempts >= maxAttempts) {
+        clearInterval(intervalId);
+      }
+    }, intervalMs);
 
-  return () => clearInterval(intervalId);
-}, [frontendLangs, languageID]);
+    return () => clearInterval(intervalId);
+  }, [frontendLangs, languageID]);
 
   // Intersection Observer to highlight language currently visible on screen
     useEffect(() => {
