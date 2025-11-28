@@ -40,9 +40,9 @@ function App() {
 
         {/* ---------- Sticky Buttons ---------- */}
             <Analytics />  {/* <--- Add Vercel Analytics at the bottom */}
-            <Floating_Share_Btn />
             <Floating_Go_Back_Btn />
             <Scroll_To_Top /> 
+            {/* <Floating_Share_Btn /> */}
             {/* <Floating_Donate_Me /> */}
 
     </Router>

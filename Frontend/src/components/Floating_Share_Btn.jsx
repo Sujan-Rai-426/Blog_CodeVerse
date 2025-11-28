@@ -15,36 +15,47 @@ export default function Floating_Share_Btn() {
     }
   };
 
-  // detect mobile devices
-  const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-  // handle share click for each platform
+// Hndle share btn on top right of component design
   const handleShareClick = (platform) => {
-    const pageUrl = encodeURIComponent("https://codevora140.vercel.app");
-    const pageTitle = encodeURIComponent(document.title);
+    const realUrl = window.location.href;
+    const encodedUrl = encodeURIComponent(realUrl);
+
+    // Title taken from the actual code/snippet page
+    const pageTitle = encodeURIComponent(currentCodes?.title || "CodeVora Snippet");
+
+    const isMobile = () =>
+      /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
     let shareUrl = "";
 
     switch (platform) {
       case "Facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${pageUrl}&quote=${pageTitle}`;
+        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`;
         break;
+
       case "WhatsApp":
-        shareUrl = `https://wa.me/?text=${pageTitle}%20${pageUrl}`;
+        shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedUrl}`;
         break;
+
+      case "Telegram":
+        shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${pageTitle}`;
+        break;
+
       case "Messenger":
         shareUrl = isMobile()
-          ? `fb-messenger://share?link=${pageUrl}`
-          : `https://www.facebook.com/dialog/send?link=${pageUrl}&app_id=1949440582581236&redirect_uri=${pageUrl}`;
+          ? `fb-messenger://share?link=${encodedUrl}`
+          : `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=1949440582581236&redirect_uri=${encodedUrl}`;
         break;
-      case "Telegram":
-        shareUrl = `https://t.me/share/url?url=${pageUrl}&text=${pageTitle}`;
-        break;
+
       default:
         return;
     }
 
     window.open(shareUrl, "_blank", "width=600,height=500");
   };
+
+
+
 
   return (
     <div className={`share-button-wrapper ${expanded ? "expanded" : ""}`}>
