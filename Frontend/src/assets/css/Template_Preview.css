@@ -24,14 +24,14 @@
 }
 
 /* Header */
-.preview-header h2 {
-  margin: 0;
+.template-preview-header h2 {
   margin: 1.5rem 0 0.5rem 0 !important;
   font-size: 1.8rem;
+  text-align: left;
   font-weight: 600;
 }
 
-.preview-header p {
+.template-preview-header p {
   margin: 0.5rem 0 1rem 0;
   color: #4b5563;
   font-size: 1rem;
@@ -45,7 +45,6 @@
   font-weight: 500;
   font-size: 0.85rem;
   height: 30px;
-  margin: 0.4rem 0;
 }
 .download-guide:hover{
   background: #00ff62 !important;
@@ -105,6 +104,99 @@
 .device-buttons button:hover:not(.active) {
   background: #d1d5db83;
 }
+
+
+/* Share btn options */
+/* Wrapper */
+.tmp-share-dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Share button */
+.tmp-share-btn {
+  background: transparent;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 15px;
+  border: 1px solid gray;
+  cursor: pointer;
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s, transform 0.15s ease;
+}
+
+.tmp-share-btn:hover {
+  background: white;
+  color: black;
+  transform: translateY(-2px);
+}
+
+.tmp-share-btn:active {
+  transform: scale(0.95);
+}
+/* Dropdown box */
+.tmp-share-options {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  min-width: 160px;
+  color: black;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 6px 0;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+
+  display: none;
+  flex-direction: column;
+
+  animation: fadeDown 0.25s ease forwards;
+  z-index: 999;
+}
+
+/* Show dropdown on hover */
+.tmp-share-dropdown:hover .tmp-share-options {
+  display: flex;
+}
+
+/* Share menu items */
+.tmp-share-options span {
+  padding: 10px 14px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.tmp-share-options span:hover {
+  background: #f5f5f5;
+}
+
+/* Social icon colors */
+.tmp-share-options .share-icon {
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+/* Animation */
+@keyframes fadeDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
 
 /* iframe container */
 .iframe-container {
@@ -292,7 +384,7 @@
     .run-instructions li { font-size: 0.95rem; }
     .run-instructions code { font-size: 0.9rem; }
     .device-download-documentation{ padding: 0.8rem;}
-    .preview-header p { font-size: 1rem; margin: 0; }
+    .template-preview-header p { font-size: 1rem; margin: 0; }
     .template-preview{ gap: 0.1rem; }
     .iframe-container iframe { height: 500px; }
     .template-preview{ padding: 0; }
@@ -311,8 +403,8 @@
     .run-instructions code { font-size: 0.85rem; }
     .run-instructions .case { padding: 0.5rem; }
     .devices{display: none;}
-    .preview-header h2 { font-size: 1.34rem; }
-    .preview-header p { font-size: 0.85rem; }
+    .template-preview-header h2 { font-size: 1.34rem; }
+    .template-preview-header p { font-size: 0.85rem; }
     .device-buttons button { display: none !important; }
     .device-download-documentation { padding: 0.2rem 0.8rem !important; }
     .iframe-container iframe { height: 450px; }
