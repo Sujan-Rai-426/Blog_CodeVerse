@@ -12,20 +12,25 @@ import { Admin_API_Provider } from "./Admin_API_Provider";
 
 function Admin_Routes() {
   return (
-    <Routes>
-      {/* Public Admin Login */}
-      <Route path="/Admin_Login" element={<Admin_Login />} />
 
-      {/* Protected Admin Routes */}
-      <Route element={<Admin_Protected_Route />}>
-          <Route path="/" element={ <Admin_API_Provider> <Admin_Home /> </Admin_API_Provider> } />
-          <Route path="/Add" element={ <Admin_API_Provider> <Admin_Add_Data /> </Admin_API_Provider> } />
-          <Route path="/View" element={ <Admin_API_Provider> <Admin_View_Data /> </Admin_API_Provider> } />
-          <Route path="/Update" element={ <Admin_API_Provider> <Admin_Update_Data /> </Admin_API_Provider> } />
-          <Route path="/Settings" element={ <Admin_API_Provider> <Admin_Settings /> </Admin_API_Provider> } />
-          <Route path="/User_Data" element={ <Admin_API_Provider> <Admin_View_User /> </Admin_API_Provider> } />
-      </Route>
-    </Routes>
+    <div style={{minHeight:'100vh'}}>
+
+      <Routes>
+        {/* Public Admin Login */}
+        <Route path="/Admin_Login" element={<Admin_Login />} />
+
+        {/* Protected Admin Routes */}
+        <Route element={<Admin_Protected_Route />}>
+            <Route path="/" element={ <Admin_API_Provider> <Admin_Home /> </Admin_API_Provider> } />
+            <Route path="/Add" element={ <Admin_API_Provider> <Admin_Add_Data /> </Admin_API_Provider> } />
+            <Route path="/View" element={ <Admin_API_Provider> <Admin_View_Data /> </Admin_API_Provider> } />
+            <Route path="/Update" element={ <Admin_API_Provider> <Admin_Update_Data /> </Admin_API_Provider> } />
+            <Route path="/Settings" element={ <Admin_API_Provider> <Admin_Settings /> </Admin_API_Provider> } />
+            <Route path="/User_Data" element={ <Admin_API_Provider> <Admin_View_User /> </Admin_API_Provider> } />
+        </Route>
+      </Routes>
+
+    </div>
   );
 }
 

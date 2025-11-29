@@ -153,7 +153,7 @@ const Templates = () => {
                 <div
                   className="iframe-wrapper"
                   ref={(el) => (wrapperRefs.current[t.id] = el)}
-                  onClick={() => navigate(`/Templates/${t.id}`)}
+                  onClick={() => navigate(`/Templates/Preview/${t.id}`)}
                 >
                   
                   {/* ⭐ PREMIUM BADGE TOP RIGHT */}
@@ -172,13 +172,13 @@ const Templates = () => {
                 </div>
 
                 {/* Title */}
-                <div className="tpl-info" onClick={() => navigate(`/Templates/${t.id}`)}>
+                <div className="tpl-info" onClick={() => navigate(`/Templates/Preview/${t.id}`)}>
                     <div >
                         <strong>{title}</strong>
                     </div>
 
                     {/* View Code Button */}
-                    <div className="view-code-btn" onClick={() => navigate(`/Templates/${t.id}`)} >
+                    <div className="view-code-btn" onClick={() => navigate(`/Templates/Preview/${t.id}`)} >
                         View Template →
                     </div>
                 </div>
