@@ -1,22 +1,47 @@
 import { useEffect, useState, useRef } from "react";
-import '../assets/css/Ads_Container.css'
+import "../assets/css/Ads_Container.css";
 
-export default function Ads_Container({ onComplete, client, slot, style, boxType, adId }) {
-  const [timer, setTimer] = useState(6);
-  const adRef = useRef(null);
+export default function Ads_Container({
+  onComplete,
+  client,
+  slot,
+  style,
+  boxType,
+  adId,
+  activeTab // 🔥 ADDED — tells ads to pause/resume
+}) {
+  const [timer, setTimer] = useState(8);
+  const intervalRef = useRef(null);
 
-  // Reset timer on adId change
-  useEffect(() => setTimer(8), [adId]);
-
-  // Countdown
+  // Reset timer when adId changes OR when tab becomes Preview again
   useEffect(() => {
-    const countdown = setInterval(() => setTimer(prev => prev - 1), 1000);
-    return () => clearInterval(countdown);
-  }, [adId]);
+    if (activeTab === "code") {
+      setTimer(8);
+    }
+  }, [adId, activeTab]);
+
+  // Timer logic (PAUSE when activeTab !== "preview")
+  useEffect(() => {
+    // STOP any old interval
+    clearInterval(intervalRef.current);
+
+    // If not in preview → pause ads
+    if (activeTab !== "code") return;
+
+    // If preview → start countdown
+    intervalRef.current = setInterval(() => {
+      setTimer((prev) => prev - 1);
+    }, 1000);
+
+    return () => clearInterval(intervalRef.current);
+  }, [activeTab, adId]);
 
   // Complete callback
   useEffect(() => {
-    if (timer <= 0) onComplete();
+    if (timer <= 0) {
+      clearInterval(intervalRef.current);
+      onComplete();
+    }
   }, [timer, onComplete]);
 
   if (boxType === "html") return null;
@@ -36,7 +61,7 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
         alignItems: "center",
         position: "relative",
         overflow: "hidden",
-        ...style,
+        ...style
       }}
     >
       <div
@@ -47,7 +72,7 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
           fontWeight: "bold",
           color: "#111",
           fontSize: "0.8rem",
-          zIndex: 2,
+          zIndex: 2
         }}
       >
         {timer > 0 ? `${timer}s` : "Done"}
@@ -60,7 +85,14 @@ export default function Ads_Container({ onComplete, client, slot, style, boxType
           <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> */}
 
       <div className="CodeBox-Ads-Placeholder">
-        <h1><b>Code<sup><u>Vora💻</u></sup></b></h1>
+        <h1>
+          <b>
+            Code
+            <sup>
+              <u>Vora💻</u>
+            </sup>
+          </b>
+        </h1>
         <p>Visit our social site for more updates</p>
         <p>We are here to provide you best resources for free.</p>
       </div>

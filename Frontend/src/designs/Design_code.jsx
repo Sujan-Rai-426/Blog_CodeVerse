@@ -12,7 +12,9 @@ export default function Design_Code({
     codeId,               // 🔹 REQUIRED
     access_type = "Free", 
     price = 100,
-    hasBought = false
+    hasBought = false,
+
+    pageTab,   // 🔥 ADDED - receives "preview" | "code" from parent
 }) {
     if (!codeId) throw new Error("codeId prop is required for Design_Code");
 
@@ -141,7 +143,8 @@ export default function Design_Code({
                 {isFree && !adCompleted[activeTab] ? (
                     <Ads_Container
                         boxType={activeTab}
-                        adId={`${codeId}-${activeTab}`} // unique
+                        adId={`${codeId}-${activeTab}`}
+                        activeTab={pageTab} //for ads to run only in code
                         onComplete={() =>
                             setAdCompleted((prev) => ({
                                 ...prev,

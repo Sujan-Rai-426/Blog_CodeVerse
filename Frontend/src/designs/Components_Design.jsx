@@ -282,12 +282,24 @@ const changeDevice = (d) => {
   setDevice(d);
 };
 
-// <------ handle SCROLL TO RECOMMENDED SECTION ------->
-const scrollToSection = (tab) => {
-  setActiveTab(tab);
-  if (tab === "preview") previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-  else codeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-};
+
+// <------ handle SCROLL TO RECOMMENDED SECTION [  Also Between Preview and Code section track & toggle ] ------->
+  const scrollToSection = (tab) => {
+    setActiveTab(tab);
+
+    if (tab === "preview") {
+      previewRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    } else {
+      codeRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    }
+  };
+
 
 // <------ handle OPEN FULL SCREEN ------->
 const openFullscreen = () => {
@@ -413,6 +425,7 @@ const openFullscreen = () => {
                       access_type={currentCodes.access_type}
                       price={currentCodes.price}
                       hasBought={currentCodes.hasBought}
+                      pageTab={activeTab}
                     />
                 </div>
 
