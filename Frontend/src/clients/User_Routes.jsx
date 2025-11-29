@@ -1,8 +1,29 @@
 import React from 'react'
+import User_Login from './User_Login'
+import User_Signup from './User_Signup'
+import User_Protected_Route from './User_Protected_Route'
+import { Route, Routes } from 'react-router-dom'
+import User_Profile from './User_Profile'
 
 function User_Routes() {
     return (
-        <div>User_Routes</div>
+        
+        <div className='container' style={{minHeight: "100vh",}} >
+            
+            <Routes>
+
+                <Route element={<User_Protected_Route />}>
+                    <Route exact path="/Profile/" element={<User_Profile />} />
+                </Route>
+
+                <Route exact path="/Login/" element={<User_Login />} />
+                <Route exact path="/Signup/" element={<User_Signup />} />
+
+            </Routes>
+
+
+        </div>
+
     )
 }
 

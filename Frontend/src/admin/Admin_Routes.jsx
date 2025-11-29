@@ -17,16 +17,16 @@ function Admin_Routes() {
 
       <Routes>
         {/* Public Admin Login */}
-        <Route path="/Admin_Login" element={<Admin_Login />} />
+        <Route exact path="/Admin_Login" element={<Admin_Login />} />
 
         {/* Protected Admin Routes */}
         <Route element={<Admin_Protected_Route />}>
-            <Route path="/" element={ <Admin_API_Provider> <Admin_Home /> </Admin_API_Provider> } />
-            <Route path="/Add" element={ <Admin_API_Provider> <Admin_Add_Data /> </Admin_API_Provider> } />
-            <Route path="/View" element={ <Admin_API_Provider> <Admin_View_Data /> </Admin_API_Provider> } />
-            <Route path="/Update" element={ <Admin_API_Provider> <Admin_Update_Data /> </Admin_API_Provider> } />
-            <Route path="/Settings" element={ <Admin_API_Provider> <Admin_Settings /> </Admin_API_Provider> } />
-            <Route path="/User_Data" element={ <Admin_API_Provider> <Admin_View_User /> </Admin_API_Provider> } />
+            <Route exact path="/" element={ <Admin_API_Provider> <Admin_Home /> </Admin_API_Provider> } />
+            <Route exact path="/Add" element={ <Admin_API_Provider> <Admin_Add_Data /> </Admin_API_Provider> } />
+            <Route exact path="/View" element={ <Admin_API_Provider> <Admin_View_Data /> </Admin_API_Provider> } />
+            <Route exact path="/Update" element={ <Admin_API_Provider> <Admin_Update_Data /> </Admin_API_Provider> } />
+            <Route exact path="/Settings" element={ <Admin_API_Provider> <Admin_Settings /> </Admin_API_Provider> } />
+            <Route exact path="/User_Data" element={ <Admin_API_Provider> <Admin_View_User /> </Admin_API_Provider> } />
         </Route>
       </Routes>
 

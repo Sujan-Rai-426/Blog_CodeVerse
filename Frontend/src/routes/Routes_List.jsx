@@ -16,11 +16,6 @@ import Coding_Guide_Topic from "../coding_Guide/Coding_Guide_Topic";
 import Components_Design from "../designs/Components_Design";
 import Components_Topic from "../designs/Components_Topic";
 
-// Client or User Dashboard Pages imports
-import User_Profile from "../clients/User_Profile";
-import User_Protected_Route from "../clients/User_Protected_Route";
-
-
 // Payment Pages imports
 import Payment_Success from "../payment/payment_status/Payment_Success";
 import Payment_Fail from "../payment/payment_status/Payment_Fail";
@@ -53,12 +48,6 @@ function Routes_List() {
                         <Route exact path="/Component-Topics/:languageID" element={<Components_Topic />} />
                         <Route exact path="/Coding_Guide/:topicID" element={<Coding_Guide />} />
                         <Route exact path="/Coding_Guide_Topic/:languageID" element={<Coding_Guide_Topic />} />
-
-
-                        {/* Protected User Dashboard Routes */}
-                        <Route element={<User_Protected_Route />}>
-                            <Route exact path="/User-Profile" element={<User_Profile />} />
-                        </Route>
 
                         {/* Payment Routes */}
                         <Route exact path="/Payment_Success" element={<Payment_Success />} />

@@ -24,16 +24,16 @@ function App() {
         {/*  Routes and Urls */}
               <Routes>
                   {/* Admin Route */}
-                    <Route path='/Admin/*' element={<Admin_Routes />} />
+                    <Route exact path='/Admin/*' element={<Admin_Routes />} />
 
-                  {/* Client Route */}
-                    <Route path='/User/*' element={<User_Routes />} />
+                  {/* Client / User Route */}
+                    <Route exact path='/User/*' element={<User_Routes />} />
 
                   {/* Template Route */}
-                    <Route path="/Templates/*" element={<Template_Routes />} />
+                    <Route exact path="/Templates/*" element={<Template_Routes />} />
 
                   {/* All routes */}
-                    <Route path="/*" element={<Routes_List />} /> 
+                    <Route exact path="/*" element={<Routes_List />} /> 
               </Routes>
 
           <Footer /> 

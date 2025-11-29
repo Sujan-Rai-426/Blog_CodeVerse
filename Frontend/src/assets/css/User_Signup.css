@@ -1,0 +1,83 @@
+/* Background with dark pattern */
+.signup-container {
+    min-height: 90vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+
+
+    background-size: cover;
+    background-repeat: repeat;
+    font-family: "Poppins", sans-serif;
+}
+
+/* Glass effect card */
+.signup-card {
+        /* Dark gradient + subtle pattern */
+    background:
+        linear-gradient(135deg, rgba(7, 7, 7, 0.95), rgba(13, 13, 26, 0.95)),
+        url("https://www.toptal.com/designers/subtlepatterns/uploads/darkness.png");
+    padding: 40px 35px;
+    border-radius: 18px;
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
+    width: 360px;
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Light border */
+}
+
+.signup-card h2 {
+    margin-bottom: 10px;
+    color: #fff;
+    font-size: 24px;
+}
+
+.subtitle {
+    color: #aaa;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+/* Social Buttons */
+.social-login {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.social-btn {
+    text-align: left;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: 0.25s ease;
+    color: #fff;
+}
+
+.social-btn:hover {
+    transform: scale(1.04);
+    opacity: 0.85;
+}
+
+/* Provider Colors */
+.google {
+    background: #db4437;
+}
+
+.facebook {
+    background: #4267b2;
+}
+
+.github {
+    background: #24292f;
+}
+
+.icon {
+    font-size: 20px;
+    vertical-align: middle;
+}
