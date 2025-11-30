@@ -1,76 +1,89 @@
 # ==========================================
-# BASE SETTINGS
+# settings.py - Complete Updated Version
 # ==========================================
+
 import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
 from urllib.parse import urlparse, parse_qsl
-import cloudinary
 import dj_database_url
+import cloudinary
 
-load_dotenv()  # Load .env file
+# ---------------- LOAD ENV ----------------
+load_dotenv()
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # ==========================================
 # DEBUG / SECURITY
 # ==========================================
-SECRET_KEY = os.getenv('SECRET_KEY')
-DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1", "t")
-ALLOWED_HOSTS = os.getenv("ALLOWED_HOSTS", "").split(",")
+SECRET_KEY = os.getenv("SECRET_KEY")
+DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
+
+ALLOWED_HOSTS = list(filter(None, os.getenv("ALLOWED_HOSTS", "").replace(" ", "").split(",")))
+ALLOWED_HOSTS += [".vercel.app", ".now.sh"]
 
 # ==========================================
-# JWT / TOKEN SETTINGS
+# JWT / AUTH SETTINGS
 # ==========================================
 TOKEN_MODEL = None
 REST_USE_JWT = True
-REST_SESSION_LOGIN = False
+REST_SESSION_LOGIN = True  # ✅ Enable session login for /admin
+
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
-JWT_AUTH_COOKIE = "jwt-auth"
+
+JWT_AUTH_COOKIE = "jwt-access"
 JWT_AUTH_REFRESH_COOKIE = "jwt-refresh"
 
 # ==========================================
 # INSTALLED APPS
 # ==========================================
 INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'django.contrib.sites',
+    # Django
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "django.contrib.sites",
 
-    'rest_framework.authtoken',
-    'Home',
-    'Tutorial.apps.TutorialConfig',
+    # Backend apps
+    "Home",
+    "Tutorial.apps.TutorialConfig",
 
-    'rest_framework',
-    'rest_framework_simplejwt',
-    'corsheaders',
-    'cloudinary_storage',
-    'cloudinary',
+    # DRF
+    "rest_framework",
+    "rest_framework_simplejwt",
+    "rest_framework.authtoken",
 
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
+    # Auth + social login
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
 
-    'allauth.socialaccount.providers.github',
-]
+    # Providers
+    "allauth.socialaccount.providers.github",
 
-# ==========================================
-# AUTHENTICATION BACKENDS
-# ==========================================
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
+    # Others
+    "corsheaders",
+    "cloudinary",
+    "cloudinary_storage",
 ]
 
 SITE_ID = 2
+
+# ==========================================
+# AUTH BACKENDS
+# ==========================================
+AUTHENTICATION_BACKENDS = [
+    "django.contrib.auth.backends.ModelBackend",
+    "allauth.account.auth_backends.AuthenticationBackend",
+]
 
 # ==========================================
 # ALLAUTH SETTINGS
@@ -83,15 +96,18 @@ SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_STORE_TOKENS = False
 SOCIALACCOUNT_ADAPTER = "Tutorial.adapter.MySocialAccountAdapter"
 
-LOGIN_REDIRECT_URL = "http://localhost:5173/User/Profile/" if DEBUG else "https://codevora140.vercel.app/User/Profile/"
+LOGIN_REDIRECT_URL = (
+    "http://localhost:5173/User/Profile/" if DEBUG else "https://codevora140.vercel.app/User/Profile/"
+)
 LOGOUT_REDIRECT_URL = "/"
 
 # ==========================================
-# REST FRAMEWORK
+# REST FRAMEWORK + SIMPLE JWT
 # ==========================================
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
+        "rest_framework.authentication.SessionAuthentication",  # ✅ Enable session auth
     ],
 }
 
@@ -105,22 +121,18 @@ SIMPLE_JWT = {
 # DATABASE
 # ==========================================
 if DEBUG:
-    # Local DB / Debug URL
-    DATABASES = {
-        'default': dj_database_url.parse(os.getenv('DATABASE_DEBUG_URL'))
-    }
+    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_DEBUG_URL"))}
 else:
-    # Production DB: parse Neon DATABASE_URL safely
     tmp = urlparse(os.getenv("DATABASE_URL"))
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': tmp.path.lstrip('/'),
-            'USER': tmp.username,
-            'PASSWORD': tmp.password,
-            'HOST': tmp.hostname,
-            'PORT': tmp.port or 5432,
-            'OPTIONS': dict(parse_qsl(tmp.query)),  # handles sslmode & channel_binding
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": tmp.path.lstrip("/"),
+            "USER": tmp.username,
+            "PASSWORD": tmp.password,
+            "HOST": tmp.hostname,
+            "PORT": tmp.port or 5432,
+            "OPTIONS": dict(parse_qsl(tmp.query)),
         }
     }
 
@@ -128,51 +140,51 @@ else:
 # PASSWORD VALIDATION
 # ==========================================
 AUTH_PASSWORD_VALIDATORS = [
-    {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'},
-    {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 # ==========================================
 # INTERNATIONALIZATION
 # ==========================================
-LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+LANGUAGE_CODE = "en-us"
+TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
 # ==========================================
 # STATIC FILES
 # ==========================================
-STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "static"]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ==========================================
-# MEDIA FILES
+# MEDIA FILES (Cloudinary / Local)
 # ==========================================
 if DEBUG:
-    MEDIA_URL = '/media/'
-    MEDIA_ROOT = BASE_DIR / 'media'
+    MEDIA_URL = "/media/"
+    MEDIA_ROOT = BASE_DIR / "media"
 else:
     MEDIA_URL = f"https://res.cloudinary.com/{os.getenv('CLOUD_NAME')}/"
-    DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
     CLOUDINARY_STORAGE = {
-        'CLOUD_NAME': os.getenv('CLOUD_NAME'),
-        'API_KEY': os.getenv('CLOUD_API_KEY'),
-        'API_SECRET': os.getenv('CLOUD_API_SECRET'),
+        "CLOUD_NAME": os.getenv("CLOUD_NAME"),
+        "API_KEY": os.getenv("CLOUD_API_KEY"),
+        "API_SECRET": os.getenv("CLOUD_API_SECRET"),
     }
     cloudinary.config(
-        cloud_name=os.getenv('CLOUD_NAME'),
-        api_key=os.getenv('CLOUD_API_KEY'),
-        api_secret=os.getenv('CLOUD_API_SECRET'),
-        secure=True
+        cloud_name=os.getenv("CLOUD_NAME"),
+        api_key=os.getenv("CLOUD_API_KEY"),
+        api_secret=os.getenv("CLOUD_API_SECRET"),
+        secure=True,
     )
 
 # ==========================================
-# CACHES (Redis)
+# CACHES - REDIS
 # ==========================================
 CACHES = {
     "default": {
@@ -198,34 +210,53 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ROOT_URLCONF = 'Backend.urls'
+# ==========================================
+# URL / TEMPLATES / WSGI
+# ==========================================
+ROOT_URLCONF = "Backend.urls"
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [BASE_DIR / "templates"],
+        "APP_DIRS": True,
+        "OPTIONS": {
+            "context_processors": [
+                "django.template.context_processors.request",
+                "django.template.context_processors.csrf",
+                "django.contrib.auth.context_processors.auth",
+                "django.contrib.messages.context_processors.messages",
             ],
         },
     },
 ]
 
-WSGI_APPLICATION = 'Backend.wsgi.application'
+WSGI_APPLICATION = "Backend.wsgi.application"
 
 # ==========================================
 # CSRF / CORS
 # ==========================================
-CSRF_TRUSTED_ORIGINS = ["https://codevora140.vercel.app", "http://localhost:5173"]
-CORS_ALLOWED_ORIGINS = ["https://codevora140.vercel.app", "http://localhost:5173"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://codevora140.vercel.app",
+    "http://localhost:5173",
+    "http://127.0.0.1:8000",
+    "https://codevora-backend.vercel.app",
+]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://codevora140.vercel.app",
+    "http://localhost:5173",
+]
+
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
+
+# Session / CSRF Cookies
+SESSION_COOKIE_SECURE = not DEBUG
+SESSION_COOKIE_SAMESITE = "Lax" if DEBUG else "None"
+CSRF_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SAMESITE = "Lax" if DEBUG else "None"
 
 # ==========================================
-# DEFAULT AUTO FIELD
+# DEFAULT FIELD
 # ==========================================
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

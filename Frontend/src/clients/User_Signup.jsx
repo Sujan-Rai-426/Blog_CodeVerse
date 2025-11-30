@@ -20,7 +20,13 @@ function User_Signup() {
                   <FaFacebookF className="icon" /> &nbsp; Continue with Facebook
               </button>
 
-              <button className="social-btn github">
+              <button
+                className="social-btn github"
+                onClick={() => {
+                  // Redirect user to backend GitHub login
+                  window.location.href = "http://127.0.0.1:8000/accounts/github/login/";
+                }}
+              >
                   <FaGithub className="icon" /> &nbsp; Continue with GitHub
               </button>
           </div>

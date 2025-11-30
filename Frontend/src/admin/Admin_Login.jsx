@@ -9,25 +9,49 @@ function Admin_Login() {
     const [isUploading, setIsUploading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
+
     const handleLogin = async (e) => {
         e.preventDefault();
         setIsUploading(true);
         setError("");
+
         try {
             const response = await Admin_API.post("/api/admin-login/", {
                 username,
                 password,
             });
+
             if (response.status === 200) {
                 const { access_token } = response.data;
-                localStorage.setItem("admin_token", access_token); // Save JWT to localStorage
-                navigate("/Admin"); // redirect to Admin Dashboard
+
+                // Save JWT to localStorage
+                localStorage.setItem("admin_token", access_token);
+
+                // Redirect to Admin Dashboard
+                navigate("/Admin");
             } else {
                 setError("Invalid credentials or not an admin.");
             }
         } catch (err) {
             console.error("Admin login error:", err);
-            setError("Invalid credentials or not an admin.");
+
+            if (err.response) {
+                // Server returned a response
+                const { status } = err.response;
+                if (status === 401) {
+                    setError("Invalid credentials or not an admin.");
+                } else if (status >= 500) {
+                    setError("Server error. Please try again later.");
+                } else {
+                    setError(err.response.data?.detail || "Login failed.");
+                }
+            } else if (err.request) {
+                // Request made but no response
+                setError("No response from server. Please check your connection.");
+            } else {
+                // Other errors
+                setError("Login failed. Please try again.");
+            }
         } finally {
             setIsUploading(false);
         }
@@ -35,7 +59,11 @@ function Admin_Login() {
 
     return (
         <div className="admin-login d-flex justify-content-center align-items-center vh-100">
-            <form onSubmit={handleLogin} className="p-4 shadow rounded bg-white" style={{ width: "350px" }}>
+            <form
+                onSubmit={handleLogin}
+                className="p-4 shadow rounded bg-white"
+                style={{ width: "350px" }}
+            >
                 <h3 className="text-center mb-4 text-primary">Admin Login</h3>
 
                 <input
@@ -64,7 +92,7 @@ function Admin_Login() {
                     {isUploading ? "Logging In..." : "Login"}
                 </button>
 
-                <p className="mt-3">
+                <p className="mt-3 text-center">
                     Mail here to join our team &nbsp;
                     <a href="https://sujan140.vercel.app/contact/">Mail</a>
                 </p>

@@ -158,27 +158,37 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 
+
 # ------------------ ADMIN LOGIN VIEW ------------------
+from django.contrib.auth import login 
 class AdminLoginAPIView(APIView):
     permission_classes = [AllowAny]
+
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)
+
         if user is not None and user.is_superuser:
+            # Log in user to Django session
+            login(request, user)  # <--- This sets session cookie
+
             return self.create_token_response(user)
         else:
             return Response({"detail": "Invalid credentials or not admin."}, status=401)
+
     def create_token_response(self, user):
         refresh = RefreshToken.for_user(user)
         access_token = str(refresh.access_token)
         expires = timezone.now() + timedelta(days=7)
+
         response = Response({
             "detail": "Login successful",
             "access_token": access_token,
             "refresh_token": str(refresh)
         }, status=200)
-        # Set cookies (optional)
+
+        # Set JWT cookies
         response.set_cookie(
             key="access_token",
             value=access_token,
@@ -196,6 +206,8 @@ class AdminLoginAPIView(APIView):
             expires=expires
         )
         return response
+
+
 
 
 #  To fetch all data

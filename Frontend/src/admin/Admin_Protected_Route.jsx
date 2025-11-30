@@ -10,7 +10,7 @@ const Admin_Protected_Route = () => {
     useEffect(() => {
         const checkAuth = async () => {
             try {
-                const res = await Admin_API.get("/admin/all-data/");
+                const res = await Admin_API.get("/api/admin/all-data/");
                 setAdminData(res.data);
                 setIsAuth(true);
             } catch {
