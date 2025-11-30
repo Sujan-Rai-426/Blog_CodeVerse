@@ -6,64 +6,42 @@ import "../assets/css/Admin_Login.css";
 function Admin_Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [isUploading, setIsUploading] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState("");
     const navigate = useNavigate();
 
     const handleLogin = async (e) => {
         e.preventDefault();
-        setIsUploading(true);
+        setIsLoading(true);
         setError("");
 
         try {
-            const response = await Admin_API.post("/api/admin-login/", {
-                username,
-                password,
-            });
+            const res = await Admin_API.post("/api/admin-login/", { username, password });
 
-            if (response.status === 200) {
-                const { access_token } = response.data;
-
-                // Save JWT to localStorage
+            if (res.status === 200) {
+                const { access_token } = res.data;
                 localStorage.setItem("admin_token", access_token);
 
-                // Redirect to Admin Dashboard
-                navigate("/Admin");
-            } else {
-                setError("Invalid credentials or not an admin.");
+                // Navigate after storing token
+                navigate("/Admin", { replace: true });
             }
         } catch (err) {
-            console.error("Admin login error:", err);
-
-            if (err.response) {
-                // Server returned a response
-                const { status } = err.response;
-                if (status === 401) {
-                    setError("Invalid credentials or not an admin.");
-                } else if (status >= 500) {
-                    setError("Server error. Please try again later.");
-                } else {
-                    setError(err.response.data?.detail || "Login failed.");
-                }
-            } else if (err.request) {
-                // Request made but no response
-                setError("No response from server. Please check your connection.");
+            console.error(err);
+            if (err.response?.status === 401) {
+                setError("Invalid credentials or not an admin.");
+            } else if (err.response?.status >= 500) {
+                setError("Server error. Try again later.");
             } else {
-                // Other errors
-                setError("Login failed. Please try again.");
+                setError(err.response?.data?.detail || "Login failed.");
             }
         } finally {
-            setIsUploading(false);
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="admin-login d-flex justify-content-center align-items-center vh-100">
-            <form
-                onSubmit={handleLogin}
-                className="p-4 shadow rounded bg-white"
-                style={{ width: "350px" }}
-            >
+            <form className="p-4 shadow rounded bg-white" style={{ width: "350px" }} onSubmit={handleLogin}>
                 <h3 className="text-center mb-4 text-primary">Admin Login</h3>
 
                 <input
@@ -73,7 +51,7 @@ function Admin_Login() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     required
-                    disabled={isUploading}
+                    disabled={isLoading}
                 />
 
                 <input
@@ -83,13 +61,13 @@ function Admin_Login() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
-                    disabled={isUploading}
+                    disabled={isLoading}
                 />
 
                 {error && <div className="alert alert-danger">{error}</div>}
 
-                <button type="submit" className="btn btn-primary w-100" disabled={isUploading}>
-                    {isUploading ? "Logging In..." : "Login"}
+                <button type="submit" className="btn btn-primary w-100" disabled={isLoading}>
+                    {isLoading ? "Logging In..." : "Login"}
                 </button>
 
                 <p className="mt-3 text-center">

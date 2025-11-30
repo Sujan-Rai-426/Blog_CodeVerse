@@ -7,27 +7,27 @@ import Admin_Add_Data from "./Admin_Add_Data";
 import Admin_Update_Data from "./Admin_Update_Data";
 import Admin_Settings from "./Admin_Settings";
 import Admin_View_Data from "./Admin_View_Data";
-import { useNavigate, useOutletContext } from "react-router-dom";
 import Admin_View_User from "./Admin_View_User";
+import { useNavigate } from "react-router-dom";
+import { useAdminAPI } from "./Admin_API_Provider"; // ✅ import hook
 
 export default function Admin_Home() {
   const navigate = useNavigate();
-  const { adminData } = useOutletContext(); // Get all DB data from Protected Route
+  const { adminData, loading } = useAdminAPI(); // ✅ get data from context
   const [sidebarOpen, setSidebarOpen] = useState(true);
-  const [activePage, setActivePage] = useState("dashboard"); // current content
+  const [activePage, setActivePage] = useState("dashboard");
 
-  // =================== LOGOUT ===================
   const handleLogout = () => {
-    window.localStorage.removeItem("loggedIn"); // optional
-    window.localStorage.removeItem("access_token"); // optional
-    navigate("/Admin/Admin_Login");
+    localStorage.removeItem("admin_token");
+    window.location.replace("/Admin_Login");
   };
 
-  // Render main content based on activePage
+  if (loading) return <div>Loading Admin Data...</div>;
+
   const renderContent = () => {
     switch (activePage) {
       case "dashboard":
-        return <Admin_Dashboard adminData={adminData} />; // pass adminData
+        return <Admin_Dashboard adminData={adminData} />;
       case "add":
         return <Admin_Add_Data adminData={adminData} />;
       case "view":
@@ -45,34 +45,25 @@ export default function Admin_Home() {
 
   return (
     <div className="admin-container">
-      {/* NAVBAR */}
       <nav className="admin-navbar">
-        <button
-          className="toggle-btn"
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-        >
+        <button className="toggle-btn" onClick={() => setSidebarOpen(!sidebarOpen)}>
           <FaBars />
         </button>
         <h1 className="admin-title">CodeVora Admin</h1>
-
-        <button
-          type="button"
-          className="logout-btn"
-          onClick={handleLogout}
-        >
+        <button type="button" className="logout-btn" onClick={handleLogout}>
           Logout
         </button>
       </nav>
 
-        <div className="admin-body">
-            <Admin_Sidebar
-              sidebarOpen={sidebarOpen}
-              setSidebarOpen={setSidebarOpen}
-              setActivePage={setActivePage}
-              activePage={activePage}
-            />
-              <div className="container admin-content">{renderContent()}</div>
-        </div>
+      <div className="admin-body">
+        <Admin_Sidebar
+          sidebarOpen={sidebarOpen}
+          setSidebarOpen={setSidebarOpen}
+          setActivePage={setActivePage}
+          activePage={activePage}
+        />
+        <div className="container admin-content">{renderContent()}</div>
+      </div>
     </div>
   );
 }

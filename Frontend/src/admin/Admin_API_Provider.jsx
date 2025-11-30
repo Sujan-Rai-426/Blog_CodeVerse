@@ -1,17 +1,14 @@
-
-// THIS FETCH API FROM BACKEND DB
-
 import React, { createContext, useState, useEffect, useCallback, useContext } from "react";
 import Admin_API from "./Admin_API";
 
 const Admin_API_Context = createContext();
+export const useAdminAPI = () => useContext(Admin_API_Context);
 
 export const Admin_API_Provider = ({ children }) => {
     const CACHE_KEY = "admin_api_data";
     const CACHE_TIME_KEY = "admin_api_cache_time";
-    const MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
+    const MAX_AGE = 1000 * 60 * 60 * 24; // 24h
 
-    // ------------------ define function first ------------------
     const loadFromCache = () => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
@@ -29,33 +26,33 @@ export const Admin_API_Provider = ({ children }) => {
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     };
 
-    const [adminData, setAdminData] = useState(() => loadFromCache());
-    const [loading, setLoading] = useState(true);
+    const [adminData, setAdminData] = useState(() => loadFromCache() || {});
+    const [loading, setLoading] = useState(!loadFromCache());
     const [error, setError] = useState(null);
 
     const fetchAdminData = useCallback(async () => {
+        const token = localStorage.getItem("admin_token");
+        if (!token) return; // skip if not logged in
+
         setLoading(true);
         try {
-            const res = await Admin_API.get("/api/admin/all-data/"); // sends cookie automatically
+            const res = await Admin_API.get("/api/admin/all-data/");
             setAdminData(res.data);
             saveToCache(res.data);
         } catch (err) {
-            console.error("Admin API fetch error:", err);
+            console.error(err);
             setError(err);
+            if (err.response?.status === 401) {
+                localStorage.removeItem("admin_token");
+                window.location.replace("/Admin_Login");
+            }
         } finally {
             setLoading(false);
         }
     }, []);
 
     useEffect(() => {
-        const cached = loadFromCache();
-        if (cached) {
-            setAdminData(cached);
-            setLoading(false);
-            fetchAdminData(); // background refresh
-        } else {
-            fetchAdminData();
-        }
+        fetchAdminData();
     }, [fetchAdminData]);
 
     return (
@@ -64,5 +61,3 @@ export const Admin_API_Provider = ({ children }) => {
         </Admin_API_Context.Provider>
     );
 };
-
-export const useAdminAPI = () => useContext(Admin_API_Context);
