@@ -104,47 +104,6 @@ class BackendImageViewSet(viewsets.ModelViewSet):
 
 
 
-# ------------------ ADMIN LOGIN VIEW ------------------
-class AdminLoginAPIView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        user = authenticate(username=username, password=password)
-        if user is not None and user.is_superuser:
-            return self.create_token_response(user)
-        else:
-            return Response({"detail": "Invalid credentials or not admin."}, status=401)
-    def create_token_response(self, user):
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        expires = timezone.now() + timedelta(days=7)
-        response = Response({
-            "detail": "Login successful",
-            "access_token": access_token,
-            "refresh_token": str(refresh)
-        }, status=200)
-        # Set cookies (optional)
-        response.set_cookie(
-            key="access_token",
-            value=access_token,
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax" if settings.DEBUG else "None",
-            expires=expires
-        )
-        response.set_cookie(
-            key="refresh_token",
-            value=str(refresh),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax" if settings.DEBUG else "None",
-            expires=expires
-        )
-        return response
-
-
-
 
 # ------------------ Contact form (unchanged) ------------------
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
@@ -199,6 +158,46 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 
+# ------------------ ADMIN LOGIN VIEW ------------------
+class AdminLoginAPIView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(username=username, password=password)
+        if user is not None and user.is_superuser:
+            return self.create_token_response(user)
+        else:
+            return Response({"detail": "Invalid credentials or not admin."}, status=401)
+    def create_token_response(self, user):
+        refresh = RefreshToken.for_user(user)
+        access_token = str(refresh.access_token)
+        expires = timezone.now() + timedelta(days=7)
+        response = Response({
+            "detail": "Login successful",
+            "access_token": access_token,
+            "refresh_token": str(refresh)
+        }, status=200)
+        # Set cookies (optional)
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
+            expires=expires
+        )
+        response.set_cookie(
+            key="refresh_token",
+            value=str(refresh),
+            httponly=True,
+            secure=not settings.DEBUG,
+            samesite="Lax" if settings.DEBUG else "None",
+            expires=expires
+        )
+        return response
+
+
 #  To fetch all data
 class AdminAllDataAPIView(APIView):
     permission_classes = [IsAdminUser]
@@ -222,3 +221,6 @@ class AdminAllDataAPIView(APIView):
             cache.set("admin_all_data", data, timeout=600)
 
         return Response(data)
+
+
+
