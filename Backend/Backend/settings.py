@@ -98,11 +98,11 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 
 # ---------------- DATABASE ----------------
 # Define my database for local host and production
-if DEBUG: #debug is true -->  Localhost configuration (SQLite)
+if config("DEBUG", cast=bool):
     DATABASES = {
         'default': dj_database_url.parse(config('DATABASE_DEBUG_URL'))
     }
-else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
+else:
     DATABASES = {
         'default': dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600)
     }
