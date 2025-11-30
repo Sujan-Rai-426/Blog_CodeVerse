@@ -100,10 +100,7 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 # Define my database for local host and production
 if DEBUG: #debug is true -->  Localhost configuration (SQLite)
     DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+        'default': dj_database_url.parse(config('DATABASE_DEBUG_URL'))
     }
 else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
     DATABASES = {
