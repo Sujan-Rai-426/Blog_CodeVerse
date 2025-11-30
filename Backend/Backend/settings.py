@@ -140,18 +140,7 @@ SIMPLE_JWT = {
 if DEBUG:
     DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_DEBUG_URL"))}
 else:
-    tmp = urlparse(os.getenv("DATABASE_URL"))
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": tmp.path.lstrip("/"),
-            "USER": tmp.username,
-            "PASSWORD": tmp.password,
-            "HOST": tmp.hostname,
-            "PORT": tmp.port or 5432,
-            "OPTIONS": dict(parse_qsl(tmp.query)),
-        }
-    }
+    DATABASES = {"default": dj_database_url.parse(os.getenv("DATABASE_URL"))}
 
 # ==========================================
 # PASSWORD VALIDATION
