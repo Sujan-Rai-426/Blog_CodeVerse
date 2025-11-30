@@ -7,13 +7,6 @@ import dj_database_url
 # ---------------- BASE ----------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# ---------------- JWT / TOKEN ----------------
-TOKEN_MODEL = None
-REST_USE_JWT = True
-REST_SESSION_LOGIN = False   # ⛔ Important (prevent session login)
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-SOCIALACCOUNT_LOGIN_ON_GET = True  # ⛔ Avoid confirmation screen
-
 # ---------------- SECURITY ----------------
 SECRET_KEY = config('SECRET_KEY')
 DEBUG = config("DEBUG", cast=bool)
@@ -30,16 +23,12 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
 
-    # Tokens (required)
-    'rest_framework.authtoken',
-
-    # Custom apps
-    'Home',
-    'Tutorial.apps.TutorialConfig',
-
-    # Third-party apps
+    # Tokens & REST
     'rest_framework',
+    'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    
+    # Third-party apps
     'corsheaders',
     'cloudinary_storage',
     'cloudinary',
@@ -55,6 +44,10 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
     'allauth.socialaccount.providers.facebook',
     'allauth.socialaccount.providers.github',
+
+    # Custom apps
+    'Home',
+    'Tutorial.apps.TutorialConfig',
 ]
 
 # ---------------- AUTHENTICATION BACKENDS ----------------
@@ -67,20 +60,18 @@ AUTHENTICATION_BACKENDS = [
 SITE_ID = 2
 
 # ---------------- ALLAUTH SETTINGS ----------------
-ACCOUNT_EMAIL_VERIFICATION = "none"
+# Use the new SIGNUP_FIELDS setting to avoid deprecated warnings
+ACCOUNT_SIGNUP_FIELDS = ['username', 'email', 'password1', 'password2']
+ACCOUNT_EMAIL_VERIFICATION = "none"  # Only if you want no email verification
 ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
-SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_STORE_TOKENS = False
-REST_USE_JWT = True
-JWT_AUTH_COOKIE = "jwt-auth"
-JWT_AUTH_REFRESH_COOKIE = "jwt-refresh"
-
 
 SOCIALACCOUNT_ADAPTER = "Tutorial.adapter.MySocialAccountAdapter"
 
-# Redirect URLs
+# ---------------- REDIRECTS ----------------
 if DEBUG:
     LOGIN_REDIRECT_URL = "http://localhost:5173/User/Profile/"
 else:
@@ -102,6 +93,9 @@ SIMPLE_JWT = {
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
+JWT_AUTH_COOKIE = "jwt-auth"
+JWT_AUTH_REFRESH_COOKIE = "jwt-refresh"
+
 # ---------------- CACHES ----------------
 CACHES = {
     "default": {
@@ -115,17 +109,14 @@ CACHES = {
 
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",  #For Cors Header
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware", #For White Noise
-
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
-
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "allauth.account.middleware.AccountMiddleware",
-
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -213,7 +204,6 @@ CORS_ALLOWED_ORIGINS = [
     "https://codevora140.vercel.app",
     "http://localhost:5173",
 ]
-
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_ALL_ORIGINS = True
 
