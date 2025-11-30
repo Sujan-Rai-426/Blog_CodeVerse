@@ -16,6 +16,9 @@
         }
     ],
     "build": {
+        "env": {
+            "DEBUG": "False"
+        },
         "commands": [
             "pip install -r requirements.txt",
             "python manage.py migrate",
