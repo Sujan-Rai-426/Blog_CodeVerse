@@ -104,7 +104,7 @@ if DEBUG: #debug is true -->  Localhost configuration (SQLite)
     }
 else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
     DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
+        'default': dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600)
     }
 
 
