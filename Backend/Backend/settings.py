@@ -1,11 +1,19 @@
 # ==========================================
 # BASE SETTINGS
 # ==========================================
+import os
+from dotenv import load_dotenv
+from urllib.parse import urlparse, parse_qsl
+
+load_dotenv()
+
+
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
 import cloudinary
 import dj_database_url
+
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -177,9 +185,19 @@ if DEBUG:
         'default': dj_database_url.parse(config('DATABASE_DEBUG_URL'))
     }
 else:
+    tmpPostgres = urlparse(os.getenv("DATABASE_URL"))
     DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'))
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': tmpPostgres.path.lstrip('/'),
+            'USER': tmpPostgres.username,
+            'PASSWORD': tmpPostgres.password,
+            'HOST': tmpPostgres.hostname,
+            'PORT': tmpPostgres.port or 5432,
+            'OPTIONS': dict(parse_qsl(tmpPostgres.query)),  # handles sslmode & channel_binding
+        }
     }
+
 
 # ==========================================
 # PASSWORD VALIDATION
