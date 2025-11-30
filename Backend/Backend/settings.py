@@ -1,102 +1,57 @@
 from datetime import timedelta
 from pathlib import Path
 from decouple import config
+# from decouple import Config, RepositoryEnv
 import cloudinary
 import dj_database_url
 
 # ---------------- BASE ----------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+
 # ---------------- SECURITY ----------------
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config("DEBUG", cast=bool)
+DEBUG = config("DEBUG",cast=bool)
 ALLOWED_HOSTS = config("ALLOWED_HOSTS").split(",")
 
 # ---------------- INSTALLED APPS ----------------
 INSTALLED_APPS = [
-    # Django default apps
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.sites',
-
-    # Tokens & REST
-    'rest_framework',
-    'rest_framework.authtoken',
-    'rest_framework_simplejwt',
     
-    # Third-party apps
-    'corsheaders',
-    'cloudinary_storage',
-    'cloudinary',
-
-    # Authentication apps
-    'allauth',
-    'allauth.account',
-    'allauth.socialaccount',
-    'dj_rest_auth',
-    'dj_rest_auth.registration',
-
-    # Social providers
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook',
-    'allauth.socialaccount.providers.github',
 
     # Custom apps
     'Home',
+    
+        # IMPORTANT: Load signals via AppConfig [ For loading Tutorial from signals.py for caching ]
     'Tutorial.apps.TutorialConfig',
+
+    # Third-party apps
+    'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
+    'cloudinary_storage',
+    'cloudinary',
 ]
 
-# ---------------- AUTHENTICATION BACKENDS ----------------
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-# ---------------- SITE SETTINGS ----------------
-SITE_ID = 2
-
-# ---------------- ALLAUTH SETTINGS ----------------
-# Use the new SIGNUP_FIELDS setting to avoid deprecated warnings
-ACCOUNT_SIGNUP_FIELDS = ['username', 'email', 'password1', 'password2']
-ACCOUNT_EMAIL_VERIFICATION = "none"  # Only if you want no email verification
-ACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
-SOCIALACCOUNT_STORE_TOKENS = False
-
-SOCIALACCOUNT_ADAPTER = "Tutorial.adapter.MySocialAccountAdapter"
-
-# ---------------- REDIRECTS ----------------
-if DEBUG:
-    LOGIN_REDIRECT_URL = "http://localhost:5173/User/Profile/"
-else:
-    LOGIN_REDIRECT_URL = "https://codevora140.vercel.app/User/Profile/"
-
-LOGOUT_REDIRECT_URL = "/"
-
-# ---------------- REST FRAMEWORK ----------------
+# manually added for simple jwt token authentication
 REST_FRAMEWORK = {
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
     ],
 }
-
-# ---------------- SIMPLE JWT ----------------
+# JWT token for authentication
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(days=7),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "AUTH_HEADER_TYPES": ("Bearer",),
 }
 
-JWT_AUTH_COOKIE = "jwt-auth"
-JWT_AUTH_REFRESH_COOKIE = "jwt-refresh"
-
-# ---------------- CACHES ----------------
+# settings.py - Redis cache example
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
@@ -107,18 +62,18 @@ CACHES = {
     }
 }
 
+
 # ---------------- MIDDLEWARE ----------------
 MIDDLEWARE = [
-    "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "corsheaders.middleware.CorsMiddleware",  # CORS
+    'django.middleware.security.SecurityMiddleware',
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # Serve static files
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
 # ---------------- URL & TEMPLATES ----------------
@@ -142,17 +97,19 @@ TEMPLATES = [
 WSGI_APPLICATION = 'Backend.wsgi.application'
 
 # ---------------- DATABASE ----------------
-if DEBUG:
+# Define my database for local host and production
+if DEBUG: #debug is true -->  Localhost configuration (SQLite)
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-else:
+else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
     DATABASES = {
         'default': dj_database_url.parse(config('DATABASE_URL'))
     }
+
 
 # ---------------- PASSWORD VALIDATION ----------------
 AUTH_PASSWORD_VALIDATORS = [
@@ -170,8 +127,10 @@ USE_TZ = True
 
 # ---------------- STATIC FILES ----------------
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_DIRS = [BASE_DIR / "static"]
+STATIC_ROOT = BASE_DIR / 'staticfiles'  # For collectstatic
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # optional local static folder
+]
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # ---------------- MEDIA FILES ----------------
@@ -187,6 +146,7 @@ else:
         'API_SECRET': config('CLOUD_API_SECRET'),
     }
 
+# Cloudinary configuration
 cloudinary.config(
     cloud_name=config('CLOUD_NAME'),
     api_key=config('CLOUD_API_KEY'),
@@ -194,18 +154,16 @@ cloudinary.config(
     secure=True
 )
 
-# ---------------- CSRF / CORS ----------------
 CSRF_TRUSTED_ORIGINS = [
     "https://codevora140.vercel.app",
     "http://localhost:5173",
 ]
 
+# ---------------- CORS ----------------
 CORS_ALLOWED_ORIGINS = [
-    "https://codevora140.vercel.app",
-    "http://localhost:5173",
+    "https://codevora140.vercel.app", "http://localhost:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
-CORS_ALLOW_ALL_ORIGINS = True
 
 # ---------------- DEFAULT AUTO FIELD ----------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
