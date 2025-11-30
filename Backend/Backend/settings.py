@@ -80,9 +80,9 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # ==========================================
 MIDDLEWARE = [
+    "whitenoise.middleware.WhiteNoiseMiddleware",  # css whitenoise here
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # css whitenoise here
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -171,13 +171,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-# ==========================================
-# STATIC FILES
-# ==========================================
-STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"
-STATICFILES_DIRS = [BASE_DIR / "static"]
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 
 # ==========================================
@@ -255,9 +248,23 @@ CORS_ALLOW_CREDENTIALS = True
 
 # Session / CSRF Cookies
 SESSION_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SAMESITE = "Lax" if DEBUG else "None"
+SESSION_COOKIE_SAMESITE = "None"
 CSRF_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SAMESITE = "Lax" if DEBUG else "None"
+CSRF_COOKIE_SAMESITE = "None"
+
+
+# ==========================================
+# STATIC FILES
+# ==========================================
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"  # collectstatic output
+STATICFILES_DIRS = [
+    BASE_DIR / "static",  # your custom static files (optional)
+]
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+
+
 
 # ==========================================
 # DEFAULT FIELD
