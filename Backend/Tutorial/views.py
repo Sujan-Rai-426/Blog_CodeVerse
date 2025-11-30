@@ -224,3 +224,26 @@ class AdminAllDataAPIView(APIView):
 
 
 
+# # --------User / Client Login -----------
+# from allauth.socialaccount.models import SocialAccount
+# from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
+# from dj_rest_auth.registration.views import SocialLoginView
+# from rest_framework_simplejwt.tokens import RefreshToken
+# from django.shortcuts import redirect
+
+# class CustomGithubLogin(SocialLoginView):
+#     adapter_class = GitHubOAuth2Adapter
+
+#     def get(self, request, *args, **kwargs):
+#         response = super().post(request, *args, **kwargs)
+
+#         # User is now logged in
+#         user = request.user
+
+#         # create token
+#         refresh = RefreshToken.for_user(user)
+#         access_token = str(refresh.access_token)
+
+#         # send token to frontend
+#         frontend_url = "http://localhost:5173/User/Login"
+#         return redirect(f"{frontend_url}?token={access_token}")

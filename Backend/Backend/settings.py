@@ -98,13 +98,16 @@ WSGI_APPLICATION = 'Backend.wsgi.application'
 
 # ---------------- DATABASE ----------------
 # Define my database for local host and production
-if config("DEBUG", cast=bool):
+if DEBUG: #debug is true -->  Localhost configuration (SQLite)
     DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_DEBUG_URL'))
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-else:
+else:  # debug is false --> Production configuration (PostgreSQL via neon db) 
     DATABASES = {
-        'default': dj_database_url.parse(config('DATABASE_URL'), conn_max_age=600)
+        'default': dj_database_url.parse(config('DATABASE_URL'))
     }
 
 
