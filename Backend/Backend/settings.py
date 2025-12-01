@@ -21,15 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv("SECRET_KEY")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 
-ALLOWED_HOSTS = list(filter(None, os.getenv("ALLOWED_HOSTS", "").replace(" ", "").split(",")))
-ALLOWED_HOSTS += [".vercel.app", ".now.sh"]
+from decouple import config
+
+# Read comma-separated hosts from .env
+ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=lambda v: [h.strip() for h in v.split(",") if h.strip()])
+
 
 # ==========================================
 # JWT / AUTH SETTINGS
 # ==========================================
 TOKEN_MODEL = None
 REST_USE_JWT = True
-REST_SESSION_LOGIN = False  # ✅ Enable session login for /admin
+REST_SESSION_LOGIN = False
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -80,10 +83,10 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # ==========================================
 MIDDLEWARE = [
-    "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware", #manually added by creating for vercel <-- Backend/middleware/fix_auth_header.py
+    "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",  # css whitenoise here
     "corsheaders.middleware.CorsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
+    "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware", #manually added by creating for vercel <-- Backend/middleware/fix_auth
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -187,13 +190,19 @@ else:
 # ==========================================
 # CACHES - REDIS
 # ==========================================
+# CACHES = {
+#     "default": {
+#         "BACKEND": "django_redis.cache.RedisCache",
+#         "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
+#         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+#     }
+# }
 CACHES = {
     "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
-        "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
     }
 }
+
 
 
 # ==========================================
