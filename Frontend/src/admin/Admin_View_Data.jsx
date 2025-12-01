@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import Admin_API from "./Admin_API";
+import { useAdmin } from "./Admin_API_Provider";
 import "../assets/css/Admin_View_Data.css";
 import { FaEdit, FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
 
@@ -21,9 +21,10 @@ const Admin_View_Data = () => {
   const [templateTypes, setTemplateTypes] = useState([]);
   const sortedCategories = [...categories].sort((a, b) => b.id - a.id);
 
+  // =================== GET AdminAPI INSTANCE ===================
+    const { AdminAPI } = useAdmin(); // ✅ JWT automatically added in requests <--From context
 
-
-// <------------- [ Handle FETCH DATA from Admin_API ] ------------->
+// <------------- [ Handle FETCH DATA from AdminAPI ] ------------->
   const fetchData = async () => {
     setLoading(true);
     try {
@@ -37,14 +38,14 @@ const Admin_View_Data = () => {
         templateRes,
         templateTypesRes,
       ] = await Promise.all([
-        Admin_API.get("/api/categories/"),
-        Admin_API.get("/api/sections/"),
-        Admin_API.get("/api/languages/"),
-        Admin_API.get("/api/topics/"),
-        Admin_API.get("/api/frontendsourcecodes/"),
-        Admin_API.get("/api/backendsteps/"),
-        Admin_API.get("/api/templates/"),
-        Admin_API.get("/api/template-types/"),
+        AdminAPI.get("/api/categories/"),
+        AdminAPI.get("/api/sections/"),
+        AdminAPI.get("/api/languages/"),
+        AdminAPI.get("/api/topics/"),
+        AdminAPI.get("/api/frontendsourcecodes/"),
+        AdminAPI.get("/api/backendsteps/"),
+        AdminAPI.get("/api/templates/"),
+        AdminAPI.get("/api/template-types/"),
       ]);
 
       setCategories(catRes.data || []);
@@ -118,7 +119,7 @@ const Admin_View_Data = () => {
         }
       }
 
-      const res = await Admin_API.patch(`/api/${endpoint}/${id}/`, payload);
+      const res = await AdminAPI.patch(`/api/${endpoint}/${id}/`, payload);
 
       // Update frontend state
       setStateFn((prev) => prev.map((i) => (i.id === id ? res.data : i)));
@@ -138,7 +139,7 @@ const Admin_View_Data = () => {
   const handleDelete = async (endpoint, id, setStateFn) => {
     if (!window.confirm("Delete this item?")) return;
     try {
-      await Admin_API.delete(`/api/${endpoint}/${id}/`);
+      await AdminAPI.delete(`/api/${endpoint}/${id}/`);
       setStateFn((prev) => prev.filter((i) => i.id !== id));
       if (editingId === id) handleCancel();
       alert("Deleted successfully");

@@ -160,59 +160,50 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 # ------------------ ADMIN LOGIN VIEW ------------------
-from django.contrib.auth import login 
+# Tutorial/views.py
+from rest_framework.views import APIView
+from rest_framework.permissions import AllowAny, IsAdminUser
+from rest_framework.response import Response
+from django.contrib.auth import authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
+
+@method_decorator(csrf_exempt, name='dispatch')  # Disable CSRF for API
 class AdminLoginAPIView(APIView):
     permission_classes = [AllowAny]
 
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
+
+        if not username or not password:
+            return Response({"detail": "Username and password required"}, status=400)
+
         user = authenticate(username=username, password=password)
 
         if user is not None and user.is_superuser:
-            # Log in user to Django session
-            login(request, user)  # <--- This sets session cookie
-
-            return self.create_token_response(user)
+            # Generate JWT token
+            refresh = RefreshToken.for_user(user)
+            return Response({
+                "refresh": str(refresh),
+                "access": str(refresh.access_token),
+                "username": user.username,
+            })
         else:
-            return Response({"detail": "Invalid credentials or not admin."}, status=401)
-
-    def create_token_response(self, user):
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-        expires = timezone.now() + timedelta(days=7)
-
-        response = Response({
-            "detail": "Login successful",
-            "access_token": access_token,
-            "refresh_token": str(refresh)
-        }, status=200)
-
-        # Set JWT cookies
-        response.set_cookie(
-            key="access_token",
-            value=access_token,
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax" if settings.DEBUG else "None",
-            expires=expires
-        )
-        response.set_cookie(
-            key="refresh_token",
-            value=str(refresh),
-            httponly=True,
-            secure=not settings.DEBUG,
-            samesite="Lax" if settings.DEBUG else "None",
-            expires=expires
-        )
-        return response
+            return Response({"detail": "Invalid credentials or not an admin."}, status=401)
 
 
 
 
 #  To fetch all data
+# Tutorial/views.py
+from rest_framework.permissions import IsAuthenticated
+from rest_framework_simplejwt.authentication import JWTAuthentication
+
 class AdminAllDataAPIView(APIView):
-    permission_classes = [IsAdminUser]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAdminUser]  # Only superuser/admin
 
     def get(self, request):
         data = cache.get("admin_all_data")

@@ -1,6 +1,7 @@
+// Admin_Add_Data.jsx
 import React, { useEffect, useState } from "react";
 import "../assets/css/Admin_Add_Data.css";
-import Admin_API from "./Admin_API"; // Axios instance with JWT
+import { useAdmin } from "./Admin_API_Provider";
 
 const Admin_Add_Data = () => {
   // =================== GLOBAL STATE ===================
@@ -49,10 +50,13 @@ const Admin_Add_Data = () => {
   const [price, setPrice] = useState(0);
   const [templateType, setTemplateType] = useState("");
 
+  // =================== GET AdminAPI INSTANCE ===================
+  const { AdminAPI } = useAdmin(); // ✅ JWT automatically added in requests
+
   // =================== FETCH DATA ===================
   const fetchCategories = async () => {
     try {
-      const res = await Admin_API.get("/api/categories/");
+      const res = await AdminAPI.get("/api/categories/");
       const data = res.data || [];
       setCategories(data);
       setSections(data.flatMap(c => c.sections || []));
@@ -64,7 +68,7 @@ const Admin_Add_Data = () => {
 
   const fetchTemplateTypes = async () => {
     try {
-      const res = await Admin_API.get("/api/template-types/");
+      const res = await AdminAPI.get("/api/template-types/");
       setTemplateTypes(res.data || []);
     } catch (err) {
       console.error("Template type fetch error:", err);
@@ -82,11 +86,12 @@ const Admin_Add_Data = () => {
   const frontendTopics = frontendLanguages.find(l => l.id === parseInt(frontendLanguage))?.topics || [];
   const backendTopics = backendLanguages.find(l => l.id === parseInt(backendLanguage))?.topics || [];
 
+  // =================== FETCH OCCUPIED STEPS ===================
   useEffect(() => {
     const fetchOccupiedSteps = async () => {
       if (!backendTopic) return setOccupiedSteps([]);
       try {
-        const res = await Admin_API.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
+        const res = await AdminAPI.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
         setOccupiedSteps(res.data.occupied_steps || []);
       } catch (err) {
         console.error("Error fetching occupied steps:", err);
@@ -98,14 +103,13 @@ const Admin_Add_Data = () => {
   // =================== COMMON STYLES ===================
   const formInputStyle = { background: "#121212", color: "#fff", border: "1px solid #555" };
 
-
   // =================== HANDLERS ===================
   const handleAddCategory = async e => {
     e.preventDefault();
     if (!categoryName.trim()) return alert("Category name required!");
     try {
       setIsUploading(true);
-      await Admin_API.post("/api/categories/", { name: categoryName });
+      await AdminAPI.post("/api/categories/", { name: categoryName });
       setCategoryName("");
       await fetchCategories();
       alert("Category added!");
@@ -117,13 +121,12 @@ const Admin_Add_Data = () => {
     }
   };
 
-
   const handleAddLanguage = async e => {
     e.preventDefault();
     try {
       setIsUploading(true);
       const sec = sections.find(s => s.name === sectionType) || {};
-      await Admin_API.post("/api/languages/", {
+      await AdminAPI.post("/api/languages/", {
         section: sec.id,
         name: languageName,
         icon_class: icon,
@@ -140,13 +143,12 @@ const Admin_Add_Data = () => {
     }
   };
 
-
   const handleAddTopic = async e => {
     e.preventDefault();
     if (!topicLanguage) return alert("Select language!");
     try {
       setIsUploading(true);
-      await Admin_API.post("/api/topics/", { language: parseInt(topicLanguage), name: topicName });
+      await AdminAPI.post("/api/topics/", { language: parseInt(topicLanguage), name: topicName });
       setTopicName(""); setTopicLanguage("");
       await fetchCategories();
       alert("Topic added!");
@@ -158,14 +160,13 @@ const Admin_Add_Data = () => {
     }
   };
 
-
   const handleAddFrontend = async e => {
     e.preventDefault();
     if (!frontendLanguage || !frontendTopic) return alert("Select language + topic");
     if (!sourceAccessType) return alert("Select access type");
     try {
       setIsUploading(true);
-      await Admin_API.post("/api/frontendsourcecodes/", {
+      await AdminAPI.post("/api/frontendsourcecodes/", {
         topic: parseInt(frontendTopic),
         title: frontendTitle || (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
         description: frontendDesc || "",
@@ -186,13 +187,12 @@ const Admin_Add_Data = () => {
     }
   };
 
-
   const handleAddBackend = async e => {
     e.preventDefault();
     if (!backendLanguage || !backendTopic) return alert("Select both language and topic!");
     try {
       setIsUploading(true);
-      await Admin_API.post("/api/backendsteps/", {
+      await AdminAPI.post("/api/backendsteps/", {
         topic: parseInt(backendTopic),
         step_number: parseInt(stepNumber),
         step_file_name: stepFileName,
@@ -203,7 +203,7 @@ const Admin_Add_Data = () => {
         const formData = new FormData();
         formData.append("topic", backendTopic);
         formData.append("image", imageFile);
-        await Admin_API.post("/api/backendimages/", formData, { headers: { "Content-Type": "multipart/form-data" } });
+        await AdminAPI.post("/api/backendimages/", formData, { headers: { "Content-Type": "multipart/form-data" } });
       }
       setStepNumber(1); setStepFileName(""); setStepDescription(""); setStepCode(""); setImageFile(null);
       setBackendLanguage(""); setBackendTopic("");
@@ -217,13 +217,12 @@ const Admin_Add_Data = () => {
     }
   };
 
-
   const handleAddTemplate = async e => {
     e.preventDefault();
     if (!templateType) return alert("Select template type");
     try {
       setIsUploading(true);
-      await Admin_API.post("/api/templates/", {
+      await AdminAPI.post("/api/templates/", {
         title: templateTitle,
         project_info: templateInfo,
         iframe_url: iframeUrl,
@@ -258,6 +257,7 @@ const Admin_Add_Data = () => {
 
       {/* Upload overlay */}
       {isUploading && <div className="upload-overlay"><div className="spinner"/><div className="upload-text">Uploading…</div></div>}
+
 
       {/* ================== FORMS ================== */}
 
@@ -307,7 +307,7 @@ const Admin_Add_Data = () => {
 {/* ------------- ADD Frontend DESIGNS ------------- */}
       {activeTab === "designs" && <form onSubmit={handleAddFrontend}>
         <h4>Add Frontend Design</h4>
-        <labeL>Language</labeL>
+        <label>Language</label>
         <select value={frontendLanguage} onChange={e=>setFrontendLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Frontend Language</option>
           {frontendLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
@@ -411,10 +411,8 @@ const Admin_Add_Data = () => {
           {isUploading ? "Uploading..." : "Add Template"}
         </button>
       </form>}
-
     </div>
   );
 };
 
 export default Admin_Add_Data;
-

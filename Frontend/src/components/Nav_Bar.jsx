@@ -105,7 +105,7 @@ function Nav_Bar() {
     {/* ===================== Desktop Navbar ===================== */}
       <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
         <div className="nav-container">
-          <Link to="/" className="brand">
+          <Link to="/Admin/Login" className="brand">
             <b>Code</b>
             <sup>
               <u>

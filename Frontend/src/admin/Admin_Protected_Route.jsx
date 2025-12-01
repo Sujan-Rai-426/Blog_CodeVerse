@@ -1,10 +1,15 @@
-import React from "react";
+// src/components/Admin_Protected_Route.jsx
 import { Navigate, Outlet } from "react-router-dom";
+import { useAdmin } from "./Admin_API_Provider";
 
-const Admin_Protected_Route = () => {
-    const token = localStorage.getItem("admin_token");
-    if (!token) return <Navigate to="/Admin_Login" replace />;
-    return <Outlet />; // Admin_API_Provider will fetch data
-};
+export default function AdminProtected() {
+  const { admin } = useAdmin();
 
-export default Admin_Protected_Route;
+  if (!admin) {
+    // Not logged in → redirect to login
+    return <Navigate to="/Login" replace />;
+  }
+
+  // Logged in → render nested routes
+  return <Outlet />;
+}

@@ -1,56 +1,79 @@
+// src/api/Admin_API.jsx
 import axios from "axios";
 
-// ===================== Environment =====================
+// Dynamic backend URL based on environment
 const isProduction = import.meta.env.MODE === "production";
-const apiURL = isProduction
-    ? import.meta.env.VITE_API_URL_PRODUCTION // e.g., "https://codevora-backend.vercel.app"
-    : import.meta.env.VITE_API_URL_DEVELOPMENT; // e.g., "http://localhost:8000"
+const API_URL = isProduction
+  ? import.meta.env.VITE_API_URL_PRODUCTION
+  : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
-// ===================== Axios Instance =====================
-const Admin_API = axios.create({
-    baseURL: apiURL,
-    timeout: 30000,
-    headers: { "Content-Type": "application/json" },
-    withCredentials: true, // required for session cookies
+// Axios instance
+const api = axios.create({
+  baseURL: API_URL,
+  headers: {
+    "Content-Type": "application/json",
+  },
+  withCredentials: false, // JWT, not cookies
 });
 
-// ===================== Request Interceptor =====================
-Admin_API.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem("admin_token");
-        if (token) config.headers.Authorization = `Bearer ${token}`;
-        return config;
-    },
-    (error) => Promise.reject(error)
+// Attach token automatically
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("admin_access");
+    if (token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+  },
+  (error) => Promise.reject(error)
 );
 
-// ===================== Response Interceptor =====================
-Admin_API.interceptors.response.use(
-    (response) => response,
-    async (error) => {
-        if (!error.response) {
-            alert("Network error. Check your connection.");
-            return Promise.reject(error);
-        }
-
-        const { status } = error.response;
-
-        if (status === 401) {
-            // Token invalid or expired → logout
-            localStorage.removeItem("admin_token");
-            window.location.replace("/Admin_Login");
-        }
-
-        if (status === 403) {
-            alert("You do not have permission to perform this action.");
-        }
-
-        if (status >= 500) {
-            alert("Server error. Please try again later.");
-        }
-
-        return Promise.reject(error);
+// Optional global 401/403 handler
+api.interceptors.response.use(
+  (res) => res,
+  (err) => {
+    if (err.response && (err.response.status === 401 || err.response.status === 403)) {
+      console.warn("Unauthorized / Forbidden request", err.response);
     }
+    return Promise.reject(err);
+  }
 );
 
-export default Admin_API;
+// ====================
+// Exported Functions
+// ====================
+
+export const AdminAPI = {
+  login: async (username, password) => {
+    const res = await api.post("/api/admin-login/", { username, password });
+    // Save tokens
+    localStorage.setItem("admin_access", res.data.access);
+    localStorage.setItem("admin_refresh", res.data.refresh);
+    localStorage.setItem("admin_username", res.data.username);
+    return res.data;
+  },
+
+  logout: () => {
+    localStorage.removeItem("admin_access");
+    localStorage.removeItem("admin_refresh");
+    localStorage.removeItem("admin_username");
+  },
+
+  fetchAllData: async () => {
+    const res = await api.get("/api/admin/all-data/");
+    return res.data;
+  },
+
+  refreshToken: async () => {
+    const refresh = localStorage.getItem("admin_refresh");
+    if (!refresh) throw new Error("No refresh token available");
+
+    const res = await api.post("/api/token/refresh/", { refresh });
+    localStorage.setItem("admin_access", res.data.access);
+    return res.data.access;
+  },
+
+  getCurrentAdmin: () => {
+    return localStorage.getItem("admin_username") || null;
+  },
+};
+
+export default AdminAPI;

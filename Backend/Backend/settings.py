@@ -29,7 +29,7 @@ ALLOWED_HOSTS += [".vercel.app", ".now.sh"]
 # ==========================================
 TOKEN_MODEL = None
 REST_USE_JWT = True
-REST_SESSION_LOGIN = True  # ✅ Enable session login for /admin
+REST_SESSION_LOGIN = False  # ✅ Enable session login for /admin
 
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
@@ -124,7 +124,7 @@ LOGOUT_REDIRECT_URL = "/"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",  # ✅ Enable session auth
+        # "rest_framework.authentication.SessionAuthentication",  # ✅ Enable session auth
     ],
 }
 
