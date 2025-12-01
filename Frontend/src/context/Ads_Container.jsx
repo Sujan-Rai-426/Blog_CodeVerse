@@ -60,7 +60,7 @@ export default function Ads_Container({
         flexDirection: "column",
         alignItems: "center",
         position: "relative",
-        overflow: "hi
+        overflow: "hidden",
         ...style
       }}
     >
