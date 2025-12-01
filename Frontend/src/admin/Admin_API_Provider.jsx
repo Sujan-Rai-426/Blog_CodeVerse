@@ -1,11 +1,11 @@
 // src/context/Admin_API_Provider.jsx
 import { createContext, useContext, useState } from "react";
-import axios from "axios";
+import api from "../api"; // ✅ import dynamic axios instance
 
 // =================== CONTEXT ===================
 const AdminContext = createContext();
 
-// ✅ Custom hook to access admin context
+// ✅ Custom hook
 export const useAdmin = () => useContext(AdminContext);
 
 // =================== PROVIDER ===================
@@ -15,40 +15,15 @@ export const AdminProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [cache, setCache] = useState({});
 
-  // --------------------------- AXIOS INSTANCE ---------------------------
-  const API_URL = import.meta.env.VITE_API_URL_DEVELOPMENT; // adjust for production
-  const api = axios.create({
-    baseURL: API_URL,
-    headers: { "Content-Type": "application/json" },
-  });
-
-  // Attach token automatically
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("admin_access");
-    if (token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  });
-
-  // Optional: global 401/403 handler
-  api.interceptors.response.use(
-    (res) => res,
-    (err) => {
-      if (err.response && (err.response.status === 401 || err.response.status === 403)) {
-        console.warn("Unauthorized / Forbidden request", err.response);
-      }
-      return Promise.reject(err);
-    }
-  );
-
   // --------------------------- ADMINAPI OBJECT ---------------------------
   const AdminAPI = {
-    // Axios wrapper methods
     get: (url, config) => api.get(url, config),
     post: (url, data, config) => api.post(url, data, config),
     put: (url, data, config) => api.put(url, data, config),
+    patch: (url, data, config) => api.patch(url, data, config),
     delete: (url, config) => api.delete(url, config),
 
-    // Login/logout methods
+    // Login / Logout
     login: async (username, password) => {
       const res = await api.post("/api/admin-login/", { username, password });
       localStorage.setItem("admin_access", res.data.access);
@@ -63,7 +38,7 @@ export const AdminProvider = ({ children }) => {
     },
     getCurrentAdmin: () => localStorage.getItem("admin_username") || null,
 
-    // Optional: token refresh
+    // Token refresh
     refreshToken: async () => {
       const refresh = localStorage.getItem("admin_refresh");
       if (!refresh) throw new Error("No refresh token available");
@@ -155,7 +130,7 @@ export const AdminProvider = ({ children }) => {
         fetchAllData,
         updateCache,
         refreshAccessToken,
-        AdminAPI, // ✅ now has .get, .post, .put, .delete
+        AdminAPI,
       }}
     >
       {children}
