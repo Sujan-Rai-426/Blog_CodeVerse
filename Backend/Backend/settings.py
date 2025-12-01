@@ -172,6 +172,13 @@ USE_TZ = True
 if DEBUG:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
+    CACHES = {
+        "default": {
+            "BACKEND": "django_redis.cache.RedisCache",
+            "LOCATION": "redis://127.0.0.1:6379/1",
+            "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
+        }
+    }
 else:
     MEDIA_URL = f"https://res.cloudinary.com/{os.getenv('CLOUD_NAME')}/"
     DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
@@ -186,22 +193,12 @@ else:
         api_secret=os.getenv("CLOUD_API_SECRET"),
         secure=True,
     )
-
-# ==========================================
-# CACHES - REDIS
-# ==========================================
-# CACHES = {
-#     "default": {
-#         "BACKEND": "django_redis.cache.RedisCache",
-#         "LOCATION": os.getenv("REDIS_URL", "redis://127.0.0.1:6379/1"),
-#         "OPTIONS": {"CLIENT_CLASS": "django_redis.client.DefaultClient"},
-#     }
-# }
-CACHES = {
-    "default": {
-        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+            "LOCATION": "unique-codevora-cache",
+        }
     }
-}
 
 
 

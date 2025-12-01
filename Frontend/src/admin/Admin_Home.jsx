@@ -22,30 +22,30 @@ export default function Admin_Home() {
   const [adminData, setAdminData] = useState(null);
   const [error, setError] = useState(null); // Track fetch error
 
-  useEffect(() => {
-    let isMounted = true;
+  // useEffect(() => {
+  //   let isMounted = true;
 
-    const loadData = async () => {
-      try {
-        const data = await fetchAllData();
-        if (isMounted) {
-          setAdminData(data);
-          setError(null); // clear any previous errors
-        }
-      } catch (err) {
-        if (isMounted) {
-          console.error("Error fetching admin data:", err);
-          setError("Failed to load admin data. Please try again later.");
-        }
-      }
-    };
+  //   const loadData = async () => {
+  //     try {
+  //       const data = await fetchAllData();
+  //       if (isMounted) {
+  //         setAdminData(data);
+  //         setError(null); // clear any previous errors
+  //       }
+  //     } catch (err) {
+  //       if (isMounted) {
+  //         console.error("Error fetching admin data:", err);
+  //         setError("Failed to load admin data. Please try again later.");
+  //       }
+  //     }
+  //   };
 
-    loadData();
+  //   loadData();
 
-    return () => {
-      isMounted = false;
-    };
-  }, [fetchAllData]);
+  //   return () => {
+  //     isMounted = false;
+  //   };
+  // }, [fetchAllData]);
 
   const handleLogout = () => {
     logout();

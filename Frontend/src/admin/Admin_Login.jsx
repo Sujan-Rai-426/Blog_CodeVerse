@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useAdmin } from "./Admin_API_Provider";
+import "../assets/css/Admin_Login.css";
 
 export default function Admin_Login() {
   const navigate = useNavigate();
@@ -10,12 +11,10 @@ export default function Admin_Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // -----------------------------
   // Redirect if already logged in
-  // -----------------------------
   useEffect(() => {
     if (admin) {
-      navigate("/Admin"); // your home/dashboard route
+      navigate("/Admin"); // dashboard route
     }
   }, [admin, navigate]);
 
@@ -25,7 +24,7 @@ export default function Admin_Login() {
 
     try {
       await login(username, password);
-      // navigation will happen automatically via useEffect
+      // navigation happens via useEffect
     } catch (err) {
       console.error(err);
       setError(
@@ -60,8 +59,17 @@ export default function Admin_Login() {
           {error && <p className="error-text">{error}</p>}
 
           <button type="submit" disabled={loading}>
-            {loading ? "Logging in..." : "Login"}
+            {loading ? (
+              <>
+                Logging in
+                <span className="loader"></span>
+              </>
+            ) : (
+              "Login"
+            )}
           </button>
+<br />
+            <p><b>Mail for Joining our Team</b> &nbsp; <Link to='/Contact'> Mail </Link></p>
         </form>
       </div>
     </div>

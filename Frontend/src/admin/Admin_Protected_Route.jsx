@@ -7,7 +7,7 @@ export default function AdminProtected() {
 
   if (!admin) {
     // Not logged in → redirect to login
-    return <Navigate to="/Login" replace />;
+    return <Navigate to="/Admin/Login" replace />;
   }
 
   // Logged in → render nested routes

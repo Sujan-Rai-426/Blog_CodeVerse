@@ -1,12 +1,99 @@
-.admin-login {
+/* Container */
+.admin-login-container {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   background: transparent;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-.admin-login form {
-  background: rgb(178, 177, 177) !important;
-  transition: all 0.3s ease;
+/* Login Box */
+.admin-login-box {
+  background: #fff;
+  padding: 40px 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
 }
 
-.admin-login form:hover {
-  transform: translateY(-5px);
+/* Heading */
+.admin-login-box h2 {
+  margin-bottom: 30px;
+  color: #333;
+}
+
+/* Labels */
+.admin-login-box label {
+  display: block;
+  text-align: left;
+  margin-bottom: 6px;
+  font-weight: 600;
+  color: #555;
+}
+
+/* Inputs */
+.admin-login-box input {
+  width: 100%;
+  padding: 12px 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: border 0.3s;
+}
+
+.admin-login-box input:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 5px rgba(102, 126, 234, 0.5);
+}
+
+/* Error Text */
+.error-text {
+  color: #ff4d4f;
+  margin-bottom: 15px;
+  font-size: 14px;
+}
+
+/* Button */
+.admin-login-box button {
+  position: relative;
+  width: 100%;
+  padding: 12px 0;
+  background: #667eea;
+  border: none;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+}
+
+.admin-login-box button:disabled {
+  background: #a0aec0;
+  cursor: not-allowed;
+}
+
+/* Loader */
+.loader {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border: 3px solid #fff;
+  border-top: 3px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-left: 10px;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
