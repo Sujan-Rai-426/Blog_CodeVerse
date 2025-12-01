@@ -94,8 +94,7 @@ export default function Ads_Container({
           </b>
         </h1>
         <p> More Components will be uploaded on weekly basis. </p>
-        <p>Visit our social site for staying updated</p>
-        <p>We are here to provide you best resources for free.</p>
+        <p>Visit our social site for staying updated. We are here to provide you best resources for free.</p>
       </div>
     </div>
   );
