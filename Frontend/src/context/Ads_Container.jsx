@@ -60,7 +60,7 @@ export default function Ads_Container({
         flexDirection: "column",
         alignItems: "center",
         position: "relative",
-        overflow: "hidden",
+        overflow: "hi
         ...style
       }}
     >
@@ -93,7 +93,8 @@ export default function Ads_Container({
             </sup>
           </b>
         </h1>
-        <p>Visit our social site for more updates</p>
+        <p> More Components will be uploaded on weekly basis. </p>
+        <p>Visit our social site for staying updated</p>
         <p>We are here to provide you best resources for free.</p>
       </div>
     </div>
