@@ -80,6 +80,7 @@ INSTALLED_APPS = [
 # MIDDLEWARE
 # ==========================================
 MIDDLEWARE = [
+    "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware", #manually added by creating for vercel <-- Backend/middleware/fix_auth_header.py
     "whitenoise.middleware.WhiteNoiseMiddleware",  # css whitenoise here
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
