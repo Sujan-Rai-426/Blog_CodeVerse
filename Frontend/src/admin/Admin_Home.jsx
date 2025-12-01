@@ -1,7 +1,8 @@
-// src/pages/Admin_Home.jsx
 import React, { useState, useEffect } from "react";
 import "../assets/css/Admin_Home.css";
 import { FaBars } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+
 import Admin_Sidebar from "./Admin_sidebar";
 import Admin_Dashboard from "./Admin_Dashboard";
 import Admin_Add_Data from "./Admin_Add_Data";
@@ -9,68 +10,76 @@ import Admin_Update_Data from "./Admin_Update_Data";
 import Admin_Settings from "./Admin_Settings";
 import Admin_View_Data from "./Admin_View_Data";
 import Admin_View_User from "./Admin_View_User";
-import { useNavigate } from "react-router-dom";
-import { useAdmin } from "./Admin_API_Provider"; // updated import
+
+import { useAdmin } from "./Admin_API_Provider";
 
 export default function Admin_Home() {
   const navigate = useNavigate();
   const { admin, fetchAllData, logout, loading, cache } = useAdmin();
+
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [activePage, setActivePage] = useState("dashboard");
   const [adminData, setAdminData] = useState(null);
+  const [error, setError] = useState(null); // Track fetch error
 
-  // ----------------------------
-  // Fetch admin-protected data on mount
-  // ----------------------------
   useEffect(() => {
+    let isMounted = true;
+
     const loadData = async () => {
       try {
         const data = await fetchAllData();
-        setAdminData(data);
+        if (isMounted) {
+          setAdminData(data);
+          setError(null); // clear any previous errors
+        }
       } catch (err) {
-        console.error("Error fetching admin data:", err);
+        if (isMounted) {
+          console.error("Error fetching admin data:", err);
+          setError("Failed to load admin data. Please try again later.");
+        }
       }
     };
+
     loadData();
+
+    return () => {
+      isMounted = false;
+    };
   }, [fetchAllData]);
 
-  // ----------------------------
-  // Handle Logout
-  // ----------------------------
   const handleLogout = () => {
-    logout(); // clears tokens and cache
-    window.location.href = ("/Admin/Login"); // redirect to Admin/login forcefully to prevent nested routing for login
+    logout();
+    window.location.href = "/Admin/Login";
   };
 
-  // ----------------------------
-  // Render content based on active page
-  // ----------------------------
   const renderContent = () => {
+    const data = adminData || cache.allData || [];
     switch (activePage) {
       case "dashboard":
-        return <Admin_Dashboard adminData={adminData || cache.allData} />;
+        return <Admin_Dashboard adminData={data} />;
       case "add":
-        return <Admin_Add_Data adminData={adminData || cache.allData} />;
+        return <Admin_Add_Data adminData={data} />;
       case "view":
-        return <Admin_View_Data adminData={adminData || cache.allData} />;
+        return <Admin_View_Data adminData={data} />;
       case "update":
-        return <Admin_Update_Data adminData={adminData || cache.allData} />;
+        return <Admin_Update_Data adminData={data} />;
       case "view_users":
-        return <Admin_View_User adminData={adminData || cache.allData} />;
+        return <Admin_View_User adminData={data} />;
       case "settings":
         return <Admin_Settings />;
       default:
-        return <Admin_Dashboard adminData={adminData || cache.allData} />;
+        return <Admin_Dashboard adminData={data} />;
     }
   };
 
   if (!admin) {
-    // not logged in → redirect to login
     navigate("/Admin/Login");
     return null;
   }
 
   if (loading) return <div>Loading Admin Data...</div>;
+
+  if (error) return <div className="error-message">{error}</div>;
 
   return (
     <div className="admin-container">
