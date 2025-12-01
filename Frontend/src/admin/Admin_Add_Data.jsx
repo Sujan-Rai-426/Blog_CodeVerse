@@ -1,14 +1,10 @@
 // Admin_Add_Data.jsx
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import "../assets/css/Admin_Add_Data.css";
 import { useAdmin } from "./Admin_API_Provider";
 
 const Admin_Add_Data = () => {
   // =================== GLOBAL STATE ===================
-  const [categories, setCategories] = useState([]);
-  const [sections, setSections] = useState([]);
-  const [languages, setLanguages] = useState([]);
-  const [templateTypes, setTemplateTypes] = useState([]);
   const [activeTab, setActiveTab] = useState("category");
   const [isUploading, setIsUploading] = useState(false);
 
@@ -22,7 +18,7 @@ const Admin_Add_Data = () => {
   const [topicName, setTopicName] = useState("");
   const [topicLanguage, setTopicLanguage] = useState("");
 
-  const [frontendLanguage, setFrontendLanguage] = useState("");
+  const [frontendDesignLanguage, setfrontendDesignLanguage] = useState("");
   const [frontendTopic, setFrontendTopic] = useState("");
   const [htmlCode, setHtmlCode] = useState("");
   const [cssCode, setCssCode] = useState("");
@@ -32,7 +28,7 @@ const Admin_Add_Data = () => {
   const [sourceAccessType, setSourceAccessType] = useState("");
   const [sourcePrice, setSourcePrice] = useState(0);
 
-  const [backendLanguage, setBackendLanguage] = useState("");
+  const [codeGuideLanguage, setcodeGuideLanguage] = useState("");
   const [backendTopic, setBackendTopic] = useState("");
   const [stepNumber, setStepNumber] = useState(1);
   const [stepFileName, setStepFileName] = useState("");
@@ -50,179 +46,256 @@ const Admin_Add_Data = () => {
   const [price, setPrice] = useState(0);
   const [templateType, setTemplateType] = useState("");
 
-  // =================== GET AdminAPI INSTANCE ===================
-  const { AdminAPI } = useAdmin(); // ✅ JWT automatically added in requests
+  // =================== GET AdminAPI INSTANCE + Cache ===================
+  const { AdminAPI, updateCache, fetchAllData, cache } = useAdmin(); // ✅ JWT automatically added in requests
 
-  // =================== FETCH DATA ===================
-  const fetchCategories = async () => {
-    try {
-      const res = await AdminAPI.get("/api/categories/");
-      const data = res.data || [];
-      setCategories(data);
-      setSections(data.flatMap(c => c.sections || []));
-      setLanguages(data.flatMap(c => c.sections?.flatMap(s => s.languages) || []));
-    } catch (err) {
-      console.error("Category fetch error:", err);
-    }
-  };
 
-  const fetchTemplateTypes = async () => {
-    try {
-      const res = await AdminAPI.get("/api/template-types/");
-      setTemplateTypes(res.data || []);
-    } catch (err) {
-      console.error("Template type fetch error:", err);
-    }
-  };
+  // =================== ONCE: FETCH ALL DATA ===================
+    useEffect(() => {
+      fetchAllData();    // ⚡ Loads categories, sections, languages, template types in ONE request
+    }, []);
 
-  useEffect(() => {
-    fetchCategories();
-    fetchTemplateTypes();
-  }, []);
+  // =================== DERIVED DATA FROM CACHE [ Showing option using filter for each field ]===================
+    const categories = cache.allData?.categories || [];
+    const templateTypes = cache.allData?.template_types || [];
 
-  // =================== FILTER DATA ===================
-  const frontendLanguages = sections.find(s => s.name?.toLowerCase() === "frontend")?.languages || [];
-  const backendLanguages = sections.find(s => s.name?.toLowerCase() === "backend")?.languages || [];
-  const frontendTopics = frontendLanguages.find(l => l.id === parseInt(frontendLanguage))?.topics || [];
-  const backendTopics = backendLanguages.find(l => l.id === parseInt(backendLanguage))?.topics || [];
+    const sections = useMemo(() => {
+      return categories.flatMap(c => c.sections || []);
+    }, [categories]);
 
-  // =================== FETCH OCCUPIED STEPS ===================
-  useEffect(() => {
-    const fetchOccupiedSteps = async () => {
-      if (!backendTopic) return setOccupiedSteps([]);
-      try {
-        const res = await AdminAPI.get(`/api/backendsteps/occupied-steps/${backendTopic}/`);
-        setOccupiedSteps(res.data.occupied_steps || []);
-      } catch (err) {
-        console.error("Error fetching occupied steps:", err);
-      }
-    };
-    fetchOccupiedSteps();
-  }, [backendTopic]);
+    const languages = useMemo(() => {
+      return sections.flatMap(s => s.languages || []);
+    }, [sections]);
+
+    const frontendDesignLanguages = useMemo(() => {
+      return sections
+        .filter(sec => sec.name === "Frontend")
+        .flatMap(sec => sec.languages || []);
+    }, [sections]);
+
+    const codeGuideLanguages = useMemo(() => {
+      return sections
+        .filter(sec => sec.name === "Backend")
+        .flatMap(sec => sec.languages || []);
+    }, [sections]);
+
+    const frontendDesigns = useMemo(() => {
+      return (
+        frontendDesignLanguages.find(l => l.id === Number(frontendDesignLanguage))?.topics || []
+      );
+    }, [frontendDesignLanguages, frontendDesignLanguage]);
+
+    const codingGuides = useMemo(() => {
+      return (
+        codeGuideLanguages.find(l => l.id === Number(codeGuideLanguage))?.topics || []
+      );
+    }, [codeGuideLanguages, codeGuideLanguage]);
+
+
+  // =================== FETCH OCCUPIED STEPS (ONLY REQUEST NEEDED) ===================
+    useEffect(() => {
+      const fetchOccupiedSteps = async () => {
+        if (!backendTopic) return setOccupiedSteps([]);
+        try {
+          const res = await AdminAPI.get(
+            `/api/backendsteps/occupied-steps/${backendTopic}/`
+          );
+          setOccupiedSteps(res.data.occupied_steps || []);
+        } catch (err) {
+          console.error("Error fetching occupied steps:", err);
+        }
+      };
+      fetchOccupiedSteps();
+    }, [backendTopic, AdminAPI]);
+
+
+
+
 
   // =================== COMMON STYLES ===================
   const formInputStyle = { background: "#121212", color: "#fff", border: "1px solid #555" };
 
-  // =================== HANDLERS ===================
-  const handleAddCategory = async e => {
+
+  // =================== HANDLER: ADD CATEGORY ===================
+  const handleAddCategory = async (e) => {
     e.preventDefault();
     if (!categoryName.trim()) return alert("Category name required!");
     try {
       setIsUploading(true);
-      await AdminAPI.post("/api/categories/", { name: categoryName });
+      const res = await AdminAPI.post("/api/categories/", {
+        name: categoryName,
+      });
+      // ✅ Update UI instantly using cache
+      updateCache("categories", res.data, "add");
       setCategoryName("");
-      await fetchCategories();
       alert("Category added!");
     } catch (err) {
-      console.error(err);
+      console.error("Add category error:", err);
       alert("Error adding category!");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleAddLanguage = async e => {
+  // =================== ADD LANGUAGE ===================
+  const handleAddLanguage = async (e) => {
     e.preventDefault();
     try {
       setIsUploading(true);
-      const sec = sections.find(s => s.name === sectionType) || {};
-      await AdminAPI.post("/api/languages/", {
-        section: sec.id,
+      const sec = sections.find((s) => s.name === sectionType);
+      const res = await AdminAPI.post("/api/languages/", {
+        section: sec?.id,
         name: languageName,
         icon_class: icon,
         category: parseInt(categoryId),
       });
-      setLanguageName(""); setIcon(""); setCategoryId("");
-      await fetchCategories();
+      updateCache("languages", res.data, "add");
+      setLanguageName("");
+      setIcon("");
+      setCategoryId("");
       alert("Language added!");
     } catch (err) {
-      console.error(err);
+      console.error("Add language error:", err);
       alert("Error adding language!");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleAddTopic = async e => {
+  // =================== ADD TOPIC ===================
+  const handleAddTopic = async (e) => {
     e.preventDefault();
     if (!topicLanguage) return alert("Select language!");
+
     try {
       setIsUploading(true);
-      await AdminAPI.post("/api/topics/", { language: parseInt(topicLanguage), name: topicName });
-      setTopicName(""); setTopicLanguage("");
-      await fetchCategories();
+
+      const res = await AdminAPI.post("/api/topics/", {
+        language: parseInt(topicLanguage),
+        name: topicName,
+      });
+
+      updateCache("topics", res.data, "add");
+
+      setTopicName("");
+      setTopicLanguage("");
+
       alert("Topic added!");
     } catch (err) {
-      console.error(err);
+      console.error("Add topic error:", err);
       alert("Error adding topic!");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleAddFrontend = async e => {
+  // =================== ADD FRONTEND CODE ===================
+  const handleAddFrontend = async (e) => {
     e.preventDefault();
-    if (!frontendLanguage || !frontendTopic) return alert("Select language + topic");
+
+    if (!frontendDesignLanguage || !frontendTopic)
+      return alert("Select language + topic");
     if (!sourceAccessType) return alert("Select access type");
+
     try {
       setIsUploading(true);
-      await AdminAPI.post("/api/frontendsourcecodes/", {
+
+      const payload = {
         topic: parseInt(frontendTopic),
-        title: frontendTitle || (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
+        title:
+          frontendTitle ||
+          (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
         description: frontendDesc || "",
         html_code: htmlCode || "",
         css_code: cssCode || "",
         js_code: jsCode || "",
         access_type: sourceAccessType,
         price: parseFloat(sourcePrice) || 0,
-      });
-      setFrontendLanguage(""); setFrontendTopic(""); setHtmlCode(""); setCssCode(""); setJsCode("");
-      setFrontendTitle(""); setFrontendDesc(""); setSourceAccessType(""); setSourcePrice(0);
-      alert("Frontend Source Code added!");
+      };
+
+      const res = await AdminAPI.post("/api/frontendsourcecodes/", payload);
+
+      updateCache("frontend", res.data, "add");
+
+      setfrontendDesignLanguage("");
+      setFrontendTopic("");
+      setHtmlCode("");
+      setCssCode("");
+      setJsCode("");
+      setFrontendTitle("");
+      setFrontendDesc("");
+      setSourceAccessType("");
+      setSourcePrice(0);
+
+      alert("Frontend Source added!");
     } catch (err) {
-      console.error("Frontend add error:", err);
-      alert("Error adding frontend content!");
+      console.error("Add frontend error:", err);
+      alert("Error adding frontend code!");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleAddBackend = async e => {
+  // =================== ADD BACKEND STEP ===================
+  const handleAddBackend = async (e) => {
     e.preventDefault();
-    if (!backendLanguage || !backendTopic) return alert("Select both language and topic!");
+
+    if (!codeGuideLanguage || !backendTopic)
+      return alert("Select language + topic!");
+
     try {
       setIsUploading(true);
-      await AdminAPI.post("/api/backendsteps/", {
+
+      const stepRes = await AdminAPI.post("/api/backendsteps/", {
         topic: parseInt(backendTopic),
         step_number: parseInt(stepNumber),
         step_file_name: stepFileName,
         step_description: stepDescription,
         step_source_code: stepCode,
       });
+
+      updateCache("backend_steps", stepRes.data, "add");
+
       if (imageFile) {
         const formData = new FormData();
         formData.append("topic", backendTopic);
         formData.append("image", imageFile);
-        await AdminAPI.post("/api/backendimages/", formData, { headers: { "Content-Type": "multipart/form-data" } });
+
+        const imgRes = await AdminAPI.post("/api/backendimages/", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+
+        updateCache("backend_images", imgRes.data, "add");
       }
-      setStepNumber(1); setStepFileName(""); setStepDescription(""); setStepCode(""); setImageFile(null);
-      setBackendLanguage(""); setBackendTopic("");
-      await fetchCategories();
+
+      // Reset fields
+      setStepNumber(1);
+      setStepFileName("");
+      setStepDescription("");
+      setStepCode("");
+      setImageFile(null);
+      setcodeGuideLanguage("");
+      setBackendTopic("");
+
       alert("Backend step added!");
     } catch (err) {
-      console.error("Backend add error:", err);
+      console.error("Add backend error:", err);
       alert("Error adding backend step!");
     } finally {
       setIsUploading(false);
     }
   };
 
-  const handleAddTemplate = async e => {
+  // =================== ADD TEMPLATE ===================
+  const handleAddTemplate = async (e) => {
     e.preventDefault();
+
     if (!templateType) return alert("Select template type");
+
     try {
       setIsUploading(true);
-      await AdminAPI.post("/api/templates/", {
+
+      const res = await AdminAPI.post("/api/templates/", {
         title: templateTitle,
         project_info: templateInfo,
         iframe_url: iframeUrl,
@@ -232,16 +305,27 @@ const Admin_Add_Data = () => {
         price: parseFloat(price) || 0,
         template_type: templateType,
       });
-      setTemplateTitle(""); setTemplateInfo(""); setIframeUrl(""); setDownloadRepoUrl(""); setDocumentationUrl("");
-      setAccessType(""); setPrice(0); setTemplateType("");
-      alert("Template added!");
+
+      updateCache("templates", res.data, "add");
+
+      setTemplateTitle("");
+      setTemplateInfo("");
+      setIframeUrl("");
+      setDownloadRepoUrl("");
+      setDocumentationUrl("");
+      setAccessType("");
+      setPrice(0);
+      setTemplateType("");
+
+      alert("Template added successfully!");
     } catch (err) {
-      console.error("Template add error:", err);
+      console.error("Add template error:", err);
       alert("Error adding template!");
     } finally {
       setIsUploading(false);
     }
   };
+
 
   // =================== JSX ===================
   return (
@@ -308,14 +392,14 @@ const Admin_Add_Data = () => {
       {activeTab === "designs" && <form onSubmit={handleAddFrontend}>
         <h4>Add Frontend Design</h4>
         <label>Language</label>
-        <select value={frontendLanguage} onChange={e=>setFrontendLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
+        <select value={frontendDesignLanguage} onChange={e=>setfrontendDesignLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Frontend Language</option>
-          {frontendLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
+          {frontendDesignLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
         </select>
         <label>Topic</label>
         <select value={frontendTopic} onChange={e=>setFrontendTopic(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Topic</option>
-          {frontendTopics.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+          {frontendDesigns.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <label>Access Type</label>
         <select value={sourceAccessType} onChange={e=>setSourceAccessType(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
@@ -343,14 +427,14 @@ const Admin_Add_Data = () => {
       {activeTab === "code-guides" && <form onSubmit={handleAddBackend}>
         <h4>Add Backend Step</h4>
         <label>Language</label>
-        <select value={backendLanguage} onChange={e=>setBackendLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
+        <select value={codeGuideLanguage} onChange={e=>setcodeGuideLanguage(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Backend Language</option>
-          {backendLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
+          {codeGuideLanguages.map(l=><option key={l.id} value={l.id}>{l.name}</option>)}
         </select>
         <label>Topic</label>
         <select value={backendTopic} onChange={e=>setBackendTopic(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
           <option value="">Select Topic</option>
-          {backendTopics.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
+          {codingGuides.map(t=><option key={t.id} value={t.id}>{t.name}</option>)}
         </select>
         <label>Step Number</label>
         <select value={stepNumber} onChange={e=>setStepNumber(e.target.value)} className="form-control mb-2" style={formInputStyle} required>
