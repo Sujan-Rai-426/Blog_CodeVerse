@@ -12,17 +12,16 @@ function User_Routes() {
         <div className='container' style={{minHeight: "100vh",}} >
             
             <Routes>
-
+                {/* Dedicated redirect after social login */}
                 <Route path="/accounts/social-login-redirect" element={<User_Login_Redirect />} />
 
+                {/* Protected routes */}
                 <Route element={<User_Protected_Route />}>
                     <Route path="/Profile" element={<User_Profile />} />
                 </Route>
 
                 <Route path="/Login" element={<User_Login />} />
                 <Route path="/Signup" element={<User_Signup />} />
-
-
             </Routes>
 
 

@@ -1,22 +1,23 @@
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-const User_Login_Redirect = () => {
+export default function User_Login_Redirect() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const token = urlParams.get("token");
+        const params = new URLSearchParams(window.location.search);
+        const token = params.get("token");
 
         if (token) {
-            localStorage.setItem("user_token", token); // ← must match your protected route check
-            navigate("/Profile", { replace: true });
+            // Store token
+            localStorage.setItem("user_token", token);
+
+            // Navigate to correct protected route
+            navigate("/User/Profile", { replace: true });
         } else {
-            navigate("/Login", { replace: true });
+            navigate("/User/Login", { replace: true });
         }
     }, [navigate]);
 
-    return <p>Logging you in...</p>;
-};
-
-export default User_Login_Redirect;
+    return <p>Redirecting...</p>;
+}

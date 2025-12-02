@@ -6,9 +6,9 @@ import os
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
-from urllib.parse import urlparse, parse_qsl
 import dj_database_url
 import cloudinary
+from decouple import config
 
 # ---------------- LOAD ENV ----------------
 load_dotenv()
@@ -18,19 +18,19 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # ==========================================
 # DEBUG / SECURITY
 # ==========================================
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY", "unsafe-secret-key")
 DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 
-from decouple import config
-
 # Read comma-separated hosts from .env
-ALLOWED_HOSTS = config("ALLOWED_HOSTS", default="", cast=lambda v: [h.strip() for h in v.split(",") if h.strip()])
-
+ALLOWED_HOSTS = config(
+    "ALLOWED_HOSTS",
+    default="127.0.0.1,localhost,codevora-backend.vercel.app",
+    cast=lambda v: [h.strip() for h in v.split(",") if h.strip()],
+)
 
 # ==========================================
 # JWT / AUTH SETTINGS
 # ==========================================
-TOKEN_MODEL = None
 REST_USE_JWT = True
 REST_SESSION_LOGIN = False
 
@@ -78,15 +78,14 @@ INSTALLED_APPS = [
     "cloudinary_storage",
 ]
 
-
 # ==========================================
 # MIDDLEWARE
 # ==========================================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",  # css whitenoise here
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware", #manually added by creating for vercel <-- Backend/middleware/fix_auth
+    "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -96,7 +95,6 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-SITE_ID = 2
 
 # ==========================================
 # AUTH BACKENDS
@@ -109,18 +107,30 @@ AUTHENTICATION_BACKENDS = [
 # ==========================================
 # ALLAUTH SETTINGS
 # ==========================================
+#SITES
+SITE_ID = 1 if DEBUG else 2
+
 ACCOUNT_EMAIL_VERIFICATION = "none"
 ACCOUNT_EMAIL_REQUIRED = True
 SOCIALACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_EMAIL_VERIFICATION = "none"
 SOCIALACCOUNT_AUTO_SIGNUP = True
-SOCIALACCOUNT_STORE_TOKENS = False
+ACCOUNT_SIGNUP_FORM_CLASS = None
 SOCIALACCOUNT_ADAPTER = "Tutorial.adapter.MySocialAccountAdapter"
 
-LOGIN_REDIRECT_URL = (
-    "http://localhost:5173/User/Profile/" if DEBUG else "https://codevora140.vercel.app/User/Profile/"
-)
-LOGOUT_REDIRECT_URL = "/"
+SOCIALACCOUNT_PROVIDERS = {
+    "github": {
+        "SCOPE": ["user", "repo", "read:org", "user:email"],
+        "AUTH_PARAMS": {"access_type": "online"},
+    }
+}
+
+# Frontend redirect URL (adapter will append JWT token)
+# settings.py
+LOGIN_REDIRECT_URL = "http://localhost:5173/User/Profile" if DEBUG else "https://codevora140.vercel.app/User/Profile"
+
+
+
+
 
 # ==========================================
 # REST FRAMEWORK + SIMPLE JWT
@@ -128,7 +138,7 @@ LOGOUT_REDIRECT_URL = "/"
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        # "rest_framework.authentication.SessionAuthentication",  # ✅ Enable session auth
+        "rest_framework.authentication.SessionAuthentication",  # Enable admin login
     ],
 }
 
@@ -164,8 +174,6 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-
-
 # ==========================================
 # MEDIA FILES (Cloudinary / Local)
 # ==========================================
@@ -199,8 +207,6 @@ else:
             "LOCATION": "unique-codevora-cache",
         }
     }
-
-
 
 # ==========================================
 # URL / TEMPLATES / WSGI
@@ -242,25 +248,27 @@ CORS_ALLOWED_ORIGINS = [
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Session / CSRF Cookies
-SESSION_COOKIE_SECURE = not DEBUG
-SESSION_COOKIE_SAMESITE = "None"
-CSRF_COOKIE_SECURE = not DEBUG
-CSRF_COOKIE_SAMESITE = "None"
-
+# ================= SESSION / CSRF =================
+if DEBUG:
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
+else:
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SESSION_COOKIE_SAMESITE = "None"
+    CSRF_COOKIE_SAMESITE = "None"
 
 # ==========================================
 # STATIC FILES
 # ==========================================
 STATIC_URL = "/static/"
-STATIC_ROOT = BASE_DIR / "staticfiles"  # collectstatic output
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [
-    BASE_DIR / "static",  # your custom static files (optional)
+    BASE_DIR / "static",
 ]
-
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
-
 
 # ==========================================
 # DEFAULT FIELD

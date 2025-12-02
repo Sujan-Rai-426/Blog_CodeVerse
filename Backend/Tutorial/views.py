@@ -228,25 +228,20 @@ class AdminAllDataAPIView(APIView):
 
 
 # --------User / Client Login -----------
-from allauth.socialaccount.models import SocialAccount
-from allauth.socialaccount.providers.github.views import GitHubOAuth2Adapter
-from dj_rest_auth.registration.views import SocialLoginView
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.shortcuts import redirect
+# Tutorial/views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
 
-class CustomGithubLogin(SocialLoginView):
-    adapter_class = GitHubOAuth2Adapter
 
-    def get(self, request, *args, **kwargs):
-        response = super().post(request, *args, **kwargs)
+class CurrentUserView(APIView):
+    permission_classes = [IsAuthenticated]
 
-        # User is now logged in
+    def get(self, request):
         user = request.user
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+        })
 
-        # create token
-        refresh = RefreshToken.for_user(user)
-        access_token = str(refresh.access_token)
-
-        # send token to frontend
-        frontend_url = "http://localhost:5173/User/Login"
-        return redirect(f"{frontend_url}?token={access_token}")
