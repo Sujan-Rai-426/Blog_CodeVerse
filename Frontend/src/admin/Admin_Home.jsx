@@ -11,7 +11,7 @@ import Admin_Settings from "./Admin_Settings";
 import Admin_View_Data from "./Admin_View_Data";
 import Admin_View_User from "./Admin_View_User";
 
-import { useAdmin } from "./Admin_API_Provider";
+import { useAdmin } from "./Admin_API_Context";
 
 export default function Admin_Home() {
   const navigate = useNavigate();

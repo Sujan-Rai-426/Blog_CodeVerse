@@ -1,30 +1,40 @@
 // src/context/Admin_API_Provider.jsx
-import { createContext, useContext, useState, useCallback } from "react";
-import api from "../api"; // axios instance
-
-// =================== CONTEXT ===================
-const AdminContext = createContext();
-export const useAdmin = () => useContext(AdminContext);
+import { useState, useCallback } from "react";
+import api from "../api"; // Axios instance
+import { AdminContext } from "./Admin_API_Context";
 
 // =================== PROVIDER ===================
+// Wrap your app with <AdminProvider> to provide admin state & API
 export const AdminProvider = ({ children }) => {
+
   // --------------------------- STATE ---------------------------
     const [admin, setAdmin] = useState(localStorage.getItem("admin_username") || null);
     const [loading, setLoading] = useState(false);
-    const [cache, setCache] = useState({});
 
-    // --------------------------- TOKEN MANAGEMENT ---------------------------
+    // Unified cache for all datasets
+    const [cache, setCache] = useState({
+        topics: null,
+        steps: null,
+        users: null,
+        payments: null,
+        allData: null,
+    });
+
+  // --------------------------- TOKEN MANAGEMENT ---------------------------
     const getAccessToken = () => localStorage.getItem("admin_access");
     const getRefreshToken = () => localStorage.getItem("admin_refresh");
 
+    // Refresh access token using refresh token
     const refreshToken = async () => {
         const refresh = getRefreshToken();
         if (!refresh) throw new Error("No refresh token available");
-        const res = await api.post("/api/token/refresh/", { refresh });
-        localStorage.setItem("admin_access", res.data.access);
-        return res.data.access;
+
+        const { data } = await api.post("/api/token/refresh/", { refresh });
+        localStorage.setItem("admin_access", data.access);
+        return data.access;
     };
 
+  // Attach token to API request headers
     const attachToken = (config = {}) => {
         const token = getAccessToken();
         return {
@@ -36,13 +46,13 @@ export const AdminProvider = ({ children }) => {
         };
     };
 
-  // --------------------------- ADMIN API ---------------------------
+  // --------------------------- EASY API WRAPPER ---------------------------
     const AdminAPI = {
         get: async (url, config) => {
             try {
                 return await api.get(url, attachToken(config));
             } catch (err) {
-                // If 401, refresh token and retry once
+                // If token expired, refresh and retry
                 if (err.response?.status === 401) {
                     const newToken = await refreshToken();
                     return api.get(url, attachToken({ ...config, headers: { Authorization: `Bearer ${newToken}` } }));
@@ -55,31 +65,47 @@ export const AdminProvider = ({ children }) => {
         patch: async (url, data, config) => api.patch(url, data, attachToken(config)),
         delete: async (url, config) => api.delete(url, attachToken(config)),
 
+        // --------------------------- AUTH ---------------------------
         login: async (username, password) => {
-        const res = await api.post("/api/admin-login/", { username, password });
-            localStorage.setItem("admin_access", res.data.access);
-            localStorage.setItem("admin_refresh", res.data.refresh);
-            localStorage.setItem("admin_username", res.data.username);
-            setAdmin(res.data.username);
-            return res.data;
+            const { data } = await api.post("/api/admin-login/", { username, password });
+
+            // Store tokens & username
+            localStorage.setItem("admin_access", data.access);
+            localStorage.setItem("admin_refresh", data.refresh);
+            localStorage.setItem("admin_username", data.username);
+
+            setAdmin(data.username);
+            return data;
         },
+
         logout: () => {
             localStorage.removeItem("admin_access");
             localStorage.removeItem("admin_refresh");
             localStorage.removeItem("admin_username");
             setAdmin(null);
-            setCache({});
+
+            // Clear all cached data
+            setCache({ topics: null, steps: null, users: null, payments: null, allData: null });
         },
-        getCurrentAdmin: () => localStorage.getItem("admin_username") || null,
     };
 
-  // --------------------------- FETCH ALL DATA WITH CACHE ---------------------------
+  // --------------------------- FETCH ALL DATA + CACHE ---------------------------
     const fetchAllData = useCallback(async () => {
-        if (cache.allData) return cache.allData; // ✅ avoid repeated requests
+        if (cache.allData) return cache.allData; // Return cached data if exists
+
         setLoading(true);
         try {
             const { data } = await AdminAPI.get("/api/admin/all-data/");
-            setCache((prev) => ({ ...prev, allData: data }));
+
+            // Split datasets and store separately for easy access
+            setCache({
+                allData: data,
+                topics: data.topics || [],
+                steps: data.steps || [],
+                users: data.users || [],
+                payments: data.payments || [],
+            });
+
             setLoading(false);
             return data;
         } catch (err) {
@@ -88,44 +114,52 @@ export const AdminProvider = ({ children }) => {
         }
     }, [cache.allData]);
 
-  // --------------------------- UPDATE CACHE ---------------------------
-    const updateCache = (key, newData, action = "update") => {
+  // --------------------------- UPDATE SPECIFIC CACHE LIST ---------------------------
+    const updateCacheList = (key, newItem, action = "update") => {
         setCache((prev) => {
-            const prevData = prev[key] || [];
-            let updatedData;
+            const prevList = prev[key] || [];
+            let updated = prevList;
+
             switch (action) {
                 case "add":
-                    updatedData = [...prevData, newData];
+                    updated = [...prevList, newItem];
                     break;
                 case "update":
-                    updatedData = prevData.map((item) => (item.id === newData.id ? newData : item));
+                    updated = prevList.map((item) => (item.id === newItem.id ? newItem : item));
                     break;
                 case "delete":
-                    updatedData = prevData.filter((item) => item.id !== newData.id);
+                    updated = prevList.filter((item) => item.id !== newItem.id);
                     break;
                 default:
-                    updatedData = prevData;
+                    updated = prevList;
             }
-        return { ...prev, [key]: updatedData };
-    });
+
+            return { ...prev, [key]: updated };
+        });
     };
 
-  // --------------------------- PROVIDER VALUE ---------------------------
+  // --------------------------- UPDATE OR OVERWRITE CACHE DIRECTLY ---------------------------
+    const updateCache = (key, newData) => {
+        setCache((prev) => ({ ...prev, [key]: newData }));
+    };
+
+  // --------------------------- PROVIDE CONTEXT ---------------------------
     return (
         <AdminContext.Provider
             value={{
                 admin,
                 loading,
                 cache,
+                AdminAPI,
                 login: AdminAPI.login,
                 logout: AdminAPI.logout,
                 fetchAllData,
+                updateCacheList,
                 updateCache,
                 refreshToken,
-                AdminAPI,
             }}
         >
-            {children}
+        {children}
         </AdminContext.Provider>
     );
 };

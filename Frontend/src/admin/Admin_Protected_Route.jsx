@@ -1,6 +1,6 @@
 // src/components/Admin_Protected_Route.jsx
 import { Navigate, Outlet } from "react-router-dom";
-import { useAdmin } from "./Admin_API_Provider";
+import { useAdmin } from "./Admin_API_Context";
 
 export default function AdminProtected() {
   const { admin } = useAdmin();

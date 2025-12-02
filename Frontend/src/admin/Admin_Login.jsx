@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { useAdmin } from "./Admin_API_Provider";
+import { useAdmin } from "./Admin_API_Context";
 import "../assets/css/Admin_Login.css";
 
 export default function Admin_Login() {
