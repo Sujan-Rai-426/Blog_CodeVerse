@@ -21,7 +21,7 @@ const api = axios.create({
 // Attach Bearer token automatically
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("admin_access"); // ✔ your backend returns "access"
+    const token = localStorage.getItem("jwt-access"); // ✔ your backend returns "access"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
