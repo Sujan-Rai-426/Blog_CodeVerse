@@ -37,8 +37,15 @@ REST_SESSION_LOGIN = True
 ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 SOCIALACCOUNT_LOGIN_ON_GET = True
 
+# For admin
 JWT_AUTH_COOKIE = "jwt-access"
 JWT_AUTH_REFRESH_COOKIE = "jwt-refresh"
+
+
+# User / Client (separate settings if needed)
+USER_JWT_AUTH_COOKIE = "user-access"
+USER_JWT_AUTH_REFRESH_COOKIE = "user-refresh"
+
 
 # ==========================================
 # INSTALLED APPS

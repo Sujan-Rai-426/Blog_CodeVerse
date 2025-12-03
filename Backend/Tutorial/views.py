@@ -264,3 +264,14 @@ def github_login_redirect(request):
     # Redirect to frontend with tokens
     redirect_url = f"{FRONTEND_URL}?access_token={access_token}&refresh_token={refresh_token}"
     return redirect(redirect_url)
+
+
+
+# Tutorial/views.py
+from allauth.socialaccount.views import SignupView
+from django.shortcuts import redirect
+
+class ForceRedirectSocialSignup(SignupView):
+    def dispatch(self, request, *args, **kwargs):
+        # Directly redirect to SPA with JWT
+        return redirect("http://localhost:5173/User/Profile")

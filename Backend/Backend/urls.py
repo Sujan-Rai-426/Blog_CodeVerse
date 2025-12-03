@@ -3,9 +3,18 @@ from django.urls import include, path
 
 from Tutorial.views import CurrentUserView
 
+from Tutorial.views import ForceRedirectSocialSignup
 urlpatterns = [
         path('admin/', admin.site.urls),
         path('api/', include('api.urls')),
+        
+
+        path(
+            "accounts/3rdparty/signup/",
+            ForceRedirectSocialSignup.as_view(),
+            name="socialaccount_signup",
+        ),
+
         
         # Social login routes
         path('accounts/', include('allauth.urls')),
