@@ -22,14 +22,14 @@ function User_Login() {
         }
     }, [navigate]);
 
-    const handleGithubLogin = () => {
-        const backend = import.meta.env.DEV
-            ? "http://127.0.0.1:8000"
-            : "https://codevora-backend.vercel.app";
+const handleGithubLogin = () => {
+  const backend = import.meta.env.DEV
+    ? "http://127.0.0.1:8000"
+    : "https://codevora-backend.vercel.app";
 
-        // Redirect user to backend GitHub login
-        window.location.href = `${backend}/accounts/github/login/`;
-    };
+  window.location.href = `${backend}/accounts/github/login/`;
+};
+
 
     return (
         <div className="login-container">

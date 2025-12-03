@@ -18,10 +18,10 @@ const api = axios.create({
   withCredentials: false, // ❌ IMPORTANT: You are using JWT, not cookies → disable this
 });
 
-// Attach Bearer token automatically
+// Attach Bearer token FOR admin automatically
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("jwt-access"); // ✔ your backend returns "access"
+    const token = localStorage.getItem("jwt-admin-access"); // ✔ your backend returns "access"
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
