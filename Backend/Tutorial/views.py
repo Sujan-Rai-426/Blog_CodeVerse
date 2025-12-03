@@ -1,29 +1,27 @@
 # Tutorial/views.py
 from django.db import IntegrityError
 
-from rest_framework.decorators import action
 from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.permissions import AllowAny
-
-# Tutorial/views.py
-from rest_framework.views import APIView
-from rest_framework.permissions import IsAdminUser
+from rest_framework.decorators import api_view
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from django.contrib.auth import authenticate
-from Backend import settings
-from Tutorial.permissions import IsAdminOrReadOnly
-from rest_framework.decorators import api_view
+from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 
-import re
-from django.core.mail import EmailMessage, BadHeaderError
+# Tutorial/views.py
+from Tutorial.permissions import IsAdminOrReadOnly
 from Tutorial.utils import verify_email_exists
 
-from datetime import timedelta
-from django.utils import timezone
+# For contact
+import re
 from django.core.cache import cache
+from django.core.mail import EmailMessage, BadHeaderError
 
 
 from Tutorial.models import (
@@ -43,6 +41,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all().prefetch_related("sections__languages__topics__source_codes")
     serializer_class = CategorySerializer
 
+
 class TopicViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Topic.objects.all().prefetch_related("source_codes", "steps", "images")
@@ -61,6 +60,7 @@ class TopicViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=201)
 
 
+
 # ---------------- SECTION -------------
 class SectionViewSet(viewsets.ModelViewSet):
     queryset = Section.objects.all()
@@ -68,11 +68,13 @@ class SectionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly] 
 
 
+
 # ------------------ LANGUAGE ------------------
 class LanguageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
+
 
 
 # ------------------ FRONTEND SOURCE CODES ------------------
@@ -86,6 +88,7 @@ class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
         serializer.save()
 
 
+
 # ------------------ BACKEND ------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
@@ -97,11 +100,11 @@ class BackendStepViewSet(viewsets.ModelViewSet):
         return Response({"occupied_steps": list(steps)}, status=status.HTTP_200_OK)
 
 
+
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
-
 
 
 
@@ -151,6 +154,7 @@ class TemplateTypeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
 
 
+
 class TemplateViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Template.objects.all().order_by("-created_at")
@@ -172,16 +176,12 @@ from django.utils.decorators import method_decorator
 @method_decorator(csrf_exempt, name='dispatch')  # Disable CSRF for API
 class AdminLoginAPIView(APIView):
     permission_classes = [AllowAny]
-
     def post(self, request):
         username = request.data.get('username')
         password = request.data.get('password')
-
         if not username or not password:
             return Response({"detail": "Username and password required"}, status=400)
-
         user = authenticate(username=username, password=password)
-
         if user is not None and user.is_superuser:
             # Generate JWT token
             refresh = RefreshToken.for_user(user)
@@ -197,10 +197,6 @@ class AdminLoginAPIView(APIView):
 
 
 #  To fetch all data
-# Tutorial/views.py
-from rest_framework.permissions import IsAuthenticated
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
 class AdminAllDataAPIView(APIView):
     authentication_classes = [JWTAuthentication]
     permission_classes = [IsAdminUser]  # Only superuser/admin
@@ -226,9 +222,7 @@ class AdminAllDataAPIView(APIView):
         return Response(data)
 
 
-
 # --------User / Client Login -----------
-# Tutorial/views.py
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
@@ -245,3 +239,28 @@ class CurrentUserView(APIView):
             "email": user.email,
         })
 
+
+# accounts/views.py
+from django.shortcuts import redirect
+from rest_framework_simplejwt.tokens import RefreshToken
+from allauth.socialaccount.models import SocialAccount
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
+
+FRONTEND_URL = "http://localhost:5173/User/Profile"  # or production URL
+
+def github_login_redirect(request):
+    # Get the logged-in user
+    user = request.user
+    if not user.is_authenticated:
+        return redirect("/User/Login")
+
+    # Issue JWT tokens
+    refresh = RefreshToken.for_user(user)
+    access_token = str(refresh.access_token)
+    refresh_token = str(refresh)
+
+    # Redirect to frontend with tokens
+    redirect_url = f"{FRONTEND_URL}?access_token={access_token}&refresh_token={refresh_token}"
+    return redirect(redirect_url)

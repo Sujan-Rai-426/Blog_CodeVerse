@@ -1,16 +1,33 @@
 // pages/User_Login.jsx
-import React from "react";
+import React, { useEffect } from "react";
 import { FaGithub } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { TokenService } from "../utils/token";
 
 function User_Login() {
-    const handleGithubLogin = () => {
-        const token = localStorage.getItem("user_token");
-        if (token) return; // Already logged in
+    const navigate = useNavigate();
 
+    // Handle redirect after OAuth login
+    useEffect(() => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const access = urlParams.get("access_token");
+        const refresh = urlParams.get("refresh_token");
+
+        if (access && refresh) {
+            // Save tokens using TokenService
+            TokenService.saveUserTokens(access, refresh);
+
+            // Redirect to profile/dashboard
+            navigate("/User/Profile", { replace: true });
+        }
+    }, [navigate]);
+
+    const handleGithubLogin = () => {
         const backend = import.meta.env.DEV
             ? "http://127.0.0.1:8000"
             : "https://codevora-backend.vercel.app";
 
+        // Redirect user to backend GitHub login
         window.location.href = `${backend}/accounts/github/login/`;
     };
 

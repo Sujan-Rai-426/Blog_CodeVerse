@@ -1,16 +1,21 @@
+# Tutorial/adapter.py
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
+from django.shortcuts import redirect
 
-# Tutorial/adapter.py
 class MySocialAccountAdapter(DefaultSocialAccountAdapter):
     def is_auto_signup_allowed(self, request, sociallogin):
-        # Always auto-signup if user has email or username
+        """
+        Always allow auto signup to skip mediator page.
+        """
         return True
 
     def populate_user(self, request, sociallogin, data):
+        """
+        Make sure user has username and email
+        """
         user = super().populate_user(request, sociallogin, data)
-        # Force username/email to exist
         if not user.username:
             user.username = data.get("login") or "githubuser"
         if not user.email:
@@ -18,7 +23,9 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         return user
 
     def save_user(self, request, sociallogin, form=None):
-        """Save user immediately to bypass mediator signup page"""
+        """
+        Save the user immediately to skip mediator.
+        """
         user = sociallogin.user
         user.set_unusable_password()  # optional
         user.save()
@@ -26,12 +33,19 @@ class MySocialAccountAdapter(DefaultSocialAccountAdapter):
         return user
 
     def get_login_redirect_url(self, request):
-        # Only called after full login
+        """
+        Redirect user immediately after login with JWT token.
+        """
         user = request.user
+        frontend_url = getattr(settings, "LOGIN_REDIRECT_URL", "http://localhost:5173/User/Profile")
+
         if user.is_authenticated:
-            from rest_framework_simplejwt.tokens import RefreshToken
+            # Generate JWT token
             refresh = RefreshToken.for_user(user)
-            token = str(refresh.access_token)
-            frontend_url = getattr(settings, "LOGIN_REDIRECT_URL", "/")
-            return f"{frontend_url}?token={token}"
-        return getattr(settings, "LOGIN_REDIRECT_URL", "/")
+            access_token = str(refresh.access_token)
+
+            # Redirect to frontend profile page with token
+            return f"{frontend_url}?token={access_token}"
+
+        # fallback
+        return frontend_url

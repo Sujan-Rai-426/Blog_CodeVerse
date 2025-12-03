@@ -1,23 +1,29 @@
+// pages/User_Login_Redirect.jsx
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { TokenService } from "../utils/token";
 
 export default function User_Login_Redirect() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        const params = new URLSearchParams(window.location.search);
-        const token = params.get("token");
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
 
-        if (token) {
-            // Store token
-            localStorage.setItem("user_token", token);
+    // Your backend should send 'access' and 'refresh' tokens
+    const access = params.get("access");
+    const refresh = params.get("refresh");
 
-            // Navigate to correct protected route
-            navigate("/User/Profile", { replace: true });
-        } else {
-            navigate("/User/Login", { replace: true });
-        }
-    }, [navigate]);
+    if (access && refresh) {
+      // Save user tokens
+      TokenService.saveUserTokens(access, refresh);
 
-    return <p>Redirecting...</p>;
+      // Navigate to profile page
+      navigate("/User/Profile", { replace: true });
+    } else {
+      // If no tokens, go back to login
+      navigate("/User/Login", { replace: true });
+    }
+  }, [navigate]);
+
+  return <p>Redirecting...</p>;
 }

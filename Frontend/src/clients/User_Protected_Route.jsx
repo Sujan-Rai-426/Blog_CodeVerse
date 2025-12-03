@@ -1,19 +1,10 @@
-import React, { useState, useEffect } from "react";
+// routes/User_Protected_Route.jsx
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { TokenService } from "../utils/token";
 
-const User_Protected_Route = () => {
-    const [token, setToken] = useState(null);
-    const [checked, setChecked] = useState(false);
+export default function User_Protected_Route() {
+  const token = TokenService.getUserAccess();
 
-    useEffect(() => {
-        const t = localStorage.getItem("user_token");
-        setToken(t);
-        setChecked(true);
-    }, []);
-
-    if (!checked) return <p>Checking authentication...</p>;
-
-    return token ? <Outlet /> : <Navigate to="/User/Login" replace />;
-};
-
-export default User_Protected_Route;
+  return token ? <Outlet /> : <Navigate to="/User/Login" replace />;
+}

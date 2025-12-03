@@ -6,7 +6,7 @@ from Tutorial import views
 from Tutorial.views import (
     AdminAllDataAPIView, CategoryViewSet, SectionViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
     FrontendSourceCodeViewSet,
-    BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView,
+    BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView, github_login_redirect,
 )
 
 router = DefaultRouter()
@@ -24,6 +24,8 @@ router.register(r"template-types", TemplateTypeViewSet, basename="template_type"
 router.register(r"templates", TemplateViewSet, basename="templates")
 
 urlpatterns = [
+    path("accounts/github/login/callback/", github_login_redirect, name="github-login-callback"),
+    
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     
