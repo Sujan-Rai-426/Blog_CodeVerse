@@ -1,9 +1,13 @@
 # Tutorial/serializers.py
 from rest_framework import serializers
 from Tutorial.models import (
-    Category, Contact, Section, Language, Topic,
+    Category, ClientAuth, ClientProfile, Contact, Section, Language, Topic,
     FrontendSourceCode, BackendImage, BackendStep, TemplateType, Template
 )
+
+# ----------------------------------------------------------------------------------------------
+# <------------==========-----========= DATA SERIALIZERS ========------============----------- >
+# --------------------------------------------------------------------------------------------------
 
 # -------------------- FRONTEND SERIALIZERS --------------------
 class FrontendSourceCodeSerializer(serializers.ModelSerializer):
@@ -109,3 +113,37 @@ class TemplateSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+
+
+# ----------------------------------------------------------------------------------------------
+# <------------==========-----========  CLIENTS / USER SERIALIZERS ========------============----------- >
+# --------------------------------------------------------------------------------------------------
+class ClientRegisterSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only=True, min_length=6)
+
+    class Meta:
+        model = ClientAuth
+        fields = ["username", "email", "password"]
+    def validate_email(self, value):
+        if ClientAuth.objects.filter(email__iexact=value).exists():
+            raise serializers.ValidationError("Email is already in use.")
+        return value
+    def create(self, validated_data):
+        client = ClientAuth(
+            username=validated_data["username"],
+            email=validated_data["email"]
+        )
+        client.set_password(validated_data["password"])
+        client.save()
+        return client
+
+
+# User / Profile Serializer 
+class ClientProfileSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source="user.username")
+    email = serializers.EmailField(source="user.email")
+    class Meta:
+        model = ClientProfile
+        fields = ["username", "email", "full_name", "phone", "address", "created_at"]

@@ -1,49 +1,65 @@
-// pages/User_Login.jsx
-import React, { useEffect } from "react";
-import { FaGithub } from "react-icons/fa";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { TokenService } from "../utils/token";
 
-function User_Login() {
-    const navigate = useNavigate();
+export default function User_Login() {
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+  const [message, setMessage] = useState("");
 
-    // Handle redirect after OAuth login
-    useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const access = urlParams.get("access_token");
-        const refresh = urlParams.get("refresh_token");
+  const navigate = useNavigate(); // <-- add this
 
-        if (access && refresh) {
-            // Save tokens using TokenService
-            TokenService.saveUserTokens(access, refresh);
+  const handleLogin = async (e) => {
+    e.preventDefault();
 
-            // Redirect to profile/dashboard
-            navigate("/User/Profile", { replace: true });
-        }
-    }, [navigate]);
+    try {
+      const res = await fetch("http://127.0.0.1:8000/api/user-login/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",   // for future HttpOnly cookies
+        body: JSON.stringify({ identifier, password }),
+      });
 
-const handleGithubLogin = () => {
-  const backend = import.meta.env.DEV
-    ? "http://127.0.0.1:8000"
-    : "https://codevora-backend.vercel.app";
+      const data = await res.json();
 
-  window.location.href = `${backend}/accounts/github/login/`;
-};
+      if (res.ok) {
+        // Save client id in localStorage
+        localStorage.setItem("client_id", data.client_id);
 
+        // Navigate to profile page
+        navigate(`/User/Profile/`); // <-- redirect after login
+      } else {
+        setMessage(data.error || "Login failed");
+      }
+    } catch (error) {
+      setMessage("Server error");
+    }
+  };
 
-    return (
-        <div className="login-container">
-            <div className="login-card">
-                <h2>Welcome Back</h2>
-                <p className="subtitle">Continue with your Account</p>
-                <div className="social-login">
-                    <button className="social-btn github" onClick={handleGithubLogin}>
-                        <FaGithub /> &nbsp; Login with GitHub
-                    </button>
-                </div>
-            </div>
-        </div>
-    );
+  return (
+    <div className="user-login-container">
+      <h2>User Login</h2>
+
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Email or Username"
+          value={identifier}
+          onChange={(e) => setIdentifier(e.target.value)}
+          required
+        />
+
+        <input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+
+        <button type="submit">Login</button>
+      </form>
+
+      {message && <p>{message}</p>}
+    </div>
+  );
 }
-
-export default User_Login;

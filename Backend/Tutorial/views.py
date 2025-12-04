@@ -35,6 +35,11 @@ from Tutorial.serializers import (
     BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
 
+
+# ----------------------------------------------------------------------------------------------
+# <------==========-----========  DATA VIEWSET ========------============----------- >
+# --------------------------------------------------------------------------------------------------
+
 # ------------------ CATEGORY & TOPIC ------------------
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
@@ -163,7 +168,9 @@ class TemplateViewSet(viewsets.ModelViewSet):
 
 
 
-# ------------------ ADMIN LOGIN VIEW ------------------
+# ----------------------------------------------------------------------------------------------
+# <-------==========-----========  ADMIN VIEWSET ========------============----------- >
+# --------------------------------------------------------------------------------------------------
 # Tutorial/views.py
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAdminUser
@@ -194,8 +201,6 @@ class AdminLoginAPIView(APIView):
             return Response({"detail": "Invalid credentials or not an admin."}, status=401)
 
 
-
-
 #  To fetch all data
 class AdminAllDataAPIView(APIView):
     authentication_classes = [JWTAuthentication]
@@ -222,68 +227,81 @@ class AdminAllDataAPIView(APIView):
         return Response(data)
 
 
-# --------User / Client Login -----------
+
+
+
+
+
+# ----------------------------------------------------------------------------------------------
+# <--------==========-----========  CLIENTS / USER VIEWSET ========------============----------- >
+# --------------------------------------------------------------------------------------------------
+
+# ------- client login view ---------
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from .models import ClientAuth
+
+# --------- ClientAuth Register Viewset --------------
+from rest_framework import generics
+from .models import ClientAuth
+from .serializers import ClientRegisterSerializer
+class ClientRegisterView(generics.CreateAPIView):
+    queryset = ClientAuth.objects.all()
+    serializer_class = ClientRegisterSerializer
+    
+    
+class ClientLoginView(APIView):
+    def post(self, request):
+        identifier = request.data.get("identifier")  # email or username
+        password = request.data.get("password")
+        if not identifier or not password:
+            return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            client = ClientAuth.objects.get(email=identifier)
+        except ClientAuth.DoesNotExist:
+            try:
+                client = ClientAuth.objects.get(username=identifier)
+            except ClientAuth.DoesNotExist:
+                return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
+        if client.check_password(password):
+            return Response({"message": "Login successful", "client_id": client.id})
+        else:
+            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
 
 
-class CurrentUserView(APIView):
-    permission_classes = [IsAuthenticated]
+# views.py
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
 
-    def get(self, request):
-        user = request.user
+class ClientLogoutView(APIView):
+    def post(self, request):
+        # If using cookies, you can clear them here
+        response = Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
+        response.delete_cookie("access_token")  # if you later use cookies
+        return response
+
+
+# ------- ClientAuth / User Profile View -----------
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import AllowAny
+from .models import ClientAuth, ClientProfile
+
+class UserProfileView(APIView):
+    def get(self, request, client_id):
+        try:
+            client = ClientAuth.objects.get(id=client_id)
+        except ClientAuth.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+        profile = client.profile
         return Response({
-            "id": user.id,
-            "username": user.username,
-            "email": user.email,
+            "username": client.username,
+            "email": client.email,
+            "full_name": profile.full_name,
+            "phone": profile.phone,
+            "address": profile.address,
+            "created_at": profile.created_at,
         })
 
-
-# accounts/views.py
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.shortcuts import redirect
-
-FRONTEND_URL = "http://localhost:5173/User/Profile"
-
-def github_login_redirect(request):
-    user = request.user
-    if not user.is_authenticated:
-        return redirect("/User/Login")
-
-    refresh = RefreshToken.for_user(user)
-    access_token = str(refresh.access_token)
-    refresh_token = str(refresh)
-
-    response = redirect(FRONTEND_URL)
-
-    # Set HttpOnly cookies
-    response.set_cookie(
-        "access_token",
-        access_token,
-        httponly=True,
-        samesite="None",  # cross-site dev
-        secure=False,     # True in prod
-        max_age=5*60
-    )
-    response.set_cookie(
-        "refresh_token",
-        refresh_token,
-        httponly=True,
-        samesite="None",
-        secure=False,
-        max_age=14*24*3600
-    )
-
-    return response
-
-
-
-# Tutorial/views.py
-from allauth.socialaccount.views import SignupView
-from django.shortcuts import redirect
-
-class ForceRedirectSocialSignup(SignupView):
-    def dispatch(self, request, *args, **kwargs):
-        # Already logged-in user, just redirect
-        return redirect("http://localhost:5173/User/Profile")

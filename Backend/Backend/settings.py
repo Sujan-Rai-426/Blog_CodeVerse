@@ -1,5 +1,5 @@
 # ==========================================
-# settings.py - Complete Updated Version
+# settings.py - CLEAN VERSION (No OAuth / Custom Auth)
 # ==========================================
 
 import os
@@ -30,18 +30,15 @@ ALLOWED_HOSTS = config(
 # JWT / AUTH SETTINGS
 # ==========================================
 REST_USE_JWT = True
-REST_SESSION_LOGIN = True  # Enable session login for admin
+REST_SESSION_LOGIN = True  # Enables Django admin session login
 
-ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
-SOCIALACCOUNT_LOGIN_ON_GET = True
-
-# Admin cookies
+# Admin JWT cookies
 ADMIN_JWT_AUTH_COOKIE = "jwt-admin-access"
 ADMIN_JWT_AUTH_REFRESH_COOKIE = "jwt-admin-refresh"
 
-# User cookies
-USER_JWT_AUTH_COOKIE = "access_token"
-USER_JWT_AUTH_REFRESH_COOKIE = "refresh_token"
+# User JWT cookies
+USER_JWT_AUTH_COOKIE = "access_user_token"
+USER_JWT_AUTH_REFRESH_COOKIE = "refresh_user_token"
 
 # ==========================================
 # INSTALLED APPS
@@ -56,7 +53,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "django.contrib.sites",
 
-    # Backend apps
+    # Your apps
     "Home",
     "Tutorial.apps.TutorialConfig",
 
@@ -64,16 +61,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
-
-    # Auth + social login
-    "allauth",
-    "allauth.account",
-    "allauth.socialaccount",
-    "dj_rest_auth",
-    "dj_rest_auth.registration",
-
-    # Providers
-    "allauth.socialaccount.providers.github",
 
     # Others
     "corsheaders",
@@ -88,13 +75,16 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "corsheaders.middleware.CorsMiddleware",
-    "Backend.middleware.jwt_cookie.JWTFromCookieMiddleware",  # Custom JWT from cookie
+
+    # Custom middlewares Backend/Middleware/..
+    "Backend.middleware.jwt_cookie.JWTFromCookieMiddleware",
     "Backend.middleware.fix_auth_header.FixAuthorizationHeaderMiddleware",
+
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
+
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
@@ -104,44 +94,17 @@ MIDDLEWARE = [
 # ==========================================
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
-    "allauth.account.auth_backends.AuthenticationBackend",
 ]
-
-# ==========================================
-# ALLAUTH SETTINGS
-# ==========================================
-SITE_ID = 1 if DEBUG else 2
-
-ACCOUNT_EMAIL_VERIFICATION = "none"
-ACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_EMAIL_REQUIRED = True
-SOCIALACCOUNT_AUTO_SIGNUP = True
-ACCOUNT_SIGNUP_FORM_CLASS = None
-SOCIALACCOUNT_ADAPTER = "Tutorial.adapter.MySocialAccountAdapter"
-
-SOCIALACCOUNT_PROVIDERS = {
-    "github": {
-        "SCOPE": ["user", "repo", "read:org", "user:email"],
-        "AUTH_PARAMS": {"access_type": "online"},
-    }
-}
-
-# Frontend redirect URL
-LOGIN_REDIRECT_URL = (
-    "http://localhost:5173/User/Profile"
-    if DEBUG
-    else "https://codevora140.vercel.app/User/Profile"
-)
 
 # ==========================================
 # REST FRAMEWORK + SIMPLE JWT
 # ==========================================
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "Backend.authentication.JWTFromCookieAuthentication",  # Custom cookie JWT
+        "Backend.authentication.JWTFromCookieAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
-        "rest_framework.authentication.SessionAuthentication",  # Admin login
-    ],
+        "rest_framework.authentication.SessionAuthentication",
+    ]
 }
 
 SIMPLE_JWT = {
@@ -177,7 +140,7 @@ USE_I18N = True
 USE_TZ = True
 
 # ==========================================
-# MEDIA FILES
+# MEDIA (local + cloudinary)
 # ==========================================
 if DEBUG:
     MEDIA_URL = "/media/"
@@ -221,7 +184,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "Backend.wsgi.application"
 
 # ==========================================
-# CSRF / CORS
+# CORS / CSRF
 # ==========================================
 CSRF_TRUSTED_ORIGINS = [
     "https://codevora140.vercel.app",
@@ -231,19 +194,18 @@ CSRF_TRUSTED_ORIGINS = [
 ]
 
 CORS_ALLOWED_ORIGINS = [
-    "http://127.0.0.1:5173",
     "http://localhost:5173",
+    "http://127.0.0.1:5173",
     "https://codevora140.vercel.app",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
 
-# Cookies for cross-origin requests
 if DEBUG:
     SESSION_COOKIE_SECURE = False
     CSRF_COOKIE_SECURE = False
-    SESSION_COOKIE_SAMESITE = "None"
-    CSRF_COOKIE_SAMESITE = "None"
+    SESSION_COOKIE_SAMESITE = "Lax"
+    CSRF_COOKIE_SAMESITE = "Lax"
 else:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True

@@ -3,6 +3,9 @@ from django.db import models
 from django.core.exceptions import ValidationError
 from cloudinary.models import CloudinaryField
 
+
+
+# <-------------============= DATA =========---------------->
 # -------------------- CATEGORY --------------------
 class Category(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -158,3 +161,49 @@ class Template(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     def __str__(self):
         return self.title
+
+
+
+
+
+# <---------=============== CLIENT / USER ================----------------->
+from django.contrib.auth.hashers import make_password, check_password
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+
+# Used for Client / User authentication and Login
+class ClientAuth(models.Model):
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=50)   # duplicates allowed
+    password = models.CharField(max_length=128)
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+        self.save()
+    def check_password(self, raw_password):
+        return check_password(raw_password, self.password)
+    def __str__(self):
+        return f"{self.username} ({self.email})"
+
+
+
+from Tutorial.models import ClientAuth
+#  Used for Client/User Profile
+class ClientProfile(models.Model):
+    user = models.OneToOneField(ClientAuth, on_delete=models.CASCADE, related_name="profile")
+    full_name = models.CharField(max_length=100, blank=True)
+    phone = models.CharField(max_length=20, blank=True)
+    address = models.TextField(blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    def __str__(self):
+        return self.user.username
+
+# -------------------------
+# Signal: auto-create profile from register auth
+# -------------------------
+@receiver(post_save, sender=ClientAuth)
+def create_client_profile(sender, instance, created, **kwargs):
+    if created:
+        ClientProfile.objects.create(user=instance)
+
+
