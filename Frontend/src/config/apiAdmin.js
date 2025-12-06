@@ -1,4 +1,3 @@
-// ==================== src/config/apiAdmin.js ====================
 import axios from "axios";
 
 const isProduction = import.meta.env.MODE === "production";
@@ -9,27 +8,29 @@ const apiURL = isProduction
 // Axios instance for Admin
 const apiAdmin = axios.create({
   baseURL: apiURL,
-  withCredentials: true,
+  withCredentials: true, // needed for cross-site cookies
   headers: { "Content-Type": "application/json" },
 });
 
-// Ensure CSRF cookie is set before unsafe requests
-async function ensureCsrf() {
+// ------------------- CSRF Handling -------------------
+
+// Fetch CSRF token once before any unsafe request
+export async function fetchAdminCsrfToken() {
   try {
     await apiAdmin.get("/api/csrf/"); // sets csrftoken cookie
+    const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+    console.log("Admin CSRF token ready:", token);
+    return token;
   } catch (err) {
-    console.error("Failed to fetch CSRF token:", err);
+    console.error("Failed to fetch admin CSRF:", err);
   }
 }
 
-// Attach CSRF token automatically before unsafe requests
-apiAdmin.interceptors.request.use(async (config) => {
+// Attach CSRF token automatically
+apiAdmin.interceptors.request.use((config) => {
   if (["post", "put", "patch", "delete"].includes(config.method)) {
-    await ensureCsrf();
     const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
+    if (csrfToken) config.headers["X-CSRFToken"] = csrfToken;
   }
   return config;
 });
@@ -39,8 +40,6 @@ apiAdmin.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
-
-    // Do not retry CSRF endpoint
     if (originalRequest.url.endsWith("/api/csrf/")) return Promise.reject(error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
