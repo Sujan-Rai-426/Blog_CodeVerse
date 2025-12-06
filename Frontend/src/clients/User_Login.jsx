@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import apiClient from "../config/apiClient";
+import { fetchClientCsrfToken } from "../config/apiClient";
 
 export default function User_Login() {
   const [identifier, setIdentifier] = useState("");
@@ -8,6 +9,10 @@ export default function User_Login() {
   const [message, setMessage] = useState("");
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchClientCsrfToken(); // fetch CSRF once on page load
+  }, []);
 
   const handleLogin = async (e) => {
     e.preventDefault();

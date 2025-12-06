@@ -1,4 +1,3 @@
-// ==================== src/config/apiClient.js ====================
 import axios from "axios";
 
 const isProduction = import.meta.env.MODE === "production";
@@ -13,19 +12,23 @@ const apiClient = axios.create({
   headers: { "Content-Type": "application/json" },
 });
 
-// Ensure CSRF cookie is set before unsafe requests
-async function ensureClientCsrf() {
+// ------------------- CSRF Handling -------------------
+
+// Fetch CSRF token once
+export async function fetchClientCsrfToken() {
   try {
     await apiClient.get("/api/csrf/"); // sets csrftoken cookie
+    const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+    console.log("Client CSRF token ready:", token);
+    return token;
   } catch (err) {
-    console.error("Failed to fetch CSRF token:", err);
+    console.error("Failed to fetch client CSRF:", err);
   }
 }
 
 // Attach CSRF token automatically before unsafe requests
-apiClient.interceptors.request.use(async (config) => {
+apiClient.interceptors.request.use((config) => {
   if (["post", "put", "patch", "delete"].includes(config.method)) {
-    await ensureClientCsrf();
     const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
     if (csrfToken) {
       config.headers["X-CSRFToken"] = csrfToken;
@@ -40,7 +43,7 @@ apiClient.interceptors.response.use(
   async (error) => {
     const originalRequest = error.config;
 
-    // Do not retry CSRF endpoint
+    // Don't retry CSRF endpoint
     if (originalRequest.url.endsWith("/api/csrf/")) return Promise.reject(error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
@@ -51,9 +54,10 @@ apiClient.interceptors.response.use(
         originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
         return axios(originalRequest);
       } catch (refreshError) {
-        console.error("User refresh token invalid:", refreshError);
+        console.error("Client refresh token invalid:", refreshError);
       }
     }
+
     return Promise.reject(error);
   }
 );

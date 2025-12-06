@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAdmin } from "./Admin_API_Context";
+import { fetchAdminCsrfToken } from "../config/apiAdmin";
 import "../assets/css/Admin_Login.css";
 
 export default function Admin_Login() {
@@ -11,9 +12,17 @@ export default function Admin_Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
-  // Redirect if already logged in
+
+  // Fetch CSRF immediately on page load
   useEffect(() => {
-    if (admin) navigate("/Admin"); // dashboard route
+    (async () => {
+      await fetchAdminCsrfToken();
+    })();
+  }, []);
+
+  // Redirect if logged in
+  useEffect(() => {
+    if (admin) navigate("/Admin");
   }, [admin, navigate]);
 
   const handleSubmit = async (e) => {
@@ -21,10 +30,10 @@ export default function Admin_Login() {
     setError("");
 
     try {
-      await login(email, password); // backend sets HttpOnly cookies
-      // navigation happens via useEffect
+      await login(email, password); // login() uses apiAdmin which sends CSRF
+      // redirect handled by useEffect when admin updates
     } catch (err) {
-      console.error(err);
+      console.error("Login error:", err);
       setError(err.response?.data?.detail || "Login failed. Check credentials.");
     }
   };
