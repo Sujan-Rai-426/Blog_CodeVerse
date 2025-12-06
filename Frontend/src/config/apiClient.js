@@ -16,7 +16,7 @@ const apiClient = axios.create({
 // Ensure CSRF cookie is set before unsafe requests
 async function ensureClientCsrf() {
   try {
-    await apiClient.get("/csrf/"); // sets csrftoken cookie
+    await apiClient.get("/api/csrf/"); // sets csrftoken cookie
   } catch (err) {
     console.error("Failed to fetch CSRF token:", err);
   }
@@ -41,7 +41,7 @@ apiClient.interceptors.response.use(
     const originalRequest = error.config;
 
     // Do not retry CSRF endpoint
-    if (originalRequest.url.endsWith("/csrf/")) return Promise.reject(error);
+    if (originalRequest.url.endsWith("/api/csrf/")) return Promise.reject(error);
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
