@@ -20,27 +20,7 @@ occupied_steps = BackendStepViewSet.as_view({'get': 'occupied_steps'})
 # ---------------------------- CSRF ----------------------------
 @ensure_csrf_cookie
 def get_csrf(request):
-    response = JsonResponse({"detail": "CSRF cookie set"})
-
-    if settings.DEBUG:
-        domain = None
-        samesite = "Lax"
-        secure = False
-    else:
-        domain = f".{settings.BACKEND_PROD_DOMAIN}"
-        samesite = "None"
-        secure = True
-
-    response.set_cookie(
-        "csrftoken",
-        request.META.get("CSRF_COOKIE"),
-        secure=secure,
-        samesite=samesite,
-        domain=domain,
-        httponly=False,
-    )
-
-    return response
+    return JsonResponse({"detail": "CSRF cookie set"})
 
 
 

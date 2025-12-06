@@ -1,3 +1,4 @@
+// src/config/apiClient.js
 import axios from "axios";
 
 const isProduction = import.meta.env.MODE === "production";
@@ -5,56 +6,63 @@ const apiURL = isProduction
   ? import.meta.env.VITE_API_URL_PRODUCTION
   : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
-// Axios instance for Client
+// CSRF and refresh paths (override via env if needed)
+const CSRF_PATH = import.meta.env.VITE_CSRF_PATH || "/api/csrf/";
+const USER_REFRESH_PATH = import.meta.env.VITE_USER_REFRESH_PATH || "/api/user/refresh/";
+
+// axios instance for client
 const apiClient = axios.create({
   baseURL: apiURL,
   withCredentials: true,
   headers: { "Content-Type": "application/json" },
 });
 
-// ------------------- CSRF Handling -------------------
-
-// Fetch CSRF token once
+// ------------------- CSRF: fetch once helper -------------------
 export async function fetchClientCsrfToken() {
   try {
-    await apiClient.get("/api/csrf/"); // sets csrftoken cookie
+    await apiClient.get(CSRF_PATH);
     const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
-    console.log("Client CSRF token ready:", token);
+    // optional: console.log("client csrf:", token);
     return token;
   } catch (err) {
-    console.error("Failed to fetch client CSRF:", err);
+    console.error("fetchClientCsrfToken failed:", err);
+    throw err;
   }
 }
 
-// Attach CSRF token automatically before unsafe requests
+// ------------------- Request interceptor -------------------
 apiClient.interceptors.request.use((config) => {
-  if (["post", "put", "patch", "delete"].includes(config.method)) {
-    const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
-    if (csrfToken) {
-      config.headers["X-CSRFToken"] = csrfToken;
-    }
+  const method = (config.method || "").toLowerCase();
+  if (["post", "put", "patch", "delete"].includes(method)) {
+    const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+    if (token) config.headers["X-CSRFToken"] = token;
   }
   return config;
-});
+}, (err) => Promise.reject(err));
 
-// Response interceptor: refresh token logic
+// ------------------- Response interceptor (refresh) -------------------
 apiClient.interceptors.response.use(
-  (response) => response,
+  (res) => res,
   async (error) => {
     const originalRequest = error.config;
+    if (!originalRequest) return Promise.reject(error);
 
-    // Don't retry CSRF endpoint
-    if (originalRequest.url.endsWith("/api/csrf/")) return Promise.reject(error);
+    if (originalRequest.url?.endsWith(CSRF_PATH) || originalRequest.url?.endsWith(USER_REFRESH_PATH)) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
-        const res = await axios.post(`${apiURL}/api/user/refresh/`, {}, { withCredentials: true });
-        const newAccessToken = res.data.access;
-        originalRequest.headers["Authorization"] = `Bearer ${newAccessToken}`;
-        return axios(originalRequest);
-      } catch (refreshError) {
-        console.error("Client refresh token invalid:", refreshError);
+        const r = await axios.post(`${apiURL}${USER_REFRESH_PATH}`, {}, { withCredentials: true });
+        const newAccess = r.data?.access;
+        if (newAccess) {
+          originalRequest.headers = originalRequest.headers || {};
+          originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
+          return axios(originalRequest);
+        }
+      } catch (refreshErr) {
+        console.error("client refresh failed:", refreshErr);
       }
     }
 

@@ -113,7 +113,7 @@ class AdminLoginAPIView(APIView):
         else:
             cookie_samesite = "None"
             cookie_secure = True
-            cookie_domain = f".{settings.BACKEND_PROD_DOMAIN}"
+            cookie_domain = settings.BACKEND_PROD_DOMAIN
 
         # Access token cookie (short-lived)
         response.set_cookie(
@@ -253,7 +253,7 @@ class ClientLoginView(APIView):
         else:
             cookie_samesite = "None"
             cookie_secure = True
-            cookie_domain = f".{os.getenv('FRONTEND_PROD_DOMAIN')}"
+            cookie_domain = settings.BACKEND_PROD_DOMAIN
 
         # Set access token cookie (short-lived)
         response.set_cookie(
