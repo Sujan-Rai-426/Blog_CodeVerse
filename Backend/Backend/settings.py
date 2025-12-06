@@ -214,8 +214,8 @@ WSGI_APPLICATION = "Backend.wsgi.application"
 FRONTEND_DEV_DOMAIN = os.getenv("FRONTEND_DEV_DOMAIN", "localhost")
 BACKEND_DEV_DOMAIN = os.getenv("BACKEND_DEV_DOMAIN", "localhost")
 
-FRONTEND_PROD_DOMAIN = os.getenv("FRONTEND_PROD_DOMAIN")
-BACKEND_PROD_DOMAIN = os.getenv("BACKEND_PROD_DOMAIN")
+FRONTEND_PROD_DOMAINS = os.getenv("FRONTEND_PROD_DOMAINS", "").split(",")
+BACKEND_PROD_DOMAINS = os.getenv("BACKEND_PROD_DOMAINS", "").split(",")
 
 # ==========================================
 # CSRF & SESSION SETTINGS
@@ -245,14 +245,8 @@ else:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SAMESITE = "None"
-    CSRF_TRUSTED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}",        #codevora140.vercel.app
-        f"https://{BACKEND_PROD_DOMAIN}",         #codevora-backend.vercel.app
-        "https://api." + f"{BACKEND_PROD_DOMAIN}" #api.codevora-backend.vercel.app
-    ]
-    CORS_ALLOWED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}"          #codevora140.vercel.app 
-    ]
+    CSRF_TRUSTED_ORIGINS = [f"https://{d.strip()}" for d in FRONTEND_PROD_DOMAINS + BACKEND_PROD_DOMAINS]
+    CORS_ALLOWED_ORIGINS = [f"https://{d.strip()}" for d in FRONTEND_PROD_DOMAINS]
 
 
 
