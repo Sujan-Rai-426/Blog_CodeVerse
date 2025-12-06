@@ -1,9 +1,18 @@
+import React, { useEffect, useState } from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import apiClient from "../config/apiClient";
 
 export default function User_Protected_Route() {
-  const clientId = localStorage.getItem("client_id");
+  const [authenticated, setAuthenticated] = useState(null);
 
-  if (!clientId) return <Navigate to="/User/Login/" replace />;
+  useEffect(() => {
+    apiClient
+      .get("/api/user-profile/")
+      .then(() => setAuthenticated(true))
+      .catch(() => setAuthenticated(false));
+  }, []);
 
-  return <Outlet />;
+  if (authenticated === null) return <p>Loading...</p>;
+
+  return authenticated ? <Outlet /> : <Navigate to="/User/Login" replace />;
 }

@@ -1,8 +1,11 @@
+
+
 // src/admin/Admin_View_Data.jsx
 import React, { useEffect, useState } from "react";
 import { useAdmin } from "./Admin_API_Context";
 import "../assets/css/Admin_View_Data.css";
 import { FaEdit, FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
+import apiAdmin from "../config/apiAdmin.js"; 
 
 const Admin_View_Data = () => {
   // =================== Local State ===================
@@ -13,8 +16,8 @@ const Admin_View_Data = () => {
   const [formData, setFormData] = useState({});
   const [activeTab, setActiveTab] = useState("category");
 
-  // =================== Cached Data State ===================
-  const { cache, updateCacheList, updateCache, AdminAPI } = useAdmin();
+  // =================== AdminProvider Data ===================
+  const { cache, fetchResource, fetchNested, updateCacheList } = useAdmin();
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -24,70 +27,53 @@ const Admin_View_Data = () => {
   const [templates, setTemplates] = useState([]);
   const [templateTypes, setTemplateTypes] = useState([]);
 
-  // =================== Fetch Data (with caching) ===================
+
+  // =================== Fetch Data ===================
   const fetchData = async () => {
     setLoading(true);
     try {
-      // Check if cached in sessionStorage
-      const cached = sessionStorage.getItem("adminData");
-      if (cached) {
-        const parsed = JSON.parse(cached);
-        setCategories(parsed.categories || []);
-        setSections(parsed.sections || []);
-        setLanguages(parsed.languages || []);
-        setTopics(parsed.topics || []);
-        setFrontend(parsed.frontend || []);
-        setBackend(parsed.backend || []);
-        setTemplates(parsed.templates || []);
-        setTemplateTypes(parsed.templateTypes || []);
-        setLoading(false);
-        return;
+      // Use cache if available
+      if (cache.adminData) {
+        const data = cache.adminData;
+        setCategories(data.categories || []);
+        setSections(data.sections || []);
+        setLanguages(data.languages || []);
+        setTopics(data.topics || []);
+        setFrontend(data.frontend || []);
+        setBackend(data.backend || []);
+        setTemplates(data.templates || []);
+        setTemplateTypes(data.templateTypes || []);
+      } else {
+        // Fetch all resources
+        const [
+          categoriesRes,
+          sectionsRes,
+          languagesRes,
+          topicsRes,
+          frontendRes,
+          backendRes,
+          templatesRes,
+          templateTypesRes,
+        ] = await Promise.all([
+          fetchResource("categories"),
+          fetchResource("sections"),
+          fetchResource("languages"),
+          fetchResource("topics"),
+          fetchResource("frontend-source-codes"),
+          fetchResource("backend-steps"),
+          fetchResource("templates"),
+          fetchResource("template-types"),
+        ]);
+
+        setCategories(categoriesRes || []);
+        setSections(sectionsRes || []);
+        setLanguages(languagesRes || []);
+        setTopics(topicsRes || []);
+        setFrontend(frontendRes || []);
+        setBackend(backendRes || []);
+        setTemplates(templatesRes || []);
+        setTemplateTypes(templateTypesRes || []);
       }
-
-      // Fetch from API
-      const [
-        catRes,
-        secRes,
-        langRes,
-        topicRes,
-        frontRes,
-        backRes,
-        templateRes,
-        templateTypesRes,
-      ] = await Promise.all([
-        AdminAPI.get("/api/categories/"),
-        AdminAPI.get("/api/sections/"),
-        AdminAPI.get("/api/languages/"),
-        AdminAPI.get("/api/topics/"),
-        AdminAPI.get("/api/frontendsourcecodes/"),
-        AdminAPI.get("/api/backendsteps/"),
-        AdminAPI.get("/api/templates/"),
-        AdminAPI.get("/api/template-types/"),
-      ]);
-
-      const adminData = {
-        categories: catRes.data || [],
-        sections: secRes.data || [],
-        languages: langRes.data || [],
-        topics: topicRes.data || [],
-        frontend: frontRes.data || [],
-        backend: backRes.data || [],
-        templates: templateRes.data || [],
-        templateTypes: templateTypesRes.data || [],
-      };
-
-      // Save to state
-      setCategories(adminData.categories);
-      setSections(adminData.sections);
-      setLanguages(adminData.languages);
-      setTopics(adminData.topics);
-      setFrontend(adminData.frontend);
-      setBackend(adminData.backend);
-      setTemplates(adminData.templates);
-      setTemplateTypes(adminData.templateTypes);
-
-      // Save to sessionStorage for caching
-      sessionStorage.setItem("adminData", JSON.stringify(adminData));
     } catch (err) {
       console.error(err);
       alert("Error fetching admin data");
@@ -96,14 +82,12 @@ const Admin_View_Data = () => {
     }
   };
 
-
   useEffect(() => {
     fetchData();
   }, []);
 
   // =================== Helpers ===================
-  const toggleSub = (id) =>
-    setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }));
+const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }));
 
   const handleEdit = (item, fields) => {
     setEditingId(item.id);
@@ -114,25 +98,30 @@ const Admin_View_Data = () => {
     setFormData(initialData);
   };
 
+
+// =================== Handle Cancle ===================
   const handleCancel = () => {
     setEditingId(null);
     setFormData({});
   };
 
-  // =================== Handle Update ===================
+// =================== Handle Update ===================
   const handleUpdate = async (endpoint, id, setStateFn) => {
     try {
       setSavingId(id);
       const payload = { ...formData };
 
+      // Normalize empty fields to null
       Object.keys(payload).forEach((key) => {
         if (payload[key] === "") payload[key] = null;
       });
 
+      // Convert numeric fields
       ["language", "price"].forEach((field) => {
         if (payload[field] != null) payload[field] = Number(payload[field]);
       });
 
+      // Validate access_type
       if (payload.access_type) {
         const type = payload.access_type.toLowerCase();
         if (type === "free") payload.access_type = "Free";
@@ -144,24 +133,28 @@ const Admin_View_Data = () => {
         }
       }
 
-      const res = await AdminAPI.patch(`/api/${endpoint}/${id}/`, payload);
+      // PATCH request using apiAdmin (handles token)
+      const res = await apiAdmin.patch(`/api/${endpoint}/${id}/`, payload);
+
       setStateFn((prev) => prev.map((i) => (i.id === id ? res.data : i)));
       updateCacheList(endpoint, res.data, "update");
       handleCancel();
       alert("Updated successfully!");
     } catch (err) {
-      console.error(err.response || err);
+      console.error(err);
       alert("Update failed! Check console.");
     } finally {
       setSavingId(null);
     }
   };
 
-  // =================== Handle Delete ===================
+// =================== Handle Delete ===================
   const handleDelete = async (endpoint, id, setStateFn) => {
     if (!window.confirm("Delete this item?")) return;
     try {
-      await AdminAPI.delete(`/api/${endpoint}/${id}/`);
+      // DELETE request using apiAdmin
+      await apiAdmin.delete(`/api/${endpoint}/${id}/`);
+
       setStateFn((prev) => prev.filter((i) => i.id !== id));
       updateCacheList(endpoint, { id }, "delete");
       if (editingId === id) handleCancel();
@@ -171,6 +164,7 @@ const Admin_View_Data = () => {
       alert("Delete failed");
     }
   };
+
 
   // =================== Render Form Fields ===================
   const renderFormFields = (fields) =>
@@ -245,6 +239,10 @@ const Admin_View_Data = () => {
         </div>
       );
     });
+
+
+
+  // =================== Tabs Render Functions ===================
 
   // =================== Render CATEGORY Tabs ===================
   const renderCategoryTab = () =>
@@ -580,7 +578,7 @@ const Admin_View_Data = () => {
                                         <button
                                           className="avd-save-btn"
                                           onClick={() =>
-                                            handleUpdate("frontendsourcecodes", comp.id, setFrontend)
+                                            handleUpdate("frontend-source-codes", comp.id, setFrontend)
                                           }
                                         >
                                           {savingId === comp.id ? "Saving..." : "Save"}
@@ -614,7 +612,7 @@ const Admin_View_Data = () => {
                                         <button
                                           className="avd-delete-btn"
                                           onClick={() =>
-                                            handleDelete("frontendsourcecodes", comp.id, setFrontend)
+                                            handleDelete("frontend-source-codes", comp.id, setFrontend)
                                           }
                                         >
                                           <FaTrash /> Delete
@@ -669,7 +667,7 @@ const Admin_View_Data = () => {
                                         <button
                                           className="avd-save-btn"
                                           onClick={() =>
-                                            handleUpdate("backendsteps", step.id, setBackend)
+                                            handleUpdate("backend-steps", step.id, setBackend)
                                           }
                                         >
                                           {savingId === step.id ? "Saving..." : "Save"}
@@ -703,7 +701,7 @@ const Admin_View_Data = () => {
                                         <button
                                           className="avd-delete-btn"
                                           onClick={() =>
-                                            handleDelete("backendsteps", step.id, setBackend)
+                                            handleDelete("backend-steps", step.id, setBackend)
                                           }
                                         >
                                           <FaTrash /> Delete
@@ -724,7 +722,6 @@ const Admin_View_Data = () => {
           </div>
         )
       });
-
 
 // =================== Render BACKEND TAB ===================
   const renderCodeGuideTab = () => {
@@ -774,7 +771,7 @@ const Admin_View_Data = () => {
                       <div className="avd-card-buttons">
                         <button
                           className="avd-save-btn"
-                          onClick={() => handleUpdate("backendsteps", step.id, setBackend)}
+                          onClick={() => handleUpdate("backend-steps", step.id, setBackend)}
                         >
                           {savingId === step.id ? "Saving..." : "Save"}
                         </button>
@@ -811,7 +808,7 @@ const Admin_View_Data = () => {
                         </button>
                         <button
                           className="avd-delete-btn"
-                          onClick={() => handleDelete("backendsteps", step.id, setBackend)}
+                          onClick={() => handleDelete("backend-steps", step.id, setBackend)}
                         >
                           <FaTrash /> Delete
                         </button>
@@ -1033,7 +1030,6 @@ const Admin_View_Data = () => {
   };
 
 
-
   // =================== MAIN RENDER ===================
   return (
     <div className="avd-dashboard">
@@ -1060,12 +1056,12 @@ const Admin_View_Data = () => {
             ))}
           </div>
           <div className="avd-tab-content">
-            {activeTab === "category" && renderCategoryTab()}
-            {activeTab === "section" && renderSectionTab()}
-            {activeTab === "language" && renderLanguageTab()}
-            {activeTab === "topic" && renderTopicTab()}
-            {activeTab === "backend" && renderCodeGuideTab()}
-            {activeTab === "template" && renderTemplateTypesTab()}
+            {activeTab === "category" && categories.length && renderCategoryTab()}
+            {activeTab === "section" && sections.length && renderSectionTab()}
+            {activeTab === "language" && languages.length && renderLanguageTab()}
+            {activeTab === "topic" && topics.length && renderTopicTab()}
+            {activeTab === "backend" && backend.length && renderCodeGuideTab()}
+            {activeTab === "template" && templateTypes.length && renderTemplateTypesTab()}
           </div>
         </>
       )}

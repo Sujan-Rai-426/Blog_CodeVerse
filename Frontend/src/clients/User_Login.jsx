@@ -1,42 +1,36 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import apiClient from "../config/apiClient";
 
 export default function User_Login() {
   const [identifier, setIdentifier] = useState("");
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
-  const navigate = useNavigate(); // <-- add this
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/user-login/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",   // for future HttpOnly cookies
-        body: JSON.stringify({ identifier, password }),
+      const res = await apiClient.post("/api/user-login/", {
+        identifier,
+        password,
       });
 
-      const data = await res.json();
-
-      if (res.ok) {
-        // Save client id in localStorage
-        localStorage.setItem("client_id", data.client_id);
-
-        // Navigate to profile page
-        navigate(`/User/Profile/`); // <-- redirect after login
-      } else {
-        setMessage(data.error || "Login failed");
+      if (res.status === 200) {
+        // No need to store tokens
+        navigate("/User/Profile");
       }
-    } catch (error) {
-      setMessage("Server error");
+    } catch (err) {
+      console.error(err);
+      setMessage("Login failed");
     }
   };
 
+
   return (
-    <div className="user-login-container">
+    <div className="auth-container">
       <h2>User Login</h2>
 
       <form onSubmit={handleLogin}>
@@ -59,7 +53,11 @@ export default function User_Login() {
         <button type="submit">Login</button>
       </form>
 
-      {message && <p>{message}</p>}
+      <p>
+        Don't have an account? <Link to="/User/Signup">Sign Up</Link>
+      </p>
+
+      {message && <p style={{ color: "red" }}>{message}</p>}
     </div>
   );
 }

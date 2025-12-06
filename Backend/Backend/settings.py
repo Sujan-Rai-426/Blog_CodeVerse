@@ -22,7 +22,7 @@ DEBUG = os.getenv("DEBUG", "False").lower() in ("true", "1")
 
 ALLOWED_HOSTS = config(
     "ALLOWED_HOSTS",
-    default="127.0.0.1,localhost,codevora-backend.vercel.app",
+    default="127.0.0.1,localhost,codevora140.vercel.app,codevora-backend.vercel.app",
     cast=lambda v: [h.strip() for h in v.split(",") if h.strip()],
 )
 
@@ -33,12 +33,15 @@ REST_USE_JWT = True
 REST_SESSION_LOGIN = True  # Enables Django admin session login
 
 # Admin JWT cookies
-ADMIN_JWT_AUTH_COOKIE = "jwt-admin-access"
-ADMIN_JWT_AUTH_REFRESH_COOKIE = "jwt-admin-refresh"
+ADMIN_JWT_ACCESS_TOKEN = "access_admin_token"
+ADMIN_JWT_REFRESH_TOKEN = "refresh_admin_token"
 
 # User JWT cookies
-USER_JWT_AUTH_COOKIE = "access_user_token"
-USER_JWT_AUTH_REFRESH_COOKIE = "refresh_user_token"
+USER_JWT_ACCESS_TOKEN = "access_user_token"
+USER_JWT_REFRESH_TOKEN = "refresh_user_token"
+
+# Backend/settings.py
+AUTH_USER_MODEL = 'CustomUser.User'
 
 # ==========================================
 # INSTALLED APPS
@@ -54,13 +57,14 @@ INSTALLED_APPS = [
     # "django.contrib.sites",
 
     # Your apps
-    "Home",
+    "Home", "CustomUser",
     "Tutorial.apps.TutorialConfig",
 
     # DRF
     "rest_framework",
     "rest_framework_simplejwt",
     "rest_framework.authtoken",
+    "rest_framework_simplejwt.token_blacklist",
 
     # Others
     "corsheaders",
@@ -100,8 +104,10 @@ AUTHENTICATION_BACKENDS = [
 # REST FRAMEWORK + SIMPLE JWT
 # ==========================================
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
     "DEFAULT_AUTHENTICATION_CLASSES": [
-        "Backend.authentication.JWTFromCookieAuthentication",
+        "Backend.authentication.ClientCookieJWTAuthentication",
+        "Backend.authentication.AdminCookieJWTAuthentication",
         "rest_framework_simplejwt.authentication.JWTAuthentication",
         "rest_framework.authentication.SessionAuthentication",
     ]
@@ -111,6 +117,14 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
     "AUTH_HEADER_TYPES": ("Bearer",),
+    "ROTATE_REFRESH_TOKENS": True,
+    "BLACKLIST_AFTER_ROTATION": True,
+    
+    
+    # Allow using cookies
+    "AUTH_COOKIE_SECURE": not DEBUG,  # True in prod, False in dev
+    "AUTH_COOKIE_SAMESITE": "Lax",
+    "AUTH_COOKIE_HTTP_ONLY": True,
 }
 
 # ==========================================
@@ -142,6 +156,14 @@ USE_TZ = True
 # ==========================================
 # MEDIA (local + cloudinary)
 # ==========================================
+# Always configure Cloudinary
+cloudinary.config(
+    cloud_name=os.getenv("CLOUD_NAME"),
+    api_key=os.getenv("CLOUD_API_KEY"),
+    api_secret=os.getenv("CLOUD_API_SECRET"),
+    secure=True,
+)
+
 if DEBUG:
     MEDIA_URL = "/media/"
     MEDIA_ROOT = BASE_DIR / "media"
@@ -183,22 +205,25 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "Backend.wsgi.application"
 
+
 # ==========================================
 # CORS / CSRF
 # ==========================================
-CSRF_TRUSTED_ORIGINS = [
-    "https://codevora140.vercel.app",
-    "http://localhost:5173",
-    "http://127.0.0.1:8000",
-    "https://codevora-backend.vercel.app",
-]
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "https://codevora140.vercel.app",
-]
+# Load environment variables
+FRONTEND_DEV_DOMAIN = os.getenv("FRONTEND_DEV_DOMAIN", "localhost")
+BACKEND_DEV_DOMAIN = os.getenv("BACKEND_DEV_DOMAIN", "localhost")
 
+FRONTEND_PROD_DOMAIN = os.getenv("FRONTEND_PROD_DOMAIN")
+BACKEND_PROD_DOMAIN = os.getenv("BACKEND_PROD_DOMAIN")
+
+# ==========================================
+# CSRF & SESSION SETTINGS
+# ==========================================
+CSRF_COOKIE_HTTPONLY = False
+CSRF_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_ALLOW_ALL = False
+CORS_ALLOW_METHODS = ['DELETE', 'GET', 'PATCH', 'POST', 'PUT', 'OPTIONS',]
 CORS_ALLOW_CREDENTIALS = True
 
 if DEBUG:
@@ -206,11 +231,31 @@ if DEBUG:
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SAMESITE = "Lax"
     CSRF_COOKIE_SAMESITE = "Lax"
+    CSRF_TRUSTED_ORIGINS = [
+        f"http://{FRONTEND_DEV_DOMAIN}:5173",  #localhost:5173
+        f"http://{BACKEND_DEV_DOMAIN}:8000",   #127.0.0.1:8000
+        f"http://{FRONTEND_DEV_DOMAIN}:3000",  #localhost:3000
+    ]
+    CORS_ALLOWED_ORIGINS = [
+        f"http://{FRONTEND_DEV_DOMAIN}:5173"    #localhost:5173
+    ]
+
 else:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SAMESITE = "None"
+    CSRF_TRUSTED_ORIGINS = [
+        f"https://{FRONTEND_PROD_DOMAIN}",        #codevora140.vercel.app
+        f"https://{BACKEND_PROD_DOMAIN}",         #codevora-backend.vercel.app
+        "https://api." + f"{BACKEND_PROD_DOMAIN}" #api.codevora-backend.vercel.app
+    ]
+    CORS_ALLOWED_ORIGINS = [
+        f"https://{FRONTEND_PROD_DOMAIN}"          #codevora140.vercel.app 
+    ]
+
+
+
 
 # ==========================================
 # STATIC FILES

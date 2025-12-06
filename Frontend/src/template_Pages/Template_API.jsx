@@ -1,6 +1,6 @@
 // src/template_Pages/Template_API.jsx
 import React, { createContext, useContext, useEffect, useState } from "react";
-import api from "../api"; // axios instance
+import api from "../config/api"; // axios instance
 
 // Context
 export const Templates_API_Context = createContext();

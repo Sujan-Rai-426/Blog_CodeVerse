@@ -1,28 +1,12 @@
 # Tutorial/views.py
 from django.db import IntegrityError
-
+from django.db.models import Count
 from rest_framework import viewsets, status
-from rest_framework.decorators import action
+from rest_framework.decorators import action, api_view
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
-from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
-from django.contrib.auth import authenticate
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
-# Tutorial/views.py
-from Tutorial.permissions import IsAdminOrReadOnly
-from Tutorial.utils import verify_email_exists
-
-# For contact
-import re
-from django.core.cache import cache
 from django.core.mail import EmailMessage, BadHeaderError
-
+from django.views.decorators.csrf import ensure_csrf_cookie
+import re
 
 from Tutorial.models import (
     Category, Section, Topic, Language,
@@ -34,26 +18,71 @@ from Tutorial.serializers import (
     FrontendSourceCodeSerializer,
     BackendStepSerializer, BackendImageSerializer, TemplateTypeSerializer, TemplateSerializer
 )
+from Tutorial.permissions import IsAdminOrReadOnly
+from Tutorial.utils import verify_email_exists
 
 
-# ----------------------------------------------------------------------------------------------
-# <------==========-----========  DATA VIEWSET ========------============----------- >
-# --------------------------------------------------------------------------------------------------
-
-# ------------------ CATEGORY & TOPIC ------------------
+# ---------------------------- CATEGORY ----------------------------
 class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Category.objects.all().prefetch_related("sections__languages__topics__source_codes")
+    queryset = Category.objects.all()
     serializer_class = CategorySerializer
 
+    @action(detail=True, methods=['get'], url_path='sections')
+    def get_sections(self, request, pk=None):
+        """Lazy-load sections for a category."""
+        category = self.get_object()
+        sections = category.sections.all()
+        serializer = SectionSerializer(sections, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
+
+# ---------------------------- SECTION ----------------------------
+class SectionViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = Section.objects.all()
+    serializer_class = SectionSerializer
+
+    @action(detail=True, methods=['get'], url_path='languages')
+    def get_languages(self, request, pk=None):
+        """Lazy-load languages for a section."""
+        section = self.get_object()
+        languages = section.languages.all()
+        serializer = LanguageSerializer(languages, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ---------------------------- LANGUAGE ----------------------------
+class LanguageViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    queryset = Language.objects.all()
+    serializer_class = LanguageSerializer
+
+    @action(detail=True, methods=['get'], url_path='topics')
+    def get_topics(self, request, pk=None):
+        """Lazy-load topics for a language."""
+        language = self.get_object()
+        topics = language.topics.annotate(
+            source_codes_count=Count('source_codes', distinct=True),
+            images_count=Count('images', distinct=True),
+            steps_count=Count('steps', distinct=True)
+        )
+        serializer = TopicSerializer(topics, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+# ---------------------------- TOPIC ----------------------------
 class TopicViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = Topic.objects.all().prefetch_related("source_codes", "steps", "images")
     serializer_class = TopicSerializer
+    queryset = Topic.objects.annotate(
+        source_codes_count=Count('source_codes', distinct=True),
+        images_count=Count('images', distinct=True),
+        steps_count=Count('steps', distinct=True)
+    )
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context={'request': request})
         serializer.is_valid(raise_exception=True)
         try:
             self.perform_create(serializer)
@@ -64,56 +93,71 @@ class TopicViewSet(viewsets.ModelViewSet):
             )
         return Response(serializer.data, status=201)
 
+    @action(detail=True, methods=['get'], url_path='source-codes')
+    def get_source_codes(self, request, pk=None):
+        topic = self.get_object()
+        codes = topic.source_codes.all()
+        serializer = FrontendSourceCodeSerializer(codes, many=True, context={'request': request})
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'], url_path='backend-steps')
+    def get_backend_steps(self, request, pk=None):
+        topic = self.get_object()
+        steps = topic.steps.all()
+        serializer = BackendStepSerializer(steps, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(detail=True, methods=['get'], url_path='backend-images')
+    def get_backend_images(self, request, pk=None):
+        topic = self.get_object()
+        images = topic.images.all()
+        serializer = BackendImageSerializer(images, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-# ---------------- SECTION -------------
-class SectionViewSet(viewsets.ModelViewSet):
-    queryset = Section.objects.all()
-    serializer_class = SectionSerializer
-    permission_classes = [IsAdminOrReadOnly] 
-
-
-
-# ------------------ LANGUAGE ------------------
-class LanguageViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = Language.objects.all()
-    serializer_class = LanguageSerializer
-
-
-
-# ------------------ FRONTEND SOURCE CODES ------------------
+# ---------------------------- FRONTEND SOURCE CODES ----------------------------
 class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = FrontendSourceCode.objects.all()
     serializer_class = FrontendSourceCodeSerializer
+    queryset = FrontendSourceCode.objects.all()
 
-    def perform_create(self, serializer):
-        # No special file upload here (we moved away from video frames).
-        serializer.save()
+    def get_serializer_context(self):
+        return {'request': self.request}  # Needed for hasBought field
 
 
-
-# ------------------ BACKEND ------------------
+# ---------------------------- BACKEND ----------------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = BackendStep.objects.all()
     serializer_class = BackendStepSerializer
-    @action(detail=False, methods=["get"], url_path="occupied-steps/(?P<topic_id>[^/.]+)")
+    queryset = BackendStep.objects.all()
+
+    # CODE to give Occupied step
     def occupied_steps(self, request, topic_id=None):
         steps = BackendStep.objects.filter(topic_id=topic_id).values_list("step_number", flat=True)
-        return Response({"occupied_steps": list(steps)}, status=status.HTTP_200_OK)
+        return Response({"occupied_steps": list(steps)}, status=200)
 
 
 
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
-    queryset = BackendImage.objects.all()
     serializer_class = BackendImageSerializer
+    queryset = BackendImage.objects.all()
 
 
+# ---------------------------- TEMPLATE ----------------------------
+class TemplateTypeViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    serializer_class = TemplateTypeSerializer
+    queryset = TemplateType.objects.all()
 
-# ------------------ Contact form (unchanged) ------------------
+
+class TemplateViewSet(viewsets.ModelViewSet):
+    permission_classes = [IsAdminOrReadOnly]
+    serializer_class = TemplateSerializer
+    queryset = Template.objects.all().order_by("-created_at")
+
+
+# ---------------------------- CONTACT FORM ----------------------------
 EMAIL_REGEX = r"[^@]+@[^@]+\.[^@]+"
 
 @api_view(['POST'])
@@ -122,20 +166,15 @@ def contact_form_view(request):
     email = request.data.get('email')
     subject = request.data.get('subject')
     message = request.data.get('message')
-
-    if not name or not email or not subject or not message:
+    if not all([name, email, subject, message]):
         return Response({"error": "All fields are required."}, status=status.HTTP_400_BAD_REQUEST)
-
     if not re.match(EMAIL_REGEX, email):
         return Response({"error": "Invalid email format."}, status=status.HTTP_400_BAD_REQUEST)
-
     if not verify_email_exists(email):
         return Response({"error": "The email address does not exist or cannot receive emails."},
                         status=status.HTTP_400_BAD_REQUEST)
-
     email_subject = f"Contact Form Message: {subject}"
     email_message = f"From: {name} <{email}>\n\nMessage:\n{message}"
-
     try:
         email_obj = EmailMessage(
             subject=email_subject,
@@ -152,156 +191,11 @@ def contact_form_view(request):
         return Response({"error": f"Failed to send email: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
-# ------------------ TEMPLATE viewsets (unchanged) ------------------
-class TemplateTypeViewSet(viewsets.ModelViewSet):
-    queryset = TemplateType.objects.all()
-    serializer_class = TemplateTypeSerializer
-    permission_classes = [IsAdminOrReadOnly]
+# ---------------------------- CSRF & DEBUG ----------------------------
+@ensure_csrf_cookie
+def get_csrf(request):
+    return Response({"detail": "CSRF cookie set"})
 
 
-
-class TemplateViewSet(viewsets.ModelViewSet):
-    permission_classes = [IsAdminOrReadOnly]
-    queryset = Template.objects.all().order_by("-created_at")
-    serializer_class = TemplateSerializer
-
-
-
-
-# ----------------------------------------------------------------------------------------------
-# <-------==========-----========  ADMIN VIEWSET ========------============----------- >
-# --------------------------------------------------------------------------------------------------
-# Tutorial/views.py
-from rest_framework.views import APIView
-from rest_framework.permissions import AllowAny, IsAdminUser
-from rest_framework.response import Response
-from django.contrib.auth import authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
-from django.views.decorators.csrf import csrf_exempt
-from django.utils.decorators import method_decorator
-
-@method_decorator(csrf_exempt, name='dispatch')  # Disable CSRF for API
-class AdminLoginAPIView(APIView):
-    permission_classes = [AllowAny]
-    def post(self, request):
-        username = request.data.get('username')
-        password = request.data.get('password')
-        if not username or not password:
-            return Response({"detail": "Username and password required"}, status=400)
-        user = authenticate(username=username, password=password)
-        if user is not None and user.is_superuser:
-            # Generate JWT token
-            refresh = RefreshToken.for_user(user)
-            return Response({
-                "refresh": str(refresh),
-                "access": str(refresh.access_token),
-                "username": user.username,
-            })
-        else:
-            return Response({"detail": "Invalid credentials or not an admin."}, status=401)
-
-
-#  To fetch all data
-class AdminAllDataAPIView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAdminUser]  # Only superuser/admin
-
-    def get(self, request):
-        data = cache.get("admin_all_data")
-
-        if not data:
-            data = {
-                "categories": CategorySerializer(Category.objects.all(), many=True).data,
-                "topics": TopicSerializer(Topic.objects.all(), many=True).data,
-                "languages": LanguageSerializer(Language.objects.all(), many=True).data,
-                "templates": TemplateSerializer(Template.objects.all(), many=True).data,
-                "template_types": TemplateTypeSerializer(TemplateType.objects.all(), many=True).data,
-                "frontend_codes": FrontendSourceCodeSerializer(FrontendSourceCode.objects.all(), many=True).data,
-                "backend_steps": BackendStepSerializer(BackendStep.objects.all(), many=True).data,
-                "backend_images": BackendImageSerializer(BackendImage.objects.all(), many=True).data,
-            }
-
-            # Cache for 10 minutes
-            cache.set("admin_all_data", data, timeout=600)
-
-        return Response(data)
-
-
-
-
-
-
-
-# ----------------------------------------------------------------------------------------------
-# <--------==========-----========  CLIENTS / USER VIEWSET ========------============----------- >
-# --------------------------------------------------------------------------------------------------
-
-# ------- client login view ---------
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from .models import ClientAuth
-
-# --------- ClientAuth Register Viewset --------------
-from rest_framework import generics
-from .models import ClientAuth
-from .serializers import ClientRegisterSerializer
-class ClientRegisterView(generics.CreateAPIView):
-    queryset = ClientAuth.objects.all()
-    serializer_class = ClientRegisterSerializer
-    
-    
-class ClientLoginView(APIView):
-    def post(self, request):
-        identifier = request.data.get("identifier")  # email or username
-        password = request.data.get("password")
-        if not identifier or not password:
-            return Response({"error": "All fields are required"}, status=status.HTTP_400_BAD_REQUEST)
-        try:
-            client = ClientAuth.objects.get(email=identifier)
-        except ClientAuth.DoesNotExist:
-            try:
-                client = ClientAuth.objects.get(username=identifier)
-            except ClientAuth.DoesNotExist:
-                return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-        if client.check_password(password):
-            return Response({"message": "Login successful", "client_id": client.id})
-        else:
-            return Response({"error": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
-
-# views.py
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-
-class ClientLogoutView(APIView):
-    def post(self, request):
-        # If using cookies, you can clear them here
-        response = Response({"message": "Logged out successfully"}, status=status.HTTP_200_OK)
-        response.delete_cookie("access_token")  # if you later use cookies
-        return response
-
-
-# ------- ClientAuth / User Profile View -----------
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
-from .models import ClientAuth, ClientProfile
-
-class UserProfileView(APIView):
-    def get(self, request, client_id):
-        try:
-            client = ClientAuth.objects.get(id=client_id)
-        except ClientAuth.DoesNotExist:
-            return Response({"error": "User not found"}, status=404)
-        profile = client.profile
-        return Response({
-            "username": client.username,
-            "email": client.email,
-            "full_name": profile.full_name,
-            "phone": profile.phone,
-            "address": profile.address,
-            "created_at": profile.created_at,
-        })
-
+def debug_test(request):
+    return Response({"status": "ok", "message": "API working"}, status=200)

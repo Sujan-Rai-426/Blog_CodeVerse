@@ -1,66 +1,228 @@
-import React, { createContext, useEffect, useState, useCallback } from "react";
-import api from "../api"; // axios instance
+import React, {
+    createContext,
+    useEffect,
+    useState,
+    useCallback,
+    useContext,
+} from "react";
+import api from "../config/api"; // <-- your dynamic axios instance
 
 export const Parent_API_Provider_Context = createContext();
 
 export const Parent_Api_Provider = ({ children }) => {
-    const [data, setData] = useState(() => loadFromCache());  // Load instantly
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
+  // --------------------------------------------------------------------
+  // STATE
+  // --------------------------------------------------------------------
+    const [baseData, setBaseData] = useState(null);
+    const [loadingBase, setLoadingBase] = useState(true);
+    const [errorBase, setErrorBase] = useState(null);
 
-    // --------------- LOCAL STORAGE CACHE HELPERS ----------------
-    const CACHE_KEY = "parent_api_data";
-    const CACHE_TIME_KEY = "parent_api_cache_time";
-    const MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
+  // --------------------------------------------------------------------
+  // CACHE CONFIG
+  // --------------------------------------------------------------------
+    const CACHE_KEY = "parent_api_base_data";
+    const CACHE_TIME_KEY = "parent_api_base_cache_time";
+    const MAX_AGE = 1000 * 60 * 60 * 48; // 48 hours
 
-    function loadFromCache() {
+  // Load from localStorage instantly
+    const loadFromCache = useCallback(() => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
             const time = localStorage.getItem(CACHE_TIME_KEY);
             if (!cached || !time) return null;
-
-            const isExpired = Date.now() - Number(time) > MAX_AGE;
-            return isExpired ? null : JSON.parse(cached);
+            const expired = Date.now() - Number(time) > MAX_AGE;
+            // If expired, treat as a cache miss
+            return expired ? null : JSON.parse(cached);
         } catch {
             return null;
         }
-    }
-
-    const saveToCache = (data) => {
-        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
-        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
-    };
-
-    // ------------------- FETCH FROM BACKEND ---------------------
-    const fetchData = useCallback(async () => {
-        try {
-            const response = await api.get("/api/categories/");
-            setData(response.data);
-            saveToCache(response.data);
-        } catch (err) {
-            console.error("Parent API fetch error:", err);
-            setError(err);
-        } finally {
-            setLoading(false);
-        }
     }, []);
 
-    // --------------------- INITIAL LOAD -------------------------
-    useEffect(() => {
-        const cached = loadFromCache();
+  // Save fresh cache
+    const saveToCache = useCallback((data) => {
+        localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+        localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
+    }, []);
 
-        if (cached) {
-            setData(cached);
-            setLoading(false);
-            fetchData(); // background refresh
-        } else {
-            fetchData();
+  // --------------------------------------------------------------------
+  // 1️⃣ FETCH BASE DATA (Categories + Sections + Languages)
+  // --------------------------------------------------------------------
+    const fetchBaseData = useCallback(async () => {
+        // Only set loading true if we aren't already showing cached data
+        if (!baseData) {
+            setLoadingBase(true);
         }
-    }, [fetchData]);
+        setErrorBase(null); // Clear errors before fetching
 
+        try {
+            const [categoriesRes, sectionsRes, languagesRes] = await Promise.all([
+                api.get("/api/categories/"), // <-- uses your dynamic api instance
+                api.get("/api/sections/"),
+                api.get("/api/languages/"),
+            ]);
+
+            const combined = {
+                categories: categoriesRes.data,
+                sections: sectionsRes.data,
+                languages: languagesRes.data,
+            };
+
+        // This update will trigger a re-render with the freshest data from the backend
+            setBaseData(combined);
+            saveToCache(combined);
+        } catch (err) {
+            console.error("Base Data fetch error:", err);
+            // Only set error if no base data was available
+            if (!baseData) {
+                setErrorBase(err);
+            }
+        } finally {
+        // Always finish loading state
+            setLoadingBase(false);
+        }
+    }, [saveToCache, baseData]); // Depend on baseData to check if we already have data
+
+
+  // --------------------------------------------------------------------
+  // INITIAL LOAD (cache first → background refresh)
+  // --------------------------------------------------------------------
+    useEffect(() => {
+        const cachedData = loadFromCache();
+        if (cachedData) {
+        // 1. Show cached data instantly (set state, stop loading for UI)
+            setBaseData(cachedData);
+            setLoadingBase(false);
+
+        // 2. Always run a background fetch to check for new backend data
+        // This immediately updates the UI when the newer data arrives.
+            console.log("Using cached data, fetching new data in background...");
+            fetchBaseData();
+        } else {
+        // 3. No cache found, fetch normally and show loading indicator
+            console.log("No cache found, fetching base data normally...");
+            fetchBaseData();
+        }
+    }, []); // Empty dependency array ensures this runs once on mount
+
+
+  // --------------------------------------------------------------------
+  // 2️⃣ LAZY ON-DEMAND API FUNCTIONS
+  // --------------------------------------------------------------------
+
+  // Fetch all topics (filters optional)
+    const fetchTopics = async (filters = {}) => {
+        try {
+            const res = await api.get("/api/topics/", { params: filters });
+            return res.data;
+        } catch (err) {
+            console.error("Topics fetch error:", err);
+            return [];
+        }
+    };
+
+  // Single topic detail
+    const fetchTopicDetail = async (topicId) => {
+        try {
+            const res = await api.get(`/api/topics/${topicId}/`);
+            return res.data;
+        } catch (err) {
+            console.error("Topic detail error:", err);
+            return null;
+        }
+    };
+
+  // Frontend source code by topic
+    const fetchFrontendSourceCode = async (topicId) => {
+        try {
+            const res = await api.get("/api/frontend-source-codes/", {
+                params: { topic_id: topicId },
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Frontend source code error:", err);
+            return [];
+        }
+    };
+
+  // Backend steps by topic
+    const fetchBackendSteps = async (topicId) => {
+        try {
+            const res = await api.get("/api/backend-steps/", {
+                params: { topic_id: topicId },
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Backend steps error:", err);
+            return [];
+        }
+    };
+
+  // Backend images by topic
+    const fetchBackendImages = async (topicId) => {
+        try {
+            const res = await api.get("/api/backend-images/", {
+                params: { topic_id: topicId },
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Backend images error:", err);
+            return [];
+        }
+    };
+
+  // All template types
+    const fetchTemplateTypes = async () => {
+        try {
+            const res = await api.get("/api/template-types/");
+            return res.data;
+        } catch (err) {
+            console.error("Template types error:", err);
+            return [];
+        }
+    };
+
+  // Templates for a specific type
+    const fetchTemplates = async (typeId) => {
+        try {
+            const res = await api.get("/api/templates/", {
+                params: { type_id: typeId },
+            });
+            return res.data;
+        } catch (err) {
+            console.error("Templates error:", err);
+            return [];
+        }
+    };
+
+  // --------------------------------------------------------------------
+  // PROVIDER EXPORT
+  // --------------------------------------------------------------------
     return (
-        <Parent_API_Provider_Context.Provider value={{ data, loading, error }}>
+        <Parent_API_Provider_Context.Provider
+            value={{
+                // Base cached data
+                baseData,
+                loadingBase,
+                errorBase,
+
+                categories: baseData?.categories || [],
+                sections: baseData?.sections || [],
+                languages: baseData?.languages || [],
+
+                // Lazy endpoints
+                fetchTopics,
+                fetchTopicDetail,
+                fetchFrontendSourceCode,
+                fetchBackendSteps,
+                fetchBackendImages,
+                fetchTemplateTypes,
+                fetchTemplates,
+            }}
+        >
             {children}
         </Parent_API_Provider_Context.Provider>
     );
 };
+
+// Easy custom hook
+export const useParentAPI = () => useContext(Parent_API_Provider_Context);

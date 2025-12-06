@@ -1,88 +1,57 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import apiClient from "../config/apiClient";
 
 export default function User_Signup() {
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // <-- new state
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    password: "",
+  });
+
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const navigate = useNavigate(); // for redirect after signup
-
-  const handleSignup = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // --- Check if passwords match ---
-    if (password !== confirmPassword) {
-      setMessage("Passwords do not match");
-      return;
-    }
+    setMessage("");
 
     try {
-      const res = await fetch("http://127.0.0.1:8000/api/user-register/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({
-          username: username,
-          email: email,
-          password: password,
-        }),
-      });
+      const res = await apiClient.post("/api/user-register/", form);
 
-      const data = await res.json();
-
-      if (res.ok) {
-        setMessage("Account created successfully");
-
-        // Optionally auto-login and redirect to profile
-        localStorage.setItem("client_id", data.id || data.client_id); // adjust depending on your backend
-        navigate("/User/Profile"); 
-      } else {
-        setMessage(data.error || "Signup failed");
+      if (res.status === 201) {
+        navigate("/User/Login");
       }
-    } catch (error) {
-      setMessage("Server error");
+    } catch (err) {
+      setMessage("Registration failed");
     }
   };
 
   return (
-    <div className="user-signup-container">
-      <h2>Create Account</h2>
-
-      <form onSubmit={handleSignup}>
+    <div className="auth-container">
+      <h2>User Signup</h2>
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
-          placeholder="Enter Username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Username"
+          value={form.username}
+          onChange={(e) => setForm({ ...form, username: e.target.value })}
           required
         />
 
         <input
           type="email"
-          placeholder="Enter Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Email"
+          value={form.email}
+          onChange={(e) => setForm({ ...form, email: e.target.value })}
           required
         />
 
         <input
           type="password"
-          placeholder="Create Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-
-        <input
-          type="password"
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.target.value)}
+          placeholder="Password"
+          value={form.password}
+          onChange={(e) => setForm({ ...form, password: e.target.value })}
           required
         />
 
@@ -90,6 +59,8 @@ export default function User_Signup() {
       </form>
 
       {message && <p style={{ color: "red" }}>{message}</p>}
+
+      <p>Already have an account? <Link to="/User/Login">Login</Link></p>
     </div>
   );
 }

@@ -7,7 +7,7 @@ const isProduction = import.meta.env.MODE === "production";
 // Backend URL from .env
 const apiURL = isProduction
   ? import.meta.env.VITE_API_URL_PRODUCTION   // https://codevora-backend.vercel.app
-  : import.meta.env.VITE_API_URL_DEVELOPMENT; // http://127.0.0.1:8000
+  : import.meta.env.VITE_API_URL_DEVELOPMENT; // http://localhost:3000
 
 // Create Axios instance
 const api = axios.create({

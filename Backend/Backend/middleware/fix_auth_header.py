@@ -1,5 +1,17 @@
 # Backend/middleware/fix_auth_header.py
+"""
+FixAuthorizationHeaderMiddleware
 
+Purpose:
+- Ensures the `Authorization` header is preserved when hosting on serverless platforms
+    (like Vercel) that may rename or strip headers.
+- If `HTTP_AUTHORIZATION` is missing, it restores it from `HTTP_X_FORWARDED_AUTHORIZATION`.
+- Helps avoid authentication failures due to missing or altered headers.
+
+Usage:
+- Optional, mostly needed when deploying to platforms that forward headers differently.
+- Not required for local development but recommended for production on Vercel/Netlify.
+"""
 class FixAuthorizationHeaderMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response

@@ -1,18 +1,13 @@
 # Tutorial/admin.py
 from django.contrib import admin
 from Tutorial.models import (
-    Category, ClientAuth, ClientProfile, Section, Language, Topic,
+    Category, Section, Language, Topic,
     FrontendSourceCode,
     BackendImage, BackendStep, Contact, TemplateType, Template
 )
 
 # contact
 admin.site.register(Contact)
-admin.site.register(ClientProfile)
-
-@admin.register(ClientAuth)
-class ClientAuthAdmin(admin.ModelAdmin):
-    list_display = ['id', 'username', 'email', 'password']
     
     
 @admin.register(TemplateType)

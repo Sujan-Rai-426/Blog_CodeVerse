@@ -7,15 +7,13 @@ export default function Admin_Login() {
   const navigate = useNavigate();
   const { login, admin, loading } = useAdmin();
 
-  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
   // Redirect if already logged in
   useEffect(() => {
-    if (admin) {
-      navigate("/Admin"); // dashboard route
-    }
+    if (admin) navigate("/Admin"); // dashboard route
   }, [admin, navigate]);
 
   const handleSubmit = async (e) => {
@@ -23,13 +21,11 @@ export default function Admin_Login() {
     setError("");
 
     try {
-      await login(username, password);
+      await login(email, password); // backend sets HttpOnly cookies
       // navigation happens via useEffect
     } catch (err) {
       console.error(err);
-      setError(
-        err.response?.data?.detail || "Login failed. Check credentials."
-      );
+      setError(err.response?.data?.detail || "Login failed. Check credentials.");
     }
   };
 
@@ -38,12 +34,12 @@ export default function Admin_Login() {
       <div className="admin-login-box">
         <h2>Admin Login</h2>
         <form onSubmit={handleSubmit}>
-          <label>Username</label>
+          <label>Email</label>
           <input
-            type="text"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
-            placeholder="Enter username"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Enter email"
             required
           />
 
@@ -68,8 +64,11 @@ export default function Admin_Login() {
               "Login"
             )}
           </button>
-<br />
-            <p><b>Mail for Joining our Team</b> &nbsp; <Link to='/Contact'> Mail </Link></p>
+
+          <p>
+            <b>Mail for Joining our Team</b> &nbsp;{" "}
+            <Link to="/Contact">Mail</Link>
+          </p>
         </form>
       </div>
     </div>

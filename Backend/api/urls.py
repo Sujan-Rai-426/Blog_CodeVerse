@@ -2,46 +2,81 @@
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-from Tutorial import views
+from django.http import JsonResponse
+from django.views.decorators.csrf import ensure_csrf_cookie
+
+from Tutorial import views as tutorial_view
+from CustomUser import views as user_view
+
 from Tutorial.views import (
-    AdminAllDataAPIView, CategoryViewSet, ClientLoginView, ClientLogoutView, ClientRegisterView, SectionViewSet, TemplateTypeViewSet, TemplateViewSet, TopicViewSet, LanguageViewSet,
-    FrontendSourceCodeViewSet,
-    BackendStepViewSet, BackendImageViewSet, AdminLoginAPIView, UserProfileView, 
-    # github_login_redirect,
+    CategoryViewSet, SectionViewSet, LanguageViewSet, TopicViewSet,
+    FrontendSourceCodeViewSet, BackendStepViewSet, BackendImageViewSet,
+    TemplateTypeViewSet, TemplateViewSet
 )
 
+occupied_steps = BackendStepViewSet.as_view({'get': 'occupied_steps'})
+
+# ---------------------------- CSRF ----------------------------
+@ensure_csrf_cookie
+def get_csrf(request):
+    return JsonResponse({"detail": "CSRF cookie set"})
+
+
+# ---------------------------- DEBUG ----------------------------
+def debug_test(request):
+    return JsonResponse({"status": "ok", "message": "API working"}, status=200)
+
+
+# ---------------------------- ROUTER ----------------------------
 router = DefaultRouter()
-router.register("categories", CategoryViewSet, basename="category")
+
+# Categories & nested lazy endpoints
+router.register(r'categories', CategoryViewSet, basename='categories')
 router.register(r'sections', SectionViewSet, basename='sections')
-router.register("topics", TopicViewSet, basename="topic")
-router.register("languages", LanguageViewSet, basename="language")
+router.register(r'languages', LanguageViewSet, basename='languages')
+router.register(r'topics', TopicViewSet, basename='topics')
 
-# FRONTEND SOURCE CODES — canonical endpoint now
-router.register("frontendsourcecodes", FrontendSourceCodeViewSet, basename="frontendsourcecode")
+# Frontend & Backend
+router.register(r'frontend-source-codes', FrontendSourceCodeViewSet, basename='frontend-source-codes')
+router.register(r'backend-steps', BackendStepViewSet, basename='backend-steps')
+router.register(r'backend-images', BackendImageViewSet, basename='backend-images')
 
-router.register("backendsteps", BackendStepViewSet, basename="backendstep")
-router.register("backendimages", BackendImageViewSet, basename="backendimage")
-router.register(r"template-types", TemplateTypeViewSet, basename="template_type")
-router.register(r"templates", TemplateViewSet, basename="templates")
+# Templates
+router.register(r'template-types', TemplateTypeViewSet, basename='template-types')
+router.register(r'templates', TemplateViewSet, basename='templates')
 
-urlpatterns = [    
-    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+
+# ---------------------------- URLPATTERNS ----------------------------
+urlpatterns = [
+    # CSRF & Debug
+    path('csrf/', get_csrf, name='get_csrf'),
+    path('debug-test/', debug_test, name='debug_test'),
+
+    # JWT Auth
+    path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
+
+    # Contact Form
+    path('contact/', tutorial_view.contact_form_view, name='contact_form'),
     
+    # Backend Occupied Steps
+    path('backend-steps/occupied-steps/<int:topic_id>/', occupied_steps, name='occupied-steps'),
     
-    path('contact/', views.contact_form_view, name='contact_form'),
-    path("", include(router.urls)),
-    
-    
-    # <======= Admin url =========>
-    path('admin-login/', AdminLoginAPIView.as_view(), name='admin-login'),
-    path("admin/all-data/", AdminAllDataAPIView.as_view(), name="admin-all-data"),
-    
-    
-    # <====== Client / User URLs ======>
-    path('user-register/', ClientRegisterView.as_view(), name='client-register'),
-    path('user-login/', ClientLoginView.as_view(), name='client-login'),
-    path('user-logout/', ClientLogoutView.as_view(), name='client-logout'),
-    path('user-profile/<int:client_id>/', UserProfileView.as_view(), name='user-profile'),
+    # Router Endpoints
+    path('', include(router.urls)),
+
+    # ----------------- Custom User Auth -----------------
+    # Admin
+    path('admin-login/', user_view.AdminLoginAPIView.as_view(), name='admin-login'),
+    path('admin-profile/', user_view.AdminProfileView.as_view(), name='admin-profile'),
+    path('admin-logout/', user_view.AdminLogoutView.as_view(), name='admin-logout'),
+    path('admin/all-data/', user_view.AdminAllDataAPIView.as_view(), name='admin-all-data'),
+    path('admin/refresh/', user_view.CookieTokenRefreshView.as_view(), {"is_admin": True}, name='admin-refresh'),
+
+    # Client/User
+    path('user-register/', user_view.ClientRegisterView.as_view(), name='client-register'),
+    path('user-login/', user_view.ClientLoginView.as_view(), name='client-login'),
+    path('user-profile/', user_view.ClientProfileView.as_view(), name='user-profile'),
+    path('user-logout/', user_view.ClientLogoutView.as_view(), name='client-logout'),
+    path('user/refresh/', user_view.CookieTokenRefreshView.as_view(), name='user-refresh'),
 ]
-

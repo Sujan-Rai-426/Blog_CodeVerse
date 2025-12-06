@@ -1,52 +1,42 @@
-// src/api/Admin_API.jsx
-import api from "../api"; // Use the shared axios instance with interceptor
+// src/api/AdminAPI.js
+import apiAdmin from "../config/apiAdmin"; // Axios instance with withCredentials: true
 
-// ==================== ADMIN API FUNCTIONS ====================
+// Note: This file assumes your backend API is mounted under `/api/`.
+// If your Django urls are mounted elsewhere, update the endpoint strings below.
+
 const AdminAPI = {
   // -------------------- LOGIN --------------------
-  login: async (username, password) => {
-    const res = await api.post("/api/admin-login/", { username, password });
-    // Save tokens
-    localStorage.setItem("admin_access", res.data.access);
-    localStorage.setItem("admin_refresh", res.data.refresh);
-    localStorage.setItem("admin_username", res.data.username);
+  // returns backend response data
+  login: async (email, password) => {
+    const res = await apiAdmin.post("/api/admin-login/", { email, password });
     return res.data;
   },
 
   // -------------------- LOGOUT --------------------
-  logout: () => {
-    localStorage.removeItem("admin_access");
-    localStorage.removeItem("admin_refresh");
-    localStorage.removeItem("admin_username");
+  logout: async () => {
+    const res = await apiAdmin.post("/api/admin-logout/");
+    return res.data;
   },
 
   // -------------------- FETCH ALL DATA --------------------
   fetchAllData: async () => {
-    const res = await api.get("/api/admin/all-data/");
+    const res = await apiAdmin.get("/api/admin/all-data/");
     return res.data;
   },
 
-  // -------------------- REFRESH TOKEN --------------------
-  refreshToken: async () => {
-    const refresh = localStorage.getItem("admin_refresh");
-    if (!refresh) throw new Error("No refresh token available");
-
-    const res = await api.post("/api/token/refresh/", { refresh });
-    localStorage.setItem("admin_access", res.data.access);
-    return res.data.access;
-  },
-
-  // -------------------- GET CURRENT ADMIN --------------------
-  getCurrentAdmin: () => {
-    return localStorage.getItem("admin_username") || null;
+  // -------------------- GET CURRENT ADMIN / PROFILE --------------------
+  getCurrentAdmin: async () => {
+    // Backend should return current user/profile details
+    const res = await apiAdmin.get("/api/admin-profile/");
+    return res.data;
   },
 
   // -------------------- GENERIC REQUEST METHODS --------------------
-  get: (url, config) => api.get(url, config),
-  post: (url, data, config) => api.post(url, data, config),
-  put: (url, data, config) => api.put(url, data, config),
-  patch: (url, data, config) => api.patch(url, data, config),
-  delete: (url, config) => api.delete(url, config),
+  get: (url, config) => apiAdmin.get(url, config).then(r => r.data),
+  post: (url, data, config) => apiAdmin.post(url, data, config).then(r => r.data),
+  put: (url, data, config) => apiAdmin.put(url, data, config).then(r => r.data),
+  patch: (url, data, config) => apiAdmin.patch(url, data, config).then(r => r.data),
+  delete: (url, config) => apiAdmin.delete(url, config).then(r => r.data),
 };
 
 export default AdminAPI;
