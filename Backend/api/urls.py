@@ -1,4 +1,5 @@
 # Tutorial/urls.py
+from django.conf import settings
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -19,7 +20,28 @@ occupied_steps = BackendStepViewSet.as_view({'get': 'occupied_steps'})
 # ---------------------------- CSRF ----------------------------
 @ensure_csrf_cookie
 def get_csrf(request):
-    return JsonResponse({"detail": "CSRF cookie set"})
+    response = JsonResponse({"detail": "CSRF cookie set"})
+
+    if settings.DEBUG:
+        domain = None
+        samesite = "Lax"
+        secure = False
+    else:
+        domain = f".{settings.BACKEND_PROD_DOMAIN}"
+        samesite = "None"
+        secure = True
+
+    response.set_cookie(
+        "csrftoken",
+        request.META.get("CSRF_COOKIE"),
+        secure=secure,
+        samesite=samesite,
+        domain=domain,
+        httponly=False,
+    )
+
+    return response
+
 
 
 # ---------------------------- DEBUG ----------------------------
