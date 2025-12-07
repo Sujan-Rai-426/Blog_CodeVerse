@@ -1,0 +1,231 @@
+    /* ======================= Admin_View_User.css ======================= */
+
+.auu-container {
+    padding: 1.5rem;
+    background-color: transparent;
+    min-height: 80vh;
+    border-radius: 12px;
+    color: gray;
+    border: 2px solid gray;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.auu-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: #1f2937;
+    margin-bottom: 1rem;
+}
+
+.auu-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: #ffffff0f;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.auu-table th,.auu-table td {
+    padding: 0.8rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.auu-table th {
+    background-color: #3b82f6;
+    color: #fff;
+    font-weight: 600;
+}
+
+.auu-table tr:hover {
+    color: white;
+    background-color: #128cd81b;
+}
+
+.auu-user-type {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: #fff;
+}
+
+.auu-user-type.Admin {
+    background-color: #ef4444; /* Red for admin */
+}
+
+.auu-user-type.Client {
+    background-color: #10b981; /* Green for client/user */
+}
+
+.auu-user-type.Moderator {
+    background-color: #f59e0b; /* Orange for moderator */
+}
+
+.auu-action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.auu-action-buttons button {
+    padding: 0.35rem 0.6rem;
+    font-size: 0.85rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.auu-action-buttons butto.auu-edit-btn {
+    background-color: #3b82f6;
+    color: #fff;
+}
+
+.auu-action-buttons butto.auu-edit-btn:hover {
+    background-color: #2563eb;
+}
+
+.auu-action-buttons butto.auu-delete-btn {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.auu-action-buttons butto.auu-delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+.auu-no-users {
+    text-align: center;
+    padding: 3rem 0;
+    font-size: 1.2rem;
+    color: #6b7280;
+}
+
+    /* Responsive */
+@media (max-width: 768px) {
+    .auu-table th,.auu-table td {
+        padding: 0.6rem 0.8rem;
+        font-size: 0.85rem;
+    }
+    .auu-action-buttons button {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* =================== Admin Search Bar =================== */
+.auu-search-wrapper {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    max-width: 400px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 0.3rem 0.5rem;
+    background: #fff;
+}
+
+.auu-search-input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 0.4rem 0.5rem;
+    font-size: 0.95rem;
+}
+
+.auu-search-icon {
+    color: #555;
+    margin-right: 0.5rem;
+}
+
+/* =================== Admin Filter Buttons =================== */
+.auu-filter-select {
+    margin-left: 0.5rem;
+    padding: 0.4rem 0.5rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 0.95rem;
+    background: #fff;
+    cursor: pointer;
+}
+
+
+
+
+    /* =================== Admin Action Buttons =================== */
+
+.auu-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    margin-left: 4px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+    font-weight: 500;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    text-transform: capitalize;
+}
+
+
+.auu-edit-btn {
+    background-color: #3b82f6; 
+    color: #fff;
+}
+
+.auu-edit-btn:hover {
+    background-color: #2563eb;
+}
+
+
+.auu-delete-btn {
+    background-color: #ef4444;
+    color: #fff;
+}
+
+.auu-delete-btn:hover {
+    background-color: #b91c1c;
+}
+
+.auu-save-btn {
+    background-color: #10b981;
+    color: #fff;
+}
+
+.auu-save-btn:hover {
+    background-color: #059669;
+}
+
+
+.auu-cancel-btn {
+    background-color: #6b7280; 
+    color: #fff;
+}
+
+.auu-cancel-btn:hover {
+    background-color: #4b5563;
+}
+
+    /* Small Icon Adjustments (optional) */
+.auu-btn svg {
+    width: 0.9rem;
+    height: 0.9rem;
+}
+
+    /* Responsive adjustments */
+@media (max-width: 768px) {
+    .auu-btn {
+        padding: 0.3rem 0.6rem;
+        font-size: 0.75rem;
+    }
+}

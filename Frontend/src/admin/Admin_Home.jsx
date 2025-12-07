@@ -8,10 +8,9 @@ import Admin_Dashboard from "./Admin_Dashboard";
 import Admin_Add_Data from "./Admin_Add_Data";
 import Admin_Update_Data from "./Admin_Update_Data";
 import Admin_Settings from "./Admin_Settings";
-import Admin_View_Data from "./Admin_Update_Data";
-import Admin_View_User from "./Admin_View_User";
 
 import { useAdmin } from "./Admin_API_Context";
+import Admin_Update_User from "./Admin_Update_User";
 
 export default function Admin_Home() {
   const navigate = useNavigate();
@@ -34,10 +33,10 @@ export default function Admin_Home() {
         return <Admin_Dashboard adminData={data} />;
       case "add":
         return <Admin_Add_Data adminData={data} />;
-      case "update":
-        return <Admin_View_Data adminData={data} />;
-      case "view_users":
-        return <Admin_View_User adminData={data} />;
+      case "update_data":
+        return <Admin_Update_Data adminData={data} />;
+      case "update_user":
+        return <Admin_Update_User adminData={data} />;
       case "settings":
         return <Admin_Settings />;
       default:

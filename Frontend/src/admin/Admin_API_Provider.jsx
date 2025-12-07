@@ -373,31 +373,39 @@ export const AdminProvider = ({ children }) => {
 
   // ---------------------- Helper: get cached entry (fast sync) ----------------------
   const getCached = useCallback((resource) => {
-  return cache[resource] || { data: null, lastFetched: 0, loading: false, error: null };
+    return cache[resource] || { data: null, lastFetched: 0, loading: false, error: null };
   }, [cache]);
 
 
   // ---------------------- Helper: Update Cach list when data is updated ----------------------
   const updateCacheList = useCallback((resource, item, action = "update") => {
-    // action: "update" | "delete" | "add"
-    setCache((prev) => {
-    const prevList = prev[resource]?.data || [];
-    let newList = [...prevList];
+      setCache((prev) => {
+          const prevResource = prev[resource] || { data: [], lastFetched: 0, loading: false, error: null };
+          let prevList = prevResource.data || [];
+          let newList = [...prevList];
 
-    if (action === "update") {
-      newList = newList.map((i) => (i.id === item.id ? { ...i, ...item } : i));
-    } else if (action === "delete") {
-      newList = newList.filter((i) => i.id !== item.id);
-    } else if (action === "add") {
-      newList.push(item);
-    }
+          if (action === "update") {
+              newList = newList.map((i) => (i.id === item.id ? { ...i, ...item } : i));
+          } else if (action === "delete") {
+              newList = newList.filter((i) => i.id !== item.id);
+          } else if (action === "add") {
+              newList.push(item);
+          } else if (action === "set") {
+              newList = Array.isArray(item) ? item : [];
+          }
 
-    return {
-      ...prev,
-      [resource]: { ...prev[resource], data: newList, lastFetched: Date.now() },
-    };
-  });
+          return {
+              ...prev,
+              [resource]: {
+                  ...prevResource,
+                  data: newList,
+                  lastFetched: Date.now(),
+              },
+          };
+      });
   }, []);
+
+
 
 
   // ---------------------- Admin login/logout helpers ----------------------

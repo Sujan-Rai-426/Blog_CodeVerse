@@ -81,4 +81,12 @@ urlpatterns = [
     path('user-profile/', user_view.ClientProfileView.as_view(), name='user-profile'),
     path('user-logout/', user_view.ClientLogoutView.as_view(), name='client-logout'),
     path('user/refresh/', user_view.CookieTokenRefreshView.as_view(), name='user-refresh'),
+    
+    
+    # Admin Client User management 
+    # ---------------- ADMIN USER MANAGEMENT ----------------
+    path('admin/users/', user_view.AdminUserListAPIView.as_view(), name='admin-users'),
+    path('admin/users/create/', user_view.AdminUserCreateAPIView.as_view(), name='admin-user-create'),
+    path('admin/users/<int:pk>/', user_view.AdminUserDetailAPIView.as_view(), name='admin-user-detail'),
+    path('admin/users/<int:pk>/toggle-active/', user_view.AdminUserToggleActiveAPIView.as_view(), name='admin-user-toggle-active'),
 ]

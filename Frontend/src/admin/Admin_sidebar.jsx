@@ -5,9 +5,9 @@ import { FaPlus, FaList, FaEdit, FaHome, FaCog, FaTimes, FaUser } from "react-ic
 export default function Admin_Sidebar({ sidebarOpen, setSidebarOpen, setActivePage, activePage }) {
   const menuItems = [
     { name: "Dashboard", icon: <FaHome />, key: "dashboard" },
-    { name: "Add Data", icon: <FaPlus />, key: "add" },
-    { name: "Update Data", icon: <FaEdit />, key: "update" },
-    { name: "View Users", icon: <FaUser />, key: "view_users" },
+    { name: "Add Data", icon: <FaPlus />, key: "add"  },
+    { name: "Update Data", icon: <FaEdit />, key: "update_data" },
+    { name: "Update Users", icon: <FaUser />, key: "update_user" },
     { name: "Settings", icon: <FaCog />, key: "settings" },
   ];
 

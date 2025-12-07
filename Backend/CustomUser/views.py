@@ -22,6 +22,10 @@ FRONTEND_PROD_DOMAIN = os.getenv("FRONTEND_PROD_DOMAIN")
 BACKEND_PROD_DOMAIN = os.getenv("BACKEND_PROD_DOMAIN")
 
 from .serializers import (
+    AdminUserCreateSerializer,
+    AdminUserDetailSerializer,
+    AdminUserListSerializer,
+    AdminUserUpdateSerializer,
     ClientRegisterSerializer,
     ClientLoginSerializer,
     AdminLoginSerializer,
@@ -313,4 +317,68 @@ class ClientLogoutView(APIView):
         response.delete_cookie(settings.USER_JWT_ACCESS_TOKEN)
         response.delete_cookie(settings.USER_JWT_REFRESH_TOKEN)
         return response
+
+
+
+
+# ===============================================================
+#            Like Admin Pannel ---> User MANAGEMENT  
+# ===============================================================
+from rest_framework import generics, status
+from rest_framework.response import Response
+from rest_framework.permissions import IsAdminUser
+from Backend.authentication import AdminCookieJWTAuthentication
+
+
+User = get_user_model()
+
+class AdminUserListAPIView(generics.ListAPIView):
+    authentication_classes = [AdminCookieJWTAuthentication]
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminUserListSerializer
+    def get_queryset(self):
+        qs = User.objects.all().order_by("-id")
+        search = self.request.query_params.get("search")
+        role = self.request.query_params.get("role")
+        if search:
+            qs = qs.filter(email__icontains=search) | qs.filter(username__icontains=search)
+        if role == "admin":
+            qs = qs.filter(is_admin_user=True)
+        elif role == "client":
+            qs = qs.filter(is_client=True)
+        return qs
+
+
+class AdminUserToggleActiveAPIView(APIView):
+    authentication_classes = [AdminCookieJWTAuthentication]
+    permission_classes = [IsAdminUser]
+    def post(self, request, pk):
+        try:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+        user.is_active = not user.is_active
+        user.save()
+        return Response({
+            "message": "User status updated",
+            "is_active": user.is_active
+        })
+
+
+class AdminUserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
+    authentication_classes = [AdminCookieJWTAuthentication]
+    permission_classes = [IsAdminUser]
+    queryset = User.objects.all()
+    lookup_field = "pk"
+    def get_serializer_class(self):
+        if self.request.method in ["PUT", "PATCH"]:
+            return AdminUserUpdateSerializer
+        return AdminUserDetailSerializer
+
+
+
+class AdminUserCreateAPIView(generics.CreateAPIView):
+    authentication_classes = [AdminCookieJWTAuthentication]
+    permission_classes = [IsAdminUser]
+    serializer_class = AdminUserCreateSerializer
 
