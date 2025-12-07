@@ -145,6 +145,7 @@ const Admin_Update_User = () => {
                     </div>
                 </div>
             ) : (
+            <div className="auu-table-wrapper">
                 <table className="auu-table">
                     <thead>
                         <tr>
@@ -240,6 +241,7 @@ const Admin_Update_User = () => {
                         )}
                     </tbody>
                 </table>
+            </div>
             )}
         </div>
     );

@@ -1,213 +1,802 @@
-/* Google Font */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap');
+/* ================================================= */
+/* 🎨 User Profile Dashboard Styles (Instagram/FB inspired) */
+/* ================================================= */
 
 :root {
-    --primary: #6366f1;
-    --secondary: #4f46e5;
-    --bg-light: #f3f4f6;
-    --card-bg: rgba(255, 255, 255, 0.9);
-    --hover-bg: #eef2ff;
-    --danger: #dc2626;
+    --primary-color: #007bff; /* Blue */
+    --secondary-color: #6c757d; /* Gray */
+    --background-color: #f8f9fa; /* Light Gray Background */
+    --card-background: #ffffff; /* White Card Background */
+    --border-color: #dee2e6;
+    --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 }
-
 .profile-container {
-    width: 100%;
-    max-width: 900px;
-    margin: 2rem auto;
-    padding: 1rem;
-    font-family: "Inter", sans-serif;
-}
-
-/* ---------------- HEADER ---------------- */
-.profile-header {
-    position: relative;
-    background: linear-gradient(145deg, var(--primary), var(--secondary));
-    padding: 2rem 1.5rem;
-    border-radius: 22px;
     color: white;
-    display: flex;
-    align-items: center;
-    gap: 1.3rem;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.35);
-}
-
-.header-settings-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: rgba(255, 255, 255, 0.2);
-    border: none;
-    padding: 8px;
-    border-radius: 50%;
-    cursor: pointer;
-    color: white;
-    transition: 0.25s;
-}
-
-.header-settings-btn:hover {
-    background: rgba(255, 255, 255, 0.33);
-}
-
-.profile-avatar {
-    width: 95px;
-    height: 95px;
-    border-radius: 50%;
-    border: 3px solid white;
-    object-fit: cover;
-}
-
-/* ---------------- TABS ---------------- */
-.tab-grid {
-    margin: 1.4rem 0;
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    background: var(--bg-light);
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-}
-
-.tab-grid button {
-    padding: 1rem;
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    transition: 0.25s;
-    font-size: 0.9rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-}
-
-.tab-grid button:hover {
-    background: #e2e8f0;
-}
-
-.tab-grid .active {
-    background: linear-gradient(145deg, var(--primary), var(--secondary));
-    color: white;
-    font-weight: 600;
-}
-
-/* ---------------- ITEM LIST ---------------- */
-.item-row,
-.cart-row {
-    background: var(--card-bg);
-    padding: 1rem;
-    border-radius: 14px;
-    margin-bottom: 0.8rem;
-    border-left: 5px solid var(--primary);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    transition: 0.25s;
-}
-
-.item-row:hover,
-.cart-row:hover {
-    background: var(--hover-bg);
-    transform: translateY(-2px);
-}
-
-/* Buttons */
-.view-btn {
-    padding: 7px 14px;
-    background: var(--primary);
-    border: none;
-    color: white;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 1.5rem;
+    background-color: transparent;
     border-radius: 8px;
-    cursor: pointer;
+    font-family: sans-serif;
 }
 
-/* ---------- Cart Buttons ---------- */
-.cart-actions {
+/* --- Profile Header (Avatar, Name, Stats) --- */
+
+.profile-header {
     display: flex;
+    align-items: flex-start;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--border-color);
+    gap: 2rem;
+}
+.profile-avatar-wrapper {
+    flex-shrink: 0;
+}
+.profile-avatar {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 4px solid var(--card-background);
+    box-shadow: var(--shadow);
+}
+.profile-info-main {
+    flex-grow: 1;
+}
+.profile-name-actions {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap; /* Important for responsiveness */
     gap: 10px;
 }
+.profile-username {
+    font-size: 2.5rem;
+    font-weight: 300;
+    margin: 0;
+    color: #cdd3d8;
+    flex-shrink: 0;
+}
 
-.buy-btn {
-    background: var(--secondary);
-    padding: 7px 14px;
+/* ====== BUTTON ========= */
+.profile-btn-grp{
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* Action Buttons */
+.profile-edit-btn, .profile-logout-btn {
+    padding: 0.5rem 1rem;
     border: none;
-    border-radius: 10px;
-    color: white;
+    border-radius: 4px;
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.9rem;
 }
-
-.delete-btn-small {
-    background: var(--danger);
-    border: none;
-    padding: 7px 10px;
-    border-radius: 10px;
+.profile-edit-btn {
+    background-color: var(--primary-color);
     color: white;
-    cursor: pointer;
 }
-
-/* SETTINGS BOX */
-.settings-container {
-    background: var(--card-bg);
-    padding: 1.2rem;
-    border-radius: 16px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+.profile-edit-btn:hover {
+    background-color: #0056b3;
 }
-
-.settings-input {
-    width: 100%;
-    padding: 0.7rem;
-    margin-bottom: 1rem;
-    border-radius: 10px;
-    border: 1px solid #d1d5db;
-    background: #f9fafb;
-}
-
-.save-btn {
-    background: var(--primary);
-    padding: 10px 18px;
-    border-radius: 10px;
-    border: none;
+.profile-logout-btn {
+    background-color: #df2f2f;
     color: white;
-    cursor: pointer;
+}
+.profile-logout-btn:hover {
+    background-color: #b53939;
 }
 
-.danger-zone {
-    background: #fee2e2;
+/* --- Stats Bar --- */
+
+.profile-stats {
+    display: flex;
+    gap: 3rem;
+    padding: 0.5rem 0;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+.stat-label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+/* --- Details & Contact Section --- */
+
+.profile-details-wrapper {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.profile-about-section, .profile-contact-section {
     padding: 1rem;
-    border-radius: 14px;
-    margin-top: 1rem;
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    box-shadow: var(--shadow);
 }
 
-.delete-btn {
-    background: var(--danger);
-    border: none;
-    padding: 8px 14px;
-    border-radius: 10px;
-    color: white;
+.profile-about-section {
+    flex: 2; /* Takes more space */
+    min-width: 300px;
+}
+
+.profile-contact-section {
+    flex: 1; /* Takes less space */
+    min-width: 250px;
+}
+
+.profile-full-name {
+    font-size: 1.5rem;
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--primary-color);
+}
+
+.profile-bio {
+    font-style: italic;
+    color: #495057;
+    line-height: 1.5;
+}
+
+.profile-contact-section h3 {
+    margin-top: 0;
+    margin-bottom: 1rem;
+    color: #343a40;
+    border-bottom: 1px dashed var(--border-color);
+    padding-bottom: 0.5rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    color: #495057;
+}
+
+.contact-icon {
+    color: var(--primary-color);
+    margin-right: 0.8rem;
+    font-size: 1rem;
+}
+
+/* --- Content/Post Section --- */
+
+.profile-content-section {
+    margin-top: 2rem;
+}
+
+.profile-content-section h3 {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    color: #212529;
+}
+
+.content-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop/tablet */
+    gap: 15px;
+}
+
+.content-placeholder {
+    aspect-ratio: 1 / 1; /* Makes posts square like Instagram */
+    background-color: #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: var(--secondary-color);
+    border-radius: 4px;
+    transition: transform 0.2s;
     cursor: pointer;
 }
 
-/* ---------------- MOBILE ---------------- */
-@media (max-width: 700px) {
-    .tab-grid {
-        grid-template-columns: repeat(4, 1fr);
+.content-placeholder:hover {
+    transform: scale(1.02);
+    box-shadow: var(--shadow);
+}
+
+
+/* ================================================= */
+/* 📱 Responsive Adjustments */
+/* ================================================= */
+
+/* --- Tablet (max-width: 850px) --- */
+@media (max-width: 850px) {
+    .profile-header {
+        flex-direction: column; /* Stack avatar above info */
+        align-items: center;
+        text-align: center;
+    }
+
+    .profile-info-main {
+        padding-top: 1rem;
+    }
+
+    .profile-name-actions {
+        justify-content: center;
+    }
+    
+    .profile-username {
+        font-size: 2rem;
+    }
+
+    .profile-stats {
+        justify-content: center;
+        gap: 2rem;
+    }
+    
+    .profile-details-wrapper {
+        flex-direction: column; /* Stack details vertically */
+        gap: 1rem;
+    }
+    
+    .profile-about-section, .profile-contact-section {
+        min-width: 100%;
+        flex: auto;
+    }
+
+    .content-grid {
+        grid-template-columns: repeat(2, 1fr); /* 2 columns for tablet */
+    }
+}
+
+/* --- Mobile (max-width: 550px) --- */
+@media (max-width: 550px) {
+    .profile-container {
+        margin: 1rem 0.5rem;
+        padding: 1rem;
+    }
+    
+    .profile-avatar {
+        width: 100px;
+        height: 100px;
+    }
+
+    .profile-username {
+        font-size: 1.5rem;
+    }
+
+    .profile-name-actions {
+        flex-direction: column; /* Stack username and buttons */
+        gap: 0.5rem;
+    }
+
+    .profile-stats {
+        gap: 1rem;
+    }
+
+    .stat-value {
+        font-size: 1rem;
+    }
+    .stat-label {
+        font-size: 0.8rem;
+    }
+
+    .profile-edit-btn, .profile-logout-btn {
+        width: 100%; /* Make buttons full width */
+        justify-content: center;
+        font-size: 0.85rem;
+        padding: 0.4rem;
+    }
+    
+    .content-grid {
+        grid-template-columns: 1fr; /* 1 column for small mobile view */
+        gap: 10px;
+    }
+}
+
+
+/* ================================================= */
+/* 🧭 Profile Tab Navigation (Instagram/YouTube Style) */
+/* ================================================= */
+
+.profile-tab-bar {
+    display: flex;
+    justify-content: center; /* Center the tabs horizontally */
+    align-items: center;
+    border-bottom: 2px solid #e9ecef; /* Subtle separating line, like Instagram */
+    margin-bottom: 1.5rem;
+    margin-top: 2rem; /* Separates it from the details section */
+    padding: 0 1rem;
+}
+
+.profile-tab-button {
+    flex: 1; /* Distribute space evenly among all tabs */
+    max-width: 250px; 
+    
+    /* Style */
+    background: none;
+    border: none;
+    border-bottom: 3px solid transparent; /* Placeholder for active state */
+    padding: 0.75rem 0.5rem;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    outline: none;
+    
+    /* Layout */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    
+    /* Typography */
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--secondary-color); /* Light gray for inactive tabs */
+    white-space: nowrap;
+}
+
+/* Active Tab Styling */
+.profile-tab-button.active {
+    border-bottom-color: var(--primary-color); /* Bright indicator line */
+    color: #212529; /* Darker text/icon color for active tab */
+}
+
+.profile-tab-button:hover:not(.active) {
+    background-color: #f4f4f4; /* Subtle hover effect */
+}
+
+.tab-icon {
+    font-size: 1.1rem;
+}
+
+/* Hide the static content heading */
+.profile-content-section h3 {
+    display: none;
+}
+.tab-content-heading {
+    text-align: center;
+    color: #212529;
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+
+/* ================================================= */
+/* 📱 Responsive Adjustments for Tabs */
+/* ================================================= */
+
+/* --- Mobile (max-width: 600px) --- */
+@media (max-width: 600px) {
+    .profile-tab-bar {
+        margin-top: 1.5rem;
+        padding: 0;
+    }
+
+    .profile-tab-button {
+        padding: 0.75rem 0.2rem;
+        gap: 0; /* Remove gap */
+    }
+
+    .tab-icon {
+        font-size: 1.3rem; /* Increase icon size slightly for visibility */
+    }
+    
+    /* HIDE THE TEXT LABEL ON SMALL MOBILE, keeping it minimal like Instagram */
+    .profile-tab-button .tab-label {
+        display: none;
+    }
+    
+    /* Adjust padding to ensure the icon is centered when the label is hidden */
+    .profile-tab-button {
+        padding: 0.75rem 0; 
+    }
+}
+
+
+
+
+
+
+/* ================================================= */
+/* 🦴 SKELETON LOADER BASE & SHIMMER STYLES */
+/* ================================================= */
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+.skeleton-element {
+    /* Placeholder Color */
+    background-color: #e9ecef;
+    
+    /* Shimmer Effect */
+    background-image: linear-gradient(
+        90deg, 
+        #e9ecef 0px, 
+        #f4f4f4 40px, 
+        #e9ecef 80px
+    );
+    background-size: 400px 100%;
+    background-repeat: no-repeat;
+    animation: loading-shimmer 1.5s infinite linear;
+    border-radius: 4px; /* Uniform rounded corners */
+    display: inline-block;
+}
+
+
+/* ---------------------------------- */
+/* 1. HEADER & STATS SIZING */
+/* ---------------------------------- */
+
+.skeleton-avatar {
+    /* Matches .profile-avatar size and shape */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.skeleton-button {
+    /* Matches .profile-edit-btn / .profile-logout-btn size */
+    width: 120px;
+    height: 38px;
+}
+
+/* Line Sizes for Username/Stats */
+.skeleton-line.large {
+    width: 250px; /* Username */
+    height: 35px;
+    margin-bottom: 15px;
+}
+.skeleton-line.small-value {
+    width: 40px; /* Stat Value */
+    height: 18px;
+    margin: 5px auto; /* Centers in the stat-item column */
+}
+.skeleton-line.smallest {
+    width: 60px; /* Stat Label */
+    height: 12px;
+    margin: 5px auto;
+}
+
+/* ---------------------------------- */
+/* 2. DETAILS & CONTACT SIZING */
+/* ---------------------------------- */
+
+.skeleton-line.medium-title {
+    width: 180px; /* Full Name / Basic Info Header */
+    height: 20px;
+    margin-bottom: 10px;
+}
+.skeleton-line.full {
+    width: 100%; /* Bio line */
+    height: 14px;
+    margin-bottom: 8px;
+}
+.skeleton-line.medium {
+    width: 60%; /* Last Bio line */
+    height: 14px;
+}
+
+.skeleton-icon {
+    /* Matches .contact-icon size */
+    width: 16px;
+    height: 16px;
+    margin-right: 0.8rem;
+    border-radius: 4px;
+}
+.skeleton-line.contact {
+    /* Matches .contact-item text width */
+    width: 180px;
+    height: 14px;
+}
+
+/* ---------------------------------- */
+/* 3. TABS & GRID SIZING */
+/* ---------------------------------- */
+
+/* Tab Bar Skeleton Styling (Mimics .profile-tab-bar structure) */
+.skeleton-tab-bar {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+.skeleton-tab-button {
+    /* Mimics .profile-tab-button layout */
+    flex: 1; 
+    max-width: 250px;
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px; 
+}
+
+/* Tab Icon/Label */
+.skeleton-icon-large {
+    width: 18px; 
+    height: 18px;
+    border-radius: 4px; 
+    margin-right: 0;
+    flex-shrink: 0;
+}
+.skeleton-line-tab-label {
+    width: 70px;
+    height: 14px;
+    margin: 0;
+}
+
+/* Content Grid Posts */
+.skeleton-post-card {
+    /* Matches .content-placeholder size */
+    aspect-ratio: 1 / 1; 
+    border-radius: 4px;
+}
+
+/* Misc Sizing */
+.skeleton-line.centered {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/* ================================================= */
+/* 📱 RESPONSIVE ADJUSTMENTS FOR SKELETON */
+/* ================================================= */
+
+@media (max-width: 850px) {
+    /* Centering elements when the header stacks */
+    .profile-header .profile-avatar-wrapper,
+    .profile-header .profile-info-main {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .profile-name-actions {
+        justify-content: center;
+    }
+    .skeleton-line.large {
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 @media (max-width: 600px) {
-    .tab-text {
+    /* HIDE THE TEXT LABEL ON SMALL MOBILE SKELETON */
+    .skeleton-tab-button {
+        padding: 0.75rem 0;
+        gap: 0; 
+    }
+    .skeleton-tab-button .skeleton-line-tab-label {
         display: none;
-    }
-    .tab-icon {
-        font-size: 22px;
-    }
-    .tab-grid {
-        grid-template-columns: repeat(4, 1fr);
     }
 }
 
-@media (max-width: 550px) {
-    .profile-header {
+
+
+
+
+
+/* ==================== skeleton Loader================ */
+/* ================================================= */
+/* 🦴 Skeleton Loader Styles */
+/* ================================================= */
+
+/* --- Shimmer Animation --- */
+
+@keyframes loading-shimmer {
+    0% {
+        background-position: -400px 0;
+    }
+    100% {
+        background-position: 400px 0;
+    }
+}
+
+.skeleton-element {
+    background-color: #e9ecef; /* Placeholder color */
+    background-image: linear-gradient(
+        90deg, 
+        #e9ecef 0px, 
+        #f4f4f4 40px, 
+        #e9ecef 80px
+    );
+    background-size: 400px 100%;
+    background-repeat: no-repeat;
+    animation: loading-shimmer 1.5s infinite linear;
+    border-radius: 4px; /* Soft edges for all placeholders */
+    display: inline-block;
+}
+
+/* ---------------------------------- */
+/* 1. Header/Main Info Sizing */
+/* ---------------------------------- */
+
+.skeleton-avatar {
+    /* Matches .profile-avatar size and shape */
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+.skeleton-button {
+    /* Matches .profile-edit-btn size */
+    width: 120px;
+    height: 38px;
+}
+
+.skeleton-line {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+/* Line Sizes */
+.skeleton-line.large {
+    width: 250px; /* Username */
+    height: 35px;
+    margin-bottom: 15px;
+}
+.skeleton-line.small-value {
+    width: 40px; /* Stat Value */
+    height: 18px;
+    margin-bottom: 5px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.skeleton-line.smallest {
+    width: 60px; /* Stat Label */
+    height: 12px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+/* ---------------------------------- */
+/* 2. Details Section Sizing */
+/* ---------------------------------- */
+
+.skeleton-line.medium-title {
+    width: 180px; /* Full Name / Basic Info Header */
+    height: 20px;
+    margin-bottom: 10px;
+    margin-top: 0;
+}
+.skeleton-line.full {
+    width: 100%; /* Bio line */
+    height: 14px;
+    margin-bottom: 8px;
+}
+.skeleton-line.medium {
+    width: 60%; /* Last Bio line */
+    height: 14px;
+}
+
+.skeleton-icon {
+    /* Matches .contact-icon size */
+    width: 16px;
+    height: 16px;
+    margin-right: 0.8rem;
+    border-radius: 4px;
+}
+.skeleton-line.contact {
+    /* Matches .contact-item text */
+    width: 180px;
+    height: 14px;
+}
+/* Ensure contact items align properly */
+.profile-contact-section .contact-item {
+    align-items: center;
+}
+
+/* ---------------------------------- */
+/* 3. Content Section Sizing (Tabs & Grid) */
+/* ---------------------------------- */
+
+/* Tab Bar Skeleton */
+.skeleton-tab-bar {
+    display: flex;
+    justify-content: center;
+    border-bottom: 2px solid #e9ecef;
+    margin-bottom: 1.5rem;
+    margin-top: 2rem;
+    padding: 0 1rem;
+    width: 100%;
+}
+
+.skeleton-tab-button {
+    flex: 1; 
+    max-width: 250px;
+    padding: 0.75rem 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    height: 40px; 
+}
+
+/* Tab Icon/Label */
+.skeleton-icon-large {
+    width: 18px; 
+    height: 18px;
+    border-radius: 4px; 
+    margin-right: 0;
+    flex-shrink: 0;
+}
+.skeleton-line-tab-label {
+    width: 70px;
+    height: 14px;
+    margin: 0;
+}
+
+/* Content Grid Posts */
+.skeleton-post-card {
+    /* Matches .content-placeholder size */
+    aspect-ratio: 1 / 1; 
+    border-radius: 4px;
+}
+
+/* Misc Sizing */
+.skeleton-line.centered {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center; /* helps align text that is usually centered, even though it's a block element */
+}
+
+
+/* ================================================= */
+/* 📱 Responsive Adjustments for SKELETON */
+/* ================================================= */
+
+@media (max-width: 850px) {
+    /* Aligning the skeleton header elements to center on tablet view */
+    .profile-header .profile-avatar-wrapper,
+    .profile-header .profile-info-main {
+        width: 100%;
+        display: flex;
         flex-direction: column;
-        text-align: center;
+        align-items: center;
+    }
+    
+    .profile-name-actions {
+        justify-content: center;
+    }
+    .skeleton-line.large {
+        margin-left: auto;
+        margin-right: auto;
+    }
+    /* Buttons are already centered via the flex container .profile-name-actions */
+}
+
+@media (max-width: 600px) {
+    .skeleton-tab-button {
+        padding: 0.75rem 0;
+        gap: 0; 
+    }
+    
+    /* HIDE THE TEXT LABEL ON SMALL MOBILE SKELETON */
+    .skeleton-tab-button .skeleton-line-tab-label {
+        display: none;
     }
 }

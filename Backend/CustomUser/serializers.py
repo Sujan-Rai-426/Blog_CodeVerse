@@ -61,10 +61,11 @@ class UserProfileSerializer(serializers.ModelSerializer):
     full_name = serializers.CharField(source="profile.full_name", read_only=True)
     phone = serializers.CharField(source="profile.phone", read_only=True)
     address = serializers.CharField(source="profile.address", read_only=True)
+    created_at = serializers.DateTimeField(source="profile.created_at", read_only=True)
 
     class Meta:
         model = User
-        fields = ["email", "username", "full_name", "phone", "address"]
+        fields = ["email", "username", "full_name", "phone", "address", "created_at"]
 
 # ---------------- ADMIN LOGIN ----------------
 class AdminLoginSerializer(serializers.Serializer):

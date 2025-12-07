@@ -51,32 +51,47 @@ def get_csrf_token(request):
 # Reads refresh token directly from HttpOnly cookies (no JSON payload required)
 # Works for both Admin and Client users
 # ============================================================
+
+@method_decorator(csrf_exempt, name='dispatch')
 class CookieTokenRefreshView(APIView):
-    """
-    Endpoint to refresh access tokens using HttpOnly refresh cookies.
-    
-    Cookies expected:
-    - Client: USER_JWT_REFRESH_TOKEN
-    - Admin: ADMIN_JWT_REFRESH_TOKEN
-    
-    Returns:
-        - new access token in JSON
-    """
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
-        # Determine if this is admin or client refresh
-        is_admin = kwargs.get("is_admin", False)  # pass True for admin URLs
+        is_admin = kwargs.get("is_admin", False)
         refresh_cookie_name = (
             settings.ADMIN_JWT_REFRESH_TOKEN if is_admin else settings.USER_JWT_REFRESH_TOKEN
+        )
+        access_cookie_name = (
+            settings.ADMIN_JWT_ACCESS_TOKEN if is_admin else settings.USER_JWT_ACCESS_TOKEN
         )
         refresh_token = request.COOKIES.get(refresh_cookie_name)
         if not refresh_token:
             return Response({"error": "No refresh token found in cookies"}, status=400)
         try:
-            # Validate the refresh token
             refresh = RefreshToken(refresh_token)
-            access_token = str(refresh.access_token)
-            return Response({"access": access_token}, status=200)
+            new_access = str(refresh.access_token)
+            response = Response({"access": new_access}, status=200)
+
+            # PROPER COOKIE SETTINGS
+            if settings.DEBUG:
+                cookie_samesite = "Lax"
+                cookie_secure = False
+                cookie_domain = None
+            else:
+                cookie_samesite = "None"
+                cookie_secure = True
+                cookie_domain = settings.BACKEND_PROD_DOMAIN
+
+            # IMPORTANT: SET NEW ACCESS COOKIE HERE
+            response.set_cookie(
+                key=access_cookie_name,
+                value=new_access,
+                httponly=True,
+                samesite=cookie_samesite,
+                secure=cookie_secure,
+                domain=cookie_domain,
+                max_age=5 * 60,
+            )
+            return response
         except Exception:
             return Response({"error": "Invalid or expired refresh token"}, status=400)
 

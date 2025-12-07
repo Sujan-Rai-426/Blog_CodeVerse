@@ -70,6 +70,11 @@
     display: flex;
     gap: 0.5rem;
 }
+.auu-table-wrapper {
+    width: 100%;
+    overflow-x: auto; /* horizontal scroll for wide tables */
+}
+
 
 .auu-action-buttons button {
     padding: 0.35rem 0.6rem;
@@ -228,4 +233,33 @@
         padding: 0.3rem 0.6rem;
         font-size: 0.75rem;
     }
+}
+
+/* --- Global Updates --- */
+
+.auu-container {
+    padding: 1rem; /* Reduce padding on container */
+}
+
+/* --- Search & Filter Bar Responsiveness --- */
+
+.auu-search-wrapper {
+    /* Allow wrapper to take full width on smaller screens */
+    max-width: 100%; 
+    flex-wrap: wrap; /* Allow search input and filter to wrap */
+    padding: 0.5rem; /* Add more padding for better touch targets */
+}
+
+.auu-search-input {
+    flex: 1 1 60%; /* Allow input to take up space, but allow wrapping */
+    min-width: 180px;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
+}
+
+.auu-filter-select {
+    margin-top: 0; /* Align with input on wider screens */
+    margin-left: 0.5rem;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.9rem;
 }

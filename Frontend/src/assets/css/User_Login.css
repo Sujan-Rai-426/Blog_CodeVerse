@@ -1,77 +1,78 @@
-/* Background with dark pattern */
-.login-container {
-    min-height: 90vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-size: cover;
-    background-repeat: repeat;
-    font-family: "Poppins", sans-serif;
+.auth-container {
+width: 100%;
+max-width: 400px;
+margin: 5% auto;
+padding: 40px 30px;
+background-color: #ffffff;
+border-radius: 12px;
+box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+text-align: center;
+font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Glass card */
-.login-card {
-    background:
-        linear-gradient(135deg, rgba(21, 28, 45, 0.95), rgba(0, 0, 0, 0.95)),
-        url("https://www.toptal.com/designers/subtlepatterns/uploads/darkness.png");
-    padding: 40px 35px;
-    border-radius: 18px;
-    backdrop-filter: blur(10px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.45);
-    width: 360px;
-    text-align: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+.auth-container h2 {
+margin-bottom: 30px;
+color: #333333;
+font-size: 28px;
+font-weight: 600;
 }
 
-.login-card h2 {
-    margin-bottom: 10px;
-    color: #fff;
-    font-size: 24px;
+.auth-container form {
+display: flex;
+flex-direction: column;
+gap: 20px;
 }
 
-.subtitle {
-    color: #aaa;
-    font-size: 14px;
-    margin-bottom: 25px;
+.auth-container input {
+padding: 12px 15px;
+border-radius: 8px;
+border: 1px solid #ccc;
+font-size: 16px;
+transition: all 0.3s ease;
 }
 
-/* Social buttons */
-.social-login {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+.auth-container input:focus {
+border-color: #007BFF;
+box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+outline: none;
 }
 
-.social-btn {
-    padding: 12px;
-    border: none;
-    border-radius: 10px;
-    font-size: 15px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: 0.25s ease;
-    color: #fff;
+.auth-container button {
+padding: 12px 15px;
+border-radius: 8px;
+border: none;
+background-color: #007BFF;
+color: #ffffff;
+font-size: 16px;
+cursor: pointer;
+font-weight: 500;
+transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.social-btn:hover {
-    transform: scale(1.04);
-    opacity: 0.85;
+.auth-container button:hover {
+background-color: #0056b3;
+transform: translateY(-2px);
 }
 
-.icon {
-    font-size: 20px;
-    vertical-align: middle;
+.auth-container p {
+margin-top: 15px;
+font-size: 14px;
+color: #555555;
 }
 
-/* Provider colors */
-.google {
-    background: #db4437;
+.auth-container p a {
+color: #007BFF;
+text-decoration: none;
+font-weight: 500;
+transition: color 0.3s ease;
 }
 
-.facebook {
-    background: #4267b2;
+.auth-container p a:hover {
+color: #0056b3;
 }
 
-.github {
-    background: #24292f;
+.auth-container .error-message {
+color: red;
+margin-top: 10px;
+font-size: 14px;
 }
