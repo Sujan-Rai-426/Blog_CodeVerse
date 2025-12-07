@@ -1055,7 +1055,28 @@ const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }
   return (
     <div className="avd-dashboard">
       {loading ? (
-        <p>Loading admin data...</p>
+        <div className="avd-skeleton-wrapper">
+
+          {/* ----------- SKELETON TABS ----------- */}
+          <div className="avd-skeleton-tabs">
+            {Array.from({ length: 6 }).map((_, i) => (
+              <div key={i} className="avd-skeleton avd-skeleton-tab"></div>
+            ))}
+          </div>
+
+          {/* ----------- SKELETON CARDS ----------- */}
+          <div className="avd-skeleton-cards">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="avd-skeleton-card">
+                <div className="avd-skeleton avd-skeleton-line short"></div>
+                <div className="avd-skeleton avd-skeleton-line"></div>
+                <div className="avd-skeleton avd-skeleton-line"></div>
+                <div className="avd-skeleton avd-skeleton-line"></div>
+              </div>
+            ))}
+          </div>
+
+        </div>
       ) : (
         <>
           <div className="avd-tabs">
@@ -1076,6 +1097,7 @@ const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }
               </button>
             ))}
           </div>
+
           <div className="avd-tab-content">
             {activeTab === "category" && categories.length && renderCategoryTab()}
             {activeTab === "section" && sections.length && renderSectionTab()}
