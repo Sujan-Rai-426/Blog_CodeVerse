@@ -159,7 +159,13 @@ export const AdminProvider = ({ children }) => {
       }
 
       // else fetch from network and return fresh
-      const data = await _fetchResourceNetwork(resource, { params, background: false });
+      let data;
+        try {
+            data = await _fetchResourceNetwork(resource, { params, background: false });
+        } catch (err) {
+            console.error(`Failed to fetch resource ${resource}:`, err);
+            data = null; // fallback
+        }
       return data;
     },
     // FIX: Dependency array no longer includes 'cache', 
