@@ -52,7 +52,7 @@ def get_csrf_token(request):
 # Works for both Admin and Client users
 # ============================================================
 
-@method_decorator(csrf_exempt, name='dispatch')
+# @method_decorator(csrf_exempt, name='dispatch')
 class CookieTokenRefreshView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
