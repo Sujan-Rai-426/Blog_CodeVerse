@@ -6,22 +6,21 @@ const apiURL = isProduction
   ? import.meta.env.VITE_API_URL_PRODUCTION
   : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
-// Paths
+// Paths (can override via env)
 const CSRF_PATH = import.meta.env.VITE_CSRF_PATH || "/api/csrf/";
-const ADMIN_REFRESH_PATH =
-  import.meta.env.VITE_ADMIN_REFRESH_PATH || "/api/admin/refresh/";
+const ADMIN_REFRESH_PATH = import.meta.env.VITE_ADMIN_REFRESH_PATH || "/api/admin/refresh/";
 
 // ------------------- Axios Instance -------------------
 const apiAdmin = axios.create({
   baseURL: apiURL,
-  withCredentials: true,
+  withCredentials: true, // allow cookies
   headers: { "Content-Type": "application/json" },
 });
 
 // ------------------- Fetch CSRF Token Once -------------------
 export async function fetchAdminCsrfToken() {
   try {
-    await apiAdmin.get(CSRF_PATH);
+    await apiAdmin.get(CSRF_PATH); // sets csrftoken cookie
     const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
     return token;
   } catch (err) {
@@ -35,6 +34,7 @@ apiAdmin.interceptors.request.use(
   (config) => {
     const method = (config.method || "").toLowerCase();
 
+    // attach CSRF only to unsafe requests
     if (["post", "put", "patch", "delete"].includes(method)) {
       const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
       if (token) config.headers["X-CSRFToken"] = token;
@@ -52,6 +52,7 @@ apiAdmin.interceptors.response.use(
     const originalRequest = error.config;
     if (!originalRequest) return Promise.reject(error);
 
+    // don't retry CSRF or refresh endpoints
     if (
       originalRequest.url?.endsWith(CSRF_PATH) ||
       originalRequest.url?.endsWith(ADMIN_REFRESH_PATH)
@@ -61,8 +62,8 @@ apiAdmin.interceptors.response.use(
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
-
       try {
+        // call refresh endpoint (reads HttpOnly cookie)
         const r = await axios.post(
           `${apiURL}${ADMIN_REFRESH_PATH}`,
           {},
@@ -72,7 +73,6 @@ apiAdmin.interceptors.response.use(
         if (newAccess) {
           originalRequest.headers = originalRequest.headers || {};
           originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
-
           return axios(originalRequest);
         }
       } catch (refreshErr) {
@@ -84,4 +84,5 @@ apiAdmin.interceptors.response.use(
   }
 );
 
+// ✅ Default export for compatibility with Admin_Login.jsx and Admin_Update_Data.jsx
 export default apiAdmin;
