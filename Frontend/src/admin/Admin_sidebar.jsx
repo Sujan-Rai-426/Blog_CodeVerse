@@ -6,7 +6,6 @@ export default function Admin_Sidebar({ sidebarOpen, setSidebarOpen, setActivePa
   const menuItems = [
     { name: "Dashboard", icon: <FaHome />, key: "dashboard" },
     { name: "Add Data", icon: <FaPlus />, key: "add" },
-    { name: "View Data", icon: <FaList />, key: "view" },
     { name: "Update Data", icon: <FaEdit />, key: "update" },
     { name: "View Users", icon: <FaUser />, key: "view_users" },
     { name: "Settings", icon: <FaCog />, key: "settings" },
