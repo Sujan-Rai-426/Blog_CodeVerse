@@ -22,8 +22,8 @@ const Admin_Update_User = () => {
         try {
             // Use cache if available
             // When fetching from cache
-            if (cache.users && Array.isArray(cache.users)) {
-                setUsers(cache.users);
+            if (cache.users && Array.isArray(cache.users.data)) {
+                setUsers(cache.users.data);
             } else {
                 const res = await apiAdmin.get("/api/admin/users/");
                 const data = Array.isArray(res.data) ? res.data : res.data.results || [];
@@ -110,7 +110,6 @@ const Admin_Update_User = () => {
 
     return (
         <div className="auu-container">
-            <h2 className="auu-title">Users List</h2>
 
             {/* ================= Search & Filter Bar ================= */}
             <div className="auu-search-wrapper"> <FaSearch className="auu-search-icon" /> 
@@ -213,23 +212,23 @@ const Admin_Update_User = () => {
                                     </td>
                                     <td>
                                         {editingId === user.id ? (
-                                            <>
+                                            <div className="auu-btn-grp">
                                                 <button className="avd-save-btn auu-btn" onClick={() => handleUpdate(user.id)}>
                                                     {savingId === user.id ? "Saving..." : "Save"}
                                                 </button>
                                                 <button className="avd-cancel-btn auu-btn" onClick={handleCancel}>
                                                     Cancel
                                                 </button>
-                                            </>
+                                            </div>
                                         ) : (
-                                            <>
+                                            <div className="auu-btn-grp">
                                                 <button className="auu-edit-btn auu-btn" onClick={() => handleEdit(user)}>
-                                                    <FaEdit /> Edit
+                                                    <FaEdit /> <span> Edit </span>
                                                 </button>
                                                 <button className="auu-delete-btn auu-btn" onClick={() => handleDelete(user.id)}>
-                                                    <FaTrash /> Delete
+                                                    <FaTrash /> <span> Delete </span>
                                                 </button>
-                                            </>
+                                            </div>
                                         )}
                                     </td>
                                 </tr>

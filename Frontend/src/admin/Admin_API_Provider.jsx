@@ -384,32 +384,32 @@ export const AdminProvider = ({ children }) => {
 
 
   // ---------------------- Helper: Update Cach list when data is updated ----------------------
-  const updateCacheList = useCallback((resource, item, action = "update") => {
-      setCache((prev) => {
-          const prevResource = prev[resource] || { data: [], lastFetched: 0, loading: false, error: null };
-          let prevList = prevResource.data || [];
-          let newList = [...prevList];
+    const updateCacheList = useCallback((resource, item, action = "update") => {
+        setCache((prev) => {
+                const prevResource = prev[resource] || { data: [], lastFetched: 0, loading: false, error: null };
+                let prevList = prevResource.data || [];
+                let newList = [...prevList];
 
-          if (action === "update") {
-              newList = newList.map((i) => (i.id === item.id ? { ...i, ...item } : i));
-          } else if (action === "delete") {
-              newList = newList.filter((i) => i.id !== item.id);
-          } else if (action === "add") {
-              newList.push(item);
-          } else if (action === "set") {
-              newList = Array.isArray(item) ? item : [];
-          }
+                if (action === "update") {
+                    newList = newList.map((i) => (i.id === item.id ? { ...i, ...item } : i));
+                } else if (action === "delete") {
+                    newList = newList.filter((i) => i.id !== item.id);
+                } else if (action === "add") {
+                    newList.push(item);
+                } else if (action === "set") {
+                    newList = Array.isArray(item) ? item : [];
+                }
 
-          return {
-              ...prev,
-              [resource]: {
-                  ...prevResource,
-                  data: newList,
-                  lastFetched: Date.now(),
-              },
-          };
-      });
-  }, []);
+                return {
+                    ...prev,
+                    [resource]: {
+                        ...prevResource,
+                        data: newList,
+                        lastFetched: Date.now(),
+                    },
+                };
+        });
+    }, []);
 
 
 

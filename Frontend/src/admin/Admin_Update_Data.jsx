@@ -17,7 +17,7 @@ const Admin_Update_Data = () => {
   const [activeTab, setActiveTab] = useState("category");
 
   // =================== AdminProvider Data ===================
-  const { cache, fetchResource, fetchNested, updateCacheList } = useAdmin();
+  const { cache, fetchResource, updateResource, updateCacheList } = useAdmin();
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -87,7 +87,8 @@ const Admin_Update_Data = () => {
   }, []);
 
   // =================== Helpers ===================
-const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }));
+  const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }));
+
 
     const handleEdit = (item, fields) => {
         setEditingId(item.id);
@@ -117,46 +118,55 @@ const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }
 
 // =================== Handle Update ===================
   const handleUpdate = async (endpoint, id, setStateFn) => {
-    try {
-      setSavingId(id);
-      const payload = { ...formData };
+      try {
+          setSavingId(id);
+            // Prepare payload: only include fields with values
+          const payload = { ...formData };
+          Object.keys(payload).forEach((key) => {
+              if (payload[key] === "" || payload[key] == null) delete payload[key];
+          });
 
-      // Normalize empty fields to null
-      Object.keys(payload).forEach((key) => {
-        if (payload[key] === "") payload[key] = null;
-      });
+          // Convert number fields
+          ["language", "price"].forEach((field) => {
+              if (payload[field] != null) payload[field] = Number(payload[field]);
+          });
 
-      // Convert numeric fields
-      ["language", "price"].forEach((field) => {
-        if (payload[field] != null) payload[field] = Number(payload[field]);
-      });
+          // Normalize access_type
+          if (payload.access_type) {
+              const type = payload.access_type.toLowerCase();
+              if (type === "free") payload.access_type = "Free";
+              else if (type === "premium") payload.access_type = "Premium";
+              else {
+                  alert("Access type must be Free or Premium");
+                  setSavingId(null);
+                  return;
+              }
+          }
 
-      // Validate access_type
-      if (payload.access_type) {
-        const type = payload.access_type.toLowerCase();
-        if (type === "free") payload.access_type = "Free";
-        else if (type === "premium") payload.access_type = "Premium";
-        else {
-          alert("Access type must be Free or Premium");
+          // Use AdminProvider's updateResource to PATCH + update cache
+          await updateResource(endpoint, id, payload, {
+            onSuccess: (updated) => {
+              // Sync local state with updated item
+              setStateFn((prev) =>
+                prev.map((item) => (item.id === updated.id ? updated : item))
+              );
+              handleCancel();
+              alert("✅ Updated successfully!");
+            },
+            onError: (err) => {
+              console.error("Update failed:", err);
+              alert("❗❗❗ Update failed! Check console.");
+            },
+          });
+      } catch (err) {
+          console.error(err);
+          alert("❗❗❗ Unexpected error during update.");
+      } finally {
           setSavingId(null);
-          return;
-        }
       }
-
-      // PATCH request using apiAdmin (handles token)
-      const res = await apiAdmin.patch(`/api/${endpoint}/${id}/`, payload);
-
-      setStateFn((prev) => prev.map((i) => (i.id === id ? res.data : i)));
-      updateCacheList(endpoint, res.data, "update");
-      handleCancel();
-      alert("Updated successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Update failed! Check console.");
-    } finally {
-      setSavingId(null);
-    }
   };
+
+
 
 // =================== Handle Delete ===================
   const handleDelete = async (endpoint, id, setStateFn) => {

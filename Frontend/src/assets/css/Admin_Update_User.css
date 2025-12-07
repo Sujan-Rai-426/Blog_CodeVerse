@@ -229,10 +229,9 @@
 
     /* Responsive adjustments */
 @media (max-width: 768px) {
-    .auu-btn {
-        padding: 0.3rem 0.6rem;
-        font-size: 0.75rem;
-    }
+    .auu-btn-grp { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+    .auu-btn { padding: 0.3rem 0.6rem; font-size: 0.75rem; }
+    .auu-btn span { display: none; }
 }
 
 /* --- Global Updates --- */
