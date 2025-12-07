@@ -51,8 +51,6 @@ def get_csrf_token(request):
 # Reads refresh token directly from HttpOnly cookies (no JSON payload required)
 # Works for both Admin and Client users
 # ============================================================
-
-# @method_decorator(csrf_exempt, name='dispatch')
 class CookieTokenRefreshView(APIView):
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
