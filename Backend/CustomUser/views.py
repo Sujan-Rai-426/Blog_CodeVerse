@@ -163,7 +163,6 @@ class AdminLoginAPIView(APIView):
 #                   ADMIN PROFILE
 # ============================================================
 
-@method_decorator(csrf_exempt, name='dispatch')
 class AdminProfileView(APIView):
     authentication_classes = [AdminCookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -246,7 +245,6 @@ class ClientRegisterView(generics.CreateAPIView):
 #                   CLIENT LOGIN
 # ============================================================
 
-@method_decorator(csrf_exempt, name='dispatch')
 class ClientLoginView(APIView):
     def post(self, request):
         serializer = ClientLoginSerializer(data=request.data)
@@ -302,7 +300,6 @@ class ClientLoginView(APIView):
 #                     CLIENT PROFILE
 # ============================================================
 
-@method_decorator(csrf_exempt, name='dispatch')
 class ClientProfileView(APIView):
     authentication_classes = [ClientCookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
