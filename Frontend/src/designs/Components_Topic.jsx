@@ -1,4 +1,3 @@
-// src/components/Components_Topic.jsx
 import React, { useState, useEffect, useContext, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
@@ -10,21 +9,24 @@ const Components_Topic = () => {
     const { languageID } = useParams();
     const { languages, loading: parentLoading } = useContext(Parent_API_Provider_Context);
     const [frontendLangs, setFrontendLangs] = useState([]);
-    const [activeLangID, setActiveLangID] = useState(languageID);
+    
+    // Initialize activeLangID from localStorage or languageID
+    const [activeLangID, setActiveLangID] = useState(() => {
+        return localStorage.getItem("lastSelectedLang") || languageID;
+    });
+
     const scrollRef = useRef(null);
 
-    // Set frontend languages (section 1)
+    // Update frontend languages
     useEffect(() => {
         if (!parentLoading && languages) {
-            const frontend = languages.filter(l => l.section === 1);
-            setFrontendLangs(frontend);
+            setFrontendLangs(languages.filter(l => l.section === 1));
         }
     }, [parentLoading, languages]);
 
-    // Scroll selected language card to center on initial render
+    // Scroll selected card to center on first render
     useEffect(() => {
         if (!frontendLangs.length) return;
-
         const container = scrollRef.current;
         if (!container) return;
 
@@ -32,41 +34,27 @@ const Components_Topic = () => {
         if (selectedCard) {
             const containerRect = container.getBoundingClientRect();
             const cardRect = selectedCard.getBoundingClientRect();
-
             const cardLeftWithinContainer = cardRect.left - containerRect.left + container.scrollLeft;
             const targetScrollLeft = Math.round(
                 cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
             );
-
-            const maxScroll = container.scrollWidth - container.clientWidth;
-            const finalScroll = Math.max(0, Math.min(targetScrollLeft, maxScroll));
-
-            container.scrollTo({ left: finalScroll, behavior: "smooth" });
+            container.scrollTo({ left: Math.max(0, Math.min(targetScrollLeft, container.scrollWidth - container.clientWidth)), behavior: "smooth" });
         }
-    }, [frontendLangs, languageID]);
+    }, [frontendLangs]);
 
-    // Intersection Observer to highlight active language
+    // Intersection Observer (optional, can still update activeLangID)
     useEffect(() => {
         if (!frontendLangs.length) return;
-
-        const observerOptions = {
-            root: null,
-            rootMargin: "-150px 0px -50% 0px",
-            threshold: 0,
-        };
-
-        const observerCallback = entries => {
+        const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
                     setActiveLangID(entry.target.dataset.langId);
+                    localStorage.setItem("lastSelectedLang", entry.target.dataset.langId);
                 }
             });
-        };
-
-        const observer = new IntersectionObserver(observerCallback, observerOptions);
+        }, { root: null, rootMargin: "-150px 0px -50% 0px", threshold: 0 });
         const sections = document.querySelectorAll(".language-section");
         sections.forEach(el => observer.observe(el));
-
         return () => observer.disconnect();
     }, [frontendLangs]);
 
@@ -86,13 +74,16 @@ const Components_Topic = () => {
                                 </div>
                             ))
                             : frontendLangs.map(lang => {
-                                const isSelected = String(lang.id) === String(languageID);
                                 const isActive = String(lang.id) === String(activeLangID);
                                 return (
                                     <Link
                                         key={lang.id}
                                         to={`/Component-Topics/${lang.id}`}
-                                        className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
+                                        className={`fs-card ${isActive ? "selected-card active-hover" : ""}`}
+                                        onClick={() => {
+                                            setActiveLangID(lang.id);
+                                            localStorage.setItem("lastSelectedLang", lang.id);
+                                        }}
                                     >
                                         {lang.icon_class && <i className={`${lang.icon_class} fs-card-icon`}></i>}
                                         <span className="fs-card-text">{lang.name}</span>
@@ -103,7 +94,7 @@ const Components_Topic = () => {
                 </div>
             </div>
 
-            {/* Topics of selected language */}
+            {/* Render topics of active language */}
             {parentLoading ? (
                 <div className="topic-grid">
                     {[...Array(6)].map((_, i) => (
@@ -117,7 +108,7 @@ const Components_Topic = () => {
                 </div>
             ) : (
                 frontendLangs
-                    .filter(lang => String(lang.id) === String(languageID))
+                    .filter(lang => String(lang.id) === String(activeLangID))
                     .map(lang => (
                         <div key={lang.id} className="language-section" data-lang-id={lang.id}>
                             <h2 className="language-title">{lang.name}</h2>

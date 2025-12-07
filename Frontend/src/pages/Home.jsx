@@ -33,7 +33,7 @@ function Home() {
 
     return (
         <div className="home-container">
-            {showLoadingMessage && parentLoading && (
+            {showLoadingMessage && parentLoading && languages.length === 0 &&  (
                 <div className="loading-overlay">
                     <div className="loading-message">
                         <h2>Good things take time</h2>
@@ -134,7 +134,7 @@ function Home() {
                 </p>
 
                 <div className="grid-container">
-                    {parentLoading
+                    {parentLoading && !languages.length 
                         ? Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} />
@@ -158,7 +158,7 @@ function Home() {
                 </p>
 
                 <div className="grid-container">
-                    {parentLoading
+                    {parentLoading && !languages.length 
                         ? Array.from({ length: 5 }).map((_, idx) => (
                             <div key={idx} className="grid-card">
                                 <Skeleton height={40} width={40} style={{ marginBottom: 8, borderRadius: "10px" }} />

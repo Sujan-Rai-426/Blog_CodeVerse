@@ -16,6 +16,7 @@ export const Parent_Api_Provider = ({ children }) => {
     const [baseData, setBaseData] = useState(null);
     const [loadingBase, setLoadingBase] = useState(true);
     const [errorBase, setErrorBase] = useState(null);
+    const [refreshingBase, setRefreshingBase] = useState(false);
 
   // --------------------------------------------------------------------
   // CACHE CONFIG
@@ -53,20 +54,17 @@ export const Parent_Api_Provider = ({ children }) => {
             setLoadingBase(true);
         }
         setErrorBase(null); // Clear errors before fetching
-
         try {
             const [categoriesRes, sectionsRes, languagesRes] = await Promise.all([
                 api.get("/api/categories/"), // <-- uses your dynamic api instance
                 api.get("/api/sections/"),
                 api.get("/api/languages/"),
             ]);
-
             const combined = {
                 categories: categoriesRes.data,
                 sections: sectionsRes.data,
                 languages: languagesRes.data,
             };
-
         // This update will trigger a re-render with the freshest data from the backend
             setBaseData(combined);
             saveToCache(combined);
@@ -80,7 +78,7 @@ export const Parent_Api_Provider = ({ children }) => {
         // Always finish loading state
             setLoadingBase(false);
         }
-    }, [saveToCache, baseData]); // Depend on baseData to check if we already have data
+    }, [baseData, saveToCache]); // Depend on baseData to check if we already have data
 
 
   // --------------------------------------------------------------------
@@ -89,20 +87,18 @@ export const Parent_Api_Provider = ({ children }) => {
     useEffect(() => {
         const cachedData = loadFromCache();
         if (cachedData) {
-        // 1. Show cached data instantly (set state, stop loading for UI)
+            // show cached immediately
             setBaseData(cachedData);
             setLoadingBase(false);
 
-        // 2. Always run a background fetch to check for new backend data
-        // This immediately updates the UI when the newer data arrives.
-            console.log("Using cached data, fetching new data in background...");
-            fetchBaseData();
+            // background refresh
+            setRefreshingBase(true);
+            fetchBaseData().finally(() => setRefreshingBase(false));
         } else {
-        // 3. No cache found, fetch normally and show loading indicator
-            console.log("No cache found, fetching base data normally...");
+            // no cache
             fetchBaseData();
         }
-    }, []); // Empty dependency array ensures this runs once on mount
+    }, []);
 
 
   // --------------------------------------------------------------------
