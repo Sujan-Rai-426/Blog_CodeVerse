@@ -7,8 +7,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import status
 
 from django.core.cache import cache
-from django.utils.decorators import method_decorator
-from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from django.conf import settings
 
