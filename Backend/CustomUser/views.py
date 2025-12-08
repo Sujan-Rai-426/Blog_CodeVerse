@@ -77,7 +77,7 @@ class CookieTokenRefreshView(APIView):
             else:
                 cookie_samesite = "None"
                 cookie_secure = True
-                cookie_domain = settings.BACKEND_PROD_DOMAIN
+                cookie_domain = f".{BACKEND_PROD_DOMAIN}"
 
             # IMPORTANT: SET NEW ACCESS COOKIE HERE
             response.set_cookie(
@@ -130,7 +130,7 @@ class AdminLoginAPIView(APIView):
         else:
             cookie_samesite = "None"
             cookie_secure = True
-            cookie_domain = settings.BACKEND_PROD_DOMAIN
+            cookie_domain = f".{BACKEND_PROD_DOMAIN}"
 
         # Access token cookie (short-lived)
         response.set_cookie(
@@ -262,14 +262,14 @@ class ClientLoginView(APIView):
 
         # Dynamically set cookie attributes based on environment
         if settings.DEBUG:
-            print("LOGIN COOKIE DOMAIN =>", settings.BACKEND_PROD_DOMAIN)
+            print("LOGIN COOKIE DOMAIN =>", f".{BACKEND_PROD_DOMAIN}")
             cookie_samesite = "Lax"
             cookie_secure = False
             cookie_domain = None
         else:
             cookie_samesite = "None"
             cookie_secure = True
-            cookie_domain = settings.BACKEND_PROD_DOMAIN
+            cookie_domain = f".{BACKEND_PROD_DOMAIN}"
 
         # Set access token cookie (short-lived)
         response.set_cookie(
