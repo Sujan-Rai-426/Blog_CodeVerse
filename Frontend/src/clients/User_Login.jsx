@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiClient, { fetchClientCsrfToken } from "../config/apiClient";
 import "../assets/css/User_Login.css";
 
@@ -172,7 +172,7 @@ export default function User_Login() {
 
       {!isForgot && (
           <p>
-            Don't have an account? <a href="/User/Signup">Signup</a>
+            Don't have an account? <Link to="/User/Signup">Signup</Link>
           </p>
       )}
 

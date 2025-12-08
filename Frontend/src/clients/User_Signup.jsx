@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../config/apiClient";
 import "../assets/css/User_Login.css";
 import "../assets/css/User_Signup.css"
@@ -135,6 +135,9 @@ export default function User_Signup() {
                     <button type="submit" disabled={btnProcessing}>
                         {btnProcessing ? " Sending OTP... " : " Signup "}
                     </button>
+                    <p>
+                        Already have an account? <Link to="/User/Login">Login</Link>
+                    </p>
                 </form>
             )}
 
