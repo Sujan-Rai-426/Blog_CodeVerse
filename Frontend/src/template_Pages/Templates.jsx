@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useTemplates } from "./Template_API.jsx";
 import { useNavigate } from "react-router-dom";
-import { Helmet } from 'react-helmet-async';
+// import { Helmet } from 'react-helmet-async';
 import "../assets/css/Template.css";
 import { FaGem } from "react-icons/fa";
 
@@ -96,13 +96,13 @@ const Templates = () => {
     <>
 
         {/* // ===================== AMP ADS ===================== */}
-        <Helmet>
+        {/* <Helmet>
             <script 
               async 
               custom-element="amp-auto-ads"
               src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
             />
-        </Helmet>
+        </Helmet> */}
 
 
 

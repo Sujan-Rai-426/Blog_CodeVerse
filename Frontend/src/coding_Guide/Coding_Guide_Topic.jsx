@@ -4,7 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
 import { useParentAPI } from "../context/Parent_API_Provider.jsx";
-import { Helmet } from "react-helmet-async";
+// import { Helmet } from "react-helmet-async";
 
 const Coding_Guide_Topic = () => {
   const { languageID } = useParams();
@@ -121,13 +121,13 @@ const Coding_Guide_Topic = () => {
         {/* =================== Auto AMP ADS ====================== */}
         {/* =================== ============== ====================== */}
     
-        <Helmet>
+        {/* <Helmet>
             <script 
               async 
               custom-element="amp-auto-ads"
               src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
             />
-        </Helmet>
+        </Helmet> */}
 
 
 
