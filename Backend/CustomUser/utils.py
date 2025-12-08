@@ -1,5 +1,23 @@
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.conf import settings
+from django.core.mail import send_mail
+
+
+# ========================================================
+#                  Send Emial OTP
+# ========================================================
+
+def send_otp_email(email, otp):
+    subject = "Your OTP for Account Verification"
+    message = f"Your OTP code is {otp}. It is valid for 10 minutes."
+    send_mail(subject, message, settings.DEFAULT_FROM_EMAIL, [email])
+
+
+
+
+# ========================================================
+#                  JWT COOKIE UTILITY
+# ========================================================
 
 def set_jwt_cookies(response, user, is_admin=False):
     """

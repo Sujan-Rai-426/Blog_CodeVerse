@@ -8,6 +8,7 @@ import Recent_Contents from "../components/Recent_Contents";
 import Services from "../components/Services";
 
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
+import { FaPersonBooth } from "react-icons/fa";
 
 function Home() {
     const { languages, loadingBase: parentLoading } = useContext(Parent_API_Provider_Context);
@@ -108,10 +109,10 @@ function Home() {
                             className="share-btn text-light"
                             onClick={() => {
                                 const loggedIn = window.localStorage.getItem("loggedIn") === "true";
-                                navigate(loggedIn ? "/Admin" : "/Admin/Login");
+                                navigate(loggedIn ? "/User/Profile" : "/User/Login");
                             }}
                         >
-                            <i className="bi bi-share"></i> Share Code
+                            <i class="bi bi-person-fill"></i> SignIn / SignUp
                         </button>
                     </div>
                 </div>

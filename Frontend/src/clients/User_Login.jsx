@@ -1,94 +1,186 @@
-// src/components/User_Login.jsx
-
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import apiClient from "../config/apiClient";
-import { fetchClientCsrfToken } from "../config/apiClient"; // Import the async function
+import { useNavigate } from "react-router-dom";
+import apiClient, { fetchClientCsrfToken } from "../config/apiClient";
 import "../assets/css/User_Login.css";
 
 export default function User_Login() {
-  const [identifier, setIdentifier] = useState("");
-  const [password, setPassword] = useState("");
-  const [message, setMessage] = useState("");
-  const [isLoading, setIsLoading] = useState(true); // 👈 1. New loading state
-
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState(1); // 1 = login, 2 = forgot password OTP, 3 = reset password
+  const [isForgot, setIsForgot] = useState(false);
+  const [btnProcessing, setBtnProcessing] = useState(false);
+
+  const [form, setForm] = useState({
+    identifier: "", // email or username
+    password: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+  const [otp, setOtp] = useState("");
+  const [message, setMessage] = useState("");
+  const [messageType, setMessageType] = useState("");
+
+  // Initialize CSRF
   useEffect(() => {
-    // 👈 2. Wrap the CSRF fetch in an async function to wait for it
-    const loadCsrfToken = async () => {
+    const loadCSRF = async () => {
       try {
         await fetchClientCsrfToken();
-      } catch (error) {
-        console.error("Failed to load CSRF token:", error);
-        setMessage("Error initializing the application. Please refresh.");
+      } catch {
+        setMessage("CSRF init failed");
       } finally {
-        setIsLoading(false); // 👈 3. Mark loading complete
+        setLoading(false);
       }
     };
-
-    loadCsrfToken();
+    loadCSRF();
   }, []);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
-    if (isLoading) { // Optional safety check
-        setMessage("Initialization still in progress. Please wait.");
-        return;
-    }
-    // ... rest of handleLogin remains the same
-    try {
-      const res = await apiClient.post("/api/user-login/", {
-        identifier,
-        password,
-      });
+  // ---------------- LOGIN / FORGOT PASSWORD ----------------
+  const handleLoginOrForgot = async (e) => {
+    e?.preventDefault();
+    setBtnProcessing(true);
 
-      if (res.status === 200) {
-        navigate("/User/Profile");
+    try {
+      if (isForgot) {
+        // Send OTP for password reset
+        await apiClient.post("/api/email-otp/send/", { email: form.identifier });
+        setStep(2);
+        setMessage("OTP sent to your email. Enter OTP and new password to reset.");
+        setMessageType("success");
+      } else {
+        // Normal login
+        const res = await apiClient.post("/api/user-login/", {
+          identifier: form.identifier,
+          password: form.password,
+        });
+        if (res.status === 200) navigate("/User/Profile");
       }
     } catch (err) {
-      console.error(err);
-      setMessage("Login failed. Check credentials or server logs.");
+      setMessage(err.response?.data?.error || "Login / OTP failed");
+      setMessageType("error");
+    } finally {
+      setBtnProcessing(false);
     }
   };
 
+
+  // ---------------- RESET PASSWORD ----------------
+  const handleResetPassword = async () => {
+      if (form.newPassword !== form.confirmPassword) {
+        setMessage("Passwords do not match");
+        setMessageType("error");
+        return;
+      }
+
+    setBtnProcessing(true);
+    try {
+      await apiClient.post("/api/password-reset/otp/", {
+        email: form.identifier,
+        otp,
+        new_password: form.newPassword,
+      });
+      setMessage("Password reset successful! Please login.");
+      setMessageType("success");
+      setStep(1);
+      setIsForgot(false);
+      setForm({ ...form, password: "", newPassword: "", confirmPassword: "" });
+    } catch (err) {
+      setMessage(err.response?.data?.error || "OTP or reset failed");
+      setMessageType("error");
+    } finally {
+      setBtnProcessing(false);
+    }
+};
+
+
   return (
     <div className="auth-container">
-      <h2>User Login</h2>
+      <h2>{isForgot ? "Reset Password" : "User Login"}</h2>
 
-      {/* 👈 4. Conditional rendering or disabling */}
-      {isLoading ? (
-        <p>Initializing secure session, please wait...</p>
-      ) : (
-        <form onSubmit={handleLogin}>
-          <input
-            type="text"
-            placeholder="Email or Username"
-            value={identifier}
-            onChange={(e) => setIdentifier(e.target.value)}
-            required
-          />
+      {loading ? (
+          <p>Initializing session...</p>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
+// ================== STEP 1 contdition for normal login and STEP 2 condition for Password reset ==============
 
-          {/* Disable button while loading, though the form hiding achieves this */}
-          <button type="submit" disabled={isLoading}>
-            Login
-          </button>
-        </form>
-      )}
+      ) : step === 1 ? (
+            <form onSubmit={handleLoginOrForgot}>
+              <input
+                type="text"
+                placeholder="Email"
+                value={form.identifier}
+                onChange={(e) => setForm({ ...form, identifier: e.target.value })}
+                required
+              />
+              {!isForgot && (
+                  <input
+                    type="password"
+                    placeholder="Password"
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    required
+                  />
+              )}
+              <button type="submit" disabled={btnProcessing}>
+                  {btnProcessing
+                    ? isForgot
+                      ? "Sending OTP..."
+                      : "Logging in..."
+                    : isForgot
+                    ? "Send OTP"
+                    : "Login"}
+              </button>
+            </form>
 
-      <p>
-        Don't have an account? <Link to="/User/Signup">Sign Up</Link>
+      ) : step === 2 ? (
+            <div>
+                  <form className="ul-psw-reset-form">
+                      <input
+                        type="text"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => setOtp(e.target.value)}
+                        required
+                      />
+                      <input
+                        type="password"
+                        placeholder="New Password"
+                        value={form.newPassword}
+                        onChange={(e) => setForm({ ...form, newPassword: e.target.value })}
+                        required
+                      />
+                      <input
+                        type="password"
+                        placeholder="Confirm New Password"
+                        value={form.confirmPassword}
+                        onChange={(e) =>
+                          setForm({ ...form, confirmPassword: e.target.value })
+                        }
+                        required
+                      />
+                  </form>
+
+                  <button onClick={handleResetPassword} disabled={btnProcessing}>
+                    {btnProcessing ? "Resetting..." : "Reset Password"}
+                  </button>
+            </div>
+
+      ) : null}
+
+      <p onClick={() => setIsForgot(!isForgot)} className="forgot-toggle">
+          {isForgot ? "Back to login" : "Forgot Password?"}
       </p>
 
-      {message && <p style={{ color: "red" }}>{message}</p>}
+      {!isForgot && (
+          <p>
+            Don't have an account? <a href="/User/Signup">Signup</a>
+          </p>
+      )}
+
+      {message && (
+        <p className={messageType === "success" ? "success-message" : "error-message"}>
+          {message}
+        </p>
+      )}
     </div>
   );
 }

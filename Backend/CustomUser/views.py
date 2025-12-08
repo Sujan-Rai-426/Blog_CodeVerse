@@ -229,19 +229,24 @@ class AdminAllDataAPIView(APIView):
 
 
 # ============================================================
-#                  CLIENT REGISTER
+#                  CLIENT REGISTER +Login + Profile + Logout
 # ============================================================
 
 class ClientRegisterView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = ClientRegisterSerializer
     permission_classes = [AllowAny]
+    def create(self, request, *args, **kwargs):
+        email = request.data.get("email")
+        try:
+            otp_obj = EmailOTP.objects.get(email=email)
+            if not otp_obj.verified:
+                return Response({"error": "Email OTP not verified"}, status=400)
+        except EmailOTP.DoesNotExist:
+            return Response({"error": "OTP not requested for this email"}, status=400)
+        
+        return super().create(request, *args, **kwargs)
 
-
-
-# ============================================================
-#                   CLIENT LOGIN
-# ============================================================
 
 class ClientLoginView(APIView):
     def post(self, request):
@@ -293,12 +298,6 @@ class ClientLoginView(APIView):
         return response
 
 
-
-
-# ============================================================
-#                     CLIENT PROFILE
-# ============================================================
-
 class ClientProfileView(APIView):
     authentication_classes = [ClientCookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
@@ -306,12 +305,6 @@ class ClientProfileView(APIView):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
 
-
-
-
-# ============================================================
-#                     CLIENT LOGOUT
-# ============================================================
 
 class ClientLogoutView(APIView):
     def post(self, request):
@@ -333,13 +326,6 @@ class ClientLogoutView(APIView):
 # ===============================================================
 #            Like Admin Pannel ---> User MANAGEMENT  
 # ===============================================================
-from rest_framework import generics, status
-from rest_framework.response import Response
-from rest_framework.permissions import IsAdminUser
-from Backend.authentication import AdminCookieJWTAuthentication
-
-
-User = get_user_model()
 
 class AdminUserListAPIView(generics.ListAPIView):
     authentication_classes = [AdminCookieJWTAuthentication]
@@ -385,9 +371,79 @@ class AdminUserDetailAPIView(generics.RetrieveUpdateDestroyAPIView):
         return AdminUserDetailSerializer
 
 
-
 class AdminUserCreateAPIView(generics.CreateAPIView):
     authentication_classes = [AdminCookieJWTAuthentication]
     permission_classes = [IsAdminUser]
     serializer_class = AdminUserCreateSerializer
 
+
+
+
+# ===============================================================
+#            Send Emial OTP for verification   
+# ===============================================================
+from CustomUser.models import EmailOTP
+from CustomUser.utils import send_otp_email
+
+class RequestEmailOTPView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        email = request.data.get("email")
+        if not email:
+            return Response({"error": "Email required"}, status=400)
+        otp_obj, created = EmailOTP.objects.get_or_create(email=email)
+        otp = otp_obj.generate_otp()
+        send_otp_email(email, otp)
+        return Response({"message": "OTP sent to email"}, status=200)
+
+
+class VerifyEmailOTPView(APIView):
+    permission_classes = [AllowAny]
+    def post(self, request):
+        email = request.data.get("email")
+        otp = request.data.get("otp")
+        if not email or not otp:
+            return Response({"error": "Email and OTP required"}, status=400)
+        try:
+            otp_obj = EmailOTP.objects.get(email=email)
+        except EmailOTP.DoesNotExist:
+            return Response({"error": "Invalid OTP or email"}, status=400)  # generic message
+        valid, msg = otp_obj.verify_otp(otp)
+        if not valid:
+            return Response({"error": msg}, status=400)
+        return Response({"message": "OTP verified successfully"}, status=200)
+
+
+
+#<---------------OTP Based Password Reset=============>
+
+class PasswordResetOTPView(APIView):
+    permission_classes = [AllowAny]
+
+    def post(self, request):
+        email = request.data.get("email")
+        otp = request.data.get("otp")
+        new_password = request.data.get("new_password")
+        if not email or not otp or not new_password:
+            return Response({"error": "Email, OTP, and new password required"}, status=400)
+        try:
+            otp_obj = EmailOTP.objects.get(email=email)
+        except EmailOTP.DoesNotExist:
+            return Response({"error": "Invalid OTP or email"}, status=400)
+
+        # Verify OTP
+        valid, msg = otp_obj.verify_otp(otp)
+        if not valid:
+            return Response({"error": msg}, status=400)
+
+        # Reset password
+        try:
+            user = User.objects.get(email=email)
+        except User.DoesNotExist:
+            return Response({"error": "User not found"}, status=404)
+        user.set_password(new_password)
+        user.save()
+
+        # Delete OTP after successful reset
+        otp_obj.delete()
+        return Response({"message": "Password reset successful"}, status=200)

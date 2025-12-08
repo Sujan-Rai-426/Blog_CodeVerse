@@ -89,4 +89,15 @@ urlpatterns = [
     path('admin/users/create/', user_view.AdminUserCreateAPIView.as_view(), name='admin-user-create'),
     path('admin/users/<int:pk>/', user_view.AdminUserDetailAPIView.as_view(), name='admin-user-detail'),
     path('admin/users/<int:pk>/toggle-active/', user_view.AdminUserToggleActiveAPIView.as_view(), name='admin-user-toggle-active'),
+
+    
+    # email OTP verification
+    path("email-otp/send/", user_view.RequestEmailOTPView.as_view(), name="send-email-otp"),
+    path("email-otp/verify/", user_view.VerifyEmailOTPView.as_view(), name="verify-email-otp"),
+    
+    # urls.py
+    path("password-reset/otp/", user_view.PasswordResetOTPView.as_view(), name="password-reset-otp"),
+
+
+
 ]

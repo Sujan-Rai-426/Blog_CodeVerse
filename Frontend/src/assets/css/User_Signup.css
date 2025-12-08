@@ -1,0 +1,16 @@
+.US-otp-btn-grp{
+    margin: 1rem;
+    gap: 12px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+.success-message {
+    color: green;
+    font-weight: bold;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}

@@ -55,3 +55,46 @@ class AdminProfile(models.Model):
 
 
 
+
+# ========================================================================
+#                    Send Email OTP Model
+# ========================================================================
+
+import hashlib
+from django.utils import timezone
+
+class EmailOTP(models.Model):
+    email = models.EmailField(unique=True)
+    otp_hash = models.CharField(max_length=64) # store hashed OTP
+    created_at = models.DateTimeField(auto_now_add=True)
+    verified = models.BooleanField(default=False)
+    attempts = models.IntegerField(default=0) # count verification attempts
+    OTP_EXPIRY_MINUTES = 10
+    MAX_ATTEMPTS = 5
+    def generate_otp(self):
+        """Generate new OTP, hash it, reset attempts & verification"""
+        import random
+        otp = str(random.randint(100000, 999999))
+        self.otp_hash = hashlib.sha256(otp.encode()).hexdigest()
+        self.created_at = timezone.now()
+        self.verified = False
+        self.attempts = 0
+        self.save()
+        return otp
+    def is_expired(self):
+        return timezone.now() - self.created_at > timezone.timedelta(minutes=self.OTP_EXPIRY_MINUTES)
+    def verify_otp(self, otp):
+        """Return True if OTP valid, increment attempts if not"""
+        if self.is_expired():
+            return False, "OTP expired"
+        if self.attempts >= self.MAX_ATTEMPTS:
+            return False, "Max attempts reached"
+        hashed_input = hashlib.sha256(otp.encode()).hexdigest()
+        if hashed_input == self.otp_hash:
+            self.verified = True
+            self.save()
+            return True, "OTP verified"
+        else:
+            self.attempts += 1
+            self.save()
+            return False, "Invalid OTP"

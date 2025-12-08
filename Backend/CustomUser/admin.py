@@ -23,7 +23,16 @@ class CustomUserAdmin(BaseUserAdmin):
     list_filter = ('is_staff', 'is_superuser', 'is_active', 'is_client')
     search_fields = ('email', 'username')
     ordering = ('email',)
-
+    fieldsets = (
+        (None, {'fields': ('email', 'username', 'password')}),
+        ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'is_client', 'is_admin_user', 'groups', 'user_permissions')}),
+    )
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'username', 'password1', 'password2', 'is_active', 'is_staff', 'is_superuser', 'is_client', 'is_admin_user')}
+        ),
+    )
     # Show inlines based on user type
     def get_inline_instances(self, request, obj=None):
         if obj is None:
@@ -34,6 +43,7 @@ class CustomUserAdmin(BaseUserAdmin):
         if obj.is_staff or obj.is_superuser:
             inlines.append(AdminProfileInline(self.model, self.admin_site))
         return inlines
+
 
 # ----------------- CLIENT PROFILE ADMIN -----------------
 class ClientProfileAdmin(admin.ModelAdmin):
