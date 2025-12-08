@@ -262,6 +262,7 @@ class ClientLoginView(APIView):
 
         # Dynamically set cookie attributes based on environment
         if settings.DEBUG:
+            print("LOGIN COOKIE DOMAIN =>", settings.BACKEND_PROD_DOMAIN)
             cookie_samesite = "Lax"
             cookie_secure = False
             cookie_domain = None

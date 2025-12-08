@@ -248,13 +248,14 @@ else:
     CSRF_COOKIE_DOMAIN = f"{BACKEND_PROD_DOMAIN}"  #Same as we mention in login in view
     SESSION_COOKIE_DOMAIN = f"{BACKEND_PROD_DOMAIN}"   #Same as we mention in login in view
     CSRF_TRUSTED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}",        #codevora140.vercel.app
-        f"https://{BACKEND_PROD_DOMAIN}",         #codevora-backend.vercel.app
-        "https://api." + f"{BACKEND_PROD_DOMAIN}" #api.codevora-backend.vercel.app
+        f"https://{FRONTEND_PROD_DOMAIN}",        # codevora140.vercel.app
+        f"https://{BACKEND_PROD_DOMAIN}",         # codevora-backend.vercel.app
     ]
+
     CORS_ALLOWED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}"          #codevora140.vercel.app 
+        f"https://{FRONTEND_PROD_DOMAIN}"         # codevora140.vercel.app
     ]
+
 
 
 
