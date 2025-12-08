@@ -112,7 +112,7 @@ function Home() {
                                 navigate(loggedIn ? "/User/Profile" : "/User/Login");
                             }}
                         >
-                            <i class="bi bi-person-fill"></i> SignIn / SignUp
+                            <i className="bi bi-box-arrow-in-right"></i> SignIn / SignUp
                         </button>
                     </div>
                 </div>

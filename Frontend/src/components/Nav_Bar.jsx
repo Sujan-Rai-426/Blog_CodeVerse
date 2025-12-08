@@ -1,108 +1,95 @@
+// src/components/Components_Design.jsx
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../assets/css/Nav_Bar.css";
+import { PersonCircle } from "react-bootstrap-icons"; // icon fallback
+import apiClient from "../config/apiClient"; // your Axios client with refresh handling
 
+
+// ------------------- NAVIGATION BAR COMPONENT -------------------
 function Nav_Bar() {
-    const [sidebarOpen, setSidebarOpen] = useState(false);
-    const [aboutOpen, setAboutOpen] = useState(false); // desktop/tablet dropdown state
-    const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // sidebar dropdown state
-    const [isTouchDevice, setIsTouchDevice] = useState(false);
+  // ------------------- STATE -------------------
+  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar
+  const [aboutOpen, setAboutOpen] = useState(false); // desktop dropdown
+  const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // mobile dropdown
+  const [isTouchDevice, setIsTouchDevice] = useState(false); // detect touch
+  const [isLoggedIn, setIsLoggedIn] = useState(false); // user login state
+  const [user, setUser] = useState(null); // user profile data
 
-    const aboutRef = useRef(null); // desktop dropdown wrapper
-    const sidebarRef = useRef(null);
+  const aboutRef = useRef(null);
+  const sidebarRef = useRef(null);
 
-    useEffect(() => {
-      // detect touch / coarse pointer devices
-      const checkTouch = () => {
-        // matchMedia pointer:coarse is a good hint for touch
-        const coarse = window.matchMedia && window.matchMedia("(pointer: coarse)").matches;
-        // also check user agent as fallback
-        const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-        setIsTouchDevice(coarse || uaTouch);
-      };
-      checkTouch();
-      window.addEventListener("resize", checkTouch);
-      return () => window.removeEventListener("resize", checkTouch);
-    }, []);
-
-    // Close dropdown when clicking outside (desktop/tablet)
-    useEffect(() => {
-  // sourcery skip: avoid-function-declarations-in-blocks
-      function onDocClick(e) {
-        if (aboutRef.current && !aboutRef.current.contains(e.target)) {
-          setAboutOpen(false);
-        }
-      }
-      document.addEventListener("click", onDocClick);
-      return () => document.removeEventListener("click", onDocClick);
-    }, []);
-
-    // Close sidebar when clicking outside
-    useEffect(() => {
-  // sourcery skip: avoid-function-declarations-in-blocks
-      function onDocClick(e) {
-        if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-          setSidebarOpen(false);
-        }
-      }
-      document.addEventListener("click", onDocClick);
-      return () => document.removeEventListener("click", onDocClick);
-    }, [sidebarOpen]);
-
-    const toggleSidebar = (e) => {
-      e.stopPropagation();
-      setSidebarOpen((s) => !s);
+  // ------------------- EFFECT: Detect touch devices -------------------
+  useEffect(() => {
+    const checkTouch = () => {
+      const coarse = window.matchMedia("(pointer: coarse)").matches;
+      const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+      setIsTouchDevice(coarse || uaTouch);
     };
+    checkTouch();
+    window.addEventListener("resize", checkTouch);
+    return () => window.removeEventListener("resize", checkTouch);
+  }, []);
 
-    // Desktop: open on hover only if not a touch device and width >= 992
-    const handleAboutMouseEnter = () => {
-      if (!isTouchDevice && window.innerWidth >= 992) {
-        setAboutOpen(true);
-      }
-    };
-    const handleAboutMouseLeave = () => {
-      if (!isTouchDevice && window.innerWidth >= 992) {
+
+  // ------------------- EFFECT: Close About dropdown on click outside -------------------
+  useEffect(() => {
+    function onDocClick(e) {
+      if (aboutRef.current && !aboutRef.current.contains(e.target)) {
         setAboutOpen(false);
       }
-    };
+    }
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, []);
 
-
-    // Click handler (tablet & accessibility): toggle on click when touch device OR narrow screen
-    const handleAboutClick = (e) => {
-      // prevent navigation
-      e.preventDefault();
-      // toggle only for touch devices or narrow screens
-      if (isTouchDevice || window.innerWidth < 992) {
-        setAboutOpen((s) => !s);
+  // ------------------- EFFECT: Close Sidebar on click outside -------------------
+  useEffect(() => {
+    function onDocClick(e) {
+      if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+        setSidebarOpen(false);
       }
-    };
+    }
+    document.addEventListener("click", onDocClick);
+    return () => document.removeEventListener("click", onDocClick);
+  }, [sidebarOpen]);
 
-    // Mobile sidebar dropdown toggle
-    const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
+  // ------------------- HANDLERS -------------------
+  const toggleSidebar = (e) => {
+    e.stopPropagation();
+    setSidebarOpen((s) => !s);
+  };
 
+  const handleAboutMouseEnter = () => {
+    if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(true);
+  };
+  const handleAboutMouseLeave = () => {
+    if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(false);
+  };
+  const handleAboutClick = (e) => {
+    e.preventDefault();
+    if (isTouchDevice || window.innerWidth < 992) {
+      setAboutOpen((s) => !s);
+    }
+  };
 
+  const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
 
-      // Scroll to section function using id
-    const scrollToSection = (id) => {
-        setTimeout(() => {
-            const element = document.getElementById(id);
-            if (element) {
-                const offset = -100; // scroll 100px more upwards (adjust as needed)
-                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                const finalPosition = elementPosition + offset;
+  const scrollToSection = (id) => {
+    setTimeout(() => {
+      const element = document.getElementById(id);
+      if (element) {
+        const offset = -100;
+        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({ top: elementPosition + offset, behavior: "smooth" });
+      }
+    }, 120);
+  };
 
-                window.scrollTo({
-                    top: finalPosition,
-                    behavior: "smooth",
-                });
-            }
-        }, 120); // wait for react-router navigation
-    };
-
+  // ------------------- JSX RENDER -------------------
   return (
     <>
-
-    {/* ===================== Desktop Navbar ===================== */}
+      {/* ===================== Desktop Navbar ===================== */}
       <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
         <div className="nav-container">
           <Link to="/Admin/Login" className="brand">
@@ -114,40 +101,41 @@ function Nav_Bar() {
             </sup>
           </Link>
 
-          {/* Right actions: mobile toggle + desktop menu */}
+          {/* Right actions: profile + menu */}
           <div className="nav-right">
-            {/* mobile hamburger */}
-            <button
-              className="hamburger d-lg-none"
-              onClick={toggleSidebar}
-              aria-label="Open menu"
-            >
+            {/* Profile Button */}
+            <Link to={"/User/Profile"} > <i className="bi bi-person-circle text-light mx-3 fs-2 hover:text-gray"></i> </Link>
+
+            {/* Mobile hamburger */}
+            <button className="hamburger d-lg-none" onClick={toggleSidebar} aria-label="Open menu">
               ☰
             </button>
 
-            {/* Desktop / Tablet nav */}
-            <ul className="nav-list d-none d-lg-flex" >
-                <li className="nav-item"> <Link to="/" className="nav-link">Home</Link> </li>
+            {/* Desktop nav */}
+            <ul className="nav-list d-none d-lg-flex">
+              <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>
 
-                {/* ABOUT dropdown (desktop hover, tablet click) */}
-                <li className={`nav-item nav-dropdown ${aboutOpen ? "open" : ""}`} ref={aboutRef} onMouseEnter={handleAboutMouseEnter} onMouseLeave={handleAboutMouseLeave} >
-                    {/* Use button-like span so Link doesn't navigate */}
-                    <a href="#about" className="nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen} >
-                      About <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
-                    </a>
+              {/* About dropdown */}
+              <li
+                className={`nav-item nav-dropdown ${aboutOpen ? "open" : ""}`}
+                ref={aboutRef}
+                onMouseEnter={handleAboutMouseEnter}
+                onMouseLeave={handleAboutMouseLeave}
+              >
+                <a href="#about" className="nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
+                  About <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
+                </a>
+                <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
+                  <Link className="dropdown-item" to="/About"><i className="bi bi-people-fill"></i> Our Team</Link>
+                  <a className="dropdown-item" href="https://sujan140.vercel.app"><i className="bi bi-person-fill"></i> Developer</a>
+                  <Link className="dropdown-item" to="/Privacy_Policy"><i className="bi bi-shield-lock-fill"></i> Privacy Policy</Link>
+                </div>
+              </li>
 
-                    <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
-                      <Link className="dropdown-item" to="/About"> <i className="bi bi-people-fill"></i> Our Team </Link>
-                      <a className="dropdown-item" href="https://sujan140.vercel.app"> <i className="bi bi-person-fill"></i> Developer </a>
-                      <Link className="dropdown-item" to="/Privacy_Policy"> <i className="bi bi-shield-lock-fill"></i> Privacy Policy </Link>
-                    </div>
-                </li>
-
-                <li className="nav-item"> <Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link></li>
-                <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
-                <li className="nav-item"> <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link></li>
-                <li className="nav-item"> <Link to="/PlayGround" className="nav-link">PlayGround</Link> </li>
-
+              <li className="nav-item"><Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link></li>
+              <li className="nav-item"><Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
+              <li className="nav-item"><Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link></li>
+              {/* <li className="nav-item"><Link to="/PlayGround" className="nav-link">PlayGround</Link></li> */}
             </ul>
           </div>
         </div>
@@ -155,31 +143,41 @@ function Nav_Bar() {
 
       {/* ===================== Mobile Sidebar ===================== */}
       <aside className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef} role="dialog" aria-modal="true">
-          <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
+        <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
 
-          <ul className="sidebar-list">
-              <li><Link to="/" onClick={() => setSidebarOpen(false)}> <i className="bi bi-house-fill"></i> &nbsp; Home</Link></li>
-              <li>
-                  <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-                      <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
-                  </button>
-                  <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
-                      <li><Link to="/About" onClick={() => setSidebarOpen(false)}> <i className="bi bi-people-fill"></i> &nbsp; Our Team </Link></li>
-                      <li><a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}> <i className="bi bi-person-fill"></i> &nbsp;  Developer </a></li>
-                      <li><Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}> <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy </Link></li>
-                  </ul>
-              </li>
+        <ul className="sidebar-list">
+          {/* Profile Link */}
+          <li>
+            <Link to="/User/Profile" onClick={() => setSidebarOpen(false)}>
+              <i className="bi bi-person-fill-gear"></i> &nbsp; My Profile
+            </Link>
+          </li>
+          <li><hr className="sidebar-divider" /></li>
 
-              <li><Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}> <i className="bi bi-columns"></i> &nbsp; Templates</Link></li>
-              <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}> <i className="bi bi-easel3"></i> &nbsp; Components</Link></li>
-              <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}> <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides</Link></li>
-              <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}> <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>
-              <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}> <i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li>
-          </ul>
+          <li><Link to="/" onClick={() => setSidebarOpen(false)}><i className="bi bi-house-fill"></i> &nbsp; Home</Link></li>
+
+          {/* Mobile About dropdown */}
+          <li>
+            <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
+              <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+            </button>
+            <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
+              <li><Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link></li>
+              <li><a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a></li>
+              <li><Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link></li>
+            </ul>
+          </li>
+
+          <li><Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}><i className="bi bi-columns"></i> &nbsp; Templates</Link></li>
+          <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}><i className="bi bi-easel3"></i> &nbsp; Components</Link></li>
+          <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}><i className="bi bi-journal-code"></i> &nbsp; Coding-Guides</Link></li>
+          <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}><i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>
+          {/* <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}><i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li> */}
+        </ul>
       </aside>
 
-      {/* overlay */}
-      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} /> }
+      {/* Overlay for mobile sidebar */}
+      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
     </>
   );
 }

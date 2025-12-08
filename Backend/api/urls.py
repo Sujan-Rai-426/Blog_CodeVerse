@@ -9,6 +9,14 @@ from django.views.decorators.csrf import ensure_csrf_cookie
 from Tutorial import views as tutorial_view
 from CustomUser import views as user_view
 
+from Profile.views import (    
+    FavoriteCodeViewSet,
+    PlaylistItemViewSet,
+    PlaylistViewSet,
+    PurchaseViewSet,
+    TransactionHistoryViewSet
+)
+
 from Tutorial.views import (
     CategoryViewSet, SectionViewSet, LanguageViewSet, TopicViewSet,
     FrontendSourceCodeViewSet, BackendStepViewSet, BackendImageViewSet,
@@ -29,23 +37,26 @@ def debug_test(request):
     return JsonResponse({"status": "ok", "message": "API working"}, status=200)
 
 
-# ---------------------------- ROUTER ----------------------------
 router = DefaultRouter()
 
-# Categories & nested lazy endpoints
+# ----------------- TEMPLATE app -----------------
 router.register(r'categories', CategoryViewSet, basename='categories')
 router.register(r'sections', SectionViewSet, basename='sections')
 router.register(r'languages', LanguageViewSet, basename='languages')
 router.register(r'topics', TopicViewSet, basename='topics')
-
-# Frontend & Backend
 router.register(r'frontend-source-codes', FrontendSourceCodeViewSet, basename='frontend-source-codes')
 router.register(r'backend-steps', BackendStepViewSet, basename='backend-steps')
 router.register(r'backend-images', BackendImageViewSet, basename='backend-images')
-
-# Templates
 router.register(r'template-types', TemplateTypeViewSet, basename='template-types')
 router.register(r'templates', TemplateViewSet, basename='templates')
+
+# ----------------- PROFILE app -----------------
+router.register(r"profile/favorites", FavoriteCodeViewSet, basename="favorites")
+router.register(r"profile/purchases", PurchaseViewSet, basename="purchases")
+router.register(r"profile/transactions", TransactionHistoryViewSet, basename="transactions")
+router.register(r"profile/playlists", PlaylistViewSet, basename="playlists")
+router.register(r"profile/playlist-items", PlaylistItemViewSet, basename="playlist-items")
+
 
 
 # ---------------------------- URLPATTERNS ----------------------------
@@ -67,7 +78,7 @@ urlpatterns = [
     # Router Endpoints
     path('', include(router.urls)),
 
-    # ----------------- Custom User Auth -----------------
+    # ----------------- Custom User Auth  [ CustomUser app ]-----------------
     # Admin
     path('admin-login/', user_view.AdminLoginAPIView.as_view(), name='admin-login'),
     path('admin-profile/', user_view.AdminProfileView.as_view(), name='admin-profile'),

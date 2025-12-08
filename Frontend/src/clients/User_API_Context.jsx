@@ -1,9 +1,14 @@
-import React from 'react'
+// src/context/User_API_Context.jsx
+import { createContext, useContext } from "react";
 
-function User_API_Context() {
-  return (
-    <div>User_API_Context</div>
-  )
-}
+const User_API_Context = createContext();
 
-export default User_API_Context
+export const useUserAPI = () => {
+  const context = useContext(User_API_Context);
+  if (!context) {
+    throw new Error("useUserAPI must be used within a User_API_Provider");
+  }
+  return context;
+};
+
+export default User_API_Context;

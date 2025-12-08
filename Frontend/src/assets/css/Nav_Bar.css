@@ -230,3 +230,81 @@
 /* small tweaks */
 a { color: inherit; }
 button { font-family: inherit; }
+
+
+/* ... (Keep all existing CSS variables, standard sizes, and navbar styles) ... */
+
+/* ---------- Right group ---------- */
+.nav-right {
+    display:flex; 
+    align-items:center; 
+    /* Increased gap for visual separation between profile/menu and main links */
+    gap: 15px; 
+}
+
+/* ---------- Profile Button Styles ---------- */
+.profile-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px; /* Standard avatar size */
+    height: 40px;
+    border-radius: 50%;
+    /* Subtle background to make the icon stand out */
+    background: rgba(255, 255, 255, 0.1); 
+    padding: 0;
+    transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.profile-btn:hover {
+    background: rgba(255, 255, 255, 0.25);
+    transform: scale(1.05); /* Slight lift on hover */
+}
+
+/* Default icon style (when user is logged out / no avatar) */
+.profile-icon {
+    font-size: 1.8rem; /* Large icon */
+    color: var(--gold); /* Use your primary accent color */
+    line-height: 1; /* Center the icon */
+}
+
+/* User Avatar (when logged in) */
+.user-avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 2px solid var(--gold); /* Highlighted border */
+}
+
+/* ---------- Mobile Sidebar Divider (NEW) ---------- */
+.sidebar-divider {
+    border: 0;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.2);
+    margin: 18px 0;
+}
+
+/* Mobile sidebar link styling adjustments 
+  (Ensure profile link looks good) 
+*/
+.sidebar-list a {
+    padding: 10px 0; /* Add padding for better touch targets */
+    transition: color 0.15s ease;
+}
+.sidebar-list a:hover {
+    color: var(--gold); /* Highlight on hover/focus */
+}
+.sidebar-list li { 
+    margin-bottom: 0.5rem; /* Reduced gap for a cleaner list */
+}
+
+
+/* ... (Keep all existing media queries and other styles) ... */
+
+@media (min-width: 992px) {
+    /* Ensure profile button is always visible on desktop */
+    .profile-btn {
+        margin-right: 15px; /* Add some space between the button and the menu links */
+    }
+}

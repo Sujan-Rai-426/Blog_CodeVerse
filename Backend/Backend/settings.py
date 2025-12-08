@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     # "django.contrib.sites",
 
     # Your apps
-    "Home", "CustomUser",
+    "Home", "CustomUser", "Profile",
     "Tutorial.apps.TutorialConfig",
 
     # DRF

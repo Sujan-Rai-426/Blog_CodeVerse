@@ -6,6 +6,8 @@ import Design_Code from "./Design_code.jsx";
 import Design_Preview from "./Design_Preview";
 import "../assets/css/Components_Design.css";
 import { FaArrowRight, FaFacebook, FaFacebookMessenger, FaGem, FaTelegram, FaWhatsapp } from "react-icons/fa";
+import { fetchFavorites, addFavorite, removeFavorite } from "../clients/User_API.jsx";
+
 
 // === Main frame iframe doc ===
 const buildMainIframeDoc = (html = "", css = "", js = "") => {
@@ -109,6 +111,7 @@ export default function Components_Design() {
   const { topicID, codeId } = useParams();
   const navigate = useNavigate();
   const { fetchFrontendSourceCode } = useContext(Parent_API_Provider_Context);
+  const [favouriteIds, setFavouriteIds] = useState([]);
 
   const [currentCodes, setCurrentCodes] = useState(null);
   const [srcDoc, setSrcDoc] = useState("");
@@ -119,7 +122,6 @@ export default function Components_Design() {
   const codeRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeFilter, setActiveFilter] = useState("all");
-  const [favouriteIds, setFavouriteIds] = useState([]);
 
   // ------------------- Fetch codes with caching -------------------
   useEffect(() => {
@@ -178,26 +180,42 @@ export default function Components_Design() {
     return () => clearTimeout(timer);
   }, [currentCodes]);
 
+
+
   // ------------------- Favourites -------------------
   useEffect(() => {
-    const savedFavourites = JSON.parse(localStorage.getItem("favouriteCodes") || "[]");
-    setFavouriteIds(savedFavourites);
-  }, [currentCodes]);
+    const loadFavourites = async () => {
+      try {
+        const favs = await fetchFavorites(); // [{id, code:{id}}]
+        const ids = favs.map(f => f.code.id);
+        setFavouriteIds(ids);
+      } catch (err) {
+        console.error("Failed to fetch favourites:", err);
+      } finally {
+        setFavouritesLoaded(true);
+      }
+    };
+    loadFavourites();
+  }, []);
+
+
   const isFavourite = (id) => favouriteIds.includes(id);
-  const addToFavourite = (id) => {
-    const updated = [...favouriteIds, id];
-    setFavouriteIds(updated);
-    localStorage.setItem("favouriteCodes", JSON.stringify(updated));
+
+  const handleFavourite = async (id) => {
+    try {
+      await addFavorite(id); // backend now toggles automatically
+      setFavouriteIds(prev => {
+        if (prev.includes(id)) return prev.filter(favId => favId !== id);
+        return [...prev, id];
+      });
+    } catch (err) {
+      console.error("Failed to update favourite:", err);
+    }
   };
-  const removeFromFavourite = (id) => {
-    const updated = favouriteIds.filter((favId) => favId !== id);
-    setFavouriteIds(updated);
-    localStorage.setItem("favouriteCodes", JSON.stringify(updated));
-  };
-  const handleFavourite = (id) => {
-    if (isFavourite(id)) removeFromFavourite(id);
-    else addToFavourite(id);
-  };
+
+
+
+
 
   // ------------------- Share -------------------
   const handleShareClick = (platform) => {
@@ -284,12 +302,11 @@ export default function Components_Design() {
                   {/* <------ [ Favourite + Share ] -----> */}
                     <div className="header-actions">
                       {/* Favourite Button */}
-                      <button
-                        className={`action-btn favourite-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
-                        onClick={() => handleFavourite(currentCodes.id)}
-                        title="Save to Favourite"
-                        >
-                        <i className="fa fa-heart" />
+                      <button 
+                          className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
+                          onClick={() => handleFavourite(currentCodes.id)}
+                      >
+                          {isFavourite(currentCodes.id) ? "❤️" : "🤍"}
                       </button>
 
                       {/* Share Dropdown */}
