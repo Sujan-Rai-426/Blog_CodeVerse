@@ -4,6 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
 import { useParentAPI } from "../context/Parent_API_Provider.jsx";
+import { Helmet } from "react-helmet-async";
 
 const Coding_Guide_Topic = () => {
   const { languageID } = useParams();
@@ -113,63 +114,88 @@ const Coding_Guide_Topic = () => {
     );
 
   return (
-    <div className={`tutorial-topic-page fade-in`}>
-      <h1 className="page-title">- Coding Guide -</h1>
 
-      {/* Horizontal Scrollable Backend Languages */}
-      <div className="fs-wrapper">
-        <div className="fs-scroll" ref={scrollRef}>
-          <div className="fs-grid">
-            {backendLangs.map((lang) => {
-              const isSelected = String(lang.id) === String(languageID);
-              const isActive = String(lang.id) === String(activeLangID);
-              return (
-                <Link
-                  key={lang.id}
-                  to={`/Coding_Guide_Topic/${lang.id}`}
-                  className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
-                >
-                  {lang.icon_class && <i className={`${lang.icon_class} fs-card-icon`}></i>}
-                  <span className="fs-card-text">{lang.name}</span>
-                </Link>
-              );
-            })}
+    <>
+    
+        {/* =================== ============== ====================== */}
+        {/* =================== Auto AMP ADS ====================== */}
+        {/* =================== ============== ====================== */}
+    
+        <Helmet>
+            <script 
+              async 
+              custom-element="amp-auto-ads"
+              src="https://cdn.ampproject.org/v0/amp-auto-ads-0.1.js"
+            />
+        </Helmet>
+
+
+
+        {/* =================== ==================== ====================== */}
+        {/* =================== Code Guide Container ====================== */}
+        {/* =================== ==================== ====================== */}
+
+        <div className={`tutorial-topic-page fade-in`}>
+          <h1 className="page-title">- Coding Guide -</h1>
+
+          {/* Horizontal Scrollable Backend Languages */}
+          <div className="fs-wrapper">
+            <div className="fs-scroll" ref={scrollRef}>
+              <div className="fs-grid">
+                {backendLangs.map((lang) => {
+                  const isSelected = String(lang.id) === String(languageID);
+                  const isActive = String(lang.id) === String(activeLangID);
+                  return (
+                    <Link
+                      key={lang.id}
+                      to={`/Coding_Guide_Topic/${lang.id}`}
+                      className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
+                    >
+                      {lang.icon_class && <i className={`${lang.icon_class} fs-card-icon`}></i>}
+                      <span className="fs-card-text">{lang.name}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
           </div>
+
+          {/* Backend Topics per Language */}
+          {categories.length > 0 ? (
+            categories.map((category) => (
+              <div key={category.id} className="category-section">
+                {category.sections?.map((section) =>
+                  section.languages?.map((language) => (
+                    <div key={language.id} className="language-section" data-lang-id={language.id}>
+                      <h2 className="language-title">{language.name}</h2>
+                      <div className="topic-grid">
+                        {language.topics?.length > 0 ? (
+                          language.topics.map((topic) => (
+                            <Link key={topic.id} to={`/Coding_Guide/${topic.id}`} className="topic-card">
+                              <div className="topic-content">
+                                <h3>{topic.name}</h3>
+                                <p>Click to view tutorial steps</p>
+                              </div>
+                            </Link>
+                          ))
+                        ) : (
+                          <p className="no-topic">Content will be uploaded very soon...</p>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            ))
+          ) : (
+            <p className="no-topic">No topics found.</p>
+          )}
         </div>
-      </div>
 
-      {/* Backend Topics per Language */}
-      {categories.length > 0 ? (
-        categories.map((category) => (
-          <div key={category.id} className="category-section">
-            {category.sections?.map((section) =>
-              section.languages?.map((language) => (
-                <div key={language.id} className="language-section" data-lang-id={language.id}>
-                  <h2 className="language-title">{language.name}</h2>
-                  <div className="topic-grid">
-                    {language.topics?.length > 0 ? (
-                      language.topics.map((topic) => (
-                        <Link key={topic.id} to={`/Coding_Guide/${topic.id}`} className="topic-card">
-                          <div className="topic-content">
-                            <h3>{topic.name}</h3>
-                            <p>Click to view tutorial steps</p>
-                          </div>
-                        </Link>
-                      ))
-                    ) : (
-                      <p className="no-topic">Content will be uploaded very soon...</p>
-                    )}
-                  </div>
-                </div>
-              ))
-            )}
-          </div>
-        ))
-      ) : (
-        <p className="no-topic">No topics found.</p>
-      )}
-    </div>
-  );
+    
+    </>
+
+);
 };
 
 export default Coding_Guide_Topic;

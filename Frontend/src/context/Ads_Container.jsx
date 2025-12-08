@@ -79,10 +79,17 @@ export default function Ads_Container({
       </div>
 
       {/* AdSense commented for later verification */}
-      {/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6317483086789968" crossorigin="anonymous"></script>
-          <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article"
-               data-ad-format="fluid" data-ad-client="ca-pub-6317483086789968" data-ad-slot="1762434579" ref={adRef}></ins>
-          <script>(adsbygoogle = window.adsbygoogle || []).push({});</script> */}
+{/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5604794698656933"
+     crossorigin="anonymous"></script>
+<ins class="adsbygoogle"
+     style="display:block; text-align:center;"
+     data-ad-layout="in-article"
+     data-ad-format="fluid"
+     data-ad-client="ca-pub-5604794698656933"
+     data-ad-slot="8427450624"></ins>
+<script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+</script> */}
 
       <div className="CodeBox-Ads-Placeholder">
         <h1>
