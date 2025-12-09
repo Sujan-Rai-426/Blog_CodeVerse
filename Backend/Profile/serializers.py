@@ -8,12 +8,17 @@ class FavoriteCodeSerializer(serializers.ModelSerializer):
     code_detail = serializers.SerializerMethodField()
     class Meta:
         model = FavoriteCode
-        fields = ["id", "code", "code_detail", "added_at"]
-    def get_code_detail(self, obj):
+        fields = ["id", "code", "code_detail", "added_at",]
+    # Fetching detail inside the id of the code  [i.e of Favourite Source Code]
+    def get_code_detail(self, obj):  
         return {
             "id": obj.code.id,
             "title": obj.code.title,
             "price": obj.code.price,
+            "html_code": obj.code.html_code,
+            "css_code": obj.code.css_code,
+            "js_code": obj.code.js_code,
+            "topic_id": obj.code.topic.id,#topic id where code id belong
         }
 
 

@@ -198,8 +198,8 @@
 }
 
 .content-placeholder {
-    aspect-ratio: 1 / 1; /* Makes posts square like Instagram */
-    background-color: #e9ecef;
+    background-color: transparent;
+    border: 1px solid gray;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -214,6 +214,10 @@
     transform: scale(1.02);
     box-shadow: var(--shadow);
 }
+.favourite-card{
+    width: 99% !important;
+    padding: 3px 0 !important;
+}
 
 
 /* ================================================= */
@@ -222,6 +226,10 @@
 
 /* --- Tablet (max-width: 850px) --- */
 @media (max-width: 850px) {
+    .favourite-card{
+        width: 99% !important;
+        padding: 3px 0 !important;
+    }
     .profile-header {
         flex-direction: column; /* Stack avatar above info */
         align-items: center;
@@ -262,49 +270,17 @@
 
 /* --- Mobile (max-width: 550px) --- */
 @media (max-width: 550px) {
-    .profile-container {
-        margin: 1rem 0.5rem;
-        padding: 1rem;
-    }
-    
-    .profile-avatar {
-        width: 100px;
-        height: 100px;
-    }
-
-    .profile-username {
-        font-size: 1.5rem;
-    }
-
-    .profile-name-actions {
-        flex-direction: column; /* Stack username and buttons */
-        gap: 0.5rem;
-    }
-
-    .profile-stats {
-        gap: 1rem;
-    }
-
-    .stat-value {
-        font-size: 1rem;
-    }
-    .stat-label {
-        font-size: 0.8rem;
-    }
-
-    .profile-edit-btn, .profile-logout-btn {
-        width: 100%; /* Make buttons full width */
-        justify-content: center;
-        font-size: 0.85rem;
-        padding: 0.4rem;
-    }
-    
-    .content-grid {
-        grid-template-columns: 1fr; /* 1 column for small mobile view */
-        gap: 10px;
-    }
+    .favourite-card{ width: 99% !important; padding: 3px 0 !important; }
+    .profile-container { margin: 1rem 0.5rem; padding: 1rem; }
+    .profile-avatar { width: 100px; height: 100px; }
+    .profile-username { font-size: 1.5rem; }
+    .profile-name-actions { flex-direction: column; gap: 0.5rem; }
+    .profile-stats { gap: 1rem; }
+    .stat-value { font-size: 1rem; }
+    .stat-label { font-size: 0.8rem; }
+    .profile-edit-btn, .profile-logout-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.4rem; }
+    .content-grid { grid-template-columns: 1fr; gap: 10px; }
 }
-
 
 /* ================================================= */
 /* 🧭 Profile Tab Navigation (Instagram/YouTube Style) */
@@ -378,29 +354,12 @@
 
 /* --- Mobile (max-width: 600px) --- */
 @media (max-width: 600px) {
-    .profile-tab-bar {
-        margin-top: 1.5rem;
-        padding: 0;
-    }
-
-    .profile-tab-button {
-        padding: 0.75rem 0.2rem;
-        gap: 0; /* Remove gap */
-    }
-
-    .tab-icon {
-        font-size: 1.3rem; /* Increase icon size slightly for visibility */
-    }
-    
-    /* HIDE THE TEXT LABEL ON SMALL MOBILE, keeping it minimal like Instagram */
-    .profile-tab-button .tab-label {
-        display: none;
-    }
-    
-    /* Adjust padding to ensure the icon is centered when the label is hidden */
-    .profile-tab-button {
-        padding: 0.75rem 0; 
-    }
+    .favourite-card{width: 99% !important;padding: 3px 0 !important;}
+    .profile-tab-bar {margin-top: 1.5rem;padding: 0;}
+    .profile-tab-button {padding: 0.75rem 0.2rem;gap: 0;}
+    .tab-icon {font-size: 1.3rem;}
+    .profile-tab-button .tab-label {display: none;}
+    .profile-tab-button {padding: 0.75rem 0; }
 }
 
 
@@ -568,31 +527,15 @@
 @media (max-width: 850px) {
     /* Centering elements when the header stacks */
     .profile-header .profile-avatar-wrapper,
-    .profile-header .profile-info-main {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .profile-name-actions {
-        justify-content: center;
-    }
-    .skeleton-line.large {
-        margin-left: auto;
-        margin-right: auto;
-    }
+    .profile-header .profile-info-main {width: 100%;display: flex;flex-direction: column;align-items: center;}
+    .profile-name-actions {justify-content: center;}
+    .skeleton-line.large {margin-left: auto;margin-right: auto;}
 }
 
 @media (max-width: 600px) {
     /* HIDE THE TEXT LABEL ON SMALL MOBILE SKELETON */
-    .skeleton-tab-button {
-        padding: 0.75rem 0;
-        gap: 0; 
-    }
-    .skeleton-tab-button .skeleton-line-tab-label {
-        display: none;
-    }
+    .skeleton-tab-button {padding: 0.75rem 0;gap: 0; }
+    .skeleton-tab-button .skeleton-line-tab-label {display: none;}
 }
 
 
@@ -772,31 +715,12 @@
 @media (max-width: 850px) {
     /* Aligning the skeleton header elements to center on tablet view */
     .profile-header .profile-avatar-wrapper,
-    .profile-header .profile-info-main {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-    
-    .profile-name-actions {
-        justify-content: center;
-    }
-    .skeleton-line.large {
-        margin-left: auto;
-        margin-right: auto;
-    }
-    /* Buttons are already centered via the flex container .profile-name-actions */
+    .profile-header .profile-info-main {width: 100%;display: flex;flex-direction: column;align-items: center;}
+    .profile-name-actions {justify-content: center;}
+    .skeleton-line.large {margin-left: auto;margin-right: auto;}
 }
 
 @media (max-width: 600px) {
-    .skeleton-tab-button {
-        padding: 0.75rem 0;
-        gap: 0; 
-    }
-    
-    /* HIDE THE TEXT LABEL ON SMALL MOBILE SKELETON */
-    .skeleton-tab-button .skeleton-line-tab-label {
-        display: none;
-    }
+    .skeleton-tab-button {padding: 0.75rem 0;gap: 0; }
+    .skeleton-tab-button .skeleton-line-tab-label {display: none;}
 }

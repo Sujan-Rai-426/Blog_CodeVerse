@@ -1,9 +1,49 @@
-import React from 'react'
+import React from "react";
 
-function User_Profile_iFrame() {
+const deviceSizes = {
+    desktop: { width: "100%", height: "600px" },
+    tablet: { width: "768px", height: "600px" },
+    mobile: { width: "375px", height: "667px" },
+};
+
+export default function User_Profile_iFrame({ srcDoc, device, changeDevice }) {
+    const devices = [
+        { label: "desktop", icon: <i className="bi bi-pc-display-horizontal"></i> },
+        { label: "tablet", icon: <i className="bi bi-tablet-fill"></i> },
+        { label: "mobile", icon: <i className="bi bi-phone-fill"></i> },
+    ];
+
     return (
-        <div>User_Profile_iFrame</div>
-    )
-}
+        <div className="design-preview-section" >
+        {/* Device Selector */}
+            <div className="device-download-documentation">
+                <div className="device-buttons">
+                    <div className="devices">
+                        {devices.map((d) => (
+                            <button
+                                key={d.label}
+                                className={device === d.label ? "active" : ""}
+                                onClick={() => changeDevice(d.label)}
+                            >
+                                {d.icon}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            </div>
 
-export default User_Profile_iFrame
+        {/* Iframe */}
+            <div className="iframe-container">
+                <iframe
+                    srcDoc={srcDoc}
+                    sandbox="allow-scripts allow-same-origin allow-forms allow-modals"
+                    style={{
+                        width: deviceSizes[device].width,
+                        height: deviceSizes[device].height,
+                    }}
+                    title="Preview"
+                />
+            </div>
+        </div>
+    );
+}

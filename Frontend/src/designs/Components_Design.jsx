@@ -111,8 +111,7 @@ export default function Components_Design() {
   const { topicID, codeId } = useParams();
   const navigate = useNavigate();
   const { fetchFrontendSourceCode } = useContext(Parent_API_Provider_Context);
-  const [favouriteIds, setFavouriteIds] = useState([]);
-
+  
   const [currentCodes, setCurrentCodes] = useState(null);
   const [srcDoc, setSrcDoc] = useState("");
   const [device, setDevice] = useState("desktop");
@@ -183,35 +182,54 @@ export default function Components_Design() {
 
 
   // ------------------- Favourites -------------------
-  useEffect(() => {
-    const loadFavourites = async () => {
-      try {
-        const favs = await fetchFavorites(); // [{id, code:{id}}]
-        const ids = favs.map(f => f.code.id);
-        setFavouriteIds(ids);
-      } catch (err) {
-        console.error("Failed to fetch favourites:", err);
-      } finally {
-        setFavouritesLoaded(true);
-      }
-    };
-    loadFavourites();
-  }, []);
+const [favouriteIds, setFavouriteIds] = useState(new Set());
+const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-
-  const isFavourite = (id) => favouriteIds.includes(id);
-
-  const handleFavourite = async (id) => {
+// Load favourites on mount
+useEffect(() => {
+  const loadFavourites = async () => {
     try {
-      await addFavorite(id); // backend now toggles automatically
-      setFavouriteIds(prev => {
-        if (prev.includes(id)) return prev.filter(favId => favId !== id);
-        return [...prev, id];
-      });
+      const favs = await fetchFavorites(); // API call
+      const ids = new Set(favs.map(f => f.code.id));
+      setFavouriteIds(ids);
+      setIsLoggedIn(true); // success → logged in
     } catch (err) {
-      console.error("Failed to update favourite:", err);
+      console.error("Failed to fetch favourites:", err);
+      setIsLoggedIn(false); // failed → not logged in
     }
   };
+  loadFavourites();
+}, []);
+
+const isFavourite = (id) => favouriteIds.has(id);
+const handleFavourite = async (id) => {
+  if (!isLoggedIn) {
+    alert("You need to login to add favourites!");
+    return; // prevent action
+  }
+
+  try {
+    setFavouriteIds(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+        removeFavorite(id); // API call
+      } else {
+        newSet.add(id);
+        addFavorite(id); // API call
+      }
+      return newSet;
+    });
+  } catch (err) {
+    console.error("Failed to update favourite:", err);
+  }
+};
+
+
+
+
+
+
 
 
 
@@ -302,12 +320,28 @@ export default function Components_Design() {
                   {/* <------ [ Favourite + Share ] -----> */}
                     <div className="header-actions">
                       {/* Favourite Button */}
-                      <button 
-                          className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
-                          onClick={() => handleFavourite(currentCodes.id)}
-                      >
-                          {isFavourite(currentCodes.id) ? "❤️" : "🤍"}
-                      </button>
+<button
+  className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
+  onClick={() => handleFavourite(currentCodes.id)}
+  title={
+    !isLoggedIn
+      ? "Login to add favourites"
+      : isFavourite(currentCodes.id)
+      ? "Remove from favourites"
+      : "Add to favourites"
+  }
+  style={{
+    fontSize: 22,
+    cursor: isLoggedIn ? "pointer" : "not-allowed",
+    border: "none",
+    background: "transparent",
+    color: isFavourite(currentCodes.id) ? "red" : "#aaa",
+    transition: "color 0.2s",
+  }}
+>
+  ❤️ss
+</button>
+
 
                       {/* Share Dropdown */}
                       <div className="share-dropdown">

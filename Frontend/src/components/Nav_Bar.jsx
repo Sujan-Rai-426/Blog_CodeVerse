@@ -90,94 +90,146 @@ function Nav_Bar() {
   return (
     <>
       {/* ===================== Desktop Navbar ===================== */}
-      <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
-        <div className="nav-container">
-          <Link to="/Admin/Login" className="brand">
-            <b>Code</b>
-            <sup>
-              <u>
-                <small>Vora</small>💻
-              </u>
-            </sup>
-          </Link>
+        <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
+            <div className="nav-container">
+                <Link to="/Admin/Login" className="brand">
+                    <b>Code</b>
+                    <sup>
+                        <u>
+                            <small>Vora</small>💻
+                        </u>
+                    </sup>
+                </Link>
 
-          {/* Right actions: profile + menu */}
-          <div className="nav-right">
-            {/* Profile Button */}
-            <Link to={"/User/Profile"} > <i className="bi bi-person-circle text-light mx-3 fs-2 hover:text-gray"></i> </Link>
+              {/* Right actions: profile + menu */}
+                <div className="nav-right">
+                    {/* Profile Button */}
+                    <Link to={"/User/Profile"} > <i className="bi bi-person-circle text-light mx-3 fs-2 hover:text-gray"></i> </Link>
 
-            {/* Mobile hamburger */}
-            <button className="hamburger d-lg-none" onClick={toggleSidebar} aria-label="Open menu">
-              ☰
-            </button>
+                    {/* Mobile hamburger */}
+                    <button className="hamburger d-lg-none" onClick={toggleSidebar} aria-label="Open menu">
+                      ☰
+                    </button>
 
-            {/* Desktop nav */}
-            <ul className="nav-list d-none d-lg-flex">
-              <li className="nav-item"><Link to="/" className="nav-link">Home</Link></li>
+                    {/* ============================ ================================*/}
+                    {/* =================Desktop nav ================================*/}
+                    {/* ================================ ================================*/}
+                    <ul className="nav-list d-none d-lg-flex">
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link">Home</Link>
+                        </li>
 
-              {/* About dropdown */}
-              <li
-                className={`nav-item nav-dropdown ${aboutOpen ? "open" : ""}`}
-                ref={aboutRef}
-                onMouseEnter={handleAboutMouseEnter}
-                onMouseLeave={handleAboutMouseLeave}
-              >
-                <a href="#about" className="nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
-                  About <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
-                </a>
-                <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
-                  <Link className="dropdown-item" to="/About"><i className="bi bi-people-fill"></i> Our Team</Link>
-                  <a className="dropdown-item" href="https://sujan140.vercel.app"><i className="bi bi-person-fill"></i> Developer</a>
-                  <Link className="dropdown-item" to="/Privacy_Policy"><i className="bi bi-shield-lock-fill"></i> Privacy Policy</Link>
+                        {/* About dropdown */}
+                        <li
+                            className={`nav-item nav-dropdown ${aboutOpen ? "open" : ""}`}
+                            ref={aboutRef}
+                            onMouseEnter={handleAboutMouseEnter}
+                            onMouseLeave={handleAboutMouseLeave}
+                        >
+                            <Link to="#about" className="nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
+                                About <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
+                            </Link>
+                            <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
+                                  <Link className="dropdown-item" to="/About">
+                                    <i className="bi bi-people-fill"></i> Our Team
+                                  </Link>
+                                  <a className="dropdown-item" href="https://sujan140.vercel.app">
+                                      <i className="bi bi-person-fill"></i> Developer
+                                  </a>
+                                  <Link className="dropdown-item" to="/Privacy_Policy">
+                                      <i className="bi bi-shield-lock-fill"></i> Privacy Policy
+                                  </Link>
+                            </div>
+                        </li>
+
+                        <li className="nav-item">
+                            <Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link>
+                        </li>
+                        <li className="nav-item">
+                            <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link>
+                        </li>
+                        {/* <li className="nav-item">
+                            <Link to="/PlayGround" className="nav-link">PlayGround</Link>
+                        </li> */}
+                    </ul>
                 </div>
-              </li>
+            </div>
+        </nav>
 
-              <li className="nav-item"><Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link></li>
-              <li className="nav-item"><Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
-              <li className="nav-item"><Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link></li>
-              {/* <li className="nav-item"><Link to="/PlayGround" className="nav-link">PlayGround</Link></li> */}
-            </ul>
-          </div>
-        </div>
-      </nav>
 
+
+      {/* ===================== ============== ===================== */}
       {/* ===================== Mobile Sidebar ===================== */}
-      <aside className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef} role="dialog" aria-modal="true">
-        <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
+      {/* ===================== ============== ===================== */}
+        <aside className={`sidebar ${sidebarOpen ? "open" : ""}`} ref={sidebarRef} role="dialog" aria-modal="true">
+            <button className="sidebar-close" onClick={toggleSidebar} aria-label="Close menu">×</button>
 
-        <ul className="sidebar-list">
-          {/* Profile Link */}
-          <li>
-            <Link to="/User/Profile" onClick={() => setSidebarOpen(false)}>
-              <i className="bi bi-person-fill-gear"></i> &nbsp; My Profile
-            </Link>
-          </li>
-          <li><hr className="sidebar-divider" /></li>
+            <ul className="sidebar-list">
+                {/* Profile icon Link */}
+                <li>
+                    <Link to="/User/Profile" onClick={() => setSidebarOpen(false)}>
+                        <i className="bi bi-person-fill-gear"></i> &nbsp; My Profile
+                    </Link>
+                </li>
+                <li><hr className="sidebar-divider" /></li>
 
-          <li><Link to="/" onClick={() => setSidebarOpen(false)}><i className="bi bi-house-fill"></i> &nbsp; Home</Link></li>
+                <li>
+                    <Link to="/" onClick={() => setSidebarOpen(false)}>
+                        <i className="bi bi-house-fill"></i> &nbsp; Home
+                    </Link>
+                </li>
 
-          {/* Mobile About dropdown */}
-          <li>
-            <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-              <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
-            </button>
-            <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
-              <li><Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link></li>
-              <li><a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a></li>
-              <li><Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link></li>
+                {/* Mobile About dropdown */}
+                <li>
+                    <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
+                        <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+                    </button>
+                    <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
+                        <li>
+                            <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
+                        </li>
+                        <li> 
+                            <a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a>
+                        </li>
+                        <li>
+                            <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
+                        </li>
+                    </ul>
+                </li>
+
+                <li>
+                    <Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}>
+                        <i className="bi bi-columns"></i> &nbsp; Templates
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>
+                        <i className="bi bi-easel3"></i> &nbsp; Components
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>
+                        <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides
+                    </Link>
+                </li>
+                <li>
+                    <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
+                        <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us
+                    </Link>
+                </li>
+                {/* <li>
+                    <Link to="/PlayGround" onClick={() => setSidebarOpen(false)}>
+                        <i className="bi bi-joystick"></i> &nbsp; PlayGround
+                    </Link>
+                </li> */}
             </ul>
-          </li>
+        </aside>
 
-          <li><Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}><i className="bi bi-columns"></i> &nbsp; Templates</Link></li>
-          <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}><i className="bi bi-easel3"></i> &nbsp; Components</Link></li>
-          <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}><i className="bi bi-journal-code"></i> &nbsp; Coding-Guides</Link></li>
-          <li><Link to="/Contact" onClick={() => setSidebarOpen(false)}><i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us</Link></li>
-          {/* <li><Link to="/PlayGround" onClick={() => setSidebarOpen(false)}><i className="bi bi-joystick"></i> &nbsp; PlayGround</Link></li> */}
-        </ul>
-      </aside>
-
-      {/* Overlay for mobile sidebar */}
-      {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+        {/* Overlay for mobile sidebar */}
+        {sidebarOpen && <div className="sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
     </>
   );
 }
