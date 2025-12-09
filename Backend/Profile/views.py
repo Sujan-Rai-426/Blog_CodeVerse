@@ -1,34 +1,51 @@
 from rest_framework import viewsets, status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework.decorators import api_view
 
-from .models import FavoriteCode, Purchase, TransactionHistory, Playlist, PlaylistItem
-from .serializers import (
+from Tutorial.models import FrontendSourceCode
+
+from Profile.models import FavoriteCode, Purchase, TransactionHistory, Playlist, PlaylistItem
+from Profile.serializers import (
     FavoriteCodeSerializer, PurchaseSerializer, TransactionHistorySerializer,
     PlaylistSerializer, PlaylistItemSerializer
 )
+
+
+# -------------- FAVOURITE COUNT ----------------
+@api_view(['GET'])
+def favourite_count(request, code_id):
+    try:
+        code_obj = FrontendSourceCode.objects.get(id=code_id)
+    except FrontendSourceCode.DoesNotExist:
+        return Response({"error": "Code not found"}, status=404)
+    count = FavoriteCode.objects.filter(code_id=code_id).count()
+    return Response({
+        "code_id": code_id,
+        "title": code_obj.title,
+        "favorite_count": count
+    })
 
 
 # -------------- FAVORITES -------------------
 class FavoriteCodeViewSet(viewsets.ModelViewSet):
     serializer_class = FavoriteCodeSerializer
     permission_classes = [IsAuthenticated]
+
     def get_queryset(self):
-        # Only return favorites for the logged-in user
         return FavoriteCode.objects.filter(user=self.request.user)
+
     def create(self, request, *args, **kwargs):
         user = request.user
         code_id = request.data.get("code")
         if not code_id:
             return Response({"detail": "code ID required"}, status=status.HTTP_400_BAD_REQUEST)
 
-        # Toggle favorite: remove if exists
         favorite = FavoriteCode.objects.filter(user=user, code_id=code_id).first()
         if favorite:
             favorite.delete()
             return Response({"detail": "Removed from favorites"}, status=status.HTTP_200_OK)
 
-        # Create new favorite
         serializer = self.get_serializer(data={"code": code_id})
         serializer.is_valid(raise_exception=True)
         serializer.save(user=user)

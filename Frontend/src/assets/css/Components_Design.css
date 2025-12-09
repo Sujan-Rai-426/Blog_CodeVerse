@@ -92,41 +92,8 @@
 }
 
 /* ========Favourite btn ============= */
-.cd-fav-btn {
-  background: none;
-  border: none;
-  cursor: pointer;
-  font-size: 24px;
-  position: relative;
-  outline: none;
-  transition: transform 0.2s;
-}
-
-.cd-fav-btn .heart {
-  display: inline-block;
-  transition: transform 0.3s ease, color 0.3s ease;
-}
-
-.cd-fav-btn.active .heart {
-  color: red;
-  transform: scale(1.4);
-  animation: popHeart 0.3s forwards;
-}
-
-@keyframes popHeart {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.6);
-  }
-  100% {
-    transform: scale(1.4);
-  }
-}
-
-.cd-fav-btn:hover .heart {
-  transform: scale(1.2);
+.cd-fav-box{
+    margin: 0 3rem !important;
 }
 
 

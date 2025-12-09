@@ -6,7 +6,8 @@ import Design_Code from "./Design_code.jsx";
 import Design_Preview from "./Design_Preview";
 import "../assets/css/Components_Design.css";
 import { FaArrowRight, FaFacebook, FaFacebookMessenger, FaGem, FaTelegram, FaWhatsapp } from "react-icons/fa";
-import { fetchFavorites, addFavorite, removeFavorite } from "../clients/User_API.jsx";
+import { addFavorite, removeFavorite } from "../clients/User_API.jsx";
+import User_API_Context from "../clients/User_API_Context.jsx"
 
 
 // === Main frame iframe doc ===
@@ -183,60 +184,86 @@ export default function Components_Design() {
 
 
 
-  
 
-  // ------------------- Favourites -------------------
-const [favouriteIds, setFavouriteIds] = useState(new Set());
-const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-// Load favourites on mount
+  // ------------------- Favorites and Count-------------------
+// ------------------- Favorites and Count -------------------
+const { profile, favorites } = useContext(User_API_Context);
+const [favoriteIds, setFavoriteIds] = useState([]); // IDs of codes user favorited
+const [favoriteCountMap, setFavoriteCountMap] = useState({}); // { codeId: count }
+
+// Helper: Check if a code is favorite
+const isFavorite = (id) => favoriteIds.includes(id);
+
+// Initialize favorite IDs from context
 useEffect(() => {
-  const loadFavourites = async () => {
-    try {
-      const favs = await fetchFavorites(); // API call
-      const ids = new Set(favs.map(f => f.code.id));
-      setFavouriteIds(ids);
-      setIsLoggedIn(true); // success → logged in
-    } catch (err) {
-      console.error("Failed to fetch favourites:", err);
-      setIsLoggedIn(false); // failed → not logged in
-    }
-  };
-  loadFavourites();
-}, []);
-
-const isFavourite = (id) => favouriteIds.has(id);
-const handleFavourite = async (id) => {
-  if (!isLoggedIn) {
-    alert("You need to login to add favourites!");
-    return; // prevent action
+  if (favorites && favorites.length) {
+    const ids = favorites.map(f => f.code_detail.id);
+    setFavoriteIds(ids);
+  } else {
+    setFavoriteIds([]);
   }
+}, [favorites]);
+
+// Fetch favorite counts for all displayed codes
+// Fetch favorite counts for all displayed codes (on mount or relatedItems change)
+useEffect(() => {
+  const fetchCounts = async () => {
+    const allCodes = [currentCodes, ...relatedItems].filter(Boolean);
+    const newCounts = {};
+
+    await Promise.all(allCodes.map(async (item) => {
+      if (!item?.id) return;
+      try {
+        const res = await fetch(`/api/favorite-count/${item.id}/`);
+        if (!res.ok) throw new Error("Failed to fetch");
+        const data = await res.json();
+        newCounts[item.id] = data.favorite_count ?? 0; // ensure number
+      } catch (err) {
+        newCounts[item.id] = 0;
+      }
+    }));
+
+    setFavoriteCountMap(newCounts);
+  };
+
+  if (currentCodes) fetchCounts();
+}, [currentCodes, relatedItems]);
+
+// Handle favorite toggle with optimistic UI
+const handleFavorite = async (id) => {
+  if (!profile) return alert("Login to add favorites!");
+
+  const isFav = favoriteIds.includes(id);
+
+  // Optimistic update
+  setFavoriteIds(prev => isFav ? prev.filter(x => x !== id) : [...prev, id]);
+  setFavoriteCountMap(prev => ({
+    ...prev,
+    [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
+  }));
 
   try {
-    setFavouriteIds(prev => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-        removeFavorite(id); // API call
-      } else {
-        newSet.add(id);
-        addFavorite(id); // API call
-      }
-      return newSet;
-    });
+    const res = await addFavorite(id); // POST {code: id} toggles backend
+
+    if (!res.ok) {
+      // Revert UI if backend fails
+      setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+      setFavoriteCountMap(prev => ({
+        ...prev,
+        [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+      }));
+    }
   } catch (err) {
-    console.error("Failed to update favourite:", err);
+    console.error(err);
+    // Revert UI if error occurs
+    setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+    setFavoriteCountMap(prev => ({
+      ...prev,
+      [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+    }));
   }
 };
-
-
-
-
-
-
-
-
-
 
 
   // ------------------- Share -------------------
@@ -307,7 +334,7 @@ const handleFavourite = async (id) => {
       <div className="template-preview">
 
 
-              {/* ==== Page Header [title + description + share + favourite  ] ==== */}
+              {/* ==== Page Header [title + description + share + favorite  ] ==== */}
                 <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   {/* <------ [ Title + Descripton ] -----> */}
                     <div className="cd-header">
@@ -321,30 +348,36 @@ const handleFavourite = async (id) => {
                       </div>
                     </div>
 
-                  {/* <------ [ Favourite + Share ] -----> */}
+                  {/* <------ [ Favorite + Share ] -----> */}
                     <div className="header-actions">
-                      {/* Favourite Button */}
-                              <button
-                                className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
-                                onClick={() => handleFavourite(currentCodes.id)}
-                                title={
-                                  !isLoggedIn
-                                    ? "Login to add favourites"
-                                    : isFavourite(currentCodes.id)
-                                    ? "Remove from favourites"
-                                    : "Add to favourites"
-                                }
-                                style={{
-                                  fontSize: 22,
-                                  cursor: isLoggedIn ? "pointer" : "not-allowed",
-                                  border: "none",
-                                  background: "transparent",
-                                  color: isFavourite(currentCodes.id) ? "red" : "#aaa",
-                                  transition: "color 0.2s",
-                                }}
-                              >
-                                <i className="bi bi-heart"></i>
-                              </button>
+                      {/* Favorite Button */}
+                          <button
+  className={`cd-fav-btn ${isFavorite(currentCodes.id) ? "active" : ""}`}
+  onClick={() => handleFavorite(currentCodes.id)}
+  title={
+    !profile
+      ? "Login to add favorites"
+      : isFavorite(currentCodes.id)
+      ? "Remove from favorites"
+      : "Add to favorites"
+  }
+  style={{
+    fontSize: 22,
+    cursor: profile ? "pointer" : "not-allowed",
+    border: "none",
+    background: "transparent",
+    color: isFavorite(currentCodes.id) ? "red" : "#aaa",
+    transition: "color 0.2s",
+  }}
+>
+  <span className="cd-fav-box">
+    <i className="bi bi-heart-fill mx-3"></i>
+    <small>{favoriteCountMap[currentCodes?.id] ?? 0}</small>
+  </span>
+</button>
+
+
+
 
 
                       {/* Share Dropdown */}
@@ -426,10 +459,13 @@ const handleFavourite = async (id) => {
                 <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
                     <Design_Preview srcDoc={srcDoc} device={device} changeDevice={changeDevice} />
                 </div>
-
       </div>
 
+
+
+{/* ========================================================== */}
       {/* ========= Related / Recommended ============ */}
+{/* ========================================================== */}
       <div className="related-topic-container">
         <h1 className="home-section-title">- Recommended -</h1>
 
@@ -447,7 +483,7 @@ const handleFavourite = async (id) => {
                   />
               </div>
 
-          {/* === Filter Buttons [ALL, Free, Premium, Latest, Oldest, Unwatched, Favourite, Clicked] === */}
+          {/* === Filter Buttons [ALL, Free, Premium, Latest, Oldest, Unwatched, Favorite, Clicked] === */}
               <div style={{ marginBottom: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
                   <button className={`cd-filter-btns ${activeFilter === "all" ? "active" : ""}`} onClick={() => setActiveFilter("all")}>
                       <i className="fa fa-list" /> All
@@ -467,8 +503,8 @@ const handleFavourite = async (id) => {
                   <button className={`cd-filter-btns ${activeFilter === "unwatched" ? "active" : ""}`} onClick={() => setActiveFilter("unwatched")}>
                       <i className="fa fa-eye-slash" /> Unwatched
                   </button>
-                  <button  className={`cd-filter-btns ${activeFilter === "favourite" ? "active" : ""}`} onClick={() => setActiveFilter("favourite")} >
-                      <i className="fa fa-heart" /> Favourite
+                  <button  className={`cd-filter-btns ${activeFilter === "favorite" ? "active" : ""}`} onClick={() => setActiveFilter("favorite")} >
+                      <i className="fa fa-heart" /> Favorite
                   </button>
 
                   <button className="cd-filter-btns" disabled><i className="fa fa-chart-bar" /> Clicked</button>
@@ -488,21 +524,21 @@ const handleFavourite = async (id) => {
                           return (s.title || "").toLowerCase().includes(searchTerm.toLowerCase());
                       })
 
-                      //  Access_Type + Favourite filter
+                      //  Access_Type + Favorite filter
                       .filter((s) => {
                           if (activeFilter === "all") return true;
                           if (activeFilter === "free") return s.access_type === "Free";
                           if (activeFilter === "premium") return s.access_type === "Premium";
-                          if (activeFilter === "favourite") return favouriteIds.includes(s.id);
                           return true;
                       })
 
                       // SORT filter
-                      .sort((a, b) => {
-                          if (activeFilter === "latest") return b.id - a.id;
-                          if (activeFilter === "oldest") return a.id - b.id;
-                          return 0;
-                      })
+  .sort((a, b) => {
+      if (activeFilter === "latest") return b.id - a.id;
+      if (activeFilter === "oldest") return a.id - b.id;
+      if (activeFilter === "favorite") return (favoriteCountMap[b.id] || 0) - (favoriteCountMap[a.id] || 0);
+      return 0;
+  })
 
                       // Final Mapping
                       .map((s) => {

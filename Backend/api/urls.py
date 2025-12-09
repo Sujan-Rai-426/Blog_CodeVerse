@@ -14,7 +14,8 @@ from Profile.views import (
     PlaylistItemViewSet,
     PlaylistViewSet,
     PurchaseViewSet,
-    TransactionHistoryViewSet
+    TransactionHistoryViewSet,
+    favourite_count
 )
 
 from Tutorial.views import (
@@ -74,6 +75,9 @@ urlpatterns = [
     
     # Backend Occupied Steps
     path('backend-steps/occupied-steps/<int:topic_id>/', occupied_steps, name='occupied-steps'),
+    
+    # Total favorite count
+    path('favorite-count/<int:code_id>/', favourite_count, name='favorite-count'),
     
     # Router Endpoints
     path('', include(router.urls)),

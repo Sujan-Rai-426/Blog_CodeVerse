@@ -20,6 +20,9 @@ class FavoriteCodeSerializer(serializers.ModelSerializer):
             "js_code": obj.code.js_code,
             "topic_id": obj.code.topic.id,#topic id where code id belong
         }
+    def get_favourite_count(self, obj):
+        # Count how many users have this code as favourite
+        return obj.code.favorites.count()  # assuming related_name='favorites' in FavoriteCode model
 
 
 # ---------------- PURCHASES ----------------
