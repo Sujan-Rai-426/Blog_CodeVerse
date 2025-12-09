@@ -181,6 +181,10 @@ export default function Components_Design() {
 
 
 
+
+
+  
+
   // ------------------- Favourites -------------------
 const [favouriteIds, setFavouriteIds] = useState(new Set());
 const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -320,27 +324,27 @@ const handleFavourite = async (id) => {
                   {/* <------ [ Favourite + Share ] -----> */}
                     <div className="header-actions">
                       {/* Favourite Button */}
-<button
-  className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
-  onClick={() => handleFavourite(currentCodes.id)}
-  title={
-    !isLoggedIn
-      ? "Login to add favourites"
-      : isFavourite(currentCodes.id)
-      ? "Remove from favourites"
-      : "Add to favourites"
-  }
-  style={{
-    fontSize: 22,
-    cursor: isLoggedIn ? "pointer" : "not-allowed",
-    border: "none",
-    background: "transparent",
-    color: isFavourite(currentCodes.id) ? "red" : "#aaa",
-    transition: "color 0.2s",
-  }}
->
-  ❤️ss
-</button>
+                              <button
+                                className={`cd-fav-btn ${isFavourite(currentCodes.id) ? "active" : ""}`}
+                                onClick={() => handleFavourite(currentCodes.id)}
+                                title={
+                                  !isLoggedIn
+                                    ? "Login to add favourites"
+                                    : isFavourite(currentCodes.id)
+                                    ? "Remove from favourites"
+                                    : "Add to favourites"
+                                }
+                                style={{
+                                  fontSize: 22,
+                                  cursor: isLoggedIn ? "pointer" : "not-allowed",
+                                  border: "none",
+                                  background: "transparent",
+                                  color: isFavourite(currentCodes.id) ? "red" : "#aaa",
+                                  transition: "color 0.2s",
+                                }}
+                              >
+                                <i className="bi bi-heart"></i>
+                              </button>
 
 
                       {/* Share Dropdown */}
