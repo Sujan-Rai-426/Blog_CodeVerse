@@ -109,7 +109,7 @@ const Admin_Update_User = () => {
 
 
     return (
-        <div className="auu-container">
+        <div className="auu-container" >
 
             {/* ================= Search & Filter Bar ================= */}
             <div className="auu-search-wrapper"> <FaSearch className="auu-search-icon" /> 
