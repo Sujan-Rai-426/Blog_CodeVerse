@@ -12,7 +12,7 @@ const CSRF_PATH = import.meta.env.VITE_CSRF_PATH || "/api/csrf/";
 // Admin refresh endpoint
 const ADMIN_REFRESH_PATH = import.meta.env.VITE_ADMIN_REFRESH_PATH || "/api/admin/refresh/";
 
-// axios instance
+// Axios instance
 const apiAdmin = axios.create({
     baseURL: apiURL,
     withCredentials: true,
@@ -35,13 +35,8 @@ export async function fetchAdminCsrfToken() {
 apiAdmin.interceptors.request.use((config) => {
     const method = (config.method || "").toLowerCase();
 
-    // ✔ ACCESS TOKEN: safe and compatible with all naming styles
-    const access =
-        document.cookie.match(/admin_access=([^;]+)/)?.[1] ||
-        document.cookie.match(/admin_access_token=([^;]+)/)?.[1] ||
-        document.cookie.match(/access=([^;]+)/)?.[1] ||
-        document.cookie.match(/access_token=([^;]+)/)?.[1];
-
+    // ✔ ACCESS TOKEN: ONLY admin token
+    const access = document.cookie.match(/access_admin_token=([^;]+)/)?.[1];
     if (access) {
         config.headers["Authorization"] = `Bearer ${access}`;
     }
@@ -51,44 +46,41 @@ apiAdmin.interceptors.request.use((config) => {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
         if (csrfToken) config.headers["X-CSRFToken"] = csrfToken;
     }
-
     return config;
 });
 
 // ------------------- Response Interceptor (refresh) -------------------
 apiAdmin.interceptors.response.use(
-  (res) => res,
-  async (error) => {
-      const originalRequest = error.config;
-      if (!originalRequest) return Promise.reject(error);
+    (res) => res,
+    async (error) => {
+        const originalRequest = error.config;
+        if (!originalRequest) return Promise.reject(error);
 
-      // prevent infinite loop
-      if (
-          originalRequest.url?.endsWith(CSRF_PATH) ||
-          originalRequest.url?.endsWith(ADMIN_REFRESH_PATH)
-      ) {
-          return Promise.reject(error);
-      }
+        // prevent infinite loop
+        if (
+            originalRequest.url?.endsWith(CSRF_PATH) ||
+            originalRequest.url?.endsWith(ADMIN_REFRESH_PATH)
+        ) {
+            return Promise.reject(error);
+        }
 
-      // refresh access token
-      if (error.response?.status === 401 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          try {
-              const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
-
-              const newAccess = r.data?.access;
-              if (newAccess) {
-                  originalRequest.headers = originalRequest.headers || {};
-                  originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
-                  return axios(originalRequest);
-              }
-          } catch (refreshErr) {
-              console.error("admin refresh failed:", refreshErr);
-          }
-      }
-
-      return Promise.reject(error);
-  }
+        // refresh access token
+        if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
+                const newAccess = r.data?.access;
+                if (newAccess) {
+                    originalRequest.headers = originalRequest.headers || {};
+                    originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
+                    return axios(originalRequest);
+                }
+            } catch (refreshErr) {
+                console.error("admin refresh failed:", refreshErr);
+            }
+        }
+        return Promise.reject(error);
+    }
 );
 
 export default apiAdmin;
