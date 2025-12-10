@@ -6,11 +6,12 @@ import "../assets/css/Admin_Login.css";
 
 export default function Admin_Login() {
   const navigate = useNavigate();
-  const { login, admin, loading } = useAdmin();
+  const { login, admin } = useAdmin();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loginProcessing, setLoginProcessing] = useState(false)
 
 
   // Fetch CSRF immediately on page load
@@ -28,13 +29,15 @@ export default function Admin_Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
+      setLoginProcessing(true)
       await login(email, password); // login() uses apiAdmin which sends CSRF
       // redirect handled by useEffect when admin updates
     } catch (err) {
       console.error("Login error:", err);
       setError(err.response?.data?.detail || "Login failed. Check credentials.");
+    } finally {
+      setLoginProcessing(false)
     }
   };
 
@@ -63,15 +66,8 @@ export default function Admin_Login() {
 
           {error && <p className="error-text">{error}</p>}
 
-          <button type="submit" disabled={loading}>
-            {loading ? (
-              <>
-                Logging in
-                <span className="loader"></span>
-              </>
-            ) : (
-              "Login"
-            )}
+          <button type="submit" disabled={loginProcessing}>
+              {loginProcessing ? "Logging In ..." : "Login" }
           </button>
 
           <p>
