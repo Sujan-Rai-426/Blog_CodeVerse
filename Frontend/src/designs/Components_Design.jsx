@@ -352,33 +352,29 @@ const handleFavorite = async (id) => {
                     <div className="header-actions">
                       {/* Favorite Button */}
                           <button
-  className={`cd-fav-btn ${isFavorite(currentCodes.id) ? "active" : ""}`}
-  onClick={() => handleFavorite(currentCodes.id)}
-  title={
-    !profile
-      ? "Login to add favorites"
-      : isFavorite(currentCodes.id)
-      ? "Remove from favorites"
-      : "Add to favorites"
-  }
-  style={{
-    fontSize: 22,
-    cursor: profile ? "pointer" : "not-allowed",
-    border: "none",
-    background: "transparent",
-    color: isFavorite(currentCodes.id) ? "red" : "#aaa",
-    transition: "color 0.2s",
-  }}
->
-  <span className="cd-fav-box">
-    <i className="bi bi-heart-fill mx-3"></i>
-    <small>{favoriteCountMap[currentCodes?.id] ?? 0}</small>
-  </span>
-</button>
-
-
-
-
+                              className={`cd-fav-btn ${isFavorite(currentCodes.id) ? "active" : ""}`}
+                              onClick={() => handleFavorite(currentCodes.id)}
+                              title={
+                                !profile
+                                  ? "Login to add favorites"
+                                  : isFavorite(currentCodes.id)
+                                  ? "Remove from favorites"
+                                  : "Add to favorites"
+                              }
+                              style={{
+                                fontSize: 22,
+                                cursor: profile ? "pointer" : "not-allowed",
+                                border: "none",
+                                background: "transparent",
+                                color: isFavorite(currentCodes.id) ? "red" : "#aaa",
+                                transition: "color 0.2s",
+                              }}
+                            >
+                                <span className="cd-fav-box">
+                                    <i className="bi bi-heart-fill mx-3"></i>
+                                    {/* <small>{favoriteCountMap[currentCodes?.id] ?? 0}</small> */}
+                                </span>
+                            </button>
 
                       {/* Share Dropdown */}
                       <div className="share-dropdown">
