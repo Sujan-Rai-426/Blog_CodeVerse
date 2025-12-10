@@ -1,3 +1,4 @@
+// src/config/apiClient.js
 import axios from "axios";
 
 const isProduction = import.meta.env.MODE === "production";
@@ -18,9 +19,8 @@ const apiClient = axios.create({
 // ------------------- Fetch CSRF helper -------------------
 export async function fetchClientCsrfToken() {
   try {
-    await apiClient.get(CSRF_PATH, { withCredentials: true }); // ensures cookie is set
+    await apiClient.get(CSRF_PATH);
     const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
-    if (!token) throw new Error("CSRF token not found in cookies");
     return token;
   } catch (err) {
     console.error("fetchClientCsrfToken failed:", err);
@@ -49,16 +49,24 @@ apiClient.interceptors.response.use(
     if (
       originalRequest.url?.endsWith(CSRF_PATH) ||
       originalRequest.url?.endsWith(USER_REFRESH_PATH)
-    ) return Promise.reject(error);
+    ) {
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
       try {
+        // Read CSRF token from cookie
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+
+        // Call refresh endpoint with CSRF header
         const r = await axios.post(
           `${apiURL}${USER_REFRESH_PATH}`,
-          {},
-          { withCredentials: true, headers: csrfToken ? { "X-CSRFToken": csrfToken } : {} }
+          {}, // empty body
+          {
+            withCredentials: true,
+            headers: csrfToken ? { "X-CSRFToken": csrfToken } : {},
+          }
         );
 
         const newAccess = r.data?.access;
