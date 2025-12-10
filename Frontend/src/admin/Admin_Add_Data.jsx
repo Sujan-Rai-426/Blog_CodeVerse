@@ -933,7 +933,7 @@
 
 
 import React, { useEffect, useState } from "react";
-import { useAdmin } from "../context/Admin_API_Context";
+import { useAdmin } from "./Admin_API_Context";
 
 const Admin_Add_Data = () => {
   const {
