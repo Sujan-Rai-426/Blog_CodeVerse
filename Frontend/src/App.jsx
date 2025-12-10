@@ -10,13 +10,28 @@ import Admin_Routes from './admin/Admin_Routes.jsx';
 import User_Routes from './clients/User_Routes.jsx';
 import Template_Routes from './template_Pages/Template_Routes.jsx';
 import { adminPersistentLogin } from "./config/apiAdmin";
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 function App() {
+  const [adminLoading, setAdminLoading] = useState(true);
 
   useEffect(() => {
-    adminPersistentLogin();
+    async function checkAdminLogin() {
+      try {
+        await adminPersistentLogin(); // try to refresh token
+      } catch (err) {
+        console.log("Admin not logged in:", err);
+      } finally {
+        setAdminLoading(false);
+      }
+    }
+    checkAdminLogin();
   }, []);
+
+  if (adminLoading) {
+    // Block rendering until check is done
+    return <div>Loading Admin...</div>;
+  }
 
   return (
     <Router>
@@ -30,7 +45,6 @@ function App() {
       </Routes>
 
       <Footer />
-
       <Analytics />
       <Floating_Go_Back_Btn />
       <Scroll_To_Top />
