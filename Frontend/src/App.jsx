@@ -9,8 +9,13 @@ import Routes_List from './routes/Routes_List.jsx';
 import Admin_Routes from './admin/Admin_Routes.jsx';
 import User_Routes from './clients/User_Routes.jsx';
 import Template_Routes from './template_Pages/Template_Routes.jsx';
+import { adminPersistentLogin } from "./config/apiAdmin";
 
 function App() {
+
+  useEffect(() => {
+    adminPersistentLogin();
+  }, []);
 
   return (
     <Router>

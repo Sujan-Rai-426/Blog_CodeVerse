@@ -6,10 +6,7 @@ const apiURL = isProduction
     ? import.meta.env.VITE_API_URL_PRODUCTION
     : import.meta.env.VITE_API_URL_DEVELOPMENT;
 
-// CSRF path can be overridden
 const CSRF_PATH = import.meta.env.VITE_CSRF_PATH || "/api/csrf/";
-
-// Admin refresh endpoint
 const ADMIN_REFRESH_PATH = import.meta.env.VITE_ADMIN_REFRESH_PATH || "/api/admin/refresh/";
 
 // Axios instance
@@ -19,7 +16,7 @@ const apiAdmin = axios.create({
     headers: { "Content-Type": "application/json" },
 });
 
-// ------------------- CSRF fetch once -------------------
+// ------------------- CSRF fetch helper -------------------
 export async function fetchAdminCsrfToken() {
     try {
         await apiAdmin.get(CSRF_PATH);
@@ -35,13 +32,9 @@ export async function fetchAdminCsrfToken() {
 apiAdmin.interceptors.request.use((config) => {
     const method = (config.method || "").toLowerCase();
 
-    // ✔ ACCESS TOKEN: ONLY admin token
     const access = document.cookie.match(/access_admin_token=([^;]+)/)?.[1];
-    if (access) {
-        config.headers["Authorization"] = `Bearer ${access}`;
-    }
+    if (access) config.headers["Authorization"] = `Bearer ${access}`;
 
-    // ✔ CSRF header only for unsafe methods
     if (["post", "put", "patch", "delete"].includes(method)) {
         const csrfToken = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
         if (csrfToken) config.headers["X-CSRFToken"] = csrfToken;
@@ -49,28 +42,26 @@ apiAdmin.interceptors.request.use((config) => {
     return config;
 });
 
-// ------------------- Response Interceptor (refresh) -------------------
+// ------------------- Response Interceptor -------------------
 apiAdmin.interceptors.response.use(
     (res) => res,
     async (error) => {
         const originalRequest = error.config;
         if (!originalRequest) return Promise.reject(error);
 
-        // prevent infinite loop
         if (
             originalRequest.url?.endsWith(CSRF_PATH) ||
             originalRequest.url?.endsWith(ADMIN_REFRESH_PATH)
-        ) {
-            return Promise.reject(error);
-        }
+        ) return Promise.reject(error);
 
-        // refresh access token
         if (error.response?.status === 401 && !originalRequest._retry) {
             originalRequest._retry = true;
             try {
                 const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
                 const newAccess = r.data?.access;
                 if (newAccess) {
+                    // Update cookie
+                    document.cookie = `access_admin_token=${newAccess}; path=/;`;
                     originalRequest.headers = originalRequest.headers || {};
                     originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
                     return axios(originalRequest);
@@ -82,5 +73,22 @@ apiAdmin.interceptors.response.use(
         return Promise.reject(error);
     }
 );
+
+// ------------------- Persistent login on page load -------------------
+export async function adminPersistentLogin() {
+    const refreshToken = document.cookie.match(/refresh_admin_token=([^;]+)/)?.[1];
+    if (!refreshToken) return;
+
+    try {
+        const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
+        const newAccess = r.data?.access;
+        if (newAccess) {
+            document.cookie = `access_admin_token=${newAccess}; path=/;`;
+            console.log("Admin persistent login success");
+        }
+    } catch (err) {
+        console.warn("Admin persistent login failed", err);
+    }
+}
 
 export default apiAdmin;
