@@ -1,4 +1,3 @@
-// src/config/apiAdmin.js
 import axios from "axios";
 
 const isProduction = import.meta.env.MODE === "production";
@@ -60,8 +59,7 @@ apiAdmin.interceptors.response.use(
                 const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
                 const newAccess = r.data?.access;
                 if (newAccess) {
-                    // Update cookie
-                    document.cookie = `access_admin_token=${newAccess}; path=/;`;
+                    document.cookie = `access_admin_token=${newAccess}; path=/; max-age=300; secure; samesite=strict`;
                     originalRequest.headers = originalRequest.headers || {};
                     originalRequest.headers["Authorization"] = `Bearer ${newAccess}`;
                     return axios(originalRequest);
@@ -77,17 +75,19 @@ apiAdmin.interceptors.response.use(
 // ------------------- Persistent login on page load -------------------
 export async function adminPersistentLogin() {
     const refreshToken = document.cookie.match(/refresh_admin_token=([^;]+)/)?.[1];
-    if (!refreshToken) return;
+    if (!refreshToken) return false;
 
     try {
         const r = await axios.post(`${apiURL}${ADMIN_REFRESH_PATH}`, {}, { withCredentials: true });
         const newAccess = r.data?.access;
         if (newAccess) {
-            document.cookie = `access_admin_token=${newAccess}; path=/;`;
+            document.cookie = `access_admin_token=${newAccess}; path=/; max-age=300; secure; samesite=strict`;
             console.log("Admin persistent login success");
+            return true;
         }
     } catch (err) {
         console.warn("Admin persistent login failed", err);
+        return false;
     }
 }
 

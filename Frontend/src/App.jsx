@@ -1,37 +1,32 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
 import Scroll_To_Top from './context/Scroll_To_Top.jsx';
 import { Analytics } from "@vercel/analytics/react";
+import { useEffect, useState } from 'react';
 
 import Nav_Bar from './components/Nav_Bar.jsx';
 import Footer from './components/Footer.jsx';
 import Floating_Go_Back_Btn from './components/Floating_Go_Back_Btn.jsx';
+
 import Routes_List from './routes/Routes_List.jsx';
 import Admin_Routes from './admin/Admin_Routes.jsx';
 import User_Routes from './clients/User_Routes.jsx';
 import Template_Routes from './template_Pages/Template_Routes.jsx';
+
 import { adminPersistentLogin } from "./config/apiAdmin";
-import { useEffect, useState } from 'react';
 
 function App() {
   const [adminLoading, setAdminLoading] = useState(true);
 
   useEffect(() => {
-    async function checkAdminLogin() {
-      try {
-        await adminPersistentLogin(); // try to refresh token
-      } catch (err) {
-        console.log("Admin not logged in:", err);
-      } finally {
-        setAdminLoading(false);
-      }
+    // Persistent login for admin on page load
+    async function initAdmin() {
+      await adminPersistentLogin();
+      setAdminLoading(false);
     }
-    checkAdminLogin();
+    initAdmin();
   }, []);
 
-  if (adminLoading) {
-    // Block rendering until check is done
-    return <div>Loading Admin...</div>;
-  }
+  if (adminLoading) return <div>Loading admin session...</div>; // optional loader
 
   return (
     <Router>
