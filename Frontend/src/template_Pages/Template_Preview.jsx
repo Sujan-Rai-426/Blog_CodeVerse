@@ -6,8 +6,8 @@ import { FaFacebook, FaFacebookMessenger, FaTelegram, FaWhatsapp } from "react-i
 
 const deviceSizes = {
   desktop: { width: "100%", height: "600px" },
-  tablet: { width: "768px", height: "600px" },
-  mobile: { width: "375px", height: "667px" },
+  tablet: { width: "771px", height: "600px" },
+  mobile: { width: "568px", height: "667px" },
 };
 
 const Template_Preview = () => {

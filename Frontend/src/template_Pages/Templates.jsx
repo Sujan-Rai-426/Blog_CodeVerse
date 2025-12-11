@@ -109,7 +109,6 @@ const Templates = () => {
         {/* // ===================== TEMPLATE ===================== */}
         <div id="TEMPLATES" className="template-page">
 
-          <h2 style={{ marginBottom: "20px" }}>Choose a Template</h2>
 
           {/* Filters */}
           <div className="template-filters">

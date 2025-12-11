@@ -6,7 +6,7 @@ import "../assets/css/Recent_Contents.css";
 import api from "../config/api";
 import { FaGem } from "react-icons/fa";
 
-const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
+const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1028, aspectHeight = 760) => {
     const safeJs = (js || "").trim().replace(/<\/script>/gi, "<\\/script>");
     return `
     <!doctype html>
