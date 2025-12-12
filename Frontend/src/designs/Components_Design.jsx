@@ -32,7 +32,7 @@ const buildMainIframeDoc = (html = "", css = "", js = "") => {
 };
 
 // === Recommended / small frame iframe doc ===
-const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
+const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth=1333, aspectHeight = 600) => {
   const trimmedJs = (js || "").toString().trim();
   const safeJs = trimmedJs ? trimmedJs.replace(/<\/script>/gi, "<\\/script>") : "";
   return `
@@ -60,6 +60,7 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth = 3
         justify-content: center;
         align-items: center;
         overflow: hidden;
+        position: relative;
       }
       .scaleInner {
         width: ${aspectWidth}px;
@@ -68,6 +69,7 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth = 3
         justify-content: center;
         align-items: center;
         transform-origin: center center;
+        position: absolute;
       }
       ${css || ""}
     </style>
@@ -196,74 +198,74 @@ const [favoriteCountMap, setFavoriteCountMap] = useState({}); // { codeId: count
 const isFavorite = (id) => favoriteIds.includes(id);
 
 // Initialize favorite IDs from context
-useEffect(() => {
-  if (favorites && favorites.length) {
-    const ids = favorites.map(f => f.code_detail.id);
-    setFavoriteIds(ids);
-  } else {
-    setFavoriteIds([]);
-  }
-}, [favorites]);
+  useEffect(() => {
+    if (favorites && favorites.length) {
+      const ids = favorites.map(f => f.code_detail.id);
+      setFavoriteIds(ids);
+    } else {
+      setFavoriteIds([]);
+    }
+  }, [favorites]);
 
 // Fetch favorite counts for all displayed codes
 // Fetch favorite counts for all displayed codes (on mount or relatedItems change)
-useEffect(() => {
-  const fetchCounts = async () => {
-    const allCodes = [currentCodes, ...relatedItems].filter(Boolean);
-    const newCounts = {};
+  useEffect(() => {
+    const fetchCounts = async () => {
+      const allCodes = [currentCodes, ...relatedItems].filter(Boolean);
+      const newCounts = {};
 
-    await Promise.all(allCodes.map(async (item) => {
-      if (!item?.id) return;
-      try {
-        const res = await fetch(`/api/favorite-count/${item.id}/`);
-        if (!res.ok) throw new Error("Failed to fetch");
-        const data = await res.json();
-        newCounts[item.id] = data.favorite_count ?? 0; // ensure number
-      } catch (err) {
-        newCounts[item.id] = 0;
-      }
-    }));
+      await Promise.all(allCodes.map(async (item) => {
+        if (!item?.id) return;
+        try {
+          const res = await fetch(`/api/favorite-count/${item.id}/`);
+          if (!res.ok) throw new Error("Failed to fetch");
+          const data = await res.json();
+          newCounts[item.id] = data.favorite_count ?? 0; // ensure number
+        } catch (err) {
+          newCounts[item.id] = 0;
+        }
+      }));
 
-    setFavoriteCountMap(newCounts);
-  };
+      setFavoriteCountMap(newCounts);
+    };
 
-  if (currentCodes) fetchCounts();
-}, [currentCodes, relatedItems]);
+    if (currentCodes) fetchCounts();
+  }, [currentCodes, relatedItems]);
 
 // Handle favorite toggle with optimistic UI
-const handleFavorite = async (id) => {
-  if (!profile) return alert("Login to add favorites!");
+  const handleFavorite = async (id) => {
+    if (!profile) return alert("Login to add favorites!");
 
-  const isFav = favoriteIds.includes(id);
+    const isFav = favoriteIds.includes(id);
 
-  // Optimistic update
-  setFavoriteIds(prev => isFav ? prev.filter(x => x !== id) : [...prev, id]);
-  setFavoriteCountMap(prev => ({
-    ...prev,
-    [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
-  }));
+    // Optimistic update
+    setFavoriteIds(prev => isFav ? prev.filter(x => x !== id) : [...prev, id]);
+    setFavoriteCountMap(prev => ({
+      ...prev,
+      [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
+    }));
 
-  try {
-    const res = await addFavorite(id); // POST {code: id} toggles backend
+    try {
+      const res = await addFavorite(id); // POST {code: id} toggles backend
 
-    if (!res.ok) {
-      // Revert UI if backend fails
+      if (!res.ok) {
+        // Revert UI if backend fails
+        setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+        setFavoriteCountMap(prev => ({
+          ...prev,
+          [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+        }));
+      }
+    } catch (err) {
+      console.error(err);
+      // Revert UI if error occurs
       setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
       setFavoriteCountMap(prev => ({
         ...prev,
         [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
       }));
     }
-  } catch (err) {
-    console.error(err);
-    // Revert UI if error occurs
-    setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
-    setFavoriteCountMap(prev => ({
-      ...prev,
-      [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
-    }));
-  }
-};
+  };
 
 
   // ------------------- Share -------------------
@@ -529,12 +531,12 @@ const handleFavorite = async (id) => {
                       })
 
                       // SORT filter
-  .sort((a, b) => {
-      if (activeFilter === "latest") return b.id - a.id;
-      if (activeFilter === "oldest") return a.id - b.id;
-      if (activeFilter === "favorite") return (favoriteCountMap[b.id] || 0) - (favoriteCountMap[a.id] || 0);
-      return 0;
-  })
+                      .sort((a, b) => {
+                          if (activeFilter === "latest") return b.id - a.id;
+                          if (activeFilter === "oldest") return a.id - b.id;
+                          if (activeFilter === "favorite") return (favoriteCountMap[b.id] || 0) - (favoriteCountMap[a.id] || 0);
+                          return 0;
+                      })
 
                       // Final Mapping
                       .map((s) => {
@@ -542,8 +544,6 @@ const handleFavorite = async (id) => {
                             s.html_code || s.html || "",
                             s.css_code || s.css || "",
                             s.js_code || s.js || "",
-                            320,
-                            450
                         );
 
                         return (

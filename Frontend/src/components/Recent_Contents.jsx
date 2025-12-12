@@ -6,7 +6,7 @@ import "../assets/css/Recent_Contents.css";
 import api from "../config/api";
 import { FaGem } from "react-icons/fa";
 
-const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1028, aspectHeight = 760) => {
+const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspectHeight = 850) => {
     const safeJs = (js || "").trim().replace(/<\/script>/gi, "<\\/script>");
     return `
     <!doctype html>
@@ -16,8 +16,8 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1028, aspect
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <style>
           html, body { margin:0; padding:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
-          .scaleWrapper { width:100%; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
-          .scaleInner { width:${aspectWidth}px; height:${aspectHeight}px; display:flex; justify-content:center; align-items:center; transform-origin:center center; }
+          .scaleWrapper { width:1338px; position:relative; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+          .scaleInner { width:${aspectWidth}px; height:${aspectHeight}px; position:absolute; display:flex; justify-content:center; align-items:center; transform-origin:center center; }
           ${css || ""}
         </style>
       </head>
