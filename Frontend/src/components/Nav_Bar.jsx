@@ -136,6 +136,9 @@ function Nav_Bar() {
                                   <a className="dropdown-item" href="https://sujan140.vercel.app">
                                       <i className="bi bi-person-fill"></i> Developer
                                   </a>
+                                  <a className="dropdown-item" href="https://escape-road-140.netlify.app/">
+                                      <i className="bi bi-person-fill"></i> Game
+                                  </a>
                                   <Link className="dropdown-item" to="/Privacy_Policy">
                                       <i className="bi bi-shield-lock-fill"></i> Privacy Policy
                                   </Link>
@@ -193,6 +196,9 @@ function Nav_Bar() {
                         </li>
                         <li> 
                             <a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a>
+                        </li>
+                        <li> 
+                            <a href="https://escape-road-140.netlify.app/" onClick={() => setSidebarOpen(false)}><i className="bi bi-joystick fs-5"></i> &nbsp; Game</a>
                         </li>
                         <li>
                             <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
