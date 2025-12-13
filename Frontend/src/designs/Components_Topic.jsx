@@ -59,7 +59,7 @@ const Components_Topic = () => {
     }, [frontendLangs]);
 
     return (
-        <div className="tutorial-topic-page container" style={{ minHeight: "100vh" }}>
+        <div className="tutorial-topic-page container" style={{ minHeight: "100vh"}}>
             <h1 className="page-title">- Components Design -</h1>
 
             {/* Horizontal Scrollable Frontend Languages */}

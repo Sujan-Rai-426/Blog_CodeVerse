@@ -1,9 +1,10 @@
 import React, { useContext, useState, useEffect } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import "../assets/css/Components_Left_Sidebar.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
 const NEW_DURATION_DAYS = 7;
+const ACTIVE_TOPIC_KEY = "active_component_topic";
 
 const isNewItem = (date) => {
     if (!date) return false;
@@ -15,15 +16,24 @@ function Components_Left_Sidebar() {
     const { languageID, topicID, languages, loadingBase } =
         useContext(Parent_API_Provider_Context);
 
-    const [activeTopic, setActiveTopic] = useState(topicID || null);
+    // 🔥 Restore from cache first
+    const [activeTopic, setActiveTopic] = useState(() => {
+        return topicID || localStorage.getItem(ACTIVE_TOPIC_KEY);
+    });
 
+    // 🔄 Sync with URL changes
     useEffect(() => {
-        // Sync state when URL changes
-        setActiveTopic(topicID);
+        if (topicID) {
+            setActiveTopic(topicID);
+            localStorage.setItem(ACTIVE_TOPIC_KEY, topicID);
+        }
     }, [topicID]);
 
     const frontendLangs = languages.filter((l) => l.section === 1);
 
+    // ----------------------------------------------------
+    // LOADING SKELETON
+    // ----------------------------------------------------
     if (loadingBase) {
         return (
             <aside className="cl-sidebar loading">
@@ -44,6 +54,9 @@ function Components_Left_Sidebar() {
         );
     }
 
+    // ----------------------------------------------------
+    // SIDEBAR
+    // ----------------------------------------------------
     return (
         <aside className="cl-sidebar">
             <h3 className="cl-title sticky-top text-center">
@@ -74,18 +87,27 @@ function Components_Left_Sidebar() {
                                         isNewItem(topic.created_at) ||
                                         isNewItem(firstSourceCreated);
 
-                                    const isActiveTopic = String(topic.id) === String(activeTopic);
+                                    const isActiveTopic =
+                                        String(topic.id) === String(activeTopic);
 
                                     return (
                                         <li key={topic.id}>
                                             <Link
                                                 to={toPath}
                                                 className={`cl-topic ${isActiveTopic ? "active" : ""}`}
-                                                onClick={() => setActiveTopic(topic.id)}
+                                                onClick={() => {
+                                                    setActiveTopic(topic.id);
+                                                    localStorage.setItem(
+                                                        ACTIVE_TOPIC_KEY,
+                                                        topic.id
+                                                    );
+                                                }}
                                             >
                                                 {topic.name}
                                                 {showNewBadge && (
-                                                    <span className="cl-new-badge">NEW ✨</span>
+                                                    <span className="cl-new-badge">
+                                                        NEW ✨
+                                                    </span>
                                                 )}
                                             </Link>
                                         </li>

@@ -157,8 +157,8 @@
 
 
 /* === Page Layout === */
-.tutorial-topic-page {
-    padding: 3rem 2rem 4rem;
+.tutorial-topic-page.container {
+    padding: 0 1.5rem !important;
     min-height: 100vh;
     background: none;
     font-family: "Poppins", sans-serif;
@@ -239,7 +239,6 @@
 
 /* === Responsive Design === */
 @media (max-width: 768px) {
-    .tutorial-topic-page { padding: 2rem 1rem; }
     .page-title { font-size: 2rem; }
     .language-title { font-size: 1.4rem; }
     .topic-content h3 { font-size: 1rem; }

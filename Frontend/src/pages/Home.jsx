@@ -33,7 +33,7 @@ function Home() {
     };
 
     return (
-        <div className="home-container container" style={{ minHeight: "100vh" }}>
+        <div className="home-container" style={{ minHeight: "100vh", padding:'0 1rem !important' }}>
             {showLoadingMessage && parentLoading && languages.length === 0 &&  (
                 <div className="loading-overlay">
                     <div className="loading-message">
@@ -211,7 +211,7 @@ function Home() {
             </section>
 
             {/* Recent Components Section */}
-            <section className="recent-section mt-3">
+            <section className="recent-section mt-3 mx-2">
                 <h2 className="home-section-title">Recently uploaded Designs</h2>
                 <p className="section-subtext">
                     Browse our latest uploaded UI designs, components, and creative inspirations.

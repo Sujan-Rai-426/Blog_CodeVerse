@@ -25,6 +25,7 @@ export const Parent_Api_Provider = ({ children }) => {
     const CACHE_TIME_KEY = "parent_api_base_cache_time";
     const MAX_AGE = 1000 * 60 * 60 * 48; // 48 hours
 
+
   // Load from localStorage instantly
     const loadFromCache = useCallback(() => {
         try {
@@ -39,24 +40,25 @@ export const Parent_Api_Provider = ({ children }) => {
         }
     }, []);
 
+
   // Save fresh cache
     const saveToCache = useCallback((data) => {
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     }, []);
 
+
   // --------------------------------------------------------------------
   // 1️⃣ FETCH BASE DATA (Categories + Sections + Languages)
   // --------------------------------------------------------------------
-    const fetchBaseData = useCallback(async () => {
-        // Only set loading true if we aren't already showing cached data
-        if (!baseData) {
+    const fetchBaseData = useCallback(async (isBackground = false) => {
+        if (!isBackground) {
             setLoadingBase(true);
         }
-        setErrorBase(null); // Clear errors before fetching
+        setErrorBase(null);
         try {
             const [categoriesRes, sectionsRes, languagesRes] = await Promise.all([
-                api.get("/api/categories/"), // <-- uses your dynamic api instance
+                api.get("/api/categories/"),
                 api.get("/api/sections/"),
                 api.get("/api/languages/"),
             ]);
@@ -65,20 +67,17 @@ export const Parent_Api_Provider = ({ children }) => {
                 sections: sectionsRes.data,
                 languages: languagesRes.data,
             };
-        // This update will trigger a re-render with the freshest data from the backend
             setBaseData(combined);
             saveToCache(combined);
         } catch (err) {
-            console.error("Base Data fetch error:", err);
-            // Only set error if no base data was available
-            if (!baseData) {
-                setErrorBase(err);
-            }
+            if (!baseData) setErrorBase(err);
         } finally {
-        // Always finish loading state
-            setLoadingBase(false);
+            if (!isBackground) {
+                setLoadingBase(false);
+            }
         }
-    }, [baseData, saveToCache]); // Depend on baseData to check if we already have data
+    }, [baseData, saveToCache]);
+
 
 
   // --------------------------------------------------------------------
@@ -87,18 +86,16 @@ export const Parent_Api_Provider = ({ children }) => {
     useEffect(() => {
         const cachedData = loadFromCache();
         if (cachedData) {
-            // show cached immediately
             setBaseData(cachedData);
             setLoadingBase(false);
-
-            // background refresh
+            // ✅ background refresh (NO skeleton)
             setRefreshingBase(true);
-            fetchBaseData().finally(() => setRefreshingBase(false));
+            fetchBaseData(true).finally(() => setRefreshingBase(false));
         } else {
-            // no cache
-            fetchBaseData();
+            fetchBaseData(false);
         }
     }, []);
+
 
 
   // --------------------------------------------------------------------

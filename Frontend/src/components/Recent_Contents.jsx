@@ -93,7 +93,7 @@ function Recent_Contents() {
     };
 
     return (
-        <div className="g-4 recent-cards-container">
+        <div className="g-4 recent-cards-container mx-1">
             {components.length === 0 ? (
                 <p className="text-center text-muted py-5">No recent components found.</p>
             ) : components.map(c => {
@@ -103,11 +103,11 @@ function Recent_Contents() {
                 return (
                     <div key={c.id}>
                         <div
-                            className="card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
+                            className="rc-card shadow-sm border-0 rounded-4 overflow-hidden tutorial-card position-relative"
                             onClick={()=>handleNavigate(c.topic, c.id)}
                             style={{cursor:'pointer'}}
                         >
-                            <div className="video-container position-relative">
+                            <div className=" rc-iframe-container position-relative">
                                 <iframe
                                     title={`preview-${c.id}`}
                                     srcDoc={iframeDoc}
@@ -135,7 +135,7 @@ function Recent_Contents() {
                                     </div>
                                 )}
                             </div>
-                            <div className="card-body py-2">
+                            <div className="rc-card-body py-2 px-3">
                                 <h5 className="recent-card-title">{c.title || c.topic_name || "Untitled"}</h5>
                                 <button
                                     className="btn btn-outline-warning btn-sm rounded-pill"

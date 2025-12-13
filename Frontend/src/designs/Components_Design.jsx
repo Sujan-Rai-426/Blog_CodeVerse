@@ -128,59 +128,55 @@ export default function Components_Design() {
 
   // ------------------- Fetch codes with caching -------------------
   useEffect(() => {
-    if (!topicID) return;
-
-    const loadCodes = async () => {
-      const cachedKey = `topicCodes_${topicID}`;
-      let codes = [];
-      const cachedData = localStorage.getItem(cachedKey);
-      if (cachedData) {
-        try {
-          codes = JSON.parse(cachedData);
-        } catch (err) {
-          console.error("Cache parse error:", err);
-        }
-      }
-
-      if (!codes.length) {
-        codes = await fetchFrontendSourceCode(topicID);
-        localStorage.setItem(cachedKey, JSON.stringify(codes));
-      }
-
-      setRelatedItems(codes);
-
-      let chosenSource = codeId ? codes.find((s) => String(s.id) === String(codeId)) : null;
-      if (!chosenSource && codes.length > 0) chosenSource = codes[0];
-      if (!chosenSource) {
-        setCurrentCodes(null);
-        return;
-      }
-
-      setCurrentCodes({
-        html: chosenSource.html_code || "",
-        css: chosenSource.css_code || "",
-        js: chosenSource.js_code || "",
-        title: chosenSource.title || "Untitled",
-        access_type: chosenSource.access_type || "Free",
-        price: chosenSource.price || 0,
-        hasBought: !!chosenSource.hasBought,
-        id: chosenSource.id,
-        topicId: topicID,
-        description: chosenSource.description || "",
-      });
-    };
-
-    loadCodes();
+      if (!topicID) return;
+      const loadCodes = async () => {
+          const cachedKey = `topicCodes_${topicID}`;
+          let codes = [];
+          const cachedData = localStorage.getItem(cachedKey);
+          if (cachedData) {
+              try {
+                  codes = JSON.parse(cachedData);
+              } catch (err) {
+                  console.error("Cache parse error:", err);
+              }
+          }
+          if (!codes.length) {
+              codes = await fetchFrontendSourceCode(topicID);
+              localStorage.setItem(cachedKey, JSON.stringify(codes));
+          }
+          setRelatedItems(codes);
+          let chosenSource = codeId ? codes.find((s) => String(s.id) === String(codeId)) : null;
+          if (!chosenSource && codes.length > 0) chosenSource = codes[0];
+          if (!chosenSource) {
+              setCurrentCodes(null);
+              return;
+          }
+          setCurrentCodes({
+              html: chosenSource.html_code || "",
+              css: chosenSource.css_code || "",
+              js: chosenSource.js_code || "",
+              title: chosenSource.title || "Untitled",
+              access_type: chosenSource.access_type || "Free",
+              price: chosenSource.price || 0,
+              hasBought: !!chosenSource.hasBought,
+              id: chosenSource.id,
+              topicId: topicID,
+              description: chosenSource.description || "",
+          });
+      };
+      loadCodes();
   }, [topicID, codeId, fetchFrontendSourceCode]);
+
+
 
   // ------------------- Set srcDoc for iframe (progressive loading) -------------------
   useEffect(() => {
-    if (!currentCodes) return;
-    setSrcDoc("");
-    const timer = setTimeout(() => {
-      setSrcDoc(buildMainIframeDoc(currentCodes.html, currentCodes.css, currentCodes.js));
-    }, 100);
-    return () => clearTimeout(timer);
+      if (!currentCodes) return;
+      setSrcDoc("");
+      const timer = setTimeout(() => {
+          setSrcDoc(buildMainIframeDoc(currentCodes.html, currentCodes.css, currentCodes.js));
+      }, 100);
+      return () => clearTimeout(timer);
   }, [currentCodes]);
 
 
@@ -190,25 +186,25 @@ export default function Components_Design() {
 
 
   // ------------------- Favorites and Count-------------------
-// ------------------- Favorites and Count -------------------
-const { profile, favorites } = useContext(User_API_Context);
-const [favoriteIds, setFavoriteIds] = useState([]); // IDs of codes user favorited
-const [favoriteCountMap, setFavoriteCountMap] = useState({}); // { codeId: count }
+  const { profile, favorites } = useContext(User_API_Context);
+  const [favoriteIds, setFavoriteIds] = useState([]); // IDs of codes user favorited
+  const [favoriteCountMap, setFavoriteCountMap] = useState({}); // { codeId: count }
 
-// Helper: Check if a code is favorite
-const isFavorite = (id) => favoriteIds.includes(id);
+  // Helper: Check if a code is favorite
+  const isFavorite = (id) => favoriteIds.includes(id);
+
 
 // Initialize favorite IDs from context
   useEffect(() => {
-    if (favorites && favorites.length) {
-      const ids = favorites.map(f => f.code_detail.id);
-      setFavoriteIds(ids);
-    } else {
-      setFavoriteIds([]);
-    }
+      if (favorites && favorites.length) {
+          const ids = favorites.map(f => f.code_detail.id);
+          setFavoriteIds(ids);
+      } else {
+          setFavoriteIds([]);
+      }
   }, [favorites]);
 
-// Fetch favorite counts for all displayed codes
+
 // Fetch favorite counts for all displayed codes (on mount or relatedItems change)
   useEffect(() => {
     const fetchCounts = async () => {
@@ -235,84 +231,80 @@ const isFavorite = (id) => favoriteIds.includes(id);
 
 // Handle favorite toggle with optimistic UI
   const handleFavorite = async (id) => {
-    if (!profile) return alert("Login to add favorites!");
-
-    const isFav = favoriteIds.includes(id);
-
-    // Optimistic update
-    setFavoriteIds(prev => isFav ? prev.filter(x => x !== id) : [...prev, id]);
-    setFavoriteCountMap(prev => ({
-      ...prev,
-      [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
-    }));
-
-    try {
-      const res = await addFavorite(id); // POST {code: id} toggles backend
-
-      if (!res.ok) {
-        // Revert UI if backend fails
-        setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
-        setFavoriteCountMap(prev => ({
-          ...prev,
-          [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
-        }));
-      }
-    } catch (err) {
-      console.error(err);
-      // Revert UI if error occurs
-      setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+      if (!profile) return alert("Login to add favorites!");
+      const isFav = favoriteIds.includes(id);
+      setFavoriteIds(prev => isFav ? prev.filter(x => x !== id) : [...prev, id]);
       setFavoriteCountMap(prev => ({
-        ...prev,
-        [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+          ...prev,
+          [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
       }));
-    }
+      try {
+          const res = await addFavorite(id); // POST {code: id} toggles backend
+          if (!res.ok) {
+              // Revert UI if backend fails
+              setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+              setFavoriteCountMap(prev => ({
+                  ...prev,
+                  [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+              }));
+          }
+      } catch (err) {
+          console.error(err);
+          // Revert UI if error occurs
+          setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
+          setFavoriteCountMap(prev => ({
+              ...prev,
+              [id]: isFav ? (prev[id] || 0) + 1 : Math.max((prev[id] || 1) - 1, 0)
+          }));
+      }
   };
 
 
   // ------------------- Share -------------------
   const handleShareClick = (platform) => {
-    const realUrl = window.location.href;
-    const encodedRealUrl = encodeURIComponent(realUrl);
-    const pageTitle = encodeURIComponent(currentCodes.title || document.title);
-    let shareUrl = "";
-    switch (platform) {
-      case "Messenger":
-        shareUrl = `https://www.facebook.com/dialog/send?link=${encodedRealUrl}&app_id=1949440582581236&redirect_uri=${encodedRealUrl}`;
-        break;
-      case "WhatsApp":
-        shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedRealUrl}`;
-        break;
-      case "Facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedRealUrl}`;
-        break;
-      case "Telegram":
-        shareUrl = `https://t.me/share/url?url=${encodedRealUrl}&text=${pageTitle}`;
-        break;
-      default:
-        navigator.clipboard.writeText(realUrl);
-        alert("Link copied!");
-        return;
-    }
-    window.open(shareUrl, "_blank", "width=600,height=500");
+      const realUrl = window.location.href;
+      const encodedRealUrl = encodeURIComponent(realUrl);
+      const pageTitle = encodeURIComponent(currentCodes.title || document.title);
+      let shareUrl = "";
+      switch (platform) {
+          case "Messenger":
+              shareUrl = `https://www.facebook.com/dialog/send?link=${encodedRealUrl}&app_id=1949440582581236&redirect_uri=${encodedRealUrl}`;
+              break;
+          case "WhatsApp":
+              shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedRealUrl}`;
+              break;
+          case "Facebook":
+              shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedRealUrl}`;
+              break;
+          case "Telegram":
+              shareUrl = `https://t.me/share/url?url=${encodedRealUrl}&text=${pageTitle}`;
+              break;
+          default:
+              navigator.clipboard.writeText(realUrl);
+              alert("Link copied!");
+              return;
+      }
+      window.open(shareUrl, "_blank", "width=600,height=500");
   };
+
 
   // ------------------- Other handlers -------------------
   const changeDevice = (d) => deviceSizes[d] && setDevice(d);
   const scrollToSection = (tab) => {
-    setActiveTab(tab);
-    if (tab === "preview") previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
-    else codeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      setActiveTab(tab);
+      if (tab === "preview") previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+      else codeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
   };
   const openFullscreen = () => {
-    const newWindow = window.open("", "_blank");
-    if (!newWindow) return;
-    newWindow.document.open();
-    newWindow.document.write(srcDoc);
-    newWindow.document.close();
+      const newWindow = window.open("", "_blank");
+      if (!newWindow) return;
+      newWindow.document.open();
+      newWindow.document.write(srcDoc);
+      newWindow.document.close();
   };
   const handleRelatedClick = (code) => {
-    navigate(`/Components/${topicID}/${code.id}`);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+      navigate(`/Components/${topicID}/${code.id}`);
+      window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // ------------------- Skeleton loader -------------------
@@ -379,7 +371,7 @@ const isFavorite = (id) => favoriteIds.includes(id);
 
   // ------------------- MAIN RENDER -------------------
   return (
-    <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
+    <div className="template-preview-container container mx-2" style={{ minHeight: "100vh" }}>
       <div className="template-preview">
 
 

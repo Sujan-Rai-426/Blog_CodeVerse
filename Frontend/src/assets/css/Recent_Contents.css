@@ -1,3 +1,21 @@
+
+.rc-iframe-container{
+    border-bottom: 1px solid gray;
+}
+
+.rc-card{
+    border: 1px solid gray !important;
+    background: linear-gradient(145deg, #101010 0%, #252525 50% 50%, #5c5c5c 100% 100%);
+    border-radius: 16px;
+    /* box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08); */
+    transition: all 0.3s ease;
+}
+
+.rc-card-body{
+    background: black;
+}
+
+
 /* Iframe fixed height */
 .iframe-preview {
     width: 100%;
