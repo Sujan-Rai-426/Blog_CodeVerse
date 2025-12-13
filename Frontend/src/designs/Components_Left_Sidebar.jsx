@@ -13,8 +13,7 @@ const isNewItem = (date) => {
 };
 
 function Components_Left_Sidebar() {
-    const { languageID, topicID, languages, loadingBase } =
-        useContext(Parent_API_Provider_Context);
+    const { languageID, topicID, languages, loadingBase } = useContext(Parent_API_Provider_Context);
 
     // 🔥 Restore from cache first
     const [activeTopic, setActiveTopic] = useState(() => {

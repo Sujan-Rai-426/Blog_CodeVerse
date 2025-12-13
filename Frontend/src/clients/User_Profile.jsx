@@ -130,30 +130,40 @@ export default function User_Profile({ onEditClick }) {
 
 
   // =================== SKELETON LOADER Contetional rendering=======================
-  if (!profile && !favorites.length && !playlists.length) {
-    // Show skeleton only if no cached data
-    return (
-      <div className="profile-container">
-        {/* Skeleton Avatar */}
+if (loading || (!profile && !favorites.length && !playlists.length)) {
+  return (
+    <div className="profile-container">
+      {/* Skeleton Header */}
+      <div className="profile-header">
         <div className="skeleton-element skeleton-avatar"></div>
-        {/* Skeleton Username */}
-        <div className="skeleton-element skeleton-line large"></div>
-        {/* Skeleton Buttons */}
-        <div className="skeleton-element skeleton-button"></div>
-        <div className="skeleton-element skeleton-button"></div>
-        {/* Skeleton Content Tabs */}
-        <div className="skeleton-tab-bar">
-          <div className="skeleton-tab-button"><div className="skeleton-icon-large"></div><div className="skeleton-line-tab-label"></div></div>
-          <div className="skeleton-tab-button"><div className="skeleton-icon-large"></div><div className="skeleton-line-tab-label"></div></div>
-        </div>
-        <div className="content-grid">
-          {[...Array(6)].map((_, i) => (
-            <div key={i} className="skeleton-element skeleton-post-card"></div>
-          ))}
+        <div className="profile-info-main" style={{ flex: 1 }}>
+          <div className="skeleton-line large"></div> {/* Username */}
+          <div className="skeleton-element skeleton-button"></div> {/* Edit */}
+          <div className="skeleton-element skeleton-button"></div> {/* Logout */}
+          <div className="skeleton-line full"></div> {/* Email */}
         </div>
       </div>
-    );
-  }
+
+      {/* Skeleton Tabs */}
+      <div className="skeleton-tab-bar">
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="skeleton-tab-button">
+            <div className="skeleton-icon-large"></div>
+            <div className="skeleton-line-tab-label"></div>
+          </div>
+        ))}
+      </div>
+
+      {/* Skeleton Content Grid */}
+      <div className="content-grid">
+        {[...Array(6)].map((_, i) => (
+          <div key={i} className="skeleton-post-card"></div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 
   if (error) return <p>Error: {JSON.stringify(error)}</p>;
 

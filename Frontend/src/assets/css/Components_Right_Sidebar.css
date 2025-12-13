@@ -1,0 +1,226 @@
+:root {
+    --transparent: transparent;
+    --colorA: #fff;
+    --colorB: #ffffff62;
+    --colorC: rgb(15, 13, 13);
+    --border: rgb(245, 252, 255);
+}
+
+/* ================= Right Sidebar ================= */
+.right-sidebar {
+    top: 70px;
+    padding: 15px 15px 70px 15px;
+    border: 1px solid;
+    width: 280px;
+    background-color: var(--transparent);
+    border-left: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    font-family: "Poppins", sans-serif;
+    position: sticky;
+    top: 80px; /* adjust based on navbar height */
+    height: calc(100vh - 80px);
+    overflow-y: auto;
+    
+}
+
+.sidebar-section h4 {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    color: var(--colorA);
+}
+
+/* ==== User Profile ==== */
+.user-profile .profile-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.crs-profile-info {
+    color: var(--colorB);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 0 1rem;
+}
+
+.crs-profile-avatar {
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid #22c55e;
+}
+
+.profile-name {
+    font-weight: 600;
+    color: #333;
+    font-size: 14px;
+}
+
+/* ==== Auth Buttons ==== */
+.crs-auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.crs-auth-buttons a,
+.crs-auth-buttons button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    padding: 8px 12px;
+    font-size: 14px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+}
+
+.crs-login-btn {
+    background-color: #22c55e;
+    color: #fff;
+}
+
+.crs-login-btn:hover {
+    color: #16a34a;
+    background-color: #fff;
+}
+
+.crs-signup-btn {
+    background-color: #fff;
+    color: #22c55e;
+    border: 1px solid #22c55e;
+}
+
+.crs-signup-btn:hover {
+    background-color: #22c55e;
+    color: #fff;
+}
+
+/* ==== Profile / Logout Buttons ==== */
+.crs-profile-edit-btn,
+.crs-profile-logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    justify-content: center;
+    padding: 6px 12px;
+    border-radius: 6px;
+    border: none;
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.crs-profile-edit-btn {
+    background-color: #facc15; /* yellow */
+    color: #000;
+}
+
+.crs-profile-edit-btn:hover {
+    background-color: #bd9214;
+}
+
+.crs-profile-logout-btn {
+    background-color: #ef4444; /* red */
+    color: #fff;
+}
+
+.crs-profile-logout-btn:hover {
+    background-color: #dc2626;
+}
+
+/* ==== Quick Actions & Extra Actions ==== */
+.actions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.actions-list button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: all 0.2s;
+    font-size: 14px;
+    background-color: var(--colorB);
+    border: 1px solid var(--border);
+    color: #000;
+}
+
+.actions-list button:hover {
+    background-color: var(--colorC);
+    color: var(--colorA);
+    border: 1px solid var(--border);
+}
+
+/* ==== Footer ==== */
+.crs-sidebar-footer {
+    margin-top: auto;
+    text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    bottom: 40px;
+}
+
+/* ==== Icon Alignment for all buttons ==== */
+.crs-login-btn svg,
+.crs-signup-btn svg,
+.crs-profile-edit-btn svg,
+.crs-profile-logout-btn svg,
+.actions-list button svg {
+    display: inline-block;
+    vertical-align: middle;
+}
+
+
+
+
+/* ******************* Right Scroll Bar ******************** */
+/* ==== Custom Right Sidebar Scrollbar ==== */
+.right-sidebar::-webkit-scrollbar {
+    width: 2px; /* slightly bigger for easier hover */
+    transition: width 0.3s;
+}
+
+.right-sidebar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.right-sidebar::-webkit-scrollbar-thumb {
+    background-color: #8391886f;
+    border-radius: 10px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+/* Show thumb on hover */
+.right-sidebar:hover::-webkit-scrollbar-thumb {
+    opacity: 1;
+    background-color: #77a38790; /* optional hover color */
+}
+
+/* Firefox */
+.right-sidebar {
+    border: 1px solid;
+    scrollbar-width: thin;
+    scrollbar-color: #8391886f transparent;
+}
+
+.right-sidebar:hover {
+    scrollbar-color: #77a38790 transparent;
+}
+
