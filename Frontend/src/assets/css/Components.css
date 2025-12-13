@@ -7,51 +7,52 @@
     padding: 0;
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 
 /* Base styles */
 .c-components-container {
-  display: flex;
-  gap: 1rem; /* optional spacing between columns */
+    display: flex;
+    gap: 1rem; /* optional spacing between columns */
 }
 
 /* Left sidebar span */
 .c-components-left-sidebar {
-  display: inline-block; /* default show */
+    display: inline-block; /* default show */
 }
 
 /* Right sidebar span */
 .c-components-right-sidebar {
-  display: inline-block; /* default show */
+    display: inline-block; /* default show */
 }
 
 /* ===== Responsive ===== */
 
 /* Mobile: width <= 767px */
 @media (max-width: 767px) {
-  .c-components-left-sidebar {
-    display: none; /* hide left sidebar */
-  }
-  .c-components-right-sidebar {
-    display: none; /* hide right sidebar */
-  }
+    .c-components-left-sidebar {
+        display: none; /* hide left sidebar */
+    }
+    .c-components-right-sidebar {
+        display: none; /* hide right sidebar */
+    }
 }
 
 /* Tablet: width 768px - 1024px */
 @media (min-width: 768px) and (max-width: 1024px) {
-  .c-components-left-sidebar {
-    display: inline-block; /* show left sidebar */
-  }
-  .c-components-right-sidebar {
-    display: none; /* hide right sidebar */
-  }
+    .c-components-left-sidebar {
+        display: inline-block; /* show left sidebar */
+    }
+    .c-components-right-sidebar {
+        display: none; /* hide right sidebar */
+    }
 }
 
 /* Desktop: width > 1024px */
 @media (min-width: 1025px) {
-  .c-components-left-sidebar,
-  .c-components-right-sidebar {
-    display: inline-block; /* show both sidebars */
-  }
+    .c-components-left-sidebar,
+    .c-components-right-sidebar {
+        display: inline-block; /* show both sidebars */
+    }
 }

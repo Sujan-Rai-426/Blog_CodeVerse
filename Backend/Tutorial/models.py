@@ -78,6 +78,7 @@ class FrontendSourceCode(models.Model):
     )
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0)
     hasBought = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"Code: {self.title}"

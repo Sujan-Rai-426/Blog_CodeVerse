@@ -16,7 +16,7 @@ class FrontendSourceCodeSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'topic', 'title', 'description',
             'html_code', 'css_code', 'js_code',
-            'access_type', 'price', 'hasBought'
+            'access_type', 'price', 'hasBought', 'created_at'
         ]
 
 

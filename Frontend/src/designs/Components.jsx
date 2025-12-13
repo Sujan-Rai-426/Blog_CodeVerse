@@ -17,7 +17,7 @@ function Components() {
         
         
         {/* ************* Main Components Contents ******************** */}
-            <span className='c-components-right-sidebar'><Components_Right_Sidebar /></span>
+            {/* <span className='c-components-right-sidebar'><Components_Right_Sidebar /></span> */}
         
         </div>
     )

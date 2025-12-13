@@ -3,24 +3,13 @@ import { Link, useParams } from "react-router-dom";
 import "../assets/css/Components_Left_Sidebar.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 
-/* ===============================
-   🆕 NEW TOPIC CONFIG (EDIT HERE)
-   =============================== */
-const NEW_TOPICS = {
-    // topicId : "YYYY-MM-DD"
-    12: "2025-01-08",
-    18: "2025-01-10",
-    25: "2025-01-12",
-};
+const NEW_DURATION_DAYS = 7; // mark as NEW if added within last 7 days
 
-const isNewTopic = (topicId) => {
-    const addedDate = NEW_TOPICS[topicId];
-    if (!addedDate) return false;
-
-    const diffDays =
-        (new Date() - new Date(addedDate)) / (1000 * 60 * 60 * 24);
-
-    return diffDays <= 7;
+// Check if a date is within the last NEW_DURATION_DAYS
+const isNewItem = (date) => {
+    if (!date) return false;
+    const diffDays = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
+    return diffDays <= NEW_DURATION_DAYS;
 };
 
 function Components_Left_Sidebar() {
@@ -35,13 +24,13 @@ function Components_Left_Sidebar() {
         );
     }
 
-    const frontendLangs = languages.filter(l => l.section === 1);
+    const frontendLangs = languages.filter((l) => l.section === 1);
 
     return (
         <aside className="cl-sidebar">
-            <h3 className="cl-title skicky-top">Components</h3>
+            <h3 className="cl-title sticky-top text-center"> <i className="bi bi-easel3-fill"></i> &nbsp; Components</h3>
 
-            {frontendLangs.map(lang => {
+            {frontendLangs.map((lang) => {
                 const isActiveLang = String(lang.id) === String(languageID);
 
                 return (
@@ -58,16 +47,18 @@ function Components_Left_Sidebar() {
                         {/* Topics */}
                         {lang.topics?.length > 0 && (
                             <ul className="cl-topic-list">
-                                {lang.topics.map(topic => {
-                                    const isActiveTopic =
-                                        String(topic.id) === String(topicID);
+                                {lang.topics.map((topic) => {
+                                    const isActiveTopic = String(topic.id) === String(topicID);
+                                    const firstSource = topic.source_codes?.[0];
+                                    const firstSourceCreated = firstSource?.created_at;
 
-                                    const firstSourceId =
-                                        topic.source_codes?.[0]?.id || null;
-
-                                    const toPath = firstSourceId
-                                        ? `/Components/${topic.id}/${firstSourceId}`
+                                    const toPath = firstSource
+                                        ? `/Components/${topic.id}/${firstSource.id}`
                                         : `/Components/${topic.id}`;
+
+                                    // ✅ NEW badge logic: either topic or first source is new
+                                    const showNewBadge =
+                                        isNewItem(topic.created_at) || isNewItem(firstSourceCreated);
 
                                     return (
                                         <li key={topic.id}>
@@ -76,11 +67,8 @@ function Components_Left_Sidebar() {
                                                 className={`cl-topic ${isActiveTopic ? "active" : ""}`}
                                             >
                                                 {topic.name}
-
-                                                {isNewTopic(topic.id) && (
-                                                    <span className="cl-new-badge">
-                                                        NEW
-                                                    </span>
+                                                {showNewBadge && (
+                                                    <span className="cl-new-badge">NEW ✨</span>
                                                 )}
                                             </Link>
                                         </li>
