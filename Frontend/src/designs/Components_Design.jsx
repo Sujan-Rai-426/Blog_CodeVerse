@@ -318,14 +318,60 @@ const isFavorite = (id) => favoriteIds.includes(id);
   // ------------------- Skeleton loader -------------------
   if (!currentCodes) {
     return (
-      <div className="template-preview-container container">
+      <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
         <div className="template-preview">
+
+          {/* ==== Page Header Skeleton ==== */}
           <div className="preview-header">
-            <div className="cd-skeleton cd-skeleton-title" />
-            <div className="cd-skeleton cd-skeleton-desc" />
-            <div className="cd-skeleton cd-skeleton-badge" />
+            <div className="cd-header">
+              <div className="cd-skeleton cd-skeleton-title" />
+              <div className="cd-skeleton cd-skeleton-desc" />
+              <div className="cd-skeleton cd-skeleton-badge" />
+            </div>
+
+            <div className="header-actions">
+              <div className="cd-skeleton cd-skeleton-btn" />
+              <div className="cd-skeleton cd-skeleton-btn" />
+            </div>
           </div>
+
+          {/* ==== Navigator Buttons Skeleton ==== */}
+          <div className="navigator-btns">
+            <div className="code-preview-open">
+              <div className="cd-skeleton cd-skeleton-nav-btn" />
+              <div className="cd-skeleton cd-skeleton-nav-btn" />
+            </div>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <div className="cd-skeleton cd-skeleton-nav-btn" />
+              <div className="cd-skeleton cd-skeleton-nav-btn" />
+            </div>
+          </div>
+
+          {/* ==== Iframe / Preview Section Skeleton ==== */}
           <div className="cd-skeleton cd-skeleton-iframe" />
+
+          {/* ==== Related Section Skeleton ==== */}
+          <div className="related-topic-container">
+            <div className="cd-skeleton cd-skeleton-section-title" />
+            <div className="cd-search-bar-wrapper">
+              <div className="cd-skeleton cd-skeleton-search" />
+            </div>
+
+            <div className="cd-filter-btns-wrapper">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="cd-skeleton cd-skeleton-filter-btn" />
+              ))}
+            </div>
+
+            <div className="related-videos-grid">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="related-video-item">
+                  <div className="cd-skeleton cd-skeleton-iframe" style={{ height: 180 }} />
+                  <div className="cd-skeleton cd-skeleton-video-title" />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );

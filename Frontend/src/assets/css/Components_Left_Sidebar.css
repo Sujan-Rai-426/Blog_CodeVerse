@@ -152,3 +152,45 @@
 }
 
 
+
+/* ****************  SKELETON LOADER ******************* */
+
+
+/* ===== Skeleton Base ===== */
+.cl-skeleton {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 6px;
+    margin-bottom: 8px;
+    animation: skeleton-loading 1.2s infinite linear;
+}
+
+/* Sidebar title skeleton */
+.cl-skeleton-title {
+    width: 80%;
+    height: 28px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+}
+
+/* Language skeleton */
+.cl-skeleton-lang {
+    width: 90%;
+    height: 36px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+}
+
+/* Topic skeleton */
+.cl-skeleton-topic {
+    width: 80%;
+    height: 24px;
+    margin-bottom: 6px;
+    border-radius: 6px;
+}
+
+/* Skeleton Animation */
+@keyframes skeleton-loading {
+    0% { background-color: rgba(255, 255, 255, 0.05); }
+    50% { background-color: rgba(255, 255, 255, 0.15); }
+    100% { background-color: rgba(255, 255, 255, 0.05); }
+}
