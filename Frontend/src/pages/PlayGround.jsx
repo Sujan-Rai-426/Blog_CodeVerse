@@ -440,7 +440,7 @@ const generatedCode = (() => {
   const deleteBox = () => { setBoxes(prev => prev.filter(b => b.id !== selectedBoxId)); setSelectedBoxId(null); };
 
   return (
-    <div className="main-PlayGround-body">
+    <div className="main-PlayGround-body container" style={{ minHeight: "100vh" }}>
       <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
       <div className="cv-wrapper cv-codevora">
 

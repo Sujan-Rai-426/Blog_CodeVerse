@@ -88,7 +88,7 @@ function Recent_Contents() {
     if (error) return <p className="text-center text-danger py-5">Failed to load components.</p>;
 
     const handleNavigate = (topicId, sourceId) => {
-        navigate(`/Component-Designs/${topicId}/${sourceId}`);
+        navigate(`/Components/${topicId}/${sourceId}`);
         window.scrollTo({top:0, behavior:'smooth'});
     };
 

@@ -2,7 +2,7 @@ import React from 'react';
 
 const Privacy_Policy = () => {
     return (
-        <div className="container my-5">
+        <div className="container my-5" style={{ minHeight: "100vh" }}>
             <h1 className="mb-4 text-center text-warning">Privacy Policy</h1>
 
             <div className="card p-4 shadow-sm text-white" style={{ textAlign: "justify", lineHeight: "1.7" }}>

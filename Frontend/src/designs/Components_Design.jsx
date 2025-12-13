@@ -311,7 +311,7 @@ const isFavorite = (id) => favoriteIds.includes(id);
     newWindow.document.close();
   };
   const handleRelatedClick = (code) => {
-    navigate(`/Component-Designs/${topicID}/${code.id}`);
+    navigate(`/Components/${topicID}/${code.id}`);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -333,7 +333,7 @@ const isFavorite = (id) => favoriteIds.includes(id);
 
   // ------------------- MAIN RENDER -------------------
   return (
-    <div className="template-preview-container">
+    <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
       <div className="template-preview">
 
 

@@ -26,10 +26,11 @@ import Unavailable_Page from "../components/Unavailable_Page";
 import { Parent_Api_Provider } from "../context/Parent_API_Provider";
 import { Payment_Provider } from "../payment/payment_status/Payment_Context";
 import User_API_Provider from "../clients/User_API_Provider";
+import Components from "../designs/Components";
 
 function Routes_List() {
     return (
-        <div className="container" style={{ minHeight: "100vh" }}>
+        <div>
 
                         <User_API_Provider>
             <Parent_Api_Provider> {/* <---- To fetch API once by parent and use it all over the frontend to overcome repeatative api fetch*/}
@@ -46,7 +47,8 @@ function Routes_List() {
 
 
                         {/* Frontend and Backend Tutorial routes */}
-                            <Route exact path="/Component-Designs/:topicID/:codeId?" element={<Components_Design />} />
+                        <Route exact path="/Components/:topicID/:codeId?" element={<Components />} />
+                        <Route exact path="/Component-Designs/:topicID/:codeId?" element={<Components_Design />} />
                         <Route exact path="/Component-Topics/:languageID" element={<Components_Topic />} />
                         <Route exact path="/Coding_Guide/:topicID" element={<Coding_Guide />} />
                         <Route exact path="/Coding_Guide_Topic/:languageID" element={<Coding_Guide_Topic />} />

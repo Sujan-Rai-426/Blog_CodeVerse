@@ -59,7 +59,7 @@ const Components_Topic = () => {
     }, [frontendLangs]);
 
     return (
-        <div className="tutorial-topic-page">
+        <div className="tutorial-topic-page container" style={{ minHeight: "100vh" }}>
             <h1 className="page-title">- Components Design -</h1>
 
             {/* Horizontal Scrollable Frontend Languages */}
@@ -117,8 +117,8 @@ const Components_Topic = () => {
                                     lang.topics.map(topic => {
                                         const firstSourceId = topic.source_codes?.[0]?.id || null;
                                         const toPath = firstSourceId
-                                            ? `/Component-Designs/${topic.id}/${firstSourceId}`
-                                            : `/Component-Designs/${topic.id}`;
+                                            ? `/Components/${topic.id}/${firstSourceId}`
+                                            : `/Components/${topic.id}`;
                                         return (
                                             <Link key={topic.id} to={toPath} className="topic-card">
                                                 <div className="topic-content">

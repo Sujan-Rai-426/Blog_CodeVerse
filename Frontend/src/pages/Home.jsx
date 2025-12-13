@@ -33,7 +33,7 @@ function Home() {
     };
 
     return (
-        <div className="home-container">
+        <div className="home-container container" style={{ minHeight: "100vh" }}>
             {showLoadingMessage && parentLoading && languages.length === 0 &&  (
                 <div className="loading-overlay">
                     <div className="loading-message">

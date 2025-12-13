@@ -7,7 +7,7 @@ import roshanImg from "../assets/img/About_img/roshan_rai.JPG";
 
 function About() {
     return (
-        <div className="about-page">
+        <div className="about-page container" style={{ minHeight: "100vh" }}>
             {/* Hero Section */}
             <section className="about-hero">
                 <div className="hero-content" style={{ textAlign: "justify" }}>

@@ -135,7 +135,7 @@ const Coding_Guide_Topic = () => {
         {/* =================== Code Guide Container ====================== */}
         {/* =================== ==================== ====================== */}
 
-        <div className={`tutorial-topic-page fade-in`}>
+        <div className={`tutorial-topic-page fade-in container`} style={{ minHeight: "100vh" }}>
           <h1 className="page-title">- Coding Guide -</h1>
 
           {/* Horizontal Scrollable Backend Languages */}
