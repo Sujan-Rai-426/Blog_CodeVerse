@@ -127,18 +127,18 @@ function Nav_Bar() {
                             onMouseLeave={handleAboutMouseLeave}
                         >
                             <Link to="#about" className="nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
-                                About <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
+                                More <span className={`caret ${aboutOpen ? "open" : ""}`}>▾</span>
                             </Link>
                             <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
-                                  <Link className="dropdown-item" to="/About">
-                                    <i className="bi bi-people-fill"></i> Our Team
-                                  </Link>
+                                  <a className="dropdown-item" href="https://escape-road-140.netlify.app/">
+                                      <i className="bi bi-controller"></i> Game
+                                  </a>
                                   <a className="dropdown-item" href="https://sujan140.vercel.app">
                                       <i className="bi bi-person-fill"></i> Developer
                                   </a>
-                                  <a className="dropdown-item" href="https://escape-road-140.netlify.app/">
-                                      <i className="bi bi-person-fill"></i> Game
-                                  </a>
+                                  <Link className="dropdown-item" to="/About">
+                                    <i className="bi bi-people-fill"></i> Our Team
+                                  </Link>
                                   <Link className="dropdown-item" to="/Privacy_Policy">
                                       <i className="bi bi-shield-lock-fill"></i> Privacy Policy
                                   </Link>
@@ -188,17 +188,17 @@ function Nav_Bar() {
                 {/* Mobile About dropdown */}
                 <li>
                     <button className="sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-                        <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+                        <i className="bi bi-file-earmark-person-fill"></i> &nbsp; More <span className={`fs-4 caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
                     </button>
                     <ul className={`sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
-                        <li>
-                            <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
+                        <li> 
+                            <a href="https://escape-road-140.netlify.app/" onClick={() => setSidebarOpen(false)}><i className="bi bi-controller"></i> &nbsp; Game</a>
                         </li>
                         <li> 
                             <a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a>
                         </li>
-                        <li> 
-                            <a href="https://escape-road-140.netlify.app/" onClick={() => setSidebarOpen(false)}><i className="bi bi-joystick fs-5"></i> &nbsp; Game</a>
+                        <li>
+                            <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
                         </li>
                         <li>
                             <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
