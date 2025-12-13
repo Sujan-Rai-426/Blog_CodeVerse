@@ -110,20 +110,22 @@
 
 /* Active Topic */
 .cl-topic.active {
-    color: #38bdf8;
+    color: #00a6ff;
     font-weight: 600;
+    font-size: 0.9rem;
     position: relative;
 }
 
+/* active dot in active topic */
 .cl-topic.active::before {
     content: "";
     position: absolute;
-    left: -14px;
+    left: -18px;
     top: 50%;
     transform: translateY(-50%);
-    width: 6px;
-    height: 6px;
-    background: #38bdf8;
+    width: 10px;
+    height: 10px;
+    background: #00a6ff;
     border-radius: 50%;
 }
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import "../assets/css/Components_Left_Sidebar.css";
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
@@ -15,18 +15,22 @@ function Components_Left_Sidebar() {
     const { languageID, topicID, languages, loadingBase } =
         useContext(Parent_API_Provider_Context);
 
-    const frontendLangs = languages.filter((l) => l.section === 1);
+    const [activeTopic, setActiveTopic] = useState(topicID || null);
 
+    useEffect(() => {
+        // Sync state when URL changes
+        setActiveTopic(topicID);
+    }, [topicID]);
+
+    const frontendLangs = languages.filter((l) => l.section === 1);
 
     if (loadingBase) {
         return (
             <aside className="cl-sidebar loading">
                 <div className="cl-skeleton cl-skeleton-title" />
-
                 {[...Array(5)].map((_, i) => (
                     <div key={i} className="cl-lang-block">
                         <div className="cl-skeleton cl-skeleton-lang" />
-
                         <ul className="cl-topic-list">
                             {[...Array(3)].map((_, j) => (
                                 <li key={j}>
@@ -51,21 +55,14 @@ function Components_Left_Sidebar() {
 
                 return (
                     <div key={lang.id} className="cl-lang-block">
-                        <Link
-                            to={`/Component-Topics/${lang.id}`}
-                            className={`cl-lang ${isActiveLang ? "active" : ""}`}
-                        >
+                        <div className={`cl-lang ${isActiveLang ? "active" : ""}`}>
                             {lang.icon_class && <i className={lang.icon_class}></i>}
-                            <span>
-                                <b>{lang.name}</b>
-                            </span>
-                        </Link>
+                            <span><b>{lang.name}</b></span>
+                        </div>
 
                         {lang.topics?.length > 0 && (
                             <ul className="cl-topic-list">
                                 {lang.topics.map((topic) => {
-                                    const isActiveTopic =
-                                        String(topic.id) === String(topicID);
                                     const firstSource = topic.source_codes?.[0];
                                     const firstSourceCreated = firstSource?.created_at;
 
@@ -77,19 +74,18 @@ function Components_Left_Sidebar() {
                                         isNewItem(topic.created_at) ||
                                         isNewItem(firstSourceCreated);
 
+                                    const isActiveTopic = String(topic.id) === String(activeTopic);
+
                                     return (
                                         <li key={topic.id}>
                                             <Link
                                                 to={toPath}
-                                                className={`cl-topic ${
-                                                    isActiveTopic ? "active" : ""
-                                                }`}
+                                                className={`cl-topic ${isActiveTopic ? "active" : ""}`}
+                                                onClick={() => setActiveTopic(topic.id)}
                                             >
                                                 {topic.name}
                                                 {showNewBadge && (
-                                                    <span className="cl-new-badge">
-                                                        NEW ✨
-                                                    </span>
+                                                    <span className="cl-new-badge">NEW ✨</span>
                                                 )}
                                             </Link>
                                         </li>
