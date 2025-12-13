@@ -131,16 +131,16 @@ function Nav_Bar() {
                             </Link>
                             <div className={`dropdown-panel ${aboutOpen ? "visible" : ""}`}>
                                   <a className="dropdown-item" href="https://escape-road-140.netlify.app/">
-                                      <i className="bi bi-controller"></i> Game
+                                      <i className="bi bi-controller"></i> &nbsp; Game
                                   </a>
                                   <a className="dropdown-item" href="https://sujan140.vercel.app">
-                                      <i className="bi bi-person-fill"></i> Developer
+                                      <i className="bi bi-person-fill"></i> &nbsp; Developer
                                   </a>
                                   <Link className="dropdown-item" to="/About">
-                                    <i className="bi bi-people-fill"></i> Our Team
+                                    <i className="bi bi-people-fill"></i> &nbsp; Our Team
                                   </Link>
                                   <Link className="dropdown-item" to="/Privacy_Policy">
-                                      <i className="bi bi-shield-lock-fill"></i> Privacy Policy
+                                      <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy
                                   </Link>
                             </div>
                         </li>
