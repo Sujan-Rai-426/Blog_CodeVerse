@@ -15,7 +15,7 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspect
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <style>
-          html, body { margin:0; padding:0; width:100%; height:100%; display:flex; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
+          html, body { margin:0; padding:0; width:100%; height:100%; display:flex; flex-direction:xccolumn; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
           .scaleWrapper { width:1338px; position:relative; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
           .scaleInner { width:${aspectWidth}px; height:${aspectHeight}px; position:absolute; display:flex; justify-content:center; align-items:center; transform-origin:center center; }
           ${css || ""}
