@@ -318,7 +318,7 @@ const isFavorite = (id) => favoriteIds.includes(id);
   // ------------------- Skeleton loader -------------------
   if (!currentCodes) {
     return (
-      <div className="template-preview-container">
+      <div className="template-preview-container container">
         <div className="template-preview">
           <div className="preview-header">
             <div className="cd-skeleton cd-skeleton-title" />
