@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import "../assets/css/Components_Right_Sidebar.css";
-import { FaHeart, FaStar, FaGem, FaClock, FaCoffee, FaBug, FaLightbulb, FaComment, FaUserEdit, FaSignOutAlt, FaUserPlus, FaSignInAlt, FaArrowRight, FaPaypal } from "react-icons/fa";
+import { FaHeart, FaStar, FaGem, FaClock, FaBug, FaLightbulb, FaComment, FaUserPlus, FaSignInAlt, FaArrowRight, FaPaypal, FaGithub, FaGamepad, FaPlay } from "react-icons/fa";
 import User_API_Context from "../clients/User_API_Context.jsx";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 import { Link, useNavigate } from "react-router-dom";
@@ -25,11 +25,11 @@ function Components_Right_Sidebar() {
     }
 
     // ************** handle LogOut ***************
-    const handleLogout = async () => {
+    const handleEnterGame = async () => {
         try {
-            await apiClient.post("/api/user-logout/");
-        } finally {
-            navigate("/User/Login");
+            window.open("https://escape-road-140.netlify.app/", "_blank")
+        } catch {
+            return
         }
     };
 
@@ -71,7 +71,7 @@ function Components_Right_Sidebar() {
                     {/*****  Profile Enter and Logout BTN *****/}
                         <div className="profile-btn-grp">
                             <button className="crs-profile-edit-btn" onClick={handleEnterProfile} ><FaArrowRight /> Profile </button>
-                            <button className="crs-profile-logout-btn" onClick={handleLogout}><FaSignOutAlt /> Logout </button>
+                            <button className="crs-profile-logout-btn" onClick={handleEnterGame}><FaPlay /> Games </button>
                         </div>
                     </div>
                 ) : (
@@ -107,7 +107,7 @@ function Components_Right_Sidebar() {
                             "_blank"
                         )}
                     >
-                        <span className="crs-star-icon"><FaStar /></span> Star
+                        <span className="crs-star-icon"><FaStar /></span> Give Star<FaGithub/>
                     </button>
 
 
