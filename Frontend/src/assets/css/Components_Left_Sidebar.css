@@ -4,7 +4,7 @@
 
 .cl-sidebar {
     position: sticky;
-    top: 70px;
+    top: 65px;
     width: 270px;
     height: calc(100vh - 80px);
     overflow-y: auto;

@@ -1,15 +1,16 @@
 /* Main container */
 .template-preview-container {
-    display: flex;
-    flex-direction: column;
     gap: 2rem;
     font-family: 'Inter', sans-serif;
     background-color: transparent;
     min-height: 100vh;
     box-sizing: border-box;
     padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
-
 
 .cd-preview-container{
     background: transparent;
@@ -218,7 +219,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .cd-preview-container{ padding: 1.5rem 1rem; }
+    .cd-preview-container{ padding: 1.5rem 1rem; width: auto; }
     .iframe-container iframe { height: 500px; }
     .related-topic-container { padding: 0 1rem; }
     .related-videos-grid { grid-template-columns: repeat(2, 1fr); }

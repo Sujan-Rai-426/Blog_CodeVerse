@@ -371,7 +371,7 @@ export default function Components_Design() {
 
   // ------------------- MAIN RENDER -------------------
   return (
-    <div className="template-preview-container container" style={{ minHeight: "100vh" }}>
+    <div className="cd-template-preview-container container" style={{ minHeight: "100vh" }}>
       <div className="cd-preview-container">
 
 
