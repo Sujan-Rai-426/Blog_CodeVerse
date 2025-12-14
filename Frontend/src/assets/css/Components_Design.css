@@ -219,9 +219,9 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .cd-preview-container{ padding: 1.5rem 1rem; width: auto; }
+    .cd-preview-container{ width: auto; }
     .iframe-container iframe { height: 500px; }
-    .related-topic-container { padding: 0 1rem; }
+    .related-topic-container { padding: 0; }
     .related-videos-grid { grid-template-columns: repeat(2, 1fr); }
     .cd-search-bar-wrapper { margin-top: 1rem; }
 }
