@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import "../assets/css/Components_Right_Sidebar.css";
-import { FaHeart, FaStar, FaGem, FaClock, FaCoffee, FaBug, FaLightbulb, FaComment, FaUserEdit, FaSignOutAlt, FaUserPlus, FaSignInAlt, FaArrowRight } from "react-icons/fa";
+import { FaHeart, FaStar, FaGem, FaClock, FaCoffee, FaBug, FaLightbulb, FaComment, FaUserEdit, FaSignOutAlt, FaUserPlus, FaSignInAlt, FaArrowRight, FaPaypal } from "react-icons/fa";
 import User_API_Context from "../clients/User_API_Context.jsx";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 import { Link, useNavigate } from "react-router-dom";
@@ -32,6 +32,21 @@ function Components_Right_Sidebar() {
             navigate("/User/Login");
         }
     };
+
+
+    // ************** handle Buy Me Coffee ***************
+    const handleBuyMeCoffee = () => {
+        const amount = prompt("Enter amount (USD):");
+        if (!amount || isNaN(amount) || Number(amount) <= 0) {
+            alert("Please enter a valid amount");
+            return;
+        }
+        window.open(
+            `https://www.paypal.me/SujanRai140/${amount}`,
+            "_blank"
+        );
+    };
+
 
 
     return (
@@ -83,16 +98,6 @@ function Components_Right_Sidebar() {
                 <h4>Support / Feedback</h4>
                 <div className="actions-list">
 
-                    {/* Feedback: GitHub Discussions (optional) */}
-                    <button 
-                        title="Feedback" 
-                        onClick={() => window.open(
-                            "https://github.com/Sujan-Rai-426/CodeVora/discussions",
-                            "_blank"
-                        )}
-                    >
-                        <FaComment /> Feedback
-                    </button>
 
                     {/* Star the repo */}
                     <button 
@@ -102,11 +107,19 @@ function Components_Right_Sidebar() {
                             "_blank"
                         )}
                     >
-                        <FaStar /> Star
+                        <span className="crs-star-icon"><FaStar /></span> Star
                     </button>
+
 
                     {/* Buy Me a Coffee */}
                     <button 
+                        title="Support via PayPal" 
+                        onClick={handleBuyMeCoffee}
+                    >
+                        <span className="crs-BuyMeCoffee-icon"><FaPaypal /></span> Donate
+                    </button>
+
+                    {/* <button 
                         title="Buy me Coffee" 
                         onClick={() => window.open(
                             "https://www.buymeacoffee.com/sujanrai", // <-- replace with your link
@@ -114,7 +127,8 @@ function Components_Right_Sidebar() {
                         )}
                     >
                         <FaCoffee /> Buy me Coffee
-                    </button>
+                    </button> */}
+
 
                     {/* Report Bug */}
                     <button 
@@ -124,8 +138,9 @@ function Components_Right_Sidebar() {
                             "_blank"
                         )}
                     >
-                        <FaBug /> Report Bug
+                        <span className="crs-reportBug-icon"><FaBug /></span> Report Bug
                     </button>
+
 
                     {/* Request Feature */}
                     <button 
@@ -135,8 +150,21 @@ function Components_Right_Sidebar() {
                             "_blank"
                         )}
                     >
-                        <FaLightbulb /> Request Feature
+                        <span className="crs-requestFeature-icon"><FaLightbulb /></span> Request Feature
                     </button>
+
+
+                    {/* Feedback: GitHub Discussions (optional) */}
+                    <button 
+                        title="Feedback" 
+                        onClick={() => window.open(
+                            "https://github.com/Sujan-Rai-426/CodeVora/issues/new?labels=feedback",
+                            "_blank"
+                        )}
+                    >
+                        <span className="crs-feedback-icon"><FaComment /></span> Feedback
+                    </button>
+
 
                 </div>
             </div>

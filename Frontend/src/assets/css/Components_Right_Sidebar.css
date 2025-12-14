@@ -1,226 +1,316 @@
+/*********************************************************
+======================== ROOT THEME  =====================
+**********************************************************/
 :root {
-    --transparent: transparent;
-    --colorA: #fff;
-    --colorB: #ffffff62;
-    --colorC: rgb(15, 13, 13);
-    --border: rgb(245, 252, 255);
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.15);
+
+    --text-main: #ffffff;
+    --text-muted: #d1d5db;
+
+    --accent-green: #22c55e;
+    --accent-green-dark: #16a34a;
+
+    --accent-red: #ef4444;
+    --accent-yellow: #facc15;
+
+    --paypal-blue: #003087;
+    --paypal-light: #009cde;
+
+    --radius: 10px;
+    --transition: all 0.25s ease;
 }
 
-/* ================= Right Sidebar ================= */
+
+/*********************************************************
+==================== RIGHT SIDEBAR  ======================
+**********************************************************/
 .right-sidebar {
-    top: 70px;
-    padding: 15px 15px 70px 15px;
-    border: 1px solid;
     width: 280px;
-    background-color: var(--transparent);
-    border-left: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-    font-family: "Poppins", sans-serif;
     position: sticky;
-    top: 80px; /* adjust based on navbar height */
+    top: 80px;
     height: calc(100vh - 80px);
-    overflow-y: auto;
-    
-}
 
-.sidebar-section h4 {
-    font-size: 16px;
-    font-weight: 600;
-    margin-bottom: 12px;
-    color: var(--colorA);
-}
-
-/* ==== User Profile ==== */
-.user-profile .profile-info {
+    padding: 16px;
     display: flex;
-    align-items: center;
-    gap: 12px;
+    flex-direction: column;
+    justify-content: space-between;
+    gap: 22px;
+
+    background: var(--glass-bg);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+
+    border-left: 1px solid var(--glass-border);
+    font-family: "Poppins", sans-serif;
+
+    overflow-y: auto;
 }
 
+
+/*********************************************************
+==================== SECTION HEADINGS  ===================
+**********************************************************/
+.sidebar-section h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    color: var(--text-main);
+}
+
+
+/*********************************************************
+==================== USER PROFILE  =======================
+**********************************************************/
 .crs-profile-info {
-    color: var(--colorB);
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    padding: 0 1rem;
+    gap: 6px;
+    text-align: center;
+    color: var(--text-muted);
 }
 
 .crs-profile-avatar {
-    width: 65px;
-    height: 65px;
+    width: 68px;
+    height: 68px;
     border-radius: 50%;
     object-fit: cover;
-    border: 2px solid #22c55e;
+    border: 2px solid var(--accent-green);
+    box-shadow: 0 0 0 4px rgba(34, 197, 94, 0.15);
 }
 
-.profile-name {
-    font-weight: 600;
-    color: #333;
-    font-size: 14px;
-}
 
-/* ==== Auth Buttons ==== */
+/*********************************************************
+==================== AUTH BUTTONS  =======================
+**********************************************************/
 .crs-auth-buttons {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 
-.crs-auth-buttons a,
-.crs-auth-buttons button {
+.crs-login-btn,
+.crs-signup-btn {
+    padding: 9px 14px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+
     display: flex;
     align-items: center;
-    gap: 6px;
     justify-content: center;
-    padding: 8px 12px;
-    font-size: 14px;
-    border-radius: 6px;
-    border: none;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-decoration: none;
+    gap: 8px;
+
+    transition: var(--transition);
 }
 
 .crs-login-btn {
-    background-color: #22c55e;
+    background: var(--accent-green);
     color: #fff;
 }
 
 .crs-login-btn:hover {
-    color: #16a34a;
-    background-color: #fff;
+    background: var(--accent-green-dark);
 }
 
 .crs-signup-btn {
-    background-color: #fff;
-    color: #22c55e;
-    border: 1px solid #22c55e;
+    background: transparent;
+    color: var(--accent-green);
+    border: 1px solid var(--accent-green);
 }
 
 .crs-signup-btn:hover {
-    background-color: #22c55e;
+    background: var(--accent-green);
     color: #fff;
 }
 
-/* ==== Profile / Logout Buttons ==== */
+
+/*********************************************************
+==================== PROFILE ACTION BUTTONS ==============
+**********************************************************/
+.profile-btn-grp {
+    display: flex;
+    gap: 8px;
+}
+
 .crs-profile-edit-btn,
 .crs-profile-logout-btn {
+    padding: 6px 12px;
+    border-radius: var(--radius);
+    font-size: 13px;
+    font-weight: 500;
+
     display: flex;
     align-items: center;
     gap: 6px;
-    justify-content: center;
-    padding: 6px 12px;
-    border-radius: 6px;
+
     border: none;
-    font-weight: 500;
-    font-size: 13px;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: var(--transition);
 }
 
 .crs-profile-edit-btn {
-    background-color: #facc15; /* yellow */
+    background: var(--accent-yellow);
     color: #000;
 }
 
 .crs-profile-edit-btn:hover {
-    background-color: #bd9214;
+    background: #eab308;
+    transform: translateY(-1px);
 }
 
 .crs-profile-logout-btn {
-    background-color: #ef4444; /* red */
+    background: var(--accent-red);
     color: #fff;
 }
 
 .crs-profile-logout-btn:hover {
-    background-color: #dc2626;
+    background: #dc2626;
+    transform: translateY(-1px);
 }
 
-/* ==== Quick Actions & Extra Actions ==== */
+
+/*********************************************************
+==================== ACTION LIST (COMMON) ================
+**********************************************************/
 .actions-list {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .actions-list button {
+    padding: 8px 12px;
+    border-radius: var(--radius);
+
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--glass-border);
+    color: var(--text-main);
+
+    font-size: 14px;
+    cursor: pointer;
+
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 6px 12px;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    transition: all 0.2s;
-    font-size: 14px;
-    background-color: var(--colorB);
-    border: 1px solid var(--border);
-    color: #000;
+    gap: 10px;
+
+    transition: var(--transition);
 }
 
 .actions-list button:hover {
-    background-color: var(--colorC);
-    color: var(--colorA);
-    border: 1px solid var(--border);
+    background: rgba(255, 255, 255, 0.14);
+    transform: translateX(2px);
 }
 
-/* ==== Footer ==== */
+
+/*********************************************************
+==================== PAYPAL DONATE BUTTON ================
+**********************************************************/
+.actions-list button[title*="PayPal"] {
+    background: linear-gradient(
+        135deg,
+        var(--paypal-blue),
+        var(--paypal-light)
+    );
+    border: none;
+    color: #fff;
+    font-weight: 600;
+}
+
+.actions-list button[title*="PayPal"]:hover {
+    filter: brightness(1.1);
+    transform: translateX(3px) scale(1.02);
+}
+
+
+/*********************************************************
+=============== ACTION LIST'S ICONs  =====================
+**********************************************************/
+
+/* --------- Star Icon ----------- */
+.crs-star-icon { color: gold; }
+/* trigger icon hover when action list button is triggered */
+.actions-list button:hover .crs-star-icon {
+    color: rgb(234, 255, 0);
+    filter: drop-shadow(0 0 6px rgba(255, 251, 0, 0.8));
+}
+
+/* --------- BuyMe Coffee Icon ----------- */
+.actions-list button:hover .crs-BuyMeCoffee-icon{
+    color: #fff;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 242, 0.8));
+}
+
+/* --------- Report Bug Icon ----------- */
+.crs-reportBug-icon{ 
+    color: rgba(255, 23, 23, 0.968); 
+}
+.actions-list button:hover .crs-reportBug-icon{
+    color: rgba(255, 0, 0, 0.968);
+    filter: drop-shadow(0 0 6px rgba(231, 119, 104, 0.8));
+}
+
+/* --------- request Feature Icon ----------- */
+.crs-requestFeature-icon{
+    color: rgb(255, 255, 128);
+}
+.actions-list button:hover .crs-requestFeature-icon{
+    color: #eab308;
+    filter: drop-shadow(0 0 6px rgba(231, 220, 104, 0.8));
+}
+
+/* --------- Feedback Icon ----------- */
+.crs-feedback-icon{
+    color: rgb(73, 237, 95);
+}
+.actions-list button:hover .crs-feedback-icon{
+    color: rgb(23, 233, 51);
+    filter: drop-shadow(0 0 6px rgba(22, 247, 63, 0.8));
+}
+
+/*********************************************************
+==================== FOOTER  =============================
+**********************************************************/
 .crs-sidebar-footer {
-    margin-top: auto;
     text-align: center;
     font-size: 12px;
-    color: #aaa;
-    bottom: 40px;
+    color: var(--text-muted);
+    opacity: 0.8;
 }
 
-/* ==== Icon Alignment for all buttons ==== */
+
+/*********************************************************
+==================== ICON ALIGNMENT  =====================
+**********************************************************/
 .crs-login-btn svg,
 .crs-signup-btn svg,
 .crs-profile-edit-btn svg,
 .crs-profile-logout-btn svg,
 .actions-list button svg {
-    display: inline-block;
     vertical-align: middle;
 }
 
 
-
-
-/* ******************* Right Scroll Bar ******************** */
-/* ==== Custom Right Sidebar Scrollbar ==== */
+/*********************************************************
+==================== CUSTOM SCROLLBAR  ===================
+**********************************************************/
 .right-sidebar::-webkit-scrollbar {
-    width: 2px; /* slightly bigger for easier hover */
-    transition: width 0.3s;
+    width: 3px;
+}
+
+.right-sidebar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 10px;
 }
 
 .right-sidebar::-webkit-scrollbar-track {
     background: transparent;
 }
 
-.right-sidebar::-webkit-scrollbar-thumb {
-    background-color: #8391886f;
-    border-radius: 10px;
-    opacity: 0;
-    transition: opacity 0.3s;
-}
-
-/* Show thumb on hover */
-.right-sidebar:hover::-webkit-scrollbar-thumb {
-    opacity: 1;
-    background-color: #77a38790; /* optional hover color */
-}
-
 /* Firefox */
 .right-sidebar {
-    border: 1px solid;
     scrollbar-width: thin;
-    scrollbar-color: #8391886f transparent;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
-
-.right-sidebar:hover {
-    scrollbar-color: #77a38790 transparent;
-}
-

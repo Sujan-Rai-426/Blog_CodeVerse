@@ -371,8 +371,8 @@ export default function Components_Design() {
 
   // ------------------- MAIN RENDER -------------------
   return (
-    <div className="template-preview-container container mx-2" style={{ minHeight: "100vh" }}>
-      <div className="template-preview">
+    <div className="template-preview-container container" style={{ minHeight: "100vh" }}>
+      <div className="cd-preview-container">
 
 
               {/* ==== Page Header [title + description + share + favorite  ] ==== */}

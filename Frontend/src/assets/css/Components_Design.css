@@ -10,16 +10,16 @@
     padding: 1rem;
 }
 
-/* Template preview card */
-.template-preview {
+
+.cd-preview-container{
     background: transparent;
     color: wheat;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
+    padding: 1.5rem 0;
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 0.8rem;
 }
 
 /* Header */
@@ -218,7 +218,7 @@
 
 /* Responsive adjustments */
 @media (max-width: 1024px) {
-    .template-preview {padding: 1rem}
+    .cd-preview-container{ padding: 1.5rem 1rem; }
     .iframe-container iframe { height: 500px; }
     .related-topic-container { padding: 0 1rem; }
     .related-videos-grid { grid-template-columns: repeat(2, 1fr); }
@@ -226,7 +226,6 @@
 }
 
 @media (max-width: 768px) {
-    .template-preview { padding: 0; }
     .template-preview-container { padding: 0; }
     .iframe-container { padding: 0; aspect-ratio: 1/1.25; }
     .iframe-container iframe { height: auto !important; padding: 0;   }
@@ -337,10 +336,19 @@
 .fullscreen-btn { background: linear-gradient(135deg, #00c6ff, #0072ff); color: white; }
 .fullscreen-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(0,0,0,0.2); }
 
-/* Mobile Button adjustments */
-@media (max-width: 1024px) { .action-btn { font-size: 0.9rem; padding: 0.45rem 0.9rem; min-width: 75px; } }
-@media (max-width: 768px)  { .action-btn { font-size: 0.85rem; padding: 0.45rem 0.8rem; min-width: 70px; } .fullscreen-text{ display: none; }}
-@media (max-width: 480px)  { .action-btn { font-size: 0.8rem; padding: 0.4rem 0.7rem; min-width: 65px; } }
+
+/* Mobile + tab Button adjustments */
+@media (max-width: 1024px) { 
+    .action-btn { font-size: 0.9rem; padding: 0.45rem 0.9rem; min-width: 75px; } 
+    .device-download-documentation{display: none;}
+}
+@media (max-width: 768px)  { 
+    .action-btn { font-size: 0.85rem; padding: 0.45rem 0.8rem; min-width: 70px; } 
+    .fullscreen-text{ display: none; }
+}
+@media (max-width: 480px)  { 
+    .action-btn { font-size: 0.8rem; padding: 0.4rem 0.7rem; min-width: 65px; } 
+}
 
 
 
@@ -451,4 +459,3 @@
     50% { background-color: rgba(255, 255, 255, 0.15); }
     100% { background-color: rgba(255, 255, 255, 0.05); }
 }
-

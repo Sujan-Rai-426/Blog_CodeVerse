@@ -139,7 +139,7 @@ export default function Design_Code({
             </div>
 
             {/* ==== Code box / Ads ==== */}
-            <div className="container" style={{ position: "relative", fontSize: "0.85rem" , width: '100%', overflowX: 'auto'}}>
+            <div className="container" style={{ position: "relative", fontSize: "0.85rem" , width: '100%', overflowX: 'hidden'}}>
                 {isFree && !adCompleted[activeTab] ? (
                     <Ads_Container
                         boxType={activeTab}
@@ -165,9 +165,9 @@ export default function Design_Code({
                             maxHeight: "500px",
                             overflowX: "auto",
                             overflowY: "auto",
-                                whiteSpace: "pre",           // preserve formatting but allow scroll
-    maxWidth: "100%",            // match container
-    boxSizing: "border-box",     // include padding in width
+                            whiteSpace: "pre",           // preserve formatting but allow scroll
+                            maxWidth: "100%",            // match container
+                            boxSizing: "border-box",     // include padding in width
                             filter: canViewCode ? "none" : "blur(8px)",
                             pointerEvents: canViewCode ? "auto" : "none",
                         }}
