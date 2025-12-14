@@ -8,6 +8,7 @@
     --text-main: #ffffff;
     --text-muted: #d1d5db;
 
+    --accent-white: #fff;
     --accent-green: #22c55e;
     --accent-green-dark: #16a34a;
 
@@ -90,7 +91,7 @@
     gap: 10px;
 }
 
-.crs-login-btn,
+.crs-login-btn, .crs-game-btn,
 .crs-signup-btn {
     padding: 9px 14px;
     border-radius: var(--radius);
@@ -109,10 +110,12 @@
 .crs-login-btn {
     background: var(--accent-green);
     color: #fff;
+    border: 1px solid;
 }
-
 .crs-login-btn:hover {
-    background: var(--accent-green-dark);
+    border: 1px solid var(--accent-green);
+    background: transparent;
+    color: var(--accent-green);
 }
 
 .crs-signup-btn {
@@ -120,9 +123,18 @@
     color: var(--accent-green);
     border: 1px solid var(--accent-green);
 }
-
 .crs-signup-btn:hover {
     background: var(--accent-green);
+    color: #fff;
+}
+
+.crs-game-btn {
+    background: transparent;
+    color: var(--accent-red);
+    border: 1px solid var(--accent-red);
+}
+.crs-game-btn:hover {
+    background: var(--accent-red);
     color: #fff;
 }
 
@@ -136,7 +148,7 @@
 }
 
 .crs-profile-edit-btn,
-.crs-profile-logout-btn {
+.crs-play-game-btn {
     padding: 6px 12px;
     border-radius: var(--radius);
     font-size: 13px;
@@ -161,12 +173,12 @@
     transform: translateY(-1px);
 }
 
-.crs-profile-logout-btn {
+.crs-play-game-btn {
     background: var(--accent-red);
     color: #fff;
 }
 
-.crs-profile-logout-btn:hover {
+.crs-play-game-btn:hover {
     background: #dc2626;
     transform: translateY(-1px);
 }
@@ -287,7 +299,7 @@
 .crs-login-btn svg,
 .crs-signup-btn svg,
 .crs-profile-edit-btn svg,
-.crs-profile-logout-btn svg,
+.crs-play-game-btn svg,
 .actions-list button svg {
     vertical-align: middle;
 }

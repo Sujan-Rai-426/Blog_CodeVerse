@@ -71,7 +71,7 @@ function Components_Right_Sidebar() {
                     {/*****  Profile Enter and Logout BTN *****/}
                         <div className="profile-btn-grp">
                             <button className="crs-profile-edit-btn" onClick={handleEnterProfile} ><FaArrowRight /> Profile </button>
-                            <button className="crs-profile-logout-btn" onClick={handleEnterGame}><FaPlay /> Games </button>
+                            <button className="crs-play-game-btn" onClick={handleEnterGame}><FaPlay /> Games </button>
                         </div>
                     </div>
                 ) : (
@@ -79,6 +79,7 @@ function Components_Right_Sidebar() {
                     <div className="crs-auth-buttons">
                         <Link to="/User/Login/" className="crs-login-btn"> <FaSignInAlt /> Login</Link>
                         <Link to="/User/Signup/" className="crs-signup-btn"> <FaUserPlus /> Signup</Link>
+                        <button className="crs-game-btn" onClick={handleEnterGame}> <FaPlay /> Play Games</button>
                     </div>
                 )}
             </div>
