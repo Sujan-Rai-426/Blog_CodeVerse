@@ -201,7 +201,7 @@ function Home() {
                         style={{ cursor: "pointer" }}
                         onClick={(e) => {
                             e.stopPropagation();
-                            navigate("/Templates");
+                            navigate("/Templates/Topics");
                             setTimeout(() => window.scrollTo({ top: 0, behavior: "smooth" }), 100);
                         }}
                     >
