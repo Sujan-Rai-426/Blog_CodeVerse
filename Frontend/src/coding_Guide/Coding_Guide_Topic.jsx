@@ -148,7 +148,7 @@ const Coding_Guide_Topic = () => {
                   return (
                     <Link
                       key={lang.id}
-                      to={`/Coding_Guide_Topic/${lang.id}`}
+                      to={`/Code-Guide/Topic/${lang.id}`}
                       className={`fs-card ${isSelected ? "selected-card" : ""} ${isActive ? "active-hover" : ""}`}
                     >
                       {lang.icon_class && <i className={`${lang.icon_class} fs-card-icon`}></i>}
@@ -171,10 +171,9 @@ const Coding_Guide_Topic = () => {
                       <div className="topic-grid">
                         {language.topics?.length > 0 ? (
                           language.topics.map((topic) => (
-                            <Link key={topic.id} to={`/Coding_Guide/${topic.id}`} className="topic-card">
+                            <Link key={topic.id} to={`/Code-Guide/${topic.id}`} className="topic-card">
                               <div className="topic-content">
                                 <h3>{topic.name}</h3>
-                                <p>Click to view tutorial steps</p>
                               </div>
                             </Link>
                           ))

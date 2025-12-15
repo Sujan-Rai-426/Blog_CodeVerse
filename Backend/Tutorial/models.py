@@ -128,6 +128,7 @@ class BackendStep(models.Model):
                     "step_number": f"Upto step no. {max_step} already exists in this topic."
                 })
 
+
 # -------------------- CONTACT --------------------
 class Contact(models.Model):
     name = models.CharField(max_length=25, null=False)
@@ -154,7 +155,8 @@ class Template(models.Model):
     project_info = models.TextField()
     iframe_url = models.URLField()
     download_repo_url = models.URLField(blank=True, null=True)
-    documentation = models.URLField(blank=True, null=True)
+    documentation_url = models.URLField(blank=True, null=True)
+    github_repo_url = models.URLField(blank=True, null=True)
     template_type = models.ForeignKey(TemplateType, on_delete=models.SET_NULL, null=True, blank=True)
     access_type = models.CharField(max_length=20, choices=ACCESS_CHOICES, default="Free")
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.0)

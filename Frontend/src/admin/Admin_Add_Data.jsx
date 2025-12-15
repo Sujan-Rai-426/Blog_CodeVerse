@@ -66,6 +66,7 @@ const Admin_Add_Data = () => {
   const [iframeUrl, setIframeUrl] = useState("");
   const [downloadRepoUrl, setDownloadRepoUrl] = useState("");
   const [documentationUrl, setDocumentationUrl] = useState("");
+  const [githubRepoUrl, setGithubRepoUrl] = useState("");
   const [accessType, setAccessType] = useState("");
   const [price, setPrice] = useState(0);
   const [templateType, setTemplateType] = useState("");
@@ -412,10 +413,11 @@ const Admin_Add_Data = () => {
             project_info: templateInfo,
             iframe_url: iframeUrl,
             download_repo_url: downloadRepoUrl,
-            documentation: documentationUrl,
+            documentation_url: documentationUrl,
+            github_repo_url: githubRepoUrl,
             access_type: accessType,
             price: parseFloat(price) || 0,
-            template_type: templateType,
+            template_type_id: parseInt(templateType),
           };
 
           const created = await createResource("templates", payload);
@@ -426,6 +428,7 @@ const Admin_Add_Data = () => {
           setIframeUrl("");
           setDownloadRepoUrl("");
           setDocumentationUrl("");
+          setGithubRepoUrl("");
           setAccessType("");
           setPrice(0);
           setTemplateType("");
@@ -444,6 +447,7 @@ const Admin_Add_Data = () => {
       iframeUrl,
       downloadRepoUrl,
       documentationUrl,
+      githubRepoUrl,
       accessType,
       price,
       createResource,
@@ -881,6 +885,15 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
             placeholder="Documentation URL"
+          />
+
+          <label>Github Repo URL [ Star⭐] </label>
+          <input
+            value={githubRepoUrl}
+            onChange={(e) => setGithubRepoUrl(e.target.value)}
+            className="form-control mb-2"
+            style={formInputStyle}
+            placeholder="Github Repo URL [ Star⭐]"
           />
 
           <label>Access Type</label>

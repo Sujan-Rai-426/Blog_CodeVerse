@@ -146,7 +146,7 @@ function Nav_Bar() {
                         </li>
 
                         <li className="nav-item">
-                            <Link to="/Templates" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link>
+                            <Link to="/Templates/Topics" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link>
                         </li>
                         <li className="nav-item">
                             <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link>
@@ -207,7 +207,7 @@ function Nav_Bar() {
                 </li>
 
                 <li>
-                    <Link to="/Templates" onClick={() => scrollToSection('TEMPLATE')}>
+                    <Link to="/Templates/Topics" onClick={() => scrollToSection('TEMPLATE')}>
                         <i className="bi bi-columns"></i> &nbsp; Templates
                     </Link>
                 </li>

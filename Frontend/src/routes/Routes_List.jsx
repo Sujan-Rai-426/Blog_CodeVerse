@@ -47,11 +47,11 @@ function Routes_List() {
 
 
                         {/* Frontend and Backend Tutorial routes */}
-                        <Route exact path="/Components/:topicID/:codeId?" element={<Components />} />
+                        {/* <Route exact path="/Components/:topicID/:codeId?" element={<Components />} />
                         <Route exact path="/Component-Designs/:topicID/:codeId?" element={<Components_Design />} />
                         <Route exact path="/Component-Topics/:languageID" element={<Components_Topic />} />
                         <Route exact path="/Coding_Guide/:topicID" element={<Coding_Guide />} />
-                        <Route exact path="/Coding_Guide_Topic/:languageID" element={<Coding_Guide_Topic />} />
+                        <Route exact path="/Coding_Guide_Topic/:languageID" element={<Coding_Guide_Topic />} /> */}
 
                         {/* Payment Routes */}
                         <Route exact path="/Payment_Success" element={<Payment_Success />} />

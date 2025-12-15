@@ -4,7 +4,7 @@
 
 .cl-sidebar {
     position: sticky;
-    top: 65px;
+    top: 0; /*Top help to stick sidebar from top to bottom on sliding main body */
     width: 270px;
     height: calc(100vh - 80px);
     overflow-y: auto;

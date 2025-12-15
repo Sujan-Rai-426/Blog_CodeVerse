@@ -1,0 +1,11 @@
+
+.tr-right-sidebar{
+    
+}
+
+@media (max-width: 1024px){
+    .tr-right-sidebar{ display: none; }
+}
+@media (max-width: 768px){
+    .tr-left-sidebar{ display: none; }
+}

@@ -78,7 +78,7 @@ const Components_Topic = () => {
                                 return (
                                     <Link
                                         key={lang.id}
-                                        to={`/Component-Topics/${lang.id}`}
+                                        to={`/Components/Topics/${lang.id}`}
                                         className={`fs-card ${isActive ? "selected-card active-hover" : ""}`}
                                         onClick={() => {
                                             setActiveLangID(lang.id);

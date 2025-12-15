@@ -13,11 +13,12 @@
 
 /* Template preview card */
 .template-preview {
+    width: 100%;
     background: transparent;
     color: wheat;
     border-radius: 12px;
     box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
-    padding: 1.5rem;
+    padding: 0 1.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
@@ -228,6 +229,9 @@
     transition: all 0.3s ease;
 }
 
+
+
+
 /* Template actions */
 .download-documentation {
     display: flex;
@@ -315,6 +319,23 @@
 }
 .temp:hover{
     color: gray;
+}
+
+
+/* Github STAR */
+.tp-github-star-a{
+    margin: auto 1.5rem;
+}
+.tp-github-star-icon{
+    font-size: 1.5rem;
+    color: gold;
+    filter: drop-shadow(0 0 6px rgba(255, 251, 0, 0.555));
+}
+.tp-github-star-icon:hover{
+    font-size: 1.7rem;
+    transition: 150ms ease-in-out;
+    color: rgb(255, 213, 0);
+    filter: drop-shadow(0 0 6px rgba(255, 251, 0, 0.901));
 }
 
 

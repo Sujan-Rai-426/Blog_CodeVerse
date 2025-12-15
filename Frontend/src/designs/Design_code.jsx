@@ -156,6 +156,7 @@ export default function Design_Code({
                     <pre
                         className="scrollable-code"
                         style={{
+                            fontSize: '0.8rem',
                             background: "#1e1e1e",
                             color: "#f5f5f5",
                             padding: "1rem",

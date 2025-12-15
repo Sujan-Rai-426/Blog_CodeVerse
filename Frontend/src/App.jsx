@@ -13,6 +13,8 @@ import User_Routes from './clients/User_Routes.jsx';
 import Template_Routes from './template_Pages/Template_Routes.jsx';
 
 import { adminPersistentLogin } from "./config/apiAdmin";
+import Components_Route from './designs/Components_Route.jsx';
+import Coding_Guide_Route from './coding_Guide/Coding_Guide_Route.jsx';
 
 function App() {
   const [adminLoading, setAdminLoading] = useState(true);
@@ -30,19 +32,21 @@ function App() {
 
   return (
     <Router>
-      <Nav_Bar />
+        <Nav_Bar />
 
-      <Routes>
-        <Route exact path='/Admin/*' element={<Admin_Routes />} />
-        <Route exact path='/User/*' element={<User_Routes />} />
-        <Route exact path="/Templates/*" element={<Template_Routes />} />
-        <Route exact path="/*" element={<Routes_List />} />
-      </Routes>
+          <Routes>
+              <Route exact path='/Admin/*' element={<Admin_Routes />} />
+              <Route exact path='/User/*' element={<User_Routes />} />
+              <Route exact path="/*" element={<Routes_List />} />
+              <Route exact path="/Templates/*" element={<Template_Routes />} />
+              <Route exact path="/Components/*" element={<Components_Route />} />
+              <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route />} />
+          </Routes>
 
-      <Footer />
-      <Analytics />
-      <Floating_Go_Back_Btn />
-      <Scroll_To_Top />
+        <Footer />
+        <Analytics />
+        <Floating_Go_Back_Btn />
+        <Scroll_To_Top />
     </Router>
   );
 }

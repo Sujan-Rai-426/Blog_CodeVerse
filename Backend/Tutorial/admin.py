@@ -13,11 +13,13 @@ admin.site.register(Contact)
 @admin.register(TemplateType)
 class TemplateTypeAdmin(admin.ModelAdmin):
     list_display = ['id', 'name']
+    list_display_links = ['id', 'name']  # 👈 clickable ID and name
 
 @admin.register(Template)
 class TemplateAdmin(admin.ModelAdmin):
     list_display = ['id', 'title', 'template_type', 'access_type', 'price', 'created_at']
     list_filter = ['access_type', 'template_type']
+    list_display_links = ['id', 'title']  # 👈 clickable ID and title
 
 
 # =======================

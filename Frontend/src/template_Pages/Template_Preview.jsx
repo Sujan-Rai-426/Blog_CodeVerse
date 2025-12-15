@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchTemplateById } from "./Template_API";
 import { Link, useParams } from "react-router-dom";
 import "../assets/css/Template_Preview.css";
-import { FaFacebook, FaFacebookMessenger, FaTelegram, FaWhatsapp } from "react-icons/fa";
+import { FaFacebook, FaFacebookMessenger, FaStar, FaTelegram, FaWhatsapp } from "react-icons/fa";
 
 const deviceSizes = {
   desktop: { width: "100%", height: "600px" },
@@ -15,73 +15,66 @@ const Template_Preview = () => {
   const [template, setTemplate] = useState(null);
   const [device, setDevice] = useState("desktop");
 
-  useEffect(() => {
-    const loadTemplate = async () => {
-      const data = await fetchTemplateById(id);
-      setTemplate(data);
-    };
-    loadTemplate();
-  }, [id]);
 
-  if (!template) return <div>Loading template...</div>;
 
-  const changeDevice = (d) => setDevice(d);
+    useEffect(() => {
+        const loadTemplate = async () => {
+            const data = await fetchTemplateById(id);
+            setTemplate(data);
+        };
+        loadTemplate();
+    }, [id]);
+    if (!template) return <div>Loading template...</div>;
+    const changeDevice = (d) => setDevice(d);
+    const devices = [
+        { label: "desktop", icon: <i className="bi bi-pc-display-horizontal"></i> },
+        { label: "tablet", icon: <i className="bi bi-tablet-fill"></i> },
+        { label: "mobile", icon: <i className="bi bi-phone-fill"></i> },
+    ];
 
-  const devices = [
-    { label: "desktop", icon: <i className="bi bi-pc-display-horizontal"></i> },
-    { label: "tablet", icon: <i className="bi bi-tablet-fill"></i> },
-    { label: "mobile", icon: <i className="bi bi-phone-fill"></i> },
-  ];
+
 
   // <------- handle SHARE ------>
-  const handleShareClick = (platform) => {
-    const realUrl = window.location.href;
-    const encodedUrl = encodeURIComponent(realUrl);
-    const pageTitle = encodeURIComponent(template?.title || document.title);
-
-    const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    let shareUrl = "";
-
-    switch (platform) {
-      case "Facebook":
-        shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${pageTitle}`;
-        break;
-
-      case "WhatsApp":
-        shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedUrl}`;
-        break;
-
-      case "Telegram":
-        shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${pageTitle}`;
-        break;
-
-      case "Messenger":
-        // Only use fb-messenger scheme if not localhost and on mobile
-        if (!realUrl.includes("localhost") && isMobile()) {
-          shareUrl = `fb-messenger://share?link=${encodedUrl}`;
-        } else {
-          // fallback to Facebook Send Dialog for desktop or localhost
-          shareUrl = `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=1949440582581236&redirect_uri=${encodedUrl}`;
-        }
-        break;
-
-      default:
-        navigator.clipboard.writeText(realUrl);
-        alert("Link copied!");
-        return;
-    }
-
-    const width = 600;
-    const height = 500;
-    const left = window.screen.width / 2 - width / 2;
-    const top = window.screen.height / 2 - height / 2;
-
-    window.open(
-      shareUrl,
-      "_blank",
-      `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
-    );
-  };
+    const handleShareClick = (platform) => {
+      const realUrl = window.location.href;
+      const encodedUrl = encodeURIComponent(realUrl);
+      const pageTitle = encodeURIComponent(template?.title || document.title);
+      const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+      let shareUrl = "";
+      switch (platform) {
+        case "Facebook":
+          shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${pageTitle}`;
+          break;
+        case "WhatsApp":
+          shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedUrl}`;
+          break;
+        case "Telegram":
+          shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${pageTitle}`;
+          break;
+        case "Messenger":
+          // Only use fb-messenger scheme if not localhost and on mobile
+          if (!realUrl.includes("localhost") && isMobile()) {
+            shareUrl = `fb-messenger://share?link=${encodedUrl}`;
+          } else {
+            // fallback to Facebook Send Dialog for desktop or localhost
+            shareUrl = `https://www.facebook.com/dialog/send?link=${encodedUrl}&app_id=1949440582581236&redirect_uri=${encodedUrl}`;
+          }
+          break;
+        default:
+          navigator.clipboard.writeText(realUrl);
+          alert("Link copied!");
+          return;
+      }
+      const width = 600;
+      const height = 500;
+      const left = window.screen.width / 2 - width / 2;
+      const top = window.screen.height / 2 - height / 2;
+      window.open(
+        shareUrl,
+        "_blank",
+        `width=${width},height=${height},top=${top},left=${left},resizable=yes,scrollbars=yes`
+      );
+    };
 
 
   // <------- Scroll to section function using id ----->
@@ -101,6 +94,8 @@ const Template_Preview = () => {
         }, 120); // wait for react-router navigation
     };
 
+
+
   return (
 <div className="template-preview-container">
         <div className="template-preview">
@@ -112,35 +107,35 @@ const Template_Preview = () => {
                 <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "0 0.5rem",}}>
                     {/* Price Tag Badge */}
                       <div className="access-info">
-                        <span className={`badge ${template.access_type.toLowerCase()}`}>
-                          {template.access_type}
-                          {template.access_type === "Premium" && template.price
-                            ? ` • $${template.price}`
-                            : ""}
-                        </span>
+                          <span className={`badge ${template.access_type.toLowerCase()}`}>
+                              {template.access_type}
+                              {template.access_type === "Premium" && template.price
+                                ? ` • $${template.price}`
+                                : ""}
+                          </span>
                       </div>
 
                     {/* SHARE + Project Setup guide */}
                       <div style={{display: "flex", flexDirection: "row", gap:'1rem', margin: "0.8rem 0"}}>
                           {/* Share Dropdown */}
                           <div className="tmp-share-dropdown">
-                            <button className="tmp-share-btn" title="Share">
-                              <i className="fa fa-share-alt" />
-                            </button>
-                            <div className="tmp-share-options">
-                              <span onClick={() => handleShareClick("WhatsApp")}>
-                                <FaWhatsapp className="share-icon" /> WhatsApp
-                              </span>
-                              <span onClick={() => handleShareClick("Messenger")}>
-                                <FaFacebookMessenger className="share-icon" /> Messenger
-                              </span>
-                              <span onClick={() => handleShareClick("Facebook")}>
-                                <FaFacebook className="share-icon" /> Facebook
-                              </span>
-                              <span onClick={() => handleShareClick("Telegram")}>
-                                <FaTelegram className="share-icon" /> Telegram
-                              </span>
-                            </div>
+                              <button className="tmp-share-btn" title="Share">
+                                <i className="fa fa-share-alt" />
+                              </button>
+                              <div className="tmp-share-options">
+                                <span onClick={() => handleShareClick("WhatsApp")}>
+                                    <FaWhatsapp className="share-icon" /> WhatsApp
+                                </span>
+                                <span onClick={() => handleShareClick("Messenger")}>
+                                    <FaFacebookMessenger className="share-icon" /> Messenger
+                                </span>
+                                <span onClick={() => handleShareClick("Facebook")}>
+                                    <FaFacebook className="share-icon" /> Facebook
+                                </span>
+                                <span onClick={() => handleShareClick("Telegram")}>
+                                    <FaTelegram className="share-icon" /> Telegram
+                                </span>
+                              </div>
                           </div>
 
                           {/* Project SetUp Guide */}
@@ -149,18 +144,17 @@ const Template_Preview = () => {
                             onClick={() => {
                               const element = document.getElementById("PROJECT-SetUP-GUIDE");
                               if (element) {
-                                const offset = -80; // optional offset for sticky headers
-                                const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                                const finalPosition = elementPosition + offset;
-
-                                window.scrollTo({
-                                  top: finalPosition,
-                                  behavior: "smooth",
-                                });
+                                  const offset = -80; // optional offset for sticky headers
+                                  const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+                                  const finalPosition = elementPosition + offset;
+                                  window.scrollTo({
+                                      top: finalPosition,
+                                      behavior: "smooth",
+                                  });
                               }
                             }}
                           >
-                            Project Setup Guide
+                              Project Setup Guide
                           </button>
                       </div>
                 </div>
@@ -170,55 +164,64 @@ const Template_Preview = () => {
                     {/* === Device btn + Price Tag + Template ==== */}
                       <div className="device-buttons">
 
-                          {/* devices type */}
+                        {/* devices type */}
                           <div className="devices">
-                            {devices.map((d) => (
-                              <button
-                              key={d.label}
-                              className={device === d.label ? "active" : ""}
-                              onClick={() => changeDevice(d.label)}
-                              >
-                                {d.icon}
-                              </button>
-                            ))}
+                              {devices.map((d) => (
+                                  <button
+                                  key={d.label}
+                                  className={device === d.label ? "active" : ""}
+                                  onClick={() => changeDevice(d.label)}
+                                  >
+                                      {d.icon}
+                                  </button>
+                              ))}
                           </div>
 
-                        {/* Template icon */}
+                        {/* Template Box icon */}
                           <Link to="/Templates" className="temp" onClick={() => scrollToSection('TEMPLATE')}> 
-                            <i className="bi bi-columns"></i> 
+                              <i className="bi bi-columns"></i> 
                           </Link>
+
+                        {/* Github Star Icon */}
+                          <a
+                            href={template.github_repo_url}
+                            target="_black"
+                            rel="noopener noreferrer"
+                            className="tp-github-star-a"
+                          > 
+                              <span className="tp-github-star-icon"> <FaStar /> </span> 
+                          </a>
                       </div>
 
                     {/* ======== Download + Docmentation + Screen Size ====== */}
                       <div className="download-documentation">
-                        <a
-                          href={template.iframe_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="docs-btn"
-                        >
-                          <i className="bi bi-arrows-fullscreen"></i>
-                          <span className="btn-text"> FullScreen</span>
-                        </a>
-                        <a
-                          href={template.download_repo_url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="download-btn"
-                        >
-                          <i className="bi bi-download"></i>
-                          <span className="btn-text"> Download</span>
-                        </a>
-                        <a
-                          href={template.documentation}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="docs-btn"
-                        >
-                          <i className="bi bi-file-earmark-code-fill"></i>
-                          <span className="btn-text"> Documentation</span>
-                        </a>
-
+                          <a
+                            href={template.iframe_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="docs-btn"
+                          >
+                              <i className="bi bi-arrows-fullscreen"></i>
+                              <span className="btn-text"> FullScreen</span>
+                          </a>
+                          <a
+                            href={template.download_repo_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="download-btn"
+                          >
+                              <i className="bi bi-download"></i>
+                              <span className="btn-text"> Download</span>
+                          </a>
+                          <a
+                            href={template.documentation_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="docs-btn"
+                          >
+                              <i className="bi bi-file-earmark-code-fill"></i>
+                              <span className="btn-text"> Documentation</span>
+                          </a>
                       </div>
                   </div>
             </div>

@@ -7,18 +7,7 @@ import "../assets/css/Components.css"
 function Components() {
     return (
         <div className='c-components-container'>
-
-        {/* ************* Main Components Contents ******************** */}
-            <span className='c-components-left-sidebar'><Components_Left_Sidebar /></span>
-
-
-        {/* ************* Main Components Contents ******************** */}
             <Components_Design />
-        
-        
-        {/* ************* Main Components Contents ******************** */}
-            <span className='c-components-right-sidebar'><Components_Right_Sidebar /></span>
-        
         </div>
     )
 }

@@ -2,7 +2,7 @@
 ======================== ROOT THEME  =====================
 **********************************************************/
 :root {
-    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-bg: rgba(138, 130, 130, 0.06);
     --glass-border: rgba(255, 255, 255, 0.15);
 
     --text-main: #ffffff;
@@ -27,16 +27,14 @@
 ==================== RIGHT SIDEBAR  ======================
 **********************************************************/
 .right-sidebar {
-    width: 280px;
     position: sticky;
-    top: 65px;
-    height: calc(100vh - 80px);
+    top: 0; /*Top help to stick sidebar from top to bottom on sliding main body */
+    height: calc(100vh);
 
-    padding: 16px;
+    padding: 15px 15px 80px 15px;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    gap: 22px;
+    gap: 2rem;
 
     background: var(--glass-bg);
     backdrop-filter: blur(14px);
@@ -194,7 +192,7 @@
 }
 
 .actions-list button {
-    padding: 8px 12px;
+    padding: 8px 18px;
     border-radius: var(--radius);
 
     background: rgba(255, 255, 255, 0.08);

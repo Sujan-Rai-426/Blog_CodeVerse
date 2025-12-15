@@ -27,7 +27,7 @@ function Home() {
         return () => clearTimeout(timer);
     }, [parentLoading]);
 
-    const handleNavigate = (langId, pathPrefix = "/Component-Topics") => {
+    const handleNavigate = (langId, pathPrefix = "/Components/Topics") => {
         navigate(`${pathPrefix}/${langId}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
@@ -143,7 +143,7 @@ function Home() {
                             </div>
                         ))
                         : frontendLangs.map((lang) => (
-                            <Link key={lang.id} to={`/Component-Topics/${lang.id}`} className="grid-card">
+                            <Link key={lang.id} to={`/Components/Topics/${lang.id}`} className="grid-card">
                                 {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
                                 <span className="card-text">{lang.name}</span>
                             </Link>
@@ -167,7 +167,7 @@ function Home() {
                             </div>
                         ))
                         : backendLangs.map((lang) => (
-                            <Link key={lang.id} to={`/Coding_Guide_Topic/${lang.id}`} className="grid-card">
+                            <Link key={lang.id} to={`/Code-Guide/Topic/${lang.id}`} className="grid-card">
                                 {lang.icon_class && <i className={`${lang.icon_class} card-icon`}></i>}
                                 <span className="card-text">{lang.name}</span>
                             </Link>
