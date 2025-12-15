@@ -1,10 +1,24 @@
 import React, { useContext } from "react";
 import "../assets/css/Components_Right_Sidebar.css";
-import { FaHeart, FaStar, FaGem, FaClock, FaBug, FaLightbulb, FaComment, FaUserPlus, FaSignInAlt, FaArrowRight, FaPaypal, FaGithub, FaGamepad, FaPlay } from "react-icons/fa";
+import { 
+    FaHeart, 
+    FaStar, 
+    FaGem, 
+    FaClock, 
+    FaBug, 
+    FaLightbulb, 
+    FaComment, 
+    FaUserPlus, 
+    FaSignInAlt, 
+    FaPaypal, 
+    FaGithub, 
+    FaPlay, 
+    FaUser,
+} from "react-icons/fa";
+
 import User_API_Context from "../clients/User_API_Context.jsx";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 import { Link, useNavigate } from "react-router-dom";
-import apiClient from "../config/apiClient.js";
 
 
 
@@ -70,7 +84,7 @@ function Components_Right_Sidebar() {
 
                     {/*****  Profile Enter and Logout BTN *****/}
                         <div className="profile-btn-grp">
-                            <button className="crs-profile-edit-btn" onClick={handleEnterProfile} ><FaArrowRight /> Profile </button>
+                            <button className="crs-profile-edit-btn" onClick={handleEnterProfile}><FaUser /> Profile </button>
                             <button className="crs-play-game-btn" onClick={handleEnterGame}><FaPlay /> Games </button>
                         </div>
                     </div>

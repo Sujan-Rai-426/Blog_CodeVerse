@@ -9,8 +9,9 @@
     --card-background: #ffffff; /* White Card Background */
     --border-color: #dee2e6;
     --shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+
 }
-.profile-container {
+.up-profile-container {
     color: white;
     max-width: 1000px;
     margin: 0 auto;
@@ -22,17 +23,17 @@
 
 /* --- Profile Header (Avatar, Name, Stats) --- */
 
-.profile-header {
+.up-profile-header {
     display: flex;
     align-items: flex-start;
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
     gap: 2rem;
 }
-.profile-avatar-wrapper {
+.up-profile-avatar-wrapper {
     flex-shrink: 0;
 }
-.profile-avatar {
+.up-profile-avatar {
     width: 150px;
     height: 150px;
     border-radius: 50%;
@@ -40,17 +41,17 @@
     border: 4px solid var(--card-background);
     box-shadow: var(--shadow);
 }
-.profile-info-main {
+.up-profile-info-main {
     flex-grow: 1;
 }
-.profile-name-actions {
+.up-profile-name-actions {
     display: flex;
     align-items: center;
     margin-bottom: 1rem;
     flex-wrap: wrap; /* Important for responsiveness */
     gap: 10px;
 }
-.profile-username {
+.up-profile-username {
     font-size: 2.5rem;
     font-weight: 300;
     margin: 0;
@@ -59,14 +60,13 @@
 }
 
 /* ====== BUTTON ========= */
-.profile-btn-grp{
-    display: grid;
+.up-profile-btn-grp{
+    display: flex;
     gap: 1rem;
-    grid-template-columns: repeat(2, 1fr);
 }
 
 /* Action Buttons */
-.profile-edit-btn, .profile-logout-btn {
+.up-profile-edit-btn, .up-profile-logout-btn {
     padding: 0.5rem 1rem;
     border: none;
     border-radius: 4px;
@@ -78,24 +78,24 @@
     gap: 0.4rem;
     font-size: 0.9rem;
 }
-.profile-edit-btn {
+.up-profile-edit-btn {
     background-color: var(--primary-color);
     color: white;
 }
-.profile-edit-btn:hover {
+.up-profile-edit-btn:hover {
     background-color: #0056b3;
 }
-.profile-logout-btn {
+.up-profile-logout-btn {
     background-color: #df2f2f;
     color: white;
 }
-.profile-logout-btn:hover {
+.up-profile-logout-btn:hover {
     background-color: #b53939;
 }
 
 /* --- Stats Bar --- */
 
-.profile-stats {
+.up-profile-stats {
     display: flex;
     gap: 3rem;
     padding: 0.5rem 0;
@@ -120,14 +120,14 @@
 
 /* --- Details & Contact Section --- */
 
-.profile-details-wrapper {
+.up-profile-details-wrapper {
     display: flex;
     gap: 2rem;
     margin-top: 1.5rem;
     flex-wrap: wrap;
 }
 
-.profile-about-section, .profile-contact-section {
+.up-profile-about-section, .up-profile-contact-section {
     padding: 1rem;
     background-color: var(--card-background);
     border: 1px solid var(--border-color);
@@ -135,30 +135,30 @@
     box-shadow: var(--shadow);
 }
 
-.profile-about-section {
+.up-profile-about-section {
     flex: 2; /* Takes more space */
     min-width: 300px;
 }
 
-.profile-contact-section {
+.up-profile-contact-section {
     flex: 1; /* Takes less space */
     min-width: 250px;
 }
 
-.profile-full-name {
+.up-profile-full-name {
     font-size: 1.5rem;
     margin-top: 0;
     margin-bottom: 0.5rem;
     color: var(--primary-color);
 }
 
-.profile-bio {
+.up-profile-bio {
     font-style: italic;
     color: #495057;
     line-height: 1.5;
 }
 
-.profile-contact-section h3 {
+.up-profile-contact-section h3 {
     margin-top: 0;
     margin-bottom: 1rem;
     color: #343a40;
@@ -181,17 +181,17 @@
 
 /* --- Content/Post Section --- */
 
-.profile-content-section {
+.up-profile-content-section {
     margin-top: 2rem;
 }
 
-.profile-content-section h3 {
+.up-profile-content-section h3 {
     text-align: center;
     margin-bottom: 1.5rem;
     color: #212529;
 }
 
-.content-grid {
+.up-content-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr); /* 3 columns for desktop/tablet */
     gap: 15px;
@@ -214,10 +214,7 @@
     transform: scale(1.02);
     box-shadow: var(--shadow);
 }
-.favourite-card{
-    width: 99% !important;
-    padding: 3px 0 !important;
-}
+
 
 
 /* ================================================= */
@@ -226,67 +223,63 @@
 
 /* --- Tablet (max-width: 850px) --- */
 @media (max-width: 850px) {
-    .favourite-card{
+    .up-favourite-card{
         width: 99% !important;
         padding: 3px 0 !important;
     }
-    .profile-header {
+    .up-profile-header {
         flex-direction: column; /* Stack avatar above info */
         align-items: center;
         text-align: center;
     }
 
-    .profile-info-main {
+    .up-profile-info-main {
         padding-top: 1rem;
     }
-
-    .profile-name-actions {
-        justify-content: center;
-    }
     
-    .profile-username {
+    .up-profile-username {
         font-size: 2rem;
     }
 
-    .profile-stats {
+    .up-profile-stats {
         justify-content: center;
         gap: 2rem;
     }
     
-    .profile-details-wrapper {
+    .up-profile-details-wrapper {
         flex-direction: column; /* Stack details vertically */
         gap: 1rem;
     }
     
-    .profile-about-section, .profile-contact-section {
+    .up-profile-about-section, .up-profile-contact-section {
         min-width: 100%;
         flex: auto;
     }
 
-    .content-grid {
+    .up-content-grid {
         grid-template-columns: repeat(2, 1fr); /* 2 columns for tablet */
     }
 }
 
 /* --- Mobile (max-width: 550px) --- */
 @media (max-width: 550px) {
-    .favourite-card{ width: 99% !important; padding: 3px 0 !important; }
-    .profile-container { margin: 1rem 0.5rem; padding: 1rem; }
-    .profile-avatar { width: 100px; height: 100px; }
-    .profile-username { font-size: 1.5rem; }
-    .profile-name-actions { flex-direction: column; gap: 0.5rem; }
-    .profile-stats { gap: 1rem; }
+    .up-favourite-card{ width: 99% !important; padding: 3px 0 !important; }
+    .up-profile-container { margin: 1rem 0.5rem; padding: 1rem; }
+    .up-profile-avatar { width: 100px; height: 100px; }
+    .up-profile-username { font-size: 1.5rem; }
+    .up-profile-name-actions { flex-direction: column; gap: 0.5rem; }
+    .up-profile-stats { gap: 1rem; }
     .stat-value { font-size: 1rem; }
     .stat-label { font-size: 0.8rem; }
-    .profile-edit-btn, .profile-logout-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.4rem; }
-    .content-grid { grid-template-columns: 1fr; gap: 10px; }
+    .up-profile-edit-btn, .up-profile-logout-btn { width: 100%; justify-content: center; font-size: 0.85rem; padding: 0.4rem; }
+    .up-content-grid { grid-template-columns: 1fr; gap: 10px; }
 }
 
 /* ================================================= */
 /* 🧭 Profile Tab Navigation (Instagram/YouTube Style) */
 /* ================================================= */
 
-.profile-tab-bar {
+.up-profile-tab-bar {
     display: flex;
     justify-content: center; /* Center the tabs horizontally */
     align-items: center;
@@ -296,7 +289,7 @@
     padding: 0 1rem;
 }
 
-.profile-tab-button {
+.up-profile-tab-button {
     flex: 1; /* Distribute space evenly among all tabs */
     max-width: 250px; 
     
@@ -323,24 +316,24 @@
 }
 
 /* Active Tab Styling */
-.profile-tab-button.active {
+.up-profile-tab-button.active {
     border-bottom-color: var(--primary-color); /* Bright indicator line */
     color: #212529; /* Darker text/icon color for active tab */
 }
 
-.profile-tab-button:hover:not(.active) {
+.up-profile-tab-button:hover:not(.active) {
     background-color: #f4f4f4; /* Subtle hover effect */
 }
 
-.tab-icon {
+.up-tab-icon {
     font-size: 1.1rem;
 }
 
 /* Hide the static content heading */
-.profile-content-section h3 {
+.up-profile-content-section h3 {
     display: none;
 }
-.tab-content-heading {
+.up-tab-content-heading {
     text-align: center;
     color: #212529;
     font-size: 1.2rem;
@@ -354,30 +347,27 @@
 
 /* --- Mobile (max-width: 600px) --- */
 @media (max-width: 600px) {
-    .favourite-card{width: 99% !important;padding: 3px 0 !important;}
-    .profile-tab-bar {margin-top: 1.5rem;padding: 0;}
-    .profile-tab-button {padding: 0.75rem 0.2rem;gap: 0;}
-    .tab-icon {font-size: 1.3rem;}
-    .profile-tab-button .tab-label {display: none;}
-    .profile-tab-button {padding: 0.75rem 0; }
+    .up-favourite-card{width: 99% !important;padding: 3px 0 !important;}
+    .up-profile-tab-bar {margin-top: 1.5rem;padding: 0;}
+    .up-profile-tab-button {padding: 0.75rem 0.2rem;gap: 0;}
+    .up-tab-icon {font-size: 1.3rem;}
+    .up-profile-tab-button .up-tab-label {display: none;}
+    .up-profile-tab-button {padding: 0.75rem 0; }
 }
 
 
 
 
-/* ================================================= */
+/* ============================================================= */
 /* 🕹 Skeleton Loader Styles (Dark Mode, Matching Profile CSS) */
-/* ================================================= */
+/* ============================================================ */
 
-/* Skeleton base */
 .skeleton-element {
     background-color: #2c2c2c; /* Dark gray */
     border-radius: 6px;
     position: relative;
     overflow: hidden;
 }
-
-/* Shimmer effect */
 .skeleton-element::after {
     content: "";
     position: absolute;
@@ -393,13 +383,10 @@
     );
     animation: shimmer 1.2s infinite;
 }
-
 @keyframes shimmer {
     0% { left: -150px; }
     100% { left: 100%; }
 }
-
-/* --- Avatar --- */
 .skeleton-avatar {
     width: 150px;
     height: 150px;
@@ -407,8 +394,6 @@
     margin-right: 1.5rem;
     background-color: #2c2c2c;
 }
-
-/* --- Buttons --- */
 .skeleton-button {
     height: 35px;
     width: 100px;
@@ -416,8 +401,6 @@
     margin-bottom: 0.5rem;
     background-color: #2c2c2c;
 }
-
-/* --- Lines / Text --- */
 .skeleton-line {
     height: 15px;
     margin: 0.5rem 0;
@@ -425,13 +408,11 @@
     width: 100%;
     background-color: #2c2c2c;
 }
-
 .skeleton-line.large {
     width: 50%;
     height: 25px;
     margin-bottom: 1rem;
 }
-
 .skeleton-line.full {
     width: 100%;
     height: 18px;
@@ -442,15 +423,12 @@
     width: 60%;
     margin-top: 6px;
 }
-
-/* --- Tabs --- */
 .skeleton-tab-bar {
     display: flex;
     justify-content: space-between;
     margin-bottom: 1rem;
     gap: 10px;
 }
-
 .skeleton-tab-button {
     flex: 1;
     display: flex;
@@ -461,15 +439,12 @@
     border-radius: 6px;
     background-color: #2c2c2c;
 }
-
 .skeleton-icon-large {
     width: 24px;
     height: 24px;
     border-radius: 4px;
     background-color: #2c2c2c;
 }
-
-/* --- Content Grid Cards --- */
 .skeleton-post-card {
     height: 180px;
     border-radius: 8px;
@@ -483,10 +458,115 @@
     .skeleton-avatar { width: 120px; height: 120px; margin: 0 auto 1rem; }
     .skeleton-button { width: 90px; height: 30px; }
 }
-
 @media (max-width: 550px) {
     .skeleton-avatar { width: 100px; height: 100px; margin-bottom: 0.5rem; }
     .skeleton-button { width: 80px; height: 28px; }
 }
 
 
+
+
+
+/* ********************************************************** */
+/* ================= FAVOURITE Saved STYLE ================= */
+/* ********************************************************** */
+.up-favourite-card{
+    width: 99% !important;
+    padding: 3px 0 !important;
+}
+.up-card-style {
+    cursor: pointer;
+    border-radius: 10px;
+    padding: 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    background-color: white;
+    overflow: hidden;
+}
+.up-card-style:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+}
+.up-card-iframe {
+    background: lightblue;
+    width: 100%;
+    height: 180px;
+    border: none;
+    border-radius: 8px;
+    margin-bottom: 8px;
+}
+.up-card-title-text, .up-playlist-card-title {
+    font-size: 1em;
+    font-weight: 500;
+    color: #333;
+    padding: 0 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+
+
+/* ********************************************************** */
+/* ================= PLAYLIST GROUP STYLE ================= */
+/* ********************************************************** */
+
+.up-playlist-wrapper {
+    width: 100%;
+    margin-top: 15px;
+}
+.up-playlist-topic-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
+    margin: 10px 0;
+    background-color: #f7f7f7; /* Light background for visibility */
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, box-shadow 0.2s ease;
+}
+.up-playlist-topic-header:hover {
+    background-color: #f0f0f0; /* Slight color change on hover */
+}
+.up-playlist-topic-header.is-expanded {
+    background-color: #ffffff; /* White background when active */
+    border-color: #007bff; /* Primary color border */
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.1);
+}
+.up-playlist-topic-title {
+    margin: 0;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+}
+.topic-icon {
+    margin-right: 10px;
+    color: #007bff; /* Highlight icon color */
+    font-size: 1.2em;
+}
+.topic-item-count {
+    color: #6c757d;
+    font-size: 0.9em;
+    display: flex;
+    align-items: center;
+}
+.toggle-icon {
+    margin-left: 10px;
+    transition: transform 0.2s ease;
+    color: #6c757d;
+}
+.up-content-grid-inner {
+    /* Define the grid for the cards inside the expanded playlist */
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    padding: 20px 10px; /* Padding for the inner content */
+    background-color: #fafafa;
+    border-radius: 0 0 8px 8px;
+    margin-bottom: 20px;
+}

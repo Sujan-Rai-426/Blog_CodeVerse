@@ -19,6 +19,7 @@ class FavoriteCodeSerializer(serializers.ModelSerializer):
             "css_code": obj.code.css_code,
             "js_code": obj.code.js_code,
             "topic_id": obj.code.topic.id,#topic id where code id belong
+            "topic_name": obj.code.topic.name, # get topic name of that source code 
         }
     def get_favourite_count(self, obj):
         # Count how many users have this code as favourite
