@@ -1,7 +1,7 @@
 /* ---------- Standard sizes & reset ---------- */
 :root{
     --gold: #facc15;
-    --background : black
+    --background : black;
     --muted: #cbd5e1;
     --bg0: #0f1720;
     --nav-grad-start: #2c221bf7;
@@ -10,15 +10,14 @@
 }
 
 /* ---------- NAVBAR (standard height ~75px) ---------- */
-.navbar-standard {
+.nb-navbar-standard {
     height: 75px;
     display: flex;
     align-items: center;
-    /* background: linear-gradient(145deg, var(--nav-grad-start) 0%, var(--nav-grad-mid) 50%, var(--nav-grad-end) 100%); */
     box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     z-index: 3000; /* keep on top */
     background: var(--background);
-    border-bottom: 2px  solid gray;
+    border-bottom: 2px solid gray;
     backdrop-filter: blur(25px);
 }
 
@@ -42,10 +41,10 @@
 .brand small { font-size: 0.6rem; color: rgba(255,255,255,0.9); }
 
 /* Right group */
-.nav-right { display:flex; align-items:center; gap:10px; }
+.nav-right { display:flex; align-items:center; gap:15px; }
 
 /* hamburger (mobile) */
-.hamburger {
+.nb-hamburger {
     background: rgba(255,255,255,0.07);
     color: #fff;
     border: 0;
@@ -54,16 +53,16 @@
     cursor: pointer;
     font-size: 18px;
 }
-.hamburger:hover { background: rgba(255,255,255,0.12); }
+.nb-hamburger:hover { background: rgba(255,255,255,0.12); }
 
 /* ---------- Desktop Nav list ---------- */
 .d-none { display:none; } /* utility used in JSX */
-@media (min-width: 992px) {
-    .d-lg-flex { display:flex; }
+@media (min-width: 767px) {
+    .d-lg-flex { display:flex !important; }
 }
 
 /* nav list */
-.nav-list {
+.nb-nav-list {
     display:flex;
     gap: 6px;
     align-items:center;
@@ -73,8 +72,8 @@
 }
 
 /* nav item */
-.nav-item { position:relative; }
-.nav-link {
+.nb-nav-item { position:relative; }
+.nb-nav-link {
     color: #ffffff !important;
     text-decoration: none;
     padding: 8px 10px;
@@ -82,12 +81,11 @@
     font-weight:500;
     transition: color .18s ease, transform .12s ease;
 }
-.nav-link:hover { color: var(--gold); transform: translateY(-1px); }
+.nb-nav-link:hover { color: var(--gold); transform: translateY(-1px); }
 
 /* small underline accent */
-.nav-link::after {
+.nb-nav-link::after {
     content:"";
-    color: yellow;
     display:block;
     height:3px;
     width:0%;
@@ -96,20 +94,19 @@
     transition: width .22s ease;
     margin-top:6px;
 }
-.nav-link:hover::after, .nav-link.active::after { width:100%; }
+.nb-nav-link:hover::after, .nb-nav-link.active::after { width:100%; }
 
 /* Dropdown caret */
-.caret { margin-left:6px; font-size:0.85rem; display:inline-block; transition: transform .22s ease; }
-.caret.open { transform: rotate(180deg); }
+.nb-caret { margin-left:6px; font-size:0.85rem; display:inline-block; transition: transform .22s ease; }
+.nb-caret.open { transform: rotate(180deg); }
 
-/* ---------- Dropdown panel (NETFLIX style) ---------- */
-/* Important: absolute positioned so it DOES NOT change navbar height */
-.dropdown-panel {
+/* ---------- Dropdown panel ---------- */
+.nb-dropdown-panel {
     position: absolute;
-    top: calc(100% + 10px); /* below navbar item */
+    top: calc(100% + 10px);
     left: 0;
     min-width: 220px;
-    background: #0b0b0b;            /* Netflix-like black */
+    background: #0b0b0b;
     border-radius: 6px;
     padding: 8px 6px;
     box-shadow: 0 12px 32px rgba(0,0,0,0.6);
@@ -119,17 +116,15 @@
     transition: opacity .18s ease, transform .22s ease, visibility .18s;
     z-index: 5000;
 }
-
-/* show states */
-.nav-dropdown.open .dropdown-panel,
-.nav-item:hover .dropdown-panel { /* hover fallback for non-touch */
+.nb-nav-dropdown.open .nb-dropdown-panel,
+.nb-nav-item:hover .nb-dropdown-panel { /* hover fallback for non-touch */
     opacity: 1;
     visibility: visible;
     transform: translateY(0);
 }
 
 /* dropdown items */
-.dropdown-panel .dropdown-item {
+.nb-dropdown-panel .nb-dropdown-item {
     display:block;
     padding: 10px 14px;
     color: #d1d5db;
@@ -138,16 +133,13 @@
     font-size:0.95rem;
     transition: background .12s ease, color .12s;
 }
-.dropdown-panel .dropdown-item:hover {
-    background: #e50914; /* Netflix red hover */
+.nb-dropdown-panel .nb-dropdown-item:hover {
+    background: #e50914;
     color: #fff;
 }
 
-/* ensure dropdown doesn't cause parent height change */
-.nav-list, .nav-item { align-items: center; }
-
 /* ---------- Sidebar (mobile) ---------- */
-.sidebar {
+.nb-sidebar {
     position: fixed;
     top: 0;
     right: -100%;
@@ -162,10 +154,10 @@
     padding-top: 68px;
     box-shadow: -12px 0 30px rgba(0,0,0,0.45);
 }
-.sidebar.open { right: 0; }
+.nb-sidebar.open { right: 0; }
 
 /* sidebar close button */
-.sidebar-close {
+.nb-sidebar-close {
     position:absolute;
     top:14px;
     left:14px;
@@ -177,31 +169,29 @@
 }
 
 /* sidebar list */
-.sidebar-list { list-style:none; padding:20px 18px; margin:0; }
-.sidebar-list li { margin-bottom: 3rem; }
-.sidebar-list a, .sidebar-dropdown-btn {
+.nb-sidebar-list { list-style:none; padding:20px 18px; margin:0; }
+.nb-sidebar-list li { margin-bottom: 0.5rem; }
+.nb-sidebar-list a, .nb-sidebar-dropdown-btn {
     color:#fff;
     text-decoration:none;
     font-size:1.05rem;
     display:block;
+    margin: 0 0 1.3rem 1rem;
 }
 
 /* mobile nested list */
-.sidebar-sublist {
+.nb-sidebar-sublist {
     overflow:hidden;
     max-height:0;
     color: gray;
     transition: max-height .28s ease;
     padding-left: 38px;
 }
-.sidebar-sublist.open { max-height: 500px; }
-
-.sidebar-sublist li {
-    margin-bottom: 18px;
-}
+.nb-sidebar-sublist.open { max-height: 500px; }
+.nb-sidebar-sublist li { margin-bottom: 18px; }
 
 /* sidebar dropdown button */
-.sidebar-dropdown-btn {
+.nb-sidebar-dropdown-btn {
     background: transparent;
     border: none;
     color: #fff;
@@ -214,36 +204,11 @@
 }
 
 /* overlay when sidebar open */
-.sidebar-overlay {
+.nb-sidebar-overlay {
     position: fixed;
     inset:0;
     background: rgba(0,0,0,0.45);
     z-index: 5500;
-}
-
-/* ---------- Responsive behaviour ---------- */
-@media (max-width: 991px) {
-    .d-lg-flex { display:none !important; }
-    .hamburger { display:inline-block; }
-}
-@media (min-width: 992px) {
-    .hamburger { display:none; }
-    .sidebar { display:none; }
-}
-
-/* small tweaks */
-a { color: inherit; }
-button { font-family: inherit; }
-
-
-/* ... (Keep all existing CSS variables, standard sizes, and navbar styles) ... */
-
-/* ---------- Right group ---------- */
-.nav-right {
-    display:flex; 
-    align-items:center; 
-    /* Increased gap for visual separation between profile/menu and main links */
-    gap: 15px; 
 }
 
 /* ---------- Profile Button Styles ---------- */
@@ -251,37 +216,31 @@ button { font-family: inherit; }
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 40px; /* Standard avatar size */
+    width: 40px;
     height: 40px;
     border-radius: 50%;
-    /* Subtle background to make the icon stand out */
     background: rgba(255, 255, 255, 0.1); 
     padding: 0;
     transition: background 0.15s ease, transform 0.15s ease;
 }
-
 .profile-btn:hover {
     background: rgba(255, 255, 255, 0.25);
-    transform: scale(1.05); /* Slight lift on hover */
+    transform: scale(1.05);
 }
-
-/* Default icon style (when user is logged out / no avatar) */
 .profile-icon {
-    font-size: 1.8rem; /* Large icon */
-    color: var(--gold); /* Use your primary accent color */
-    line-height: 1; /* Center the icon */
+    font-size: 1.8rem;
+    color: var(--gold);
+    line-height: 1;
 }
-
-/* User Avatar (when logged in) */
 .user-avatar {
     width: 100%;
     height: 100%;
     object-fit: cover;
     border-radius: 50%;
-    border: 2px solid var(--gold); /* Highlighted border */
+    border: 2px solid var(--gold);
 }
 
-/* ---------- Mobile Sidebar Divider (NEW) ---------- */
+/* ---------- Mobile Sidebar Divider ---------- */
 .sidebar-divider {
     border: 0;
     height: 1px;
@@ -289,26 +248,16 @@ button { font-family: inherit; }
     margin: 18px 0;
 }
 
-/* Mobile sidebar link styling adjustments 
-  (Ensure profile link looks good) 
-*/
-.sidebar-list a {
-    padding: 10px 0; /* Add padding for better touch targets */
-    transition: color 0.15s ease;
+/* ---------- Responsive behaviour ---------- */
+@media (min-width: 767px) {
+    .nb-hamburger { display:none; }
+    .nb-sidebar { display:none; }
 }
-.sidebar-list a:hover {
-    color: var(--gold); /* Highlight on hover/focus */
-}
-.sidebar-list li { 
-    margin-bottom: 0.5rem; /* Reduced gap for a cleaner list */
+@media (max-width: 767px) {
+    .d-lg-flex { display:none !important; }
+    .nb-hamburger { display:inline-block; }
 }
 
-
-/* ... (Keep all existing media queries and other styles) ... */
-
-@media (min-width: 992px) {
-    /* Ensure profile button is always visible on desktop */
-    .profile-btn {
-        margin-right: 15px; /* Add some space between the button and the menu links */
-    }
-}
+/* small tweaks */
+a { color: inherit; }
+button { font-family: inherit; }
