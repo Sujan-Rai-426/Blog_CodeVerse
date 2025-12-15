@@ -1,58 +1,109 @@
-/* Existing layout wrapper */
+/* ================= BASE ================= */
 .cr-layout-wrapper {
     display: flex;
     justify-content: space-between;
 }
 
-/* Sidebar styles */
 .cr-sidebar {
- /* or whatever width you already have */
     transition: all 0.3s ease;
 }
 
-/* Left sidebar */
-.cr-left-sidebar {
-    max-width: 270px;
-}
-
-/* Right sidebar */
+.cr-left-sidebar,
 .cr-right-sidebar {
     max-width: 270px;
 }
 
-.cr-main-content, .c-components-container {
-    max-width: calc(100vw - 270px - 270px - 70px);
+.cr-main-content {
     transition: max-width 0.3s ease;
 }
 
+/* ================= LAPTOP DEFAULT ================= */
+body.cr-components-page .cr-left-sidebar,
+body.cr-components-page .cr-right-sidebar {
+    display: block;
+}
 
-/* HIDE SIDEBARS WHEN ZOOMED */
+body.cr-components-page .cr-main-content {
+    max-width: calc(100vw - 270px - 270px - 70px);
+}
 
+/* Topics page (Laptop) */
+body.cr-topics-page .cr-left-sidebar {
+    display: none;
+}
+
+body.cr-topics-page .cr-right-sidebar {
+    display: block;
+}
+
+body.cr-topics-page .cr-main-content {
+    max-width: calc(100vw - 270px - 30px);
+}
+
+/* ================= TABLET ================= */
+@media (max-width: 1225px) {
+
+    /* Components page */
+    body.cr-components-page .cr-left-sidebar {
+        display: block;
+    }
+    body.cr-components-page .cr-right-sidebar {
+        display: none;
+    }
+    body.cr-components-page .cr-main-content {
+        max-width: calc(100vw - 270px - 30px);
+    }
+
+    /* Topics page */
+    body.cr-topics-page .cr-left-sidebar {
+        display: none;
+    }
+    body.cr-topics-page .cr-right-sidebar {
+        display: block;
+    }
+    body.cr-topics-page .cr-main-content {
+        max-width: calc(100vw - 270px - 30px);
+    }
+}
+
+/* ================= MOBILE ================= */
+@media (max-width: 767px) {
+    /* Hide both sidebars */
+    .cr-left-sidebar,
+    .cr-right-sidebar {
+        display: none !important;
+    }
+
+    /* FORCE TRUE FULL WIDTH */
+    .cr-main-content,
+    body.cr-components-page .cr-main-content,
+    body.cr-topics-page .cr-main-content {
+        width: 100vw !important;
+        max-width: 100vw !important;
+        margin: 0 !important;
+        padding: 0.75rem !important;
+    }
+
+    /* Kill bootstrap container restriction */
+    .cr-main-content.container {
+        max-width: 100vw !important;
+        padding-left: 0.75rem !important;
+        padding-right: 0.75rem !important;
+    }
+
+    /* Prevent horizontal scroll */
+    body {
+        overflow-x: hidden;
+    }
+}
+
+
+/* ================= ZOOM ================= */
+body.cr-zoomed .cr-left-sidebar,
 body.cr-zoomed .cr-right-sidebar {
     display: none !important;
 }
 
-/* Main content adjusts when sidebars are hidden (zoom >125%) */
-body.cr-zoomed .cr-main-content,
-body.cr-zoomed .c-components-container {
-    max-width: 100vw; /* full width of viewport */
-    padding-left: 16px; /* optional: small padding */
-    padding-right: 16px; /* optional: small padding */
-}
-
-
-
-/* ******** Tablet and Small Laptop Screen *********** */
-@media (max-width: 1225px){
-    /* hide rightsidebar and remove rightsidebar width from space occupied */
-    .cr-right-sidebar{ display: none; }
-    .cr-main-content, .c-components-container { max-width: calc(100vw - 270px - 30px); }
-}
-
-
-/* ******** Mobile Screen *********** */
-@media (max-width: 768px){
-    /* hide left sidebar and remove left sidebar width from space occupied */
-    .cr-left-sidebar{ display: none; }
-    .cr-main-content, .c-components-container { max-width: calc(100vw - 5px); padding: 0 0.8rem;}
+body.cr-zoomed .cr-main-content {
+    max-width: 100vw;
 }
