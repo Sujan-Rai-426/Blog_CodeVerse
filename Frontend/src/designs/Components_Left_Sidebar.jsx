@@ -105,7 +105,7 @@ function Components_Left_Sidebar() {
                                                 {topic.name}
                                                 {showNewBadge && (
                                                     <span className="cl-new-badge">
-                                                        NEW ✨
+                                                        NEW <i className="bi bi-stars text-warning"></i>
                                                     </span>
                                                 )}
                                             </Link>

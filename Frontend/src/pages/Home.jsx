@@ -27,10 +27,6 @@ function Home() {
         return () => clearTimeout(timer);
     }, [parentLoading]);
 
-    const handleNavigate = (langId, pathPrefix = "/Components/Topics") => {
-        navigate(`${pathPrefix}/${langId}`);
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
 
     return (
         <div className="home-container" style={{ minHeight: "100vh", padding:'0 1rem !important' }}>

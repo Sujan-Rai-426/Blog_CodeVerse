@@ -32,32 +32,32 @@ function Routes_List() {
     return (
         <div>
 
-                        <User_API_Provider>
-            <Parent_Api_Provider> {/* <---- To fetch API once by parent and use it all over the frontend to overcome repeatative api fetch*/}
-                    
-                <Payment_Provider> {/* <---- For payment */}
-            
-                    <Routes>
-                        {/* Normal Routes */}
-                        <Route exact path="/" element={<Home />} />
-                        <Route exact path="/About" element={<About />} />
-                        <Route exact path="/Contact" element={<Contact />} />
-                        <Route exact path="/Privacy_Policy" element={<Privacy_Policy />} />
-                        <Route exact path="/PlayGround" element={<PlayGround />} />
+            <User_API_Provider>
+                <Parent_Api_Provider> {/* <---- To fetch API once by parent and use it all over the frontend to overcome repeatative api fetch*/}
+                        
+                    <Payment_Provider> {/* <---- For payment */}
+                
+                        <Routes>
+                            {/* Normal Routes */}
+                            <Route exact path="/" element={<Home />} />
+                            <Route exact path="/About" element={<About />} />
+                            <Route exact path="/Contact" element={<Contact />} />
+                            <Route exact path="/Privacy_Policy" element={<Privacy_Policy />} />
+                            <Route exact path="/PlayGround" element={<PlayGround />} />
 
-                        {/* Payment Routes */}
-                        <Route exact path="/Payment_Success" element={<Payment_Success />} />
-                        <Route exact path="/Payment_Failure" element={<Payment_Fail />} />
-                        <Route exact path="/Payment_Page" element={<Payment_Page />} />
+                            {/* Payment Routes */}
+                            <Route exact path="/Payment_Success" element={<Payment_Success />} />
+                            <Route exact path="/Payment_Failure" element={<Payment_Fail />} />
+                            <Route exact path="/Payment_Page" element={<Payment_Page />} />
 
-                        {/* Unavailable Page */}
-                        <Route exact path="/Unavailable" element={<Unavailable_Page />} />
-                    </Routes>
+                            {/* Unavailable Page */}
+                            <Route exact path="/Unavailable" element={<Unavailable_Page />} />
+                        </Routes>
 
-                </ Payment_Provider>
+                    </ Payment_Provider>
 
-            </ Parent_Api_Provider>
-                        </User_API_Provider>
+                </ Parent_Api_Provider>
+            </User_API_Provider>
         </div>
     );
 }

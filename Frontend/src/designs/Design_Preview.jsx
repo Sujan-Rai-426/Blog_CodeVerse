@@ -2,8 +2,8 @@ import React from "react";
 
 const deviceSizes = {
     desktop: { width: "100%", height: "600px" },
-    tablet: { width: "771px", height: "600px" },
-    mobile: { width: "568px", height: "600px" },
+    tablet: { width: "770px", height: "600px" },
+    mobile: { width: "368px", height: "600px" },
 };
 
 export default function Design_Preview({ srcDoc, device, changeDevice }) {

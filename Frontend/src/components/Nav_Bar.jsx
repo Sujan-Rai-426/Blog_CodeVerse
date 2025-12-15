@@ -2,94 +2,95 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../assets/css/Nav_Bar.css";
-import { PersonCircle } from "react-bootstrap-icons"; // icon fallback
-import apiClient from "../config/apiClient"; // your Axios client with refresh handling
+
 
 
 // ------------------- NAVIGATION BAR COMPONENT -------------------
 function Nav_Bar() {
-  // ------------------- STATE -------------------
-  const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar
-  const [aboutOpen, setAboutOpen] = useState(false); // desktop dropdown
-  const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // mobile dropdown
-  const [isTouchDevice, setIsTouchDevice] = useState(false); // detect touch
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // user login state
-  const [user, setUser] = useState(null); // user profile data
 
-  const aboutRef = useRef(null);
-  const sidebarRef = useRef(null);
+  // ------------------- STATE -------------------
+    const [sidebarOpen, setSidebarOpen] = useState(false); // mobile sidebar
+    const [aboutOpen, setAboutOpen] = useState(false); // desktop dropdown
+    const [aboutMobileOpen, setAboutMobileOpen] = useState(false); // mobile dropdown
+    const [isTouchDevice, setIsTouchDevice] = useState(false); // detect touch
+
+
+    const aboutRef = useRef(null);
+    const sidebarRef = useRef(null);
 
   // ------------------- EFFECT: Detect touch devices -------------------
-  useEffect(() => {
-    const checkTouch = () => {
-      const coarse = window.matchMedia("(pointer: coarse)").matches;
-      const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
-      setIsTouchDevice(coarse || uaTouch);
-    };
-    checkTouch();
-    window.addEventListener("resize", checkTouch);
-    return () => window.removeEventListener("resize", checkTouch);
-  }, []);
+    useEffect(() => {
+        const checkTouch = () => {
+            const coarse = window.matchMedia("(pointer: coarse)").matches;
+            const uaTouch = "ontouchstart" in window || navigator.maxTouchPoints > 0;
+            setIsTouchDevice(coarse || uaTouch);
+        };
+        checkTouch();
+        window.addEventListener("resize", checkTouch);
+        return () => window.removeEventListener("resize", checkTouch);
+    }, []);
 
 
   // ------------------- EFFECT: Close About dropdown on click outside -------------------
-  useEffect(() => {
-    function onDocClick(e) {
-      if (aboutRef.current && !aboutRef.current.contains(e.target)) {
-        setAboutOpen(false);
-      }
-    }
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, []);
+    useEffect(() => {
+        function onDocClick(e) {
+            if (aboutRef.current && !aboutRef.current.contains(e.target)) {
+                setAboutOpen(false);
+            }
+        }
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, []);
 
   // ------------------- EFFECT: Close Sidebar on click outside -------------------
-  useEffect(() => {
-    function onDocClick(e) {
-      if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
-        setSidebarOpen(false);
-      }
-    }
-    document.addEventListener("click", onDocClick);
-    return () => document.removeEventListener("click", onDocClick);
-  }, [sidebarOpen]);
+    useEffect(() => {
+        function onDocClick(e) {
+            if (sidebarOpen && sidebarRef.current && !sidebarRef.current.contains(e.target)) {
+                setSidebarOpen(false);
+            }
+        }
+        document.addEventListener("click", onDocClick);
+        return () => document.removeEventListener("click", onDocClick);
+    }, [sidebarOpen]);
 
   // ------------------- HANDLERS -------------------
-  const toggleSidebar = (e) => {
-    e.stopPropagation();
-    setSidebarOpen((s) => !s);
-  };
+    const toggleSidebar = (e) => {
+        e.stopPropagation();
+        setSidebarOpen((s) => !s);
+    };
 
-  const handleAboutMouseEnter = () => {
-    if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(true);
-  };
-  const handleAboutMouseLeave = () => {
-    if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(false);
-  };
-  const handleAboutClick = (e) => {
-    e.preventDefault();
-    if (isTouchDevice || window.innerWidth < 992) {
-      setAboutOpen((s) => !s);
-    }
-  };
+    const handleAboutMouseEnter = () => {
+        if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(true);
+    };
+    const handleAboutMouseLeave = () => {
+        if (!isTouchDevice && window.innerWidth >= 992) setAboutOpen(false);
+    };
+    const handleAboutClick = (e) => {
+        e.preventDefault();
+        if (isTouchDevice || window.innerWidth < 992) {
+            setAboutOpen((s) => !s);
+        }
+    };
 
-  const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
+    const toggleAboutMobile = () => setAboutMobileOpen((s) => !s);
 
-  const scrollToSection = (id) => {
-    setTimeout(() => {
-      const element = document.getElementById(id);
-      if (element) {
-        const offset = -100;
-        const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-        window.scrollTo({ top: elementPosition + offset, behavior: "smooth" });
-      }
-    }, 120);
-  };
+    const scrollToSection = (id) => {
+      setTimeout(() => {
+          const element = document.getElementById(id);
+          if (element) {
+              const offset = -100;
+              const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+              window.scrollTo({ top: elementPosition + offset, behavior: "smooth" });
+          }
+      }, 120);
+    };
 
   // ------------------- JSX RENDER -------------------
   return (
     <>
+      {/* ===================== ============== ===================== */}
       {/* ===================== Desktop Navbar ===================== */}
+      {/* ===================== ============== ===================== */}
         <nav className="navbar-custom navbar-standard sticky-top" role="navigation">
             <div className="nav-container">
                 <Link to="/Admin/Login" className="brand">
@@ -149,10 +150,12 @@ function Nav_Bar() {
                             <Link to="/Templates/Topics" className="nav-link" onClick={() => scrollToSection('TEMPLATES')}>Templates</Link>
                         </li>
                         <li className="nav-item">
-                            <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link>
+                            {/* <Link to="/" className="nav-link" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link> */}
+                            <Link to={`/Components/Topics/1`} className="nav-link">Components</Link>
                         </li>
                         <li className="nav-item">
-                            <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link>
+                            {/* <Link to="/" className="nav-link" onClick={() => scrollToSection('CODING_GUIDE')}>Coding-Guides</Link> */}
+                            <Link to={`/Code-Guide/Topic/2`} className="nav-link">Coding-Guides</Link>
                         </li>
                         {/* <li className="nav-item">
                             <Link to="/PlayGround" className="nav-link">PlayGround</Link>
@@ -212,12 +215,18 @@ function Nav_Bar() {
                     </Link>
                 </li>
                 <li>
-                    <Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>
+                    {/* <Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>
+                        <i className="bi bi-easel3"></i> &nbsp; Components
+                    </Link> */}
+                    <Link to="/Components/Topics/1">
                         <i className="bi bi-easel3"></i> &nbsp; Components
                     </Link>
                 </li>
                 <li>
-                    <Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>
+                    {/* <Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>
+                        <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides
+                    </Link> */}
+                    <Link to="/Code-Guide/Topic/2">
                         <i className="bi bi-journal-code"></i> &nbsp; Coding-Guides
                     </Link>
                 </li>
