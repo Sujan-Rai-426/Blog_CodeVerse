@@ -74,6 +74,7 @@
 .up-profile-btn-grp{
     display: flex;
     gap: 1rem;
+    justify-content: center;
 }
 
 /* Action Buttons */
