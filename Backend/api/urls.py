@@ -94,9 +94,10 @@ urlpatterns = [
     path('user-register/', user_view.ClientRegisterView.as_view(), name='client-register'),
     path('user-login/', user_view.ClientLoginView.as_view(), name='client-login'),
     path('user-profile/', user_view.ClientProfileView.as_view(), name='user-profile'),
+    path("user/change-password/", user_view.ClientPasswordChangeView.as_view(), name="client-change-password"),
     path('user-logout/', user_view.ClientLogoutView.as_view(), name='client-logout'),
     path('user/refresh/', user_view.CookieTokenRefreshView.as_view(), name='user-refresh'),
-    path("user/avatar/", user_view.UpdateAvatarView.as_view(), name="update-avatar"),
+    path("user/avatar/", user_view.ClientUpdateAvatarView.as_view(), name="update-avatar"),
     
     
     # Admin pannel for Client User management 
@@ -113,7 +114,5 @@ urlpatterns = [
     
     # urls.py
     path("password-reset/otp/", user_view.PasswordResetOTPView.as_view(), name="password-reset-otp"),
-
-
 
 ]

@@ -1,6 +1,6 @@
 // src/pages/User_Edit_Profile.jsx
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react"; // IMPORTED useEffect
 import { useNavigate } from "react-router-dom";
 // Assuming these are accessible via the same context/imports as User_Profile
 import { useUserAPI } from "./User_API_Context";
@@ -8,11 +8,12 @@ import apiClient from "../config/apiClient";
 import User_Avatar_Selector from "./User_Avatar_Selector";
 
 import "../assets/css/User_Edit_Profile.css";
-// IMPORT NEW ICONS FOR PASSWORD VISIBILITY
-import { FaUserEdit, FaLock, FaImage, FaChevronLeft, FaEye, FaEyeSlash } from 'react-icons/fa';
+// IMPORTED FaTimes for close button
+import { FaUserEdit, FaLock, FaImage, FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 
 // Dynamic Avatar URL Change (read from environment, assumed to be available)
 const AVATAR_BASE_URL = import.meta.env.VITE_AVATAR_BASE_URL || "https://api.dicebear.com/9.x/open-peeps/svg";
+const AUTO_CLOSE_DURATION = 5000; // 5000ms = 5 seconds
 
 export default function User_Edit_Profile() {
     const navigate = useNavigate();
@@ -27,6 +28,9 @@ export default function User_Edit_Profile() {
     
     const [activeSection, setActiveSection] = useState("profile"); // 'profile', 'avatar', 'password'
     const [statusMessage, setStatusMessage] = useState({ type: '', message: '' });
+    
+    // NEW STATE: Loading indicator for button disabling
+    const [isLoading, setIsLoading] = useState(false);
 
     // NEW STATE FOR PASSWORD VISIBILITY
     const [isPasswordVisible, setIsPasswordVisible] = useState(false); 
@@ -36,52 +40,81 @@ export default function User_Edit_Profile() {
         setIsPasswordVisible(prev => !prev);
     };
 
-    // --- Handlers ---
+    // NEW FUNCTION: Dismiss message
+    const handleDismissMessage = () => {
+        setStatusMessage({ type: '', message: '' });
+    };
+
+    // NEW HOOK: Auto-close functionality
+    useEffect(() => {
+        if (statusMessage.message) {
+            const timer = setTimeout(() => {
+                // Only auto-dismiss if the message hasn't been manually dismissed
+                setStatusMessage((current) => current.message ? { type: '', message: '' } : current);
+            }, AUTO_CLOSE_DURATION);
+            return () => clearTimeout(timer); // Cleanup on component unmount or message change
+        }
+    }, [statusMessage]);
+
+
+
+    // ************ Update Profile Detail handler ***************
     const handleUpdateProfile = async (e) => {
         e.preventDefault();
         setStatusMessage({ type: '', message: '' });
+        setIsLoading(true); // Disable button
         try {
-            await apiClient.patch("/api/user/profile/", { username });
-            setStatusMessage({ type: 'success', message: "Username updated successfully!" });
+            await apiClient.patch("/api/user-profile/", { username });
+            setStatusMessage({ type: 'success', message: "✔ Username updated successfully!" });
         } catch (error) {
-            setStatusMessage({ type: 'error', message: error.response?.data?.username || "Failed to update username." });
+            setStatusMessage({ type: 'error', message: error.response?.data?.username || "❌ Failed to update username." });
+        } finally {
+            setIsLoading(false); // Enable button
         }
     };
 
+    // ************* Update Profile Password handler ***************
     const handleUpdatePassword = async (e) => {
         e.preventDefault();
         setStatusMessage({ type: '', message: '' });
         if (newPassword !== confirmPassword) {
-            setStatusMessage({ type: 'error', message: "New passwords do not match." });
+            setStatusMessage({ type: 'error', message: "❌ New passwords do not match." });
             return;
         }
         if (newPassword.length < 8) {
-             setStatusMessage({ type: 'error', message: "Password must be at least 8 characters." });
+            setStatusMessage({ type: 'error', message: "❌ Password must be at least 8 characters." });
             return;
         }
-
+        setIsLoading(true); // Disable button
         try {
             await apiClient.post("/api/user/change-password/", { 
                 old_password: oldPassword, 
-                new_password: newPassword 
+                new_password: newPassword ,
+                confirm_password: confirmPassword,
             });
-            setStatusMessage({ type: 'success', message: "Password updated successfully!" });
+            setStatusMessage({ type: 'success', message: "✔ Password updated successfully!" });
             setOldPassword("");
             setNewPassword("");
             setConfirmPassword("");
         } catch (error) {
-            setStatusMessage({ type: 'error', message: error.response?.data?.detail || "Failed to change password. Check old password." });
+            setStatusMessage({ type: 'error', message: error.response?.data?.detail || "❌ Failed to change password. Check old password." });
+        } finally {
+            setIsLoading(false); // Enable button
         }
     };
 
+    // ************* Update Profile Avatar handler *******************
     const handleSaveAvatar = async () => {
         setStatusMessage({ type: '', message: '' });
+        setIsLoading(true); // Disable button
         try {
             await apiClient.patch("/api/user/avatar/", { avatar_seed: avatarSeed });
-            setStatusMessage({ type: 'success', message: "Avatar updated and saved!" });
+            setStatusMessage({ type: 'success', message: "✔ Avatar updated and saved!" });
             setActiveSection('profile'); // Switch back after saving
         } catch (err) {
-            setStatusMessage({ type: 'error', message: "Failed to save avatar." });
+            setStatusMessage({ type: 'error', message: "❌ Failed to save avatar." });
+        } finally {
+            setIsLoading(false); // Enable button
         }
     };
 
@@ -94,7 +127,6 @@ export default function User_Edit_Profile() {
 
         switch (activeSection) {
             case 'avatar':
-                // ... (Avatar section code remains the same as before) ...
                 return (
                     <div className="uep-form-section uep-avatar-section">
                         <h2><FaImage /> Edit Avatar</h2>
@@ -112,8 +144,12 @@ export default function User_Edit_Profile() {
                             avatarSeed={avatarSeed}
                             onAvatarChange={setAvatarSeed}
                         />
-                        <button onClick={handleSaveAvatar} className="uep-save-btn uep-mt-20">
-                            Save New Avatar
+                        <button 
+                            onClick={handleSaveAvatar} 
+                            className="uep-save-btn uep-mt-20"
+                            disabled={isLoading} // Added disabling
+                        >
+                            {isLoading ? 'Saving...' : 'Save New Avatar'}
                         </button>
                     </div>
                 );
@@ -171,13 +207,18 @@ export default function User_Edit_Profile() {
                             </div>
                         </div>
                         
-                        <button type="submit" className="uep-save-btn">Change Password</button>
+                        <button 
+                            type="submit" 
+                            className="uep-save-btn"
+                            disabled={isLoading} // Added disabling
+                        >
+                            {isLoading ? 'Changing...' : 'Change Password'}
+                        </button>
                     </form>
                 );
 
             case 'profile':
             default:
-                // ... (Profile section code remains the same as before) ...
                 return (
                     <form onSubmit={handleUpdateProfile} className="uep-form-section">
                         <h2><FaUserEdit /> Edit Profile Details</h2>
@@ -201,7 +242,13 @@ export default function User_Edit_Profile() {
                                 disabled
                             />
                         </div>
-                        <button type="submit" className="uep-save-btn">Save Username</button>
+                        <button 
+                            type="submit" 
+                            className="uep-save-btn"
+                            disabled={isLoading} // Added disabling
+                        >
+                            {isLoading ? 'Saving...' : 'Save Username'}
+                        </button>
                     </form>
                 );
         }
@@ -216,10 +263,13 @@ export default function User_Edit_Profile() {
                 <h1>Edit User Profile</h1>
             </header>
 
-            {/* Status Message Display */}
+            {/* Status Message Display (UPDATED) */}
             {statusMessage.message && (
                 <div className={`uep-status-message uep-status-${statusMessage.type}`}>
-                    {statusMessage.message}
+                    <p className="uep-status-text">{statusMessage.message}</p>
+                    <button onClick={handleDismissMessage} className="uep-status-close">
+                        <FaTimes />
+                    </button>
                 </div>
             )}
 
@@ -229,18 +279,21 @@ export default function User_Edit_Profile() {
                     <button 
                         className={`uep-nav-btn ${activeSection === 'profile' ? 'active' : ''}`}
                         onClick={() => setActiveSection('profile')}
+                        disabled={isLoading}
                     >
                         <FaUserEdit /> Profile Details
                     </button>
                     <button 
                         className={`uep-nav-btn ${activeSection === 'avatar' ? 'active' : ''}`}
                         onClick={() => setActiveSection('avatar')}
+                        disabled={isLoading}
                     >
                         <FaImage /> Change Avatar
                     </button>
                     <button 
                         className={`uep-nav-btn ${activeSection === 'password' ? 'active' : ''}`}
                         onClick={() => setActiveSection('password')}
+                        disabled={isLoading}
                     >
                         <FaLock /> Change Password
                     </button>

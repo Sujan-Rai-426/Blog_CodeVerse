@@ -11,13 +11,13 @@
 
 /* ---------- NAVBAR (standard height ~75px) ---------- */
 .nb-navbar-standard {
-    height: 75px;
+    height: auto;
     display: flex;
     align-items: center;
-    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     z-index: 3000; /* keep on top */
     border-bottom: 1px solid gray;
     backdrop-filter: blur(35px);
+    box-shadow: 0 6px 18px rgba(128, 128, 128, 0.507) inset;
 }
 
 .nav-container {
@@ -27,7 +27,7 @@
     display:flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 18px;
+    padding: 8px 18px;
 }
 
 /* Brand */
@@ -78,14 +78,15 @@
     padding: 8px 10px;
     display:inline-block;
     font-weight:500;
+    font-size: small;
     transition: color .18s ease, transform .12s ease;
 }
-.nb-nav-link:hover { color: var(--gold); transform: translateY(-1px); }
+.nb-nav-link:hover { color: var(--gold) !important; transform: translateY(-1px); }
 
 /* small underline accent */
 .nb-nav-link::after {
     content:"";
-    display:block;
+    display:none;
     height:3px;
     width:0%;
     background: var(--gold);

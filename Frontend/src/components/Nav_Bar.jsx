@@ -99,9 +99,9 @@ function Nav_Bar() {
                     {/* Right actions: profile + menu */}
                     <div className="nav-right">
                         {/* Profile Button */}
-                        <Link to={"/User/Profile"} > 
+                        {/* <Link to={"/User/Profile"} > 
                             <i className="bi bi-person-circle text-light mx-3 fs-2 hover:text-gray"></i> 
-                        </Link>
+                        </Link> */}
 
                         {/* Mobile hamburger */}
                         <button className="nb-hamburger d-lg-none" onClick={toggleSidebar} aria-label="Open menu">

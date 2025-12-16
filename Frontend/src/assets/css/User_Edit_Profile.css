@@ -1,132 +1,169 @@
-/* ========================================= */
-/* CSS Variables for Dark Theme              */
-/* ========================================= */
-:root {
-    --color-background-dark: #121212; /* Deep Black */
-    --color-surface-dark: #1e1e1e; /* Card/Container background */
-    --color-text-light: #f0f0f0; /* Light text for readability */
-    --color-text-subtle: #999999; /* Subtle text/placeholders */
-    --color-primary: #00bcd4; /* Cyan/Teal for highlights/buttons */
-    --color-primary-dark: #0097a7;
-    --color-accent: #ff9800; /* Orange/Accent for attention */
-    --color-error: #ff3d00;
-    --color-success: #4caf50;
-    --color-border: #333333;
-    --border-radius: 8px;
-    --online : rgb(13, 160, 13);
+/* src/assets/css/User_Edit_Profile.css */
+
+/* --- 1. Base Styles & Global Utilities --- */
+:root{
+
+    /* Background Bright Mode */
+    --primary-heading: #86ebff;
+    --primary-text : #fff;
+    --secondary-text : gray;
+    --online: green;
     --offline: red;
 }
 
-body {
-    background-color: var(--color-background-dark);
-}
 
-/* ========================================= */
-/* Main Container & Layout (Desktop Base)    */
-/* ========================================= */
 
 .uep-page-container {
-    max-width: 1000px;
+    max-width: 1200px;
     margin: 40px auto;
-    padding: 20px;
-    color: var(--color-text-light);
-    background-color: var(--color-background-dark);
+    padding: 0 20px;
+    font-family: Arial, sans-serif;
 }
 
 .uep-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    padding-bottom: 20px;
-    border-bottom: 1px solid var(--color-border);
-    margin-bottom: 20px;
+    align-items: center;
+    margin-bottom: 30px;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 15px;
 }
 
 .uep-header h1 {
-    font-size: 1.8rem;
-    color: var(--color-primary);
+    font-size: 2em;
+    color: var(--primary-heading);
+    margin: 0;
 }
 
+/* Back Button */
 .uep-back-btn {
     background: none;
     border: none;
-    color: var(--color-text-light);
+    color: #007bff;
     cursor: pointer;
-    font-size: 1rem;
+    font-size: 1em;
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 5px 10px;
     transition: color 0.2s;
 }
 
 .uep-back-btn:hover {
-    color: var(--color-accent);
+    color: #0056b3;
 }
 
+
+
+/* ********************************** */
+/* ============ Alert MESSAGE ============= */
+.uep-status-message {
+    padding: 9px 15px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    font-weight: bold;
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.uep-status-success {
+    background-color: #c3e6cb;
+    color: #198b33;
+    border: 1px solid #c3e6cb;
+}
+.uep-status-error {
+    background-color: #f5c6cb;
+    color: #b91727;
+    border: 1px solid #f5c6cb;
+}
+.uep-status-text {
+    margin: 0;
+}
+.uep-status-close {
+    right: 10px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    padding: 5px;
+    line-height: 1;
+    color: inherit;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+.uep-status-close:hover {
+    opacity: 1;
+}
+
+
+
+/* --- 2. Main Layout (Desktop First) --- */
 .uep-content-wrapper {
     display: flex;
-    gap: 30px;
+    gap: 30px; /* Space between sidebar and main content */
 }
 
-/* ========================================= */
-/* Sidebar Navigation (Tabs)                 */
-/* ========================================= */
-
+/* Sidebar Navigation */
 .uep-sidebar {
-    flex: 0 0 220px; /* Fixed width sidebar on desktop */
+    flex: 0 0 250px; /* Fixed width sidebar on desktop */
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    padding: 20px;
+    border-radius: 8px;
 }
 
 .uep-nav-btn {
-    width: 100%;
-    text-align: left;
-    padding: 15px 20px;
-    background-color: var(--color-surface-dark);
-    color: var(--color-text-light);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-size: 1rem;
-    transition: background-color 0.2s, border-color 0.2s;
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 12px 15px;
+    margin-bottom: 10px;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1em;
+    color: var(--primary-text);
+    border-radius: 6px;
+    transition: background-color 0.2s, color 0.2s;
+    box-shadow: 0 0 16px #ccc5c53a inset;
 }
 
 .uep-nav-btn:hover {
-    background-color: #2a2a2a;
-    border-color: var(--color-primary);
+    background-color: #e9ecef;
+    color: #007bff;
 }
 
 .uep-nav-btn.active {
-    background-color: var(--color-primary-dark);
-    border-color: var(--color-primary);
+    background-color: #007bff;
     color: white;
-    font-weight: bold;
 }
 
+.uep-nav-btn.active:hover {
+    background-color: #0056b3;
+}
 
-/* ========================================= */
-/* Main Content Area (Form Sections)         */
-/* ========================================= */
-
+/* Main Content Area */
 .uep-main-content {
-    flex-grow: 1;
-    background-color: var(--color-surface-dark);
+    flex: 1; /* Takes up the rest of the space */
     padding: 30px;
-    border-radius: var(--border-radius);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
+
+/* --- 3. Form Section Styling --- */
 
 .uep-form-section h2 {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-    color: var(--color-primary);
+    font-size: 1.8em;
+    color: var(--primary-heading);
+    margin-top: 0;
+    margin-bottom: 25px;
     display: flex;
     align-items: center;
     gap: 10px;
+    border-bottom: 2px solid #007bff;
+    padding-bottom: 10px;
 }
 
 .uep-form-group {
@@ -136,60 +173,97 @@ body {
 .uep-form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: bold;
-    color: var(--color-text-light);
+    font-weight: 600;
+    color: #495057;
 }
 
-.uep-form-group input {
+.uep-form-group input,
+.uep-form-group input[disabled] {
     width: 100%;
-    padding: 12px;
-    background-color: #2a2a2a;
-    border: 1px solid var(--color-border);
-    border-radius: 4px;
-    color: var(--color-text-light);
-    font-size: 1rem;
-    transition: border-color 0.2s;
+    padding: 12px 15px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1em;
+    box-sizing: border-box;
+    color: var(--primary-text);
+    background: transparent;
+    box-shadow: inset 0 0 8px rgba(210, 196, 196, 0.505);
+    transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .uep-form-group input:focus {
-    border-color: var(--color-primary);
+    border-color: #007bff;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.3);
 }
 
 .uep-form-group input[disabled] {
-    background-color: #333333;
+    color: gray;
     cursor: not-allowed;
-    color: var(--color-text-subtle);
 }
 
 .uep-save-btn {
-    padding: 12px 25px;
-    background-color: var(--color-primary);
+    width: 100%;
+    padding: 12px;
+    background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-size: 1.1em;
     cursor: pointer;
-    font-weight: bold;
-    font-size: 1rem;
+    margin-top: 10px;
     transition: background-color 0.2s;
 }
 
 .uep-save-btn:hover {
-    background-color: var(--color-primary-dark);
+    background-color: #218838;
 }
 
-/* Utility Class */
-.uep-mt-20 { margin-top: 20px; }
-.uep-hint { color: var(--color-text-subtle); font-style: italic; margin-bottom: 20px; }
+/* --- 4. Password Visibility Styling --- */
 
-/* ========================================= */
-/* Avatar Section Specifics                  */
-/* ========================================= */
+.uep-password-input-wrapper {
+    position: relative;
+    display: flex; /* Makes sure the input and button are aligned */
+    align-items: center;
+}
+
+.uep-password-input-wrapper input {
+    padding-right: 50px; /* Make space for the toggle button */
+}
+
+.uep-password-toggle {
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background: none;
+    border: none;
+    padding: 0 15px;
+    cursor: pointer;
+    color: #6c757d;
+    font-size: 1.1em;
+    display: flex;
+    align-items: center;
+    transition: color 0.2s;
+}
+
+.uep-password-toggle:hover {
+    color: #343a40;
+}
+
+/* --- 5. Avatar Section Styling --- */
+
+.uep-avatar-section .uep-hint {
+    margin-bottom: 20px;
+    color: #6c757d;
+}
 
 .uep-current-avatar-preview {
-    margin: 20px 0;
     text-align: center;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid #eee;
+    border-radius: 8px;
 }
 
 .uep-avatar-selected {
@@ -197,136 +271,34 @@ body {
     height: 120px;
     border-radius: 50%;
     object-fit: cover;
-    border: 5px solid var(--online);
-    box-shadow: 0 0 15px rgba(0, 188, 212, 0.4);
+    border: 3px solid var(--online);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* Status Messages */
-.uep-status-message {
-    padding: 15px;
-    margin-bottom: 20px;
-    border-radius: 4px;
-    font-weight: bold;
-}
-.uep-status-success {
-    background-color: rgba(76, 175, 80, 0.2);
-    border: 1px solid var(--color-success);
-    color: var(--color-success);
-}
-.uep-status-error {
-    background-color: rgba(255, 61, 0, 0.2);
-    border: 1px solid var(--color-error);
-    color: var(--color-error);
+.uep-mt-20 {
+    margin-top: 20px;
 }
 
-/* ========================================= */
-/* Password Visibility Styles                */
-/* ========================================= */
+/* --- 6. Responsive Design (Mobile and Tablet) --- */
 
-.uep-password-input-wrapper {
-    /* Set up container for input and toggle button */
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.uep-password-input-wrapper input {
-    /* Give input room for the toggle button */
-    padding-right: 50px; 
-}
-
-.uep-password-toggle {
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: var(--color-text-subtle);
-    cursor: pointer;
-    padding: 5px;
-    font-size: 1.2rem;
-    transition: color 0.2s;
-}
-
-.uep-password-toggle:hover {
-    color: var(--color-primary);
-}
-
-
-/* ========================================= */
-/* Responsive Design Breakpoints             */
-/* ========================================= */
-
-/* ------------------------------------------- */
-/* 1. Tablet View (769px to 1024px)          */
-/* ------------------------------------------- */
-@media (min-width: 768px) and (max-width: 1024px) {
-    .uep-page-container {
-        max-width: 95%;
-        margin: 20px auto;
-        padding: 15px;
-    }
-    
-    .uep-content-wrapper {
-        gap: 20px;
-    }
-    
-    .uep-sidebar {
-        flex: 0 0 180px; /* Slightly smaller sidebar for tablet */
-    }
-    
-    .uep-nav-btn {
-        padding: 12px 15px; /* Smaller padding */
-        font-size: 0.95rem;
-    }
-
-    .uep-main-content {
-        padding: 25px;
-    }
-}
-
-
-/* ------------------------------------------- */
-/* 2. Mobile View (Max 768px)                */
-/* ------------------------------------------- */
 @media (max-width: 767px) {
-    .uep-page-container {
-        margin: 0;
-        padding: 10px;
-    }
-
-    .uep-header {
-        flex-direction: column;
-        align-items: flex-start;
-    }
-    
-    .uep-header h1 {
-        margin-top: 10px;
-    }
-
-    .uep-content-wrapper {
-        flex-direction: column; /* Stack sidebar and main content */
-        gap: 20px;
-    }
-
-    .uep-sidebar {
-        flex: auto;
-        flex-direction: row; /* Make tabs horizontal/scrollable */
-        overflow-x: auto;
-        padding-bottom: 10px;
-        -webkit-overflow-scrolling: touch;
-        border-bottom: 1px solid var(--color-border);
-        white-space: nowrap; /* Prevent nav buttons from wrapping */
-    }
-    
-    .uep-nav-btn {
-        flex-shrink: 0; /* Prevent buttons from shrinking */
-        padding: 10px 15px;
-        margin-right: 5px; /* Add small margin for horizontal scroll */
-    }
-
-    .uep-main-content {
-        padding: 20px;
-    }
+    .uep-page-container { margin: 20px auto; padding: 0 15px; }
+    .uep-header { flex-direction: column; align-items: flex-start; gap: 10px; margin-bottom: 20px; }
+    .uep-header h1 { font-size: 1.8em; }
+    .uep-content-wrapper { flex-direction: column; gap: 20px; }
+    .uep-sidebar { flex: 1 1 auto; flex-direction: row; overflow-x: auto; padding: 10px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05); }
+    .uep-nav-btn { flex: 0 0 auto; white-space: nowrap; margin-bottom: 0; margin-right: 10px; font-size: 1em; padding: 10px 12px; }
+    .uep-main-content { padding: 20px; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1); }
+    .uep-form-section h2 { font-size: 1.6em; }
+    .uep-save-btn { font-size: 1em; padding: 10px; }
 }
+
+/* Extra small screens / Mobile in portrait */
+@media (max-width: 576px) {
+    .uep-nav-btn { }
+    .uep-sidebar { justify-content: space-between; }
+    .uep-form-group input { padding: 10px; }
+    .uep-status-message { font-size: 0.9em; }
+    .uep-status-close { font-size: 1em; }
+}
+

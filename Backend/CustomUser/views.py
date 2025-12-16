@@ -24,11 +24,13 @@ from .serializers import (
     AdminUserDetailSerializer,
     AdminUserListSerializer,
     AdminUserUpdateSerializer,
+    ClientPasswordChangeSerializer,
     ClientRegisterSerializer,
     ClientLoginSerializer,
     AdminLoginSerializer,
-    UserAvatarUpdateSerializer,
-    UserProfileSerializer
+    ClientAvatarUpdateSerializer,
+    UserProfileSerializer,
+    ClientUsernameUpdateSerializer
 )
 
 User = get_user_model()
@@ -305,13 +307,26 @@ class ClientProfileView(APIView):
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
+    # NEW PATCH METHOD FOR USERNAME UPDATE
+    def patch(self, request):
+        serializer = ClientUsernameUpdateSerializer(
+            request.user,
+            data=request.data,
+            partial=True # Allow partial update (e.g., only sending username)
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(
+            {"username": request.user.username, "message": "Username updated successfully"}, 
+            status=status.HTTP_200_OK
+        )
 
 
-class UpdateAvatarView(APIView):
+class ClientUpdateAvatarView(APIView):
     authentication_classes = [ClientCookieJWTAuthentication]
     permission_classes = [IsAuthenticated]
     def patch(self, request):
-        serializer = UserAvatarUpdateSerializer(
+        serializer = ClientAvatarUpdateSerializer(
             request.user,
             data=request.data,
             partial=True
@@ -331,6 +346,34 @@ class ClientLogoutView(APIView):
             except Exception:
                 pass
         response = Response({"message": "Logged out"}, status=status.HTTP_200_OK)
+        response.delete_cookie(settings.USER_JWT_ACCESS_TOKEN)
+        response.delete_cookie(settings.USER_JWT_REFRESH_TOKEN)
+        return response
+
+
+# ---------------- CHANGE PASSWORD (AUTHENTICATED) ----------------
+class ClientPasswordChangeView(APIView):
+    authentication_classes = [ClientCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        serializer = ClientPasswordChangeSerializer(
+            data=request.data,
+            context={'request': request} 
+        )
+        serializer.is_valid(raise_exception=True)
+        user = serializer.save() 
+        refresh_token = request.COOKIES.get(settings.USER_JWT_REFRESH_TOKEN)
+        if refresh_token:
+            try:
+                token = RefreshToken(refresh_token)
+                token.blacklist()
+            except Exception:
+                pass
+        response = Response(
+            {"message": "Password changed successfully. Please log in again."}, 
+            status=status.HTTP_200_OK
+        )
+        # Clear cookies to force re-login
         response.delete_cookie(settings.USER_JWT_ACCESS_TOKEN)
         response.delete_cookie(settings.USER_JWT_REFRESH_TOKEN)
         return response

@@ -62,19 +62,58 @@ class UserProfileSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(source="profile.phone", read_only=True)
     address = serializers.CharField(source="profile.address", read_only=True)
     created_at = serializers.DateTimeField(source="profile.created_at", read_only=True)
-
     class Meta:
         model = User
         fields = ["email", "username", "avatar_seed", "full_name", "phone", "address", "created_at"]
 
-
-class UserAvatarUpdateSerializer(serializers.ModelSerializer):
+# ------------ Update AVATAR Serializer -----------------
+class ClientAvatarUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ["avatar_seed"]
 
+# ---------------- USERNAME UPDATE ----------------
+class ClientUsernameUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for authenticated user to update their username."""
+    class Meta:
+        model = User
+        # Expose only the username field for update
+        fields = ["username"]
+        
+# ----------- ` User ChangePasswordSerializer` (for updating password)
+class ClientPasswordChangeSerializer(serializers.Serializer):
+    """Serializer for authenticated user to change their password."""
+    old_password = serializers.CharField(required=True, write_only=True)
+    new_password = serializers.CharField(required=True, write_only=True, min_length=8)
+    confirm_password = serializers.CharField(required=True, write_only=True)
+    def validate(self, data):
+        user = self.context['request'].user
+        old_password = data.get('old_password')
+        new_password = data.get('new_password')
+        confirm_password = data.get('confirm_password')
 
-# ---------------- ADMIN LOGIN ----------------
+        # 1. Check if the old password is correct
+        if not user.check_password(old_password):
+            raise serializers.ValidationError({"old_password": "Wrong password. Please enter your current password."})
+
+        # 2. Check if new password matches confirmation
+        if new_password != confirm_password:
+            raise serializers.ValidationError({"confirm_password": "New passwords must match."})
+            
+        # 3. Check if the new password is too similar to the old one (optional but recommended)
+        if user.check_password(new_password):
+            raise serializers.ValidationError({"new_password": "New password cannot be the same as the old password."})
+        return data
+    def save(self, **kwargs):
+        """Called by the view to perform the password update."""
+        user = self.context['request'].user
+        user.set_password(self.validated_data['new_password'])
+        user.save()
+        return user
+
+
+
+# *************************** ADMIN LOGIN ***************************
 class AdminLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
