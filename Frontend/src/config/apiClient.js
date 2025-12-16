@@ -21,6 +21,7 @@ export async function fetchClientCsrfToken() {
   try {
     await apiClient.get(CSRF_PATH);
     const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
+    if (token) config.headers["X-CSRFToken"] = token;
     return token;
   } catch (err) {
     console.error("fetchClientCsrfToken failed:", err);
