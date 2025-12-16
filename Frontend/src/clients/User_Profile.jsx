@@ -6,16 +6,21 @@ import apiClient from "../config/apiClient";
 import "../assets/css/User_Profile.css"; // Ensure this CSS file is used
 import "../assets/css/Components_Design.css";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png";
+import User_Avatar_Selector from "./User_Avatar_Selector";
 
 import { 
-  FaUserEdit, FaSignOutAlt, FaHeart, FaShoppingBag, FaList, FaHistory, 
-  FaAngleRight, FaAngleDown, FaFolderOpen 
+    FaUserEdit, FaSignOutAlt, FaHeart, FaShoppingBag, FaList, FaHistory, 
+    FaAngleRight, FaAngleDown, FaFolderOpen 
 } from 'react-icons/fa';
+
+// Dynamic Avatar URL Change
+const AVATAR_BASE_URL = import.meta.env.VITE_AVATAR_BASE_URL
 
 export default function User_Profile({ onEditClick }) {
     const navigate = useNavigate();
     const { profile, favorites, loading, error } = useUserAPI();
     const [activeTab, setActiveTab] = useState("Favourite");
+    const [avatarSeed, setAvatarSeed] = useState(profile?.avatar_seed || "");
     
     // State to track the currently expanded playlist topic name
     const [expandedTopic, setExpandedTopic] = useState(null); 
@@ -29,7 +34,17 @@ export default function User_Profile({ onEditClick }) {
     ];
 
 
+    // -----------------Handle Profile Edit --------------
+    const handleProfileEdit = async () => {
+        try {
+            navigate("/User/Edit-Profile");
+        } catch {
+            return
+        }
+    };
+
     // ----------------- Logout -----------------
+    
     const handleLogout = async () => {
         try {
             await apiClient.post("/api/user-logout/");
@@ -37,7 +52,6 @@ export default function User_Profile({ onEditClick }) {
             navigate("/User/Login");
         }
     };
-
 
     // ----------------- Group Favorites by Topic -----------------
     const groupFavoritesByTopic = (items = []) => {
@@ -285,26 +299,41 @@ export default function User_Profile({ onEditClick }) {
     // **************** Main Content if adata available ***************
     return (
         <div className="up-profile-container">
-          {/* Header (Unchanged) */}
+          {/* ********* Header *********** */}
             <header className="up-profile-header">
+                {/* Current Avatar */}
                 <div className="up-profile-avatar-wrapper">
                     <img
-                      src={profile.avatar_url || CodeVora_Logo}
-                      alt={`${profile.username}'s Avatar`}
-                      className="up-profile-avatar"
+                        src={
+                            avatarSeed 
+                                ? `${AVATAR_BASE_URL}?seed=${avatarSeed}` 
+                                : CodeVora_Logo
+                        }
+                        alt={`${profile.username}'s Avatar`}
+                        className="up-profile-avatar"
                     />
                 </div>
+
+                {/* Profile Info And Button  */}
                 <div className="up-profile-info-main">
+                    {/* ======== Profile Details ========= */}
                     <div className="up-name-email">
                         <h1 className="up-profile-username">{profile.username}</h1>
                         <p>{profile.email}</p>
                     </div>
+                    {/* ====== Profile Button Groups ======= */}
                     <div className="up-profile-btn-grp">
-                        <button className="up-profile-edit-btn" onClick={onEditClick}><FaUserEdit /> Edit Profile</button>
-                        <button className="up-profile-logout-btn" onClick={handleLogout}><FaSignOutAlt /> Logout</button>
+                        <button className="up-profile-edit-btn" onClick={handleProfileEdit}>
+                            <FaUserEdit /> Edit Profile
+                        </button>
+                        <button className="up-profile-logout-btn" onClick={handleLogout}>
+                            <FaSignOutAlt /> Logout
+                        </button>
                     </div>
                 </div>
+                
             </header>
+
 
 
           {/* Tabs */}
@@ -334,3 +363,6 @@ export default function User_Profile({ onEditClick }) {
         </div>
     );
 }
+
+
+

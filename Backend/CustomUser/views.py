@@ -27,6 +27,7 @@ from .serializers import (
     ClientRegisterSerializer,
     ClientLoginSerializer,
     AdminLoginSerializer,
+    UserAvatarUpdateSerializer,
     UserProfileSerializer
 )
 
@@ -304,6 +305,20 @@ class ClientProfileView(APIView):
     def get(self, request):
         serializer = UserProfileSerializer(request.user)
         return Response(serializer.data)
+
+
+class UpdateAvatarView(APIView):
+    authentication_classes = [ClientCookieJWTAuthentication]
+    permission_classes = [IsAuthenticated]
+    def patch(self, request):
+        serializer = UserAvatarUpdateSerializer(
+            request.user,
+            data=request.data,
+            partial=True
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response({"message": "Avatar updated"})
 
 
 class ClientLogoutView(APIView):

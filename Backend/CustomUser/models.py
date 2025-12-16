@@ -8,6 +8,14 @@ class User(AbstractBaseUser, PermissionsMixin):
     """Unified user model for clients and admins"""
     email = models.EmailField(unique=True)
     username = models.CharField(max_length=50, blank=True, null=True)
+    
+        # ✅ Avatar seed for Selecting Avatar [Used DiceBear Avatar]
+    avatar_seed = models.CharField(
+        max_length=100,
+        blank=True,
+        default="default"
+    )
+
 
     # Permissions
     is_active = models.BooleanField(default=True)

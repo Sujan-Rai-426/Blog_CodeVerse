@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "../assets/css/Template_Right_Sidebar.css";
 import { 
     FaHeart, 
@@ -20,11 +20,14 @@ import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 import { Link, useNavigate } from "react-router-dom";
 
 
+// Dynamic Avatar URL Change
+const AVATAR_BASE_URL = import.meta.env.VITE_AVATAR_BASE_URL
 
 
 
 function Template_Right_Sidebar() {
     const { profile } = useContext(User_API_Context);
+    const [avatarSeed, setAvatarSeed] = useState(profile?.avatar_seed || "");
     const navigate = useNavigate();
     
 
@@ -68,10 +71,14 @@ function Template_Right_Sidebar() {
             <div className="crs-sidebar-section user-profile">
                 {profile ? (
                     <div className="crs-profile-info">
-                    {/*****  Profile Image *****/}
+                    {/*****  Profile Image / Avatar *****/}
                         <img
-                            src={profile.avatar_url || CodeVora_Logo }
-                            alt={profile.username || "User"}
+                            src={
+                                avatarSeed 
+                                    ? `${AVATAR_BASE_URL}?seed=${avatarSeed}` 
+                                    : CodeVora_Logo
+                            }
+                            alt={`${profile.username}'s Avatar`}
                             className="crs-profile-avatar"
                         />
 

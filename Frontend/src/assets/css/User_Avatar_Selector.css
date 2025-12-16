@@ -1,0 +1,33 @@
+
+:root{
+    --gold : gold;
+    --gold-2: rgb(254, 220, 96);
+    --red: red;
+}
+
+.uas-avatars-container{
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(0, 60px));
+    gap: 15px;
+    justify-content: center;
+}
+.uas-random-btn{
+    color: var(--gold);
+    border: 2px solid var(--gold);
+    filter: drop-shadow(0 0 6px var(--gold-2));
+    border-radius: 50%;
+    font-size: 1.5rem;
+    padding: 0.5rem 0.5rem;
+    /* aspect-ratio: 1 / 1; */
+    background: transparent;
+}
+.uas-random-btn:hover{
+    color: var(--red);
+    border: 2px solid var(--red);
+    transition: 100ms ease-in-out;
+    filter: drop-shadow(0 0 6px var(--red));
+}
+.uas-select-avatars-conntainer{
+
+}

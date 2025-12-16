@@ -3,6 +3,8 @@
 /* ================================================= */
 
 :root {
+    --online : rgb(13, 160, 13);
+    --offline: red;
     --primary-color: #007bff; /* Blue */
     --secondary-color: #6c757d; /* Gray */
     --background-color: #f8f9fa; /* Light Gray Background */
@@ -30,6 +32,15 @@
     border-bottom: 1px solid var(--border-color);
     gap: 2rem;
 }
+
+
+/* **************  Profile AVATAR Editing ************** */
+.up-Avatar-Editing{
+    max-width: 100vw;
+}
+
+
+
 .up-profile-avatar-wrapper {
     flex-shrink: 0;
 }
@@ -38,7 +49,7 @@
     height: 150px;
     border-radius: 50%;
     object-fit: cover;
-    border: 1px solid var(--card-background);
+    border: 2px solid var(--online);
     box-shadow: var(--shadow);
 }
 .up-profile-info-main {

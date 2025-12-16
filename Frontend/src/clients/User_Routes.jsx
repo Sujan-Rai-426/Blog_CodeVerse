@@ -5,6 +5,7 @@ import User_Signup from "./User_Signup";
 import User_Protected_Route from "./User_Protected_Route";
 import User_API_Provider from "./User_API_Provider";
 import User_Profile from "./User_Profile";
+import User_Edit_Profile from "./User_Edit_Profile";
 
 export default function User_Routes() {
     return (
@@ -19,6 +20,7 @@ export default function User_Routes() {
                     {/* Public Routes */}
                     <Route path="Login/" element={<User_Login />} />
                     <Route path="Signup/" element={<User_Signup />} />
+                    <Route path="Edit-Profile/" element={<User_Edit_Profile />} />
                 </Routes>
             </User_API_Provider>
         </div>

@@ -65,13 +65,19 @@ class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["email", "username", "full_name", "phone", "address", "created_at"]
+        fields = ["email", "username", "avatar_seed", "full_name", "phone", "address", "created_at"]
+
+
+class UserAvatarUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["avatar_seed"]
+
 
 # ---------------- ADMIN LOGIN ----------------
 class AdminLoginSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(write_only=True)
-
 
 
 
