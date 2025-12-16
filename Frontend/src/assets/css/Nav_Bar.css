@@ -16,9 +16,8 @@
     align-items: center;
     box-shadow: 0 4px 18px rgba(0,0,0,0.25);
     z-index: 3000; /* keep on top */
-    background: var(--background);
-    border-bottom: 2px solid gray;
-    backdrop-filter: blur(25px);
+    border-bottom: 1px solid gray;
+    backdrop-filter: blur(35px);
 }
 
 .nav-container {

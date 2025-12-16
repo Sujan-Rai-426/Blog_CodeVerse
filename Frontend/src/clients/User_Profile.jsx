@@ -55,83 +55,83 @@ export default function User_Profile({ onEditClick }) {
 
 
     // ----------------- Toggle Playlist Handler -----------------
-      const handleTopicClick = (topicName) => {
-          setExpandedTopic(prevTopic => 
-              prevTopic === topicName ? null : topicName // Toggle collapse
-          );
-      };
+    const handleTopicClick = (topicName) => {
+        setExpandedTopic(prevTopic => 
+            prevTopic === topicName ? null : topicName // Toggle collapse
+        );
+    };
 
 
     // ----------------- Build Iframe Preview (Mini Iframe) -----------------
-      const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
-        const safeJs = (js || "").replace(/<\/script>/gi, "<\\/script>");
-        return `
-          <!doctype html>
-          <html lang="en">
-          <head>
-              <meta charset="utf-8"/>
-              <meta name="viewport" content="width=device-width, initial-scale=1"/>
-              <style>
-                  html, body { 
-                      margin:0; 
-                      padding:0; 
-                      width:100%; 
-                      height:100%; 
-                      display:flex; 
-                      justify-content:center; 
-                      align-items:center; 
-                      background:transparent; 
-                      overflow:hidden; 
-                  }
-                  .scaleWrapper { 
-                      width:100%; 
-                      height:100%; 
-                      display:flex; 
-                      justify-content:center; 
-                      align-items:center; 
-                      overflow:hidden; 
-                  }
-                  .scaleInner { 
-                      max-width:100%; 
-                      max-height:100%; 
-                      width:${aspectWidth}px; 
-                      height:${aspectHeight}px; 
-                      display:flex; 
-                      justify-content:center; 
-                      align-items:center; 
-                      transform-origin:center center; 
-                  }
-                  ${css || ""}
-              </style>
-          </head>
-          <body>
-              <div class="scaleWrapper">
-                  <div class="scaleInner" id="scaleInner">
-                      ${html || ""}
-                  </div>
-              </div>
-              <script>
-                  try { 
-                      ${safeJs} 
-                  } catch(err) { 
-                      console.error("Preview JS error:", err); 
-                  }
-                  function resizeScale() {
-                      const inner = document.getElementById("scaleInner");
-                      if (!inner) return;
-                      const scaleX = window.innerWidth / ${aspectWidth};
-                      const scaleY = window.innerHeight / ${aspectHeight};
-                      const scale = Math.min(scaleX, scaleY);
-                      inner.style.transform = 'scale(' + scale + ')';
-                  }
-                  window.addEventListener('load', resizeScale);
-                  window.addEventListener('resize', resizeScale);
-                  resizeScale(); 
-              </script>
-          </body>
-          </html>
-        `;
-      };
+    const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 320, aspectHeight = 450) => {
+    const safeJs = (js || "").replace(/<\/script>/gi, "<\\/script>");
+    return `
+        <!doctype html>
+        <html lang="en">
+        <head>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <style>
+                html, body { 
+                    margin:0; 
+                    padding:0; 
+                    width:100%; 
+                    height:100%; 
+                    display:flex; 
+                    justify-content:center; 
+                    align-items:center; 
+                    background:transparent; 
+                    overflow:hidden; 
+                }
+                .scaleWrapper { 
+                    width:100%; 
+                    height:100%; 
+                    display:flex; 
+                    justify-content:center; 
+                    align-items:center; 
+                    overflow:hidden; 
+                }
+                .scaleInner { 
+                    max-width:100%; 
+                    max-height:100%; 
+                    width:${aspectWidth}px; 
+                    height:${aspectHeight}px; 
+                    display:flex; 
+                    justify-content:center; 
+                    align-items:center; 
+                    transform-origin:center center; 
+                }
+                ${css || ""}
+            </style>
+        </head>
+        <body>
+            <div class="scaleWrapper">
+                <div class="scaleInner" id="scaleInner">
+                    ${html || ""}
+                </div>
+            </div>
+            <script>
+                try { 
+                    ${safeJs} 
+                } catch(err) { 
+                    console.error("Preview JS error:", err); 
+                }
+                function resizeScale() {
+                    const inner = document.getElementById("scaleInner");
+                    if (!inner) return;
+                    const scaleX = window.innerWidth / ${aspectWidth};
+                    const scaleY = window.innerHeight / ${aspectHeight};
+                    const scale = Math.min(scaleX, scaleY);
+                    inner.style.transform = 'scale(' + scale + ')';
+                }
+                window.addEventListener('load', resizeScale);
+                window.addEventListener('resize', resizeScale);
+                resizeScale(); 
+            </script>
+        </body>
+        </html>
+    `;
+    };
 
 
 
@@ -228,7 +228,7 @@ export default function User_Profile({ onEditClick }) {
 
 
       // Default return for other tabs
-        return <p>No content found for the **{activeTab}** tab.</p>;
+        return <p>No content found for the Transaction {activeTab}.</p>;
     };
 
 
@@ -236,17 +236,53 @@ export default function User_Profile({ onEditClick }) {
     // -----------------------------------------------------
     // ******************** Main Render ********************
     // -----------------------------------------------------
-    if (loading || (!profile && !favorites.length)) { 
+
+    // *********** Skeleton Loader *****************
+    if (loading || (!profile && !favorites.length)) {
         return (
-            <div className="up-profile-container">
-                {/* ... Skeleton Loader Code ... */}
-                <p>Loading user data...</p>
+            <div className="up-profile-container up-skeleton">
+                
+                {/* ===== Header Skeleton ===== */}
+                <div className="up-skeleton-header">
+                    <div className="up-skeleton-avatar shimmer"></div>
+                    <div className="up-skeleton-info">
+                        <div className="up-skeleton-line lg shimmer"></div>
+                        <div className="up-skeleton-line md shimmer"></div>
+                        <div className="up-skeleton-btns">
+                            <div className="up-skeleton-btn shimmer"></div>
+                            <div className="up-skeleton-btn shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* ===== Tabs Skeleton ===== */}
+                <div className="up-skeleton-tabs">
+                    {[1, 2, 3, 4].map(i => (
+                        <div key={i} className="up-skeleton-tab shimmer"></div>
+                    ))}
+                </div>
+
+                {/* ===== Grid Cards Skeleton ===== */}
+                <div className="up-content-grid">
+                    {[1, 2, 3, 4, 5, 6].map(i => (
+                        <div key={i} className="up-skeleton-card shimmer">
+                            <div className="up-skeleton-iframe shimmer"></div>
+                            <div className="up-skeleton-line sm shimmer"></div>
+                        </div>
+                    ))}
+                </div>
+
             </div>
         );
     }
+
+
+
+
     if (error) return <p>Error: {JSON.stringify(error)}</p>;
 
 
+    // **************** Main Content if adata available ***************
     return (
         <div className="up-profile-container">
           {/* Header (Unchanged) */}
@@ -278,9 +314,9 @@ export default function User_Profile({ onEditClick }) {
                         const Icon = tab.icon;
                         return (
                             <button
-                              key={tab.name}
-                              className={`up-profile-tab-button ${activeTab === tab.name ? "active" : ""}`}
-                              onClick={() => setActiveTab(tab.name)}
+                                key={tab.name}
+                                className={`up-profile-tab-button ${activeTab === tab.name ? "active" : ""}`}
+                                onClick={() => setActiveTab(tab.name)}
                             >
                                 <Icon className="up-tab-icon" />
                                 <span className="up-tab-label">{tab.name}</span>
