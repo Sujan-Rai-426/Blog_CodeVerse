@@ -85,7 +85,7 @@ function Template_Right_Sidebar() {
                     {/*****  Profile Name and Email *****/}
                         <div style={{display: 'flex', flexDirection:'column', padding:'1rem 0'}}>
                             <span className="crs-profile-info">{profile.username || "User"}</span>
-                            <span className="crs-profile-info"> <small>{profile.email || "User"}</small> </span>
+                            <span className="crs-profile-info text-secondary"> <small>{profile.email || "User"}</small> </span>
                         </div>
 
                     {/*****  Profile Enter and Logout BTN *****/}

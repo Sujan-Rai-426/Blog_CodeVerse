@@ -31,6 +31,7 @@
     padding-bottom: 2rem;
     border-bottom: 1px solid var(--border-color);
     gap: 2rem;
+    align-items: center;
 }
 
 
@@ -74,7 +75,6 @@
 .up-profile-btn-grp{
     display: flex;
     gap: 1rem;
-    justify-content: center;
 }
 
 /* Action Buttons */
@@ -311,7 +311,7 @@
     padding: 10px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
-    background-color: white;
+    background: #cacaca;
     overflow: hidden;
 }
 .up-card-style:hover {
@@ -397,9 +397,11 @@
     gap: 20px;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     padding: 20px 10px; /* Padding for the inner content */
-    background-color: #fafafa;
     border-radius: 0 0 8px 8px;
     margin-bottom: 20px;
+    margin-bottom: 20px;
+    border: 1px solid;
+    box-shadow: 0 5px 14px rgba(128, 128, 128, 0.53) inset;
 }
 
 
@@ -533,7 +535,8 @@
 
 
 /* --- Tablet (max-width: 850px) --- */
-@media (max-width: 850px) {
+@media (max-width: 767px) {
+    .up-profile-btn-grp{ justify-content: center; }
     .up-favourite-card{ width: 99% !important; padding: 3px 0 !important; }
     .up-profile-header { flex-direction: column; align-items: center; text-align: center; }
     .up-profile-info-main { padding-top: 1rem; width: 80%; }

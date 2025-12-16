@@ -1,12 +1,11 @@
 // src/pages/User_Profile.jsx
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserAPI } from "./User_API_Context";
 import apiClient from "../config/apiClient";
 import "../assets/css/User_Profile.css"; // Ensure this CSS file is used
 import "../assets/css/Components_Design.css";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png";
-import User_Avatar_Selector from "./User_Avatar_Selector";
 
 import { 
     FaUserEdit, FaSignOutAlt, FaHeart, FaShoppingBag, FaList, FaHistory, 
@@ -16,7 +15,7 @@ import {
 // Dynamic Avatar URL Change
 const AVATAR_BASE_URL = import.meta.env.VITE_AVATAR_BASE_URL
 
-export default function User_Profile({ onEditClick }) {
+export default function User_Profile() {
     const navigate = useNavigate();
     const { profile, favorites, loading, error } = useUserAPI();
     const [activeTab, setActiveTab] = useState("Favourite");
@@ -319,7 +318,7 @@ export default function User_Profile({ onEditClick }) {
                     {/* ======== Profile Details ========= */}
                     <div className="up-name-email">
                         <h1 className="up-profile-username">{profile.username}</h1>
-                        <p>{profile.email}</p>
+                        <p className="text-secondary"><small>{profile.email}</small></p>
                     </div>
                     {/* ====== Profile Button Groups ======= */}
                     <div className="up-profile-btn-grp">
