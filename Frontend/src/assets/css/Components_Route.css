@@ -24,7 +24,7 @@ body.cr-components-page .cr-right-sidebar {
 }
 
 body.cr-components-page .cr-main-content {
-    max-width: calc(100vw - 270px - 270px - 70px);
+    max-width: calc(100vw - 250px - 250px - 30px);
 }
 
 /* Topics page (Laptop) */
