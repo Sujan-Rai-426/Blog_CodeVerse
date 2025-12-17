@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import "../assets/css/Tutorial_Topic.css";
+import "../assets/css/Coding_Guide_Topic.css";
 import { useParentAPI } from "../context/Parent_API_Provider.jsx";
 import Interactive_Grid_Background from "../context/Interactive_Grid_Background.jsx";
 // import { Helmet } from "react-helmet-async";

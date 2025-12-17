@@ -509,7 +509,7 @@ export default function Components_Design() {
                             }
                           }}
                         >
-                          <i className="fa fa-angle-down" /> View More
+                          <i className="bi bi-stack" /> Recommended
                         </button>
                     </div>
                 </div>

@@ -378,7 +378,7 @@ function Nav_Bar() {
                 {/* COMPONENTS */}
                     <li>
                         <Link to="/Components/Topics/1" onClick={() => setSidebarOpen(false)}>
-                            <i className="bi bi-easel3"></i> &nbsp; Components
+                            <i className="bi bi-stack"></i> &nbsp; Components
                         </Link>
                     </li>
                 

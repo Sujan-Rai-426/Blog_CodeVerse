@@ -1,198 +1,247 @@
-/* ================================
-     PREMIUM SCROLLBAR (SIDEBAR ONLY)
-     ================================ */
-
+/* --- Sidebar Container --- */
 .cl-sidebar {
+    width: 280px;
+    height: 100vh;
+    background: transparent; 
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex;
+    flex-direction: column;
     position: sticky;
-    top: 0; /*Top help to stick sidebar from top to bottom on sliding main body */
-    width: 270px;
-    height: calc(100vh - 80px);
+    top: 0;
     overflow-y: auto;
-
-    background: transparent;
-    padding: 16px;
-    border-right: 1px solid rgba(255,255,255,0.08);
-
-    /* Firefox */
-    scrollbar-width: none;
-    padding: 0px 15px 70px 15px;
+    transition: all 0.3s ease;
 }
 
-/* Hide scrollbar by default (Chrome, Edge, Safari) */
+/* --- Custom Scrollbar --- */
 .cl-sidebar::-webkit-scrollbar {
-    width: 6px;
+    width: 5px;
 }
 
-/* Invisible track */
 .cl-sidebar::-webkit-scrollbar-track {
     background: transparent;
 }
 
-/* Invisible thumb by default */
 .cl-sidebar::-webkit-scrollbar-thumb {
-    background-color: transparent;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
 }
 
-/* SHOW scrollbar ONLY on hover / scroll */
-.cl-sidebar:hover {
-    scrollbar-width: thin; /* Firefox */
-    scrollbar-color: rgba(148,163,184,0.35) transparent;
+.cl-sidebar::-webkit-scrollbar-thumb:hover {
+    background: #3b82f6;
 }
 
-.cl-sidebar:hover::-webkit-scrollbar-thumb {
-    background-color: rgba(148,163,184,0.35);
+/* For Firefox */
+.cl-sidebar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.1) transparent;
 }
 
-/* Slight glow on active drag */
-.cl-sidebar::-webkit-scrollbar-thumb:active {
-    background-color: rgba(148,163,184,0.6);
+/* --- Sticky Header & Search --- */
+.cl-header-sticky {
+    position: sticky;
+    top: 0;
+    background: #0e0e0e; /* Solid background to hide content scrolling behind */
+    padding: 20px 15px 10px;
+    z-index: 10;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.03);
 }
 
-
-
-/* Title */
 .cl-title {
-    font-size: 18px;
+    color: #fff;
+    font-size: 1rem;
     margin-bottom: 18px;
-    color: #000000;
     font-weight: 600;
-    background-color: white;
-    padding: 12px;
-    border-radius: 0 0 8px 8px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
 }
 
-/* Language */
+.cl-search-wrapper {
+    position: relative;
+    margin-bottom: 5px;
+}
+
+.cl-search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.cl-search-input {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    padding: 10px 35px 10px 35px;
+    color: #fff;
+    font-size: 0.85rem;
+    transition: all 0.2s ease;
+}
+
+.cl-search-input:focus {
+    outline: none;
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.cl-search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: none;
+    color: #64748b;
+    cursor: pointer;
+    font-size: 1.1rem;
+    padding: 0 5px;
+}
+
+.cl-search-clear:hover {
+    color: #ef4444;
+}
+
+/* --- Content Area --- */
+.cl-content {
+    padding: 15px;
+}
+
+.cl-lang-block {
+    margin-bottom: 25px;
+}
+
 .cl-lang {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px 12px;
-    border-radius: 8px;
-    margin-bottom: 6px;
-    font-weight: 600;
-    text-decoration: none;
-    color: #c39554;
-    transition: 0.25s;
-}
-
-.cl-lang:hover {
-    color: orange;
-    background: rgba(56,189,248,0.15);
+    gap: 10px;
+    color: #c88b2f;
+    padding: 8px 5px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 .cl-lang.active {
-    background: linear-gradient(135deg, #38bdf8, #6366f1);
-    color: #fff;
-    font-weight: 600;
+    color: #3b82f6;
 }
 
-/* Topics */
 .cl-topic-list {
-    margin: 6px 0 14px 18px;
-    padding-left: 12px;
-    border-left: 2px solid rgba(255,255,255,0.1);
+    list-style: none;
+    padding: 0;
+    margin: 5px 0 0 10px;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
 }
 
+/* --- Topic Item Styling --- */
 .cl-topic {
-    display: block;
-    padding: 10px 0;
-    font-size: 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 9px 15px;
+    color: #94a3b8;
     text-decoration: none;
-    color: #cbd5f5;
-    transition: 0.2s;
+    font-size: 0.88rem;
+    border-radius: 0 6px 6px 0;
+    transition: all 0.2s ease;
+    margin-bottom: 1px;
+    gap: 10px;
 }
 
-.cl-topic:hover {
-    font-size: 0.8rem;
-    color: #38bdf8;
+/* Container for Name + Count */
+.cl-topic-main {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-grow: 1;
+    gap: 8px;
 }
 
-/* Active Topic */
-.cl-topic.active {
-    color: #00a6ff;
+.cl-topic-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 160px;
+}
+
+/* --- Component Count Badge --- */
+.cl-topic-count {
+    font-size: 0.7rem;
+    background: rgba(255, 255, 255, 0.05);
+    color: #64748b;
+    padding: 1px 7px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.9rem;
-    position: relative;
-}
-
-/* active dot in active topic */
-.cl-topic.active::before {
-    content: "";
-    position: absolute;
-    left: -18px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 10px;
-    height: 10px;
-    background: #00a6ff;
-    border-radius: 50%;
-}
-
-/* Loading */
-.cl-loading {
+    min-width: 22px;
     text-align: center;
-    margin-top: 40px;
-    opacity: 0.7;
+    transition: all 0.2s ease;
 }
 
-.cl-new-badge {
-    margin-left: 8px;
-    padding: 2px 6px;
-    font-size: 10px;
-    border-radius: 6px;
-    background: linear-gradient(135deg, #22c55e, #16a34a);
+/* Hover States */
+.cl-topic:hover {
     color: #fff;
-    font-weight: 600;
-    animation: newPulse 1.4s ease-in-out infinite;
+    background: rgba(255, 255, 255, 0.03);
+    transform: translateX(3px);
 }
 
-@keyframes newPulse {
-    0% { opacity: 1; }
-    50% { opacity: 0.6; }
-    100% { opacity: 1; }
+.cl-topic:hover .cl-topic-count {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
 }
 
+/* Active State Styling */
+.cl-topic.active {
+    background: linear-gradient(90deg, rgba(59, 130, 246, 0.15) 0%, transparent 100%);
+    color: #3b82f6;
+    border-left: 2px solid #3b82f6;
+    font-weight: 500;
+}
 
+.cl-topic.active .cl-topic-count {
+    background: #3b82f6;
+    color: #fff;
+    box-shadow: 0 0 8px rgba(59, 130, 246, 0.3);
+}
 
-/* ****************  SKELETON LOADER ******************* */
+/* --- Badges & States --- */
+.cl-new-badge {
+    background: #10b981;
+    color: #fff;
+    font-size: 0.6rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    font-weight: 800;
+    box-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
+    flex-shrink: 0;
+}
 
+.cl-no-results {
+    text-align: center;
+    padding: 50px 10px;
+    color: #475569;
+}
 
-/* ===== Skeleton Base ===== */
+.cl-no-results i {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 10px;
+}
+
+/* --- Shimmer Skeletons --- */
 .cl-skeleton {
-    background: rgba(255, 255, 255, 0.1);
-    border-radius: 6px;
-    margin-bottom: 8px;
-    animation: skeleton-loading 1.2s infinite linear;
+    background: linear-gradient(90deg, #161b22 25%, #21262d 50%, #161b22 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 4px;
 }
 
-/* Sidebar title skeleton */
-.cl-skeleton-title {
-    width: 80%;
-    height: 28px;
-    margin-bottom: 20px;
-    border-radius: 8px;
+@keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
 }
 
-/* Language skeleton */
-.cl-skeleton-lang {
-    width: 90%;
-    height: 36px;
-    margin-bottom: 8px;
-    border-radius: 8px;
-}
-
-/* Topic skeleton */
-.cl-skeleton-topic {
-    width: 80%;
-    height: 24px;
-    margin-bottom: 6px;
-    border-radius: 6px;
-}
-
-/* Skeleton Animation */
-@keyframes skeleton-loading {
-    0% { background-color: rgba(255, 255, 255, 0.05); }
-    50% { background-color: rgba(255, 255, 255, 0.15); }
-    100% { background-color: rgba(255, 255, 255, 0.05); }
-}
+.cl-skeleton-title { height: 25px; width: 80%; }
+.cl-skeleton-lang { height: 18px; width: 50%; margin-bottom: 12px; }
+.cl-skeleton-topic { height: 14px; width: 90%; margin: 10px 0; }
