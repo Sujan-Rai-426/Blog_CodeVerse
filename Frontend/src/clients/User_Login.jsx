@@ -53,7 +53,11 @@ export default function User_Login() {
           identifier: form.identifier,
           password: form.password,
         });
-        if (res.status === 200) navigate("/User/Profile");
+        if (res.status === 200) {
+          setTimeout(() => {
+            navigate("/User/Profile");
+          }, 150); // allow cookie to settle
+        }
       }
     } catch (err) {
       setMessage(err.response?.data?.error || "Login / OTP failed");

@@ -1,90 +1,68 @@
 import React, { useEffect, useState } from "react";
 import UserAPIContext from "./User_API_Context";
+import apiClient from "../config/apiClient";
 import {
-  fetchUserProfile as fetchProfileAPI,
-  fetchFavorites as fetchFavoritesAPI,
+    fetchUserProfile,
+    fetchFavorites,
 } from "./User_API";
 
 const User_API_Provider = ({ children }) => {
-  // Load cached data first
-  const [profile, setProfile] = useState(() => {
-    const cached = localStorage.getItem("user_profile");
-    return cached ? JSON.parse(cached) : null;
-  });
-  const [favorites, setFavorites] = useState(() => {
-    const cached = localStorage.getItem("user_favorites");
-    return cached ? JSON.parse(cached) : [];
-  });
 
+    const [profile, setProfile] = useState(() => {
+        const cached = localStorage.getItem("user_profile");
+        return cached ? JSON.parse(cached) : null;
+    });
 
-  // NEW LOGIC: Only show loading = true if the profile has NOT been cached.
-  const hasInitialData = !!profile; 
-  const [loading, setLoading] = useState(!hasInitialData); 
-  const [error, setError] = useState(null);
+    const [favorites, setFavorites] = useState(() => {
+        const cached = localStorage.getItem("user_favorites");
+        return cached ? JSON.parse(cached) : [];
+    });
 
-  // Background fetch (updates UI after mount, doesn't block initial render)
-  const fetchAllData = async () => {
-    // If we already have cached data, we don't need to show a loading state
-    // while fetching new data in the background (SWR pattern).
-    if (!hasInitialData) {
-      setLoading(true); // Only set loading true if we have no initial data
-    }
+    const [loading, setLoading] = useState(!profile);
+    const [error, setError] = useState(null);
 
-    try {
-      const [profileData, favoritesData, playlistsData] = await Promise.all([
-        fetchProfileAPI(),
-        fetchFavoritesAPI(),
-      ]);
+    const fetchAllData = async () => {
+        try {
+        // ✅ IMPORTANT: Ensure auth cookie/session exists
+            await apiClient.get("/api/user-profile/");
 
-      // Update state
-      setProfile(profileData);
-      setFavorites(favoritesData);
+            const [profileData, favoritesData] = await Promise.all([
+                fetchUserProfile(),
+                fetchFavorites(),
+            ]);
 
+            setProfile(profileData);
+            setFavorites(favoritesData);
 
-      // Update cache
-      localStorage.setItem("user_profile", JSON.stringify(profileData));
-      localStorage.setItem("user_favorites", JSON.stringify(favoritesData));
+            localStorage.setItem("user_profile", JSON.stringify(profileData));
+            localStorage.setItem("user_favorites", JSON.stringify(favoritesData));
 
-      setError(null);
-    } catch (err) {
-      console.error("Error fetching user data:", err);
-      setError(err.response?.data || err.message);
-    } finally {
-      // Always stop loading once the fetch attempt is complete.
-      setLoading(false);
-    }
-  };
+            setError(null);
+        } catch (err) {
+            if (err.response?.status !== 401) {
+                setError(err.response?.data || err.message);
+            }
+        } finally {
+            setLoading(false);
+        }
+    };
 
-  useEffect(() => {
-    fetchAllData();
-  }, []);
+    useEffect(() => {
+        fetchAllData();
+    }, []);
 
-  // Refetch individual lists manually (refetch functions remain the same)
-  const refetchFavorites = async () => {
-    try {
-      const favoritesData = await fetchFavoritesAPI();
-      setFavorites(favoritesData);
-      localStorage.setItem("user_favorites", JSON.stringify(favoritesData));
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-
-
-  return (
-    <UserAPIContext.Provider
-      value={{
-        profile,
-        favorites,
-        loading,
-        error,
-        refetchFavorites,
-      }}
-    >
-      {children}
-    </UserAPIContext.Provider>
-  );
+    return (
+        <UserAPIContext.Provider
+            value={{
+                profile,
+                favorites,
+                loading,
+                error,
+            }}
+        >
+            {children}
+        </UserAPIContext.Provider>
+    );
 };
 
 export default User_API_Provider;
