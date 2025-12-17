@@ -54,7 +54,7 @@ function App() {
 
                       <Footer />
                       <Analytics />
-                      <Floating_Go_Back_Btn />
+                      {/* <Floating_Go_Back_Btn /> */}
                       <Scroll_To_Top />
                   </Router>
 

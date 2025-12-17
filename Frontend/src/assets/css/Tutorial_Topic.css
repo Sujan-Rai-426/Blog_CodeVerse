@@ -81,10 +81,10 @@
 .horizontal-card:focus,
 .fs-card.active-hover /* NEW: active hover default */ {
     transform: translateY(-6px);
-    box-shadow: 0 10px 30px rgba(77, 69, 6, 0.6) !important;
+    box-shadow: 5px 0  15px 8px rgba(0, 0, 0, 0.632) !important;
     outline: none;
     background: #0e131b !important;
-    border: 1.5px solid rgb(255, 213, 0) !important;
+    border: 1px solid rgb(255, 213, 0) !important;
 }
 
 
@@ -205,7 +205,7 @@
 
 .topic-card:hover {
     transform: translateY(-5px) scale(1.03);
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 5px 0  15px 8px rgba(0, 0, 0, 0.568);
     border-color: #3b82f6;
 }
 

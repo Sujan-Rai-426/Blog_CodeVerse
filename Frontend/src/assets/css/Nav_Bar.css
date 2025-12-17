@@ -24,7 +24,7 @@
 
 .nav-container {
     width: 100%;
-    max-width: 1200px;
+    max-width: 100%;
     margin: 0 auto;
     display:flex;
     justify-content: space-between;
@@ -147,6 +147,7 @@
     width: 100%;
     height: 100%;
     backdrop-filter: blur(22px);
+    background: #000000c7;
     color: #fff;
     transition: right .28s cubic-bezier(.2,.9,.2,1);
     z-index: 6000;

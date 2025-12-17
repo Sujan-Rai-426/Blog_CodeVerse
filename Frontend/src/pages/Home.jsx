@@ -9,6 +9,7 @@ import Services from "../components/Services";
 
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 import { FaPersonBooth } from "react-icons/fa";
+import Interactive_Grid_Background from "../context/Interactive_Grid_Background.jsx";
 
 function Home() {
     const { languages, loadingBase: parentLoading } = useContext(Parent_API_Provider_Context);
@@ -38,11 +39,12 @@ function Home() {
                     </div>
                 </div>
             )}
-
             {/* Hero Section */}
+<Interactive_Grid_Background>
             <section className="hero mb-5">
                 <div className="hero-content">
                     <div className="hero-subtitle text-center">
+                        <h1><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>
@@ -114,6 +116,8 @@ function Home() {
                 </div>
             </section>
 
+                                </Interactive_Grid_Background>
+            
             {/* Services Section */}
             <section className="service mt-2 mb-5">
                 <h2 className="home-section-title">Our Top Services</h2>

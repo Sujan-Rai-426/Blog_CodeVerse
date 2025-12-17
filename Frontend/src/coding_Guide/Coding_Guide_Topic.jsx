@@ -4,6 +4,7 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Tutorial_Topic.css";
 import { useParentAPI } from "../context/Parent_API_Provider.jsx";
+import Interactive_Grid_Background from "../context/Interactive_Grid_Background.jsx";
 // import { Helmet } from "react-helmet-async";
 
 const Coding_Guide_Topic = () => {
@@ -115,7 +116,7 @@ const Coding_Guide_Topic = () => {
 
   return (
 
-    <>
+    <Interactive_Grid_Background>
     
         {/* =================== ============== ====================== */}
         {/* =================== Auto AMP ADS ====================== */}
@@ -192,7 +193,7 @@ const Coding_Guide_Topic = () => {
         </div>
 
     
-    </>
+    </Interactive_Grid_Background>
 
 );
 };

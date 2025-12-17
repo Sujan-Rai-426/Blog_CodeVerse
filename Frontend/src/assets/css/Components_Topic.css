@@ -1,0 +1,217 @@
+/* --- Variables & Global Settings --- */
+:root {
+    --bg-dark: #0a0a0c;
+    --accent-blue: #3b82f6;
+    --accent-gold: #f59e0b; /* For the New Badge */
+    --glass-card: rgba(255, 255, 255, 0.03);
+    --glass-stroke: rgba(255, 255, 255, 0.08);
+    --text-primary: #f8fafc;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+}
+
+.ct-tutorial-topic-page {
+    padding: 40px;
+    max-width: 1600px; /* Increased for very large grids */
+    margin: 0 auto;
+}
+
+/* --- Clean Modern Title --- */
+.ct-page-title {
+    text-align: center;
+    font-size: 2.6rem;
+    font-weight: 800;
+    font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
+    background: linear-gradient(90deg, var(--accent-blue), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+/* --- The "Floating Pill" Language Selector --- */
+.ct-fs-wrapper {
+    margin-bottom: 50px;
+    display: flex;
+    justify-content: center;
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+}
+
+.ct-fs-scroll {
+    background: rgba(10, 10, 12, 0.8);
+    backdrop-filter: blur(20px);
+    padding: 6px;
+    border-radius: 100px;
+    border: 1px solid var(--glass-stroke);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.ct-fs-grid {
+    display: flex;
+    gap: 5px;
+}
+
+.ct-fs-card {
+    padding: 10px 24px;
+    border-radius: 100px;
+    text-decoration: none !important;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--text-secondary);
+}
+
+.ct-fs-card:hover {
+    color: var(--text-primary);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.ct-selected-card {
+    background: white !important;
+    color: black !important;
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+}
+
+.ct-fs-card-icon { font-size: 1.1rem; }
+.ct-fs-card-text { font-weight: 600; font-size: 0.85rem; }
+
+/* --- Language Section Title --- */
+.ct-language-title {
+    font-size: 1.4rem;
+    font-weight: 600;
+    margin-bottom: 25px;
+    color: var(--text-primary);
+    border-left: 3px solid var(--accent-blue);
+    padding-left: 15px;
+}
+
+/* --- Large Topic Grid (High Density) --- */
+.ct-topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
+}
+
+.ct-topic-card {
+    background: var(--glass-card);
+    border: 1px solid var(--glass-stroke);
+    border-radius: 14px;
+    padding: 20px;
+    text-decoration: none !important;
+    transition: all 0.25s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 120px;
+    position: relative;
+}
+
+.ct-topic-card:hover {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: var(--accent-blue);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+/* --- Card Content & Elements --- */
+.ct-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 12px;
+}
+
+.ct-topic-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.4;
+    padding-right: 10px;
+}
+
+/* --- New Badge --- */
+.ct-badge-new {
+    background: var(--accent-gold);
+    color: #000;
+    font-size: 0.65rem;
+    font-weight: 900;
+    padding: 2px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+    flex-shrink: 0;
+}
+
+/* --- Footer & Counters --- */
+.ct-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+
+.ct-comp-count {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.ct-comp-count i {
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+}
+
+.ct-topic-card:hover .ct-comp-count {
+    color: var(--text-secondary);
+}
+
+/* Arrow Decoration */
+.ct-topic-card::after {
+    content: '→';
+    position: absolute;
+    right: 20px;
+    bottom: 16px;
+    color: var(--accent-blue);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.25s ease;
+    font-weight: bold;
+}
+
+.ct-topic-card:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- Empty State --- */
+.ct-no-topic {
+    grid-column: 1 / -1;
+    padding: 60px;
+    text-align: center;
+    color: var(--text-secondary);
+    background: var(--glass-card);
+    border-radius: 12px;
+    border: 1px dashed var(--glass-stroke);
+}
+
+/* --- Responsive Layout --- */
+@media (max-width: 1024px) {
+    .ct-topic-grid { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    .ct-tutorial-topic-page { padding: 25px; }
+}
+
+@media (max-width: 640px) {
+    .ct-page-title { font-size: 1.4rem; letter-spacing: 0.1em; }
+    .ct-topic-grid { grid-template-columns: 1fr; }
+    .ct-fs-wrapper { top: 10px; }
+    .ct-fs-card { padding: 8px 16px; }
+    .ct-fs-card-text { font-size: 0.75rem; }
+}

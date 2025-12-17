@@ -632,7 +632,7 @@ export default function Components_Design() {
                             <br />
                           For this category
                             <br />
-                          No Components Available right now but will be uploaded soon
+                          No More Components Available right now but will be uploaded soon
                         </h4>
                       </div>
                   )}
