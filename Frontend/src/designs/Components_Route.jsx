@@ -4,8 +4,6 @@ import { Route, Routes, useLocation } from "react-router-dom";
 import Components from "./Components";
 import Components_Topic from "./Components_Topic";
 
-import User_API_Provider from "../clients/User_API_Provider";
-import { Parent_Api_Provider } from "../context/Parent_API_Provider";
 
 import Components_Right_Sidebar from "./Components_Right_Sidebar";
 import Components_Left_Sidebar from "./Components_Left_Sidebar";
@@ -50,32 +48,28 @@ function Components_Route() {
     }, []);
 
     return (
-        <User_API_Provider>
-            <Parent_Api_Provider>
-                <div className="cr-layout-wrapper">
+        <div className="cr-layout-wrapper">
 
-                {/* LEFT SIDEBAR */}
-                    <aside className="cr-sidebar cr-left-sidebar">
-                        <Components_Left_Sidebar />
-                    </aside>
+        {/* LEFT SIDEBAR */}
+            <aside className="cr-sidebar cr-left-sidebar">
+                <Components_Left_Sidebar />
+            </aside>
 
-                {/* MAIN CONTENT */}
-                    <main className="cr-main-content fs-6 container">
-                        <Routes>
-                            <Route path="/" element={<Components />} />
-                            <Route path=":topicID/:codeId?" element={<Components />} />
-                            <Route path="Topics/:languageID" element={<Components_Topic />} />
-                        </Routes>
-                    </main>
+        {/* MAIN CONTENT */}
+            <main className="cr-main-content fs-6 container">
+                <Routes>
+                    <Route path="/" element={<Components />} />
+                    <Route path=":topicID/:codeId?" element={<Components />} />
+                    <Route path="Topics/:languageID" element={<Components_Topic />} />
+                </Routes>
+            </main>
 
-                {/* RIGHT SIDEBAR */}
-                    <aside className="cr-sidebar cr-right-sidebar">
-                        <Components_Right_Sidebar />
-                    </aside>
+        {/* RIGHT SIDEBAR */}
+            <aside className="cr-sidebar cr-right-sidebar">
+                <Components_Right_Sidebar />
+            </aside>
 
-                </div>
-            </Parent_Api_Provider>
-        </User_API_Provider>
+        </div>
     );
 }
 

@@ -1,6 +1,8 @@
 /* ---------- Standard sizes & reset ---------- */
 :root{
     --gold: #facc15;
+    --gold-2: rgb(255, 191, 0);
+    --red: red;
     --background : black;
     --muted: #cbd5e1;
     --bg0: #0f1720;
@@ -44,7 +46,7 @@
 
 /* hamburger (mobile) */
 .nb-hamburger {
-    background: rgba(255,255,255,0.07);
+    background: transparent;
     color: #fff;
     border: 0;
     padding: 8px 12px;
@@ -54,11 +56,8 @@
 }
 .nb-hamburger:hover { background: rgba(255,255,255,0.12); }
 
-/* ---------- Desktop Nav list ---------- */
-.d-none { display:none; } /* utility used in JSX */
-@media (min-width: 767px) {
-    .d-lg-flex { display:flex !important; }
-}
+.d-none { display:none; } 
+
 
 /* nav list */
 .nb-nav-list {
@@ -138,38 +137,57 @@
     color: #fff;
 }
 
+
+/* =========================================== */
 /* ---------- Sidebar (mobile) ---------- */
-.nb-sidebar {
+.nb-sidebar-container {
     position: fixed;
     top: 0;
     right: -100%;
-    width: 84%;
-    max-width: 250px;
+    width: 100%;
     height: 100%;
-    background: linear-gradient(145deg, rgba(20,20,20,0.96), rgba(40,32,20,0.92));
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(22px);
     color: #fff;
     transition: right .28s cubic-bezier(.2,.9,.2,1);
     z-index: 6000;
     padding-top: 68px;
     box-shadow: -12px 0 30px rgba(0,0,0,0.45);
+    border-left: 1px solid;
 }
-.nb-sidebar.open { right: 0; }
+.nb-sidebar-container.open { right: 0; }
 
 /* sidebar close button */
+
+.n-sidebar-head{
+    position: absolute;
+    top: 14px;
+    padding: 0 20px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
 .nb-sidebar-close {
-    position:absolute;
-    top:14px;
-    left:14px;
     background:none;
     border:0;
     color: var(--gold);
     font-size:28px;
     cursor:pointer;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
 /* sidebar list */
-.nb-sidebar-list { list-style:none; padding:20px 18px; margin:0; }
+.nb-sidebar-list { 
+    list-style:none; 
+    padding:20px 18px; 
+    margin:0;     
+    display: flex;
+    justify-content: space-between;
+    flex-direction: column;
+    height: 80%;
+    align-items: self-start;}
 .nb-sidebar-list li { margin-bottom: 0.5rem; }
 .nb-sidebar-list a, .nb-sidebar-dropdown-btn {
     color:#fff;
@@ -240,6 +258,92 @@
     border: 2px solid var(--gold);
 }
 
+
+/* ----------- Github Button ----------------- */
+.custom-rainbow-btn {
+    background: linear-gradient(#121213, #121213) padding-box,
+                linear-gradient(90deg, #ff5f6d, #ffc371, #a8ff78, #45cafc, #8921ff) border-box;
+    border: 2px solid transparent !important;
+    border-radius: 28px;
+    padding: 8px 16px;
+    transition: transform 0.2s;
+    background-size: 200% auto;
+    animation: rainbow-move 3s linear infinite;
+    color: #fff;
+}
+[data-bs-theme="dark"] .custom-rainbow-btn {
+    background: linear-gradient(#121213, #323235) padding-box,
+                linear-gradient(90deg, #ff5f6d, #ffc371, #a8ff78, #45cafc, #8921ff) border-box;
+    color: #fff;
+}
+.custom-rainbow-btn:hover {
+    transform: scale(1.05);
+    background: linear-gradient(#6e6868, #fff) padding-box,
+        linear-gradient(90deg, #ff5f6d, #ffc371, #a8ff78, #45cafc, #8921ff);
+    }
+.custom-rainbow-btn:active {
+    transform: scale(0.95);
+    background: linear-gradient(#fff, #fff) padding-box,
+        linear-gradient(90deg, #ff5f6d, #ffc371, #a8ff78, #45cafc, #8921ff);
+}
+.star-icon {
+    color: #6c757d;
+    transition: color 0.2s;
+}
+.custom-rainbow-btn:hover .star-icon {
+    color: #ffc107;
+    filter: 0 5px 12px var(--gold);
+}
+@keyframes rainbow-move {
+    to { background-position: 200% center; }
+}
+.custom-rainbow-btn::before {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 20%;
+    right: 20%;
+    height: 10px;
+    background: linear-gradient(90deg, #ff5f6d, #ffc371, #a8ff78, #45cafc, #8921ff);
+    filter: blur(15px);
+    z-index: -1;
+    opacity: 0.6;
+    background-size: 200% auto;
+    animation: rainbow-move 3s linear infinite;
+}
+
+
+/* *********************************************** */
+/* ************* DESKTOP Navbar **************** */
+.n-desktop-profile-github-container{
+    display: flex;
+    flex-direction: row;
+}
+.n-desktop-profile{
+    margin: 0 1rem;
+}
+.n-desktop-account-btn:hover{
+    background: var(--gold);
+    color: var(--bg0);
+}
+.n-desktop-account-btn{
+    padding: 10px 15px !important;
+}
+@media (max-width: 900px){
+    .n-desktop-account-btn span{
+        display: none;
+    }
+}
+@media (max-width: 767px){
+    .n-desktop-profile-github-container{
+        display: none;
+    }
+}
+
+
+
+
+
 /* ---------- Mobile Sidebar Divider ---------- */
 .sidebar-divider {
     border: 0;
@@ -248,12 +352,215 @@
     margin: 18px 0;
 }
 
+/* =========================================== */
+/* ---------- Updated Sidebar Animation ---------- */
+/* =========================================== */
+
+.nb-sidebar-container {
+    position: fixed;
+    top: 0;
+    right: 0; /* Changed from -100% to 0 to allow clip-path to work */
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(22px);
+    color: #fff;
+    z-index: 6000;
+    padding-top: 68px;
+    box-shadow: -12px 0 30px rgba(0,0,0,0.45);
+    border-left: 1px solid rgba(255,255,255,0.1);
+
+    /* --- Professional Reveal Animation --- */
+    /* Start as a tiny circle at the top-right (near hamburger) */
+    clip-path: circle(0% at 92% 5%);
+    transition: clip-path 0.6s cubic-bezier(0.77, 0, 0.175, 1);
+    pointer-events: none; /* Prevent clicking through hidden sidebar */
+}
+
+.nb-sidebar-container.open {
+    /* Expand to cover the whole screen */
+    clip-path: circle(150% at 92% 5%);
+    pointer-events: all;
+}
+
+/* Sidebar List Item - Staggered Slide-in */
+.nb-sidebar-list li {
+    opacity: 0;
+    transform: translateX(20px);
+    transition: all 0.4s ease;
+}
+
+.nb-sidebar-container.open .nb-sidebar-list li {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Stagger delays for each menu item */
+.nb-sidebar-list li:nth-child(1) { transition-delay: 0.1s; }
+.nb-sidebar-list li:nth-child(2) { transition-delay: 0.15s; }
+.nb-sidebar-list li:nth-child(3) { transition-delay: 0.2s; }
+.nb-sidebar-list li:nth-child(4) { transition-delay: 0.25s; }
+.nb-sidebar-list li:nth-child(5) { transition-delay: 0.3s; }
+.nb-sidebar-list li:nth-child(n+6) { transition-delay: 0.35s; }
+
+/* sidebar close button rotation */
+.nb-sidebar-close:hover {
+    transform: rotate(90deg);
+    transition: transform 0.3s ease;
+}
+
+/* Overlay fade animation */
+.nb-sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 5500;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+/* When sidebar is open, show overlay */
+body:has(.nb-sidebar-container.open) .nb-sidebar-overlay {
+    opacity: 1;
+    pointer-events: all;
+}
+
+
+
+
+
+
+
+/* =========================================== */
+/* ---------- Sidebar Profile Section ---------- */
+/* =========================================== */
+
+.nav-user-profile {
+    width: 100%;
+    padding: 1.5rem 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 16px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.nav-client-profile-info-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 1.5rem;
+}
+
+.nav-client-profile-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--gold);
+    box-shadow: 0 0 15px rgba(250, 204, 21, 0.3);
+    background: var(--bg0);
+}
+
+.profile-text-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-username {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: #fff;
+    letter-spacing: 0.5px;
+}
+
+.nav-email {
+    font-size: 0.8rem;
+    color: var(--muted);
+    opacity: 0.8;
+}
+
+/* Button Group Styling */
+.profile-btn-grp, .nav-client-auth-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.nav-client-profile-edit-btn, 
+.nav-client-play-game-btn,
+.nav-client-login-btn,
+.nav-client-signup-btn {
+    padding: 10px 25px !important;
+    border-radius: 25px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+}
+
+/* Edit/Profile Button */
+.nav-client-profile-edit-btn {
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.nav-client-profile-edit-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--muted);
+}
+
+/* Play/Game Button (Matches Rainbow Theme) */
+.nav-client-play-game-btn, .nav-client-game-btn {
+    background: var(--gold);
+    color: #000;
+    border: none;
+    grid-column: span 1;
+}
+
+.nav-client-play-game-btn:hover, .nav-client-game-btn:hover {
+    background: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(250, 204, 21, 0.4);
+}
+
+/* Auth Buttons */
+.nav-client-login-btn {
+    background: transparent;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+}
+
+.nav-client-signup-btn {
+    background: var(--gold);
+    color: #000;
+    border: 1px solid var(--gold);
+}
+
+.nav-client-game-btn {
+    grid-column: span 2; /* Full width for the game button in login state */
+    margin-top: 5px;
+}
+
+
+
+
 /* ---------- Responsive behaviour ---------- */
+@media (max-width: 1024px){
+    .n-desktop-github-txt { display: none; }
+}
+
 @media (min-width: 767px) {
     .nb-hamburger { display:none; }
     .nb-sidebar { display:none; }
+    .d-lg-flex { display:flex !important; }
 }
 @media (max-width: 767px) {
+    .desktop-github-btn { display: none !important; }
     .d-lg-flex { display:none !important; }
     .nb-hamburger { display:inline-block; }
 }
