@@ -18,17 +18,33 @@ const buildMainIframeDoc = (html = "", css = "", js = "") => {
     ? `<script>try{${safeJs}}catch(err){console.error("Preview JS error:",err);}</script>`
     : "";
   return `<!doctype html>
-<html lang="en">
-<head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
-</head>
-<body style="margin:0;padding:0;width:100%;height:100%">
-  <style>html,body{margin:0;padding:0;width:100%;height:100%;} ${css || ""}</style>
-  ${html || ""}
-  ${scriptTag}
-</body>
-</html>`;
+  <html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1"/>
+    <style>
+        html,body{
+            margin:0;
+            padding:0;
+            width:100%;
+            height:100%;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+        } 
+        ${css || ""}
+    </style>
+  </head>
+
+  <body>
+      ${html || ""}
+
+      <scripts>
+          ${scriptTag}
+      </scripts>
+  </body>
+  </html>`;
 };
 
 // === Recommended / small frame iframe doc ===
@@ -104,6 +120,7 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth=133
   </body>
   </html>`;
 };
+
 
 const deviceSizes = {
   desktop: { width: "100%", height: "600px" },
