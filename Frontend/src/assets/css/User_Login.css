@@ -3,7 +3,6 @@ width: 100%;
 max-width: 400px;
 margin: 5% auto;
 padding: 40px 30px;
-background-color: #ffffff;
 border-radius: 12px;
 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 text-align: center;
@@ -12,7 +11,7 @@ font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 
 .auth-container h2 {
 margin-bottom: 30px;
-color: #333333;
+color: #fff;
 font-size: 28px;
 font-weight: 600;
 }

@@ -271,6 +271,7 @@
     background-size: 200% auto;
     animation: rainbow-move 3s linear infinite;
     color: #fff;
+    margin: 0;
 }
 [data-bs-theme="dark"] .custom-rainbow-btn {
     background: linear-gradient(#121213, #323235) padding-box,

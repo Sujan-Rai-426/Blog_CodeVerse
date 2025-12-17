@@ -6,11 +6,12 @@ import Interactive_Grid_Background from '../context/Interactive_Grid_Background'
 function Template_Left_Sidebar() {
     return (
     <Interactive_Grid_Background>
-        <nav>Navbar Content</nav>
-        <main>
-            <h1>My Awesome Site</h1>
-            <button onClick={() => alert("Clicked!")}>Interactive Button</button>
-        </main>
+        <div className="container text-center my-5">
+            <main>
+                <h1>My Awesome Site</h1>
+                <button onClick={() => alert("Clicked!")} className='btn-success btn'>Interactive Button</button>
+            </main>
+        </div>
     </Interactive_Grid_Background>
     )
 }
