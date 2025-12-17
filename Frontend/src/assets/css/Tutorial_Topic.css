@@ -238,7 +238,7 @@
 }
 
 /* === Responsive Design === */
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .page-title { font-size: 2rem; }
     .language-title { font-size: 1.4rem; }
     .topic-content h3 { font-size: 1rem; }

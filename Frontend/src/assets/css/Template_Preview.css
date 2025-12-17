@@ -414,7 +414,7 @@
         }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
         .run-instructions {padding: 1rem 0.5rem;}
         .run-instructions h3 { font-size: 1.4rem; }
         .run-instructions h4 { font-size: 1rem; }

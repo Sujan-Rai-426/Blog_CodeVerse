@@ -369,6 +369,27 @@ export default function Components_Design() {
     );
   }
 
+  // Logic to filter the related items
+  const filteredRelatedItems = relatedItems
+    .filter((s) => s.id !== currentCodes.id)
+    .filter((s) => s.topic === Number(topicID))
+    .filter((s) => {
+        if (!searchTerm) return true;
+        return (s.title || "").toLowerCase().includes(searchTerm.toLowerCase());
+    })
+    .filter((s) => {
+        if (activeFilter === "all") return true;
+        if (activeFilter === "free") return s.access_type === "Free";
+        if (activeFilter === "premium") return s.access_type === "Premium";
+        return true;
+    })
+    .sort((a, b) => {
+        if (activeFilter === "latest") return b.id - a.id;
+        if (activeFilter === "oldest") return a.id - b.id;
+        if (activeFilter === "favorite") return (favoriteCountMap[b.id] || 0) - (favoriteCountMap[a.id] || 0);
+        return 0;
+    });
+
   // ------------------- MAIN RENDER -------------------
   return (
     <div className="cd-template-preview-container container" style={{ minHeight: "100vh" }}>
@@ -550,35 +571,8 @@ export default function Components_Design() {
 
           {/* === Filtered / Searched Items And IFRAME === */}
               <div className="related-videos-grid">
-                  {relatedItems
-                      .filter((s) => s.id !== currentCodes.id)
-                      // ✅ Only show frontend source codes of the current topic
-                      .filter((s) => s.topic === Number(topicID)) 
-
-                      // SEARCH filter
-                      .filter((s) => {
-                          if (!searchTerm) return true;
-                          return (s.title || "").toLowerCase().includes(searchTerm.toLowerCase());
-                      })
-
-                      //  Access_Type + Favorite filter
-                      .filter((s) => {
-                          if (activeFilter === "all") return true;
-                          if (activeFilter === "free") return s.access_type === "Free";
-                          if (activeFilter === "premium") return s.access_type === "Premium";
-                          return true;
-                      })
-
-                      // SORT filter
-                      .sort((a, b) => {
-                          if (activeFilter === "latest") return b.id - a.id;
-                          if (activeFilter === "oldest") return a.id - b.id;
-                          if (activeFilter === "favorite") return (favoriteCountMap[b.id] || 0) - (favoriteCountMap[a.id] || 0);
-                          return 0;
-                      })
-
-                      // Final Mapping
-                      .map((s) => {
+                  {filteredRelatedItems.length > 0 ? (
+                      filteredRelatedItems.map((s) => {
                         const smallSrcDoc = buildRecommendedIframeDoc(
                             s.html_code || s.html || "",
                             s.css_code || s.css || "",
@@ -630,7 +624,18 @@ export default function Components_Design() {
                           </div>
                         );
                       })
-                  }
+                  ) : (
+                      <div className="no-components-message" style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#888" }}>
+                        <h4> 
+                          😖 Oops!!! 😖
+                            <br />
+                            <br />
+                          For this category
+                            <br />
+                          No Components Available right now but will be uploaded soon
+                        </h4>
+                      </div>
+                  )}
               </div>
 
 

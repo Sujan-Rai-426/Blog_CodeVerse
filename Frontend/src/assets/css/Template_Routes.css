@@ -6,6 +6,6 @@
 @media (max-width: 1024px){
     .tr-right-sidebar{ display: none; }
 }
-@media (max-width: 768px){
+@media (max-width: 767px){
     .tr-left-sidebar{ display: none; }
 }
