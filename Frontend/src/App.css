@@ -1,0 +1,20 @@
+:root{
+    --dark-mode-background: hsl(0 0% 0%);
+    --dark-mode-color:hsl(0 0% 100%);
+    --dark-mode-secondary-color:#e0e0e0;
+
+    --light-mode-background: hsl(0 0% 100%);
+    --light-mode-color:hsl(0 0% 0%);
+    --light-mode-secondary-color:#050505;
+
+}
+
+.dark-mode {
+    background-color: var(--dark-mode-background) !important;
+    color: var(--dark-mode-color) !important;
+}
+
+.light-mode {
+    background-color: var(--light-mode-background) !important;
+    color: var(--light-mode-color) !important;
+}

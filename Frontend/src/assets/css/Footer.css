@@ -1,185 +1,135 @@
-
-
-/* ======= SEMI FOOTER SECTION =========== */
+/* Semi Footer Styles */
 .semi-footer-alt {
-    position: relative;
-    background: linear-gradient(145deg, #0f1220f7 0%, #17234c 50%, #131a73d9 100%);
-    color: #d1d5db;
-    font-family: 'Inter', sans-serif;
-    overflow: hidden;
-    padding: 120px 0 50px 0; /* extra top padding for wave */
+    background-color: #1a1a1a; /* Dark professional background */
+    color: #ffffff;
+    border-bottom: 1px solid #333;
 }
 
-/* Static hill/wave at top */
-.semi-footer-alt::before {
-    content: "";
-    position: absolute;
-    top: -50px;
-    left: 0;
-    width: 100%;
-    height: 150px;
-    background: url("data:image/svg+xml,%3Csvg viewBox='0 0 1440 320' xmlns='http://www.w3.org/2000/svg'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' stop-color='%232c221b' stop-opacity='0.97' /%3E%3Cstop offset='50%25' stop-color='%236e5629' stop-opacity='0.97' /%3E%3Cstop offset='100%25' stop-color='%2366593d' stop-opacity='0.97' /%3E%3C/linearGradient%3E%3C/defs%3E%3Cpath fill='url(%23grad)' d='M0,160 C360,300 1080,20 1440,160 L1440,0 L0,0 Z'/%3E%3C/svg%3E") no-repeat top;
-    background-size: cover;
-    z-index: 1;
-}
-
-
-/* Ensure container is above wave */
 .semi-footer-alt-container {
-    position: relative;
-    z-index: 5;
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1.5fr; /* Multi-column layout */
     gap: 40px;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
+    padding-bottom: 3rem;
 }
 
-
-/* Brand / About */
-.footer-brand {
-    flex: 1 1 250px;
-}
-
+/* Brand Section */
 .brand-title {
-    font-size: 2rem;
-    font-weight: 700;
-    color: #f2f2f0;
-    margin-bottom: 10px;
+    color: #00d2ff; /* Highlight color for CodeVora */
+    font-size: 1.8rem;
+    margin-bottom: 1rem;
 }
 
 .brand-text {
     font-size: 0.95rem;
     line-height: 1.6;
+    opacity: 0.8;
 }
 
-/* Links and Resources */
-.footer-links, .footer-resources {
-    flex: 1 1 150px;
-}
-
-.footer-links h5, .footer-resources h5 {
-    font-weight: 600;
+/* Common Header Styles for Footer columns */
+.footer-links h5, 
+.footer-resources h5, 
+.footer-social h5 {
+    font-weight: 700;
+    margin-bottom: 1.5rem;
     color: #ffffff;
-    margin-bottom: 10px;
+    text-transform: uppercase;
+    font-size: 1rem;
+    letter-spacing: 1px;
 }
 
-.footer-links ul, .footer-resources ul {
+/* List Styling */
+.footer-links ul, 
+.footer-resources ul {
     list-style: none;
     padding: 0;
+    margin: 0;
 }
 
-.footer-links ul li, .footer-resources ul li {
-    margin-bottom: 8px;
-}
-
-.footer-links ul li a, .footer-resources ul li a {
-    color: #d1d5db;
-    text-decoration: none;
-    transition: 0.3s;
-}
-
-.footer-links ul li a:hover, .footer-resources ul li a:hover {
-    color: #facc15;
-}
-
-/* Social + Mini CTA */
-.footer-social {
-    flex: 1 1 200px;
-    text-align: left;
-}
-
-.footer-social h5 {
-    font-weight: 600;
-    color: #ffffff;
+.footer-links ul li, 
+.footer-resources ul li {
     margin-bottom: 10px;
+}
+
+.footer-links ul li a, 
+.footer-resources ul li a {
+    color: #bbbbbb;
+    text-decoration: none;
+    transition: 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.footer-links ul li a:hover, 
+.footer-resources ul li a:hover {
+    color: #00d2ff;
+    padding-left: 5px; /* Subtle slide effect */
+}
+
+/* Social Icons */
+.social-icons {
+    display: flex;
+    gap: 15px;
+    font-size: 1.3rem;
 }
 
 .social-icons a {
-    color: #d1d5db;
-    font-size: 1.3rem;
-    margin-right: 12px;
-    transition: 0.3s;
+    color: #ffffff;
+    transition: transform 0.3s ease, color 0.3s ease;
 }
 
 .social-icons a:hover {
-    color: #facc15;
+    color: #00d2ff;
+    transform: translateY(-3px);
 }
 
-.mini-cta small {
-    color: #9ca3af;
-    display: block;
-    margin-top: 10px;
+.mini-cta {
+    color: #999;
+    line-height: 1.4;
 }
 
-/* Hover effect on entire cards if needed */
-.footer-links ul li a:hover,
-.footer-resources ul li a:hover,
-.social-icons a:hover {
-    transform: translateY(-2px);
+/* Main Copyright Footer */
+.footer {
+    background-color: #111111;
+    padding: 2rem 0;
+    text-align: center;
+    color: #777;
+    font-size: 0.9rem;
 }
 
-/* Responsive */
+.footer-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.footer .footer-links {
+    display: flex;
+    gap: 20px;
+}
+
+.footer .footer-links a {
+    color: #777;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+.footer .footer-links a:hover {
+    color: #ffffff;
+}
+
+/* Responsiveness */
 @media (max-width: 992px) {
     .semi-footer-alt-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 30px;
-    }
-    .footer-brand {
-        flex: 1 1 25px;
-    }
-    .footer-social {
-        text-align: left;
-        flex: 1 1 20px;
+        grid-template-columns: 1fr 1fr; /* 2 columns on tablets */
     }
 }
 
 @media (max-width: 576px) {
-    .brand-title {
-        font-size: 1.5rem;
+    .semi-footer-alt-container {
+        grid-template-columns: 1fr; /* 1 column on mobile */
+        text-align: center;
     }
 
-    .footer-links, .footer-resources, .footer-social {
-        flex: 1 1 100%;
+    .social-icons {
+        justify-content: center;
     }
-}
-
-
-
-
-
-/* ============== MAIN FOOTER =================== */
-.footer {
-    background-color: #222;
-    color: #fff;
-    padding: 20px 0;
-    margin-top: 2px;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-    display: flex;
-    align-items: center;
-    text-align: center;
-}
-
-.footer-links {
-    margin-top: 10px;
-}
-
-.footer-links a {
-    color: #ddd;
-    margin: 0 10px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.footer-links a:hover {
-    text-decoration: underline;
-    color: #fff;
 }

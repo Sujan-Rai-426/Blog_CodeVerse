@@ -27,7 +27,7 @@ const Footer = () => {
 
         <div>
             {/* =============== Semi Footer Section =============== */}
-                <section className="semi-footer-alt mt-5 py-5">
+                <section className="semi-footer-alt pt-5 p-3">
                     <div className="semi-footer-alt-container container">
                         {/* About / Brand */}
                         <div className="footer-brand">

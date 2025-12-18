@@ -39,6 +39,12 @@
 
 .cd-header h3 {
     margin: 0 !important;
+    font-family: auto;
+    color: #c8dbd2;
+}
+.cd-header p {
+    font-family: sans-serif;
+    color: #a7acad;
 }
 
 .access-info {

@@ -20,11 +20,13 @@ import { Parent_Api_Provider } from './context/Parent_API_Provider.jsx';
 import { Payment_Provider } from './payment/payment_status/Payment_Context.jsx';
 import { Templates_API_Provider } from './template_Pages/Template_API.jsx';
 
+import './App.css'; // Make sure your dark-mode/light-mode classes are here
+
 function App() {
+  const [isDark, setIsDark] = useState(true); // Track dark/light mode
   const [adminLoading, setAdminLoading] = useState(true);
 
   useEffect(() => {
-    // Persistent login for admin on page load
     async function initAdmin() {
       await adminPersistentLogin();
       setAdminLoading(false);
@@ -32,35 +34,37 @@ function App() {
     initAdmin();
   }, []);
 
-  if (adminLoading) return <div>Loading admin session...</div>; // optional loader
+  if (adminLoading) return <div>Loading admin session...</div>;
+
+  const toggleMode = () => setIsDark(prev => !prev); // Toggle dark/light mode
 
   return (
-
     <User_API_Provider>
-            <Payment_Provider>
+      <Payment_Provider>
         <Parent_Api_Provider>
-            <Templates_API_Provider>
-                  <Router>
-                      <Nav_Bar />
+          <Templates_API_Provider>
+            <Router>
+      {/* <div className={isDark ? 'dark-mode' : 'light-mode'}>
+              </div> */}
+              <Nav_Bar mode={isDark ? 'dark' : 'light'} toggleMode={toggleMode} />
 
-                        <Routes>
-                            <Route exact path='/Admin/*' element={<Admin_Routes />} />
-                            <Route exact path='/User/*' element={<User_Routes />} />
-                            <Route exact path="/*" element={<Routes_List />} />
-                            <Route exact path="/Templates/*" element={<Template_Routes />} />
-                            <Route exact path="/Components/*" element={<Components_Route />} />
-                            <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route />} />
-                        </Routes>
+                <Routes>
+                  <Route exact path='/Admin/*' element={<Admin_Routes mode={isDark ? 'dark' : 'light'} />} />
+                  <Route exact path='/User/*' element={<User_Routes mode={isDark ? 'dark' : 'light'} />} />
+                  <Route exact path="/*" element={<Routes_List mode={isDark ? 'dark' : 'light'} />} />
+                  <Route exact path="/Templates/*" element={<Template_Routes mode={isDark ? 'dark' : 'light'} />} />
+                  <Route exact path="/Components/*" element={<Components_Route mode={isDark ? 'dark' : 'light'} />} />
+                  <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route mode={isDark ? 'dark' : 'light'} />} />
+                </Routes>
 
-                      <Footer />
-                      <Analytics />
-                      {/* <Floating_Go_Back_Btn /> */}
-                      <Scroll_To_Top />
-                  </Router>
-
-            </Templates_API_Provider>
+              <Footer />
+              <Analytics />
+              {/* <Floating_Go_Back_Btn /> */}
+              <Scroll_To_Top />
+            </Router>
+          </Templates_API_Provider>
         </Parent_Api_Provider>
-            </Payment_Provider>
+      </Payment_Provider>
     </User_API_Provider>
   );
 }

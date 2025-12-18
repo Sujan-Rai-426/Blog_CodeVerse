@@ -9,7 +9,7 @@ import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 // Dynamic Avatar URL Change
 const AVATAR_BASE_URL = import.meta.env.VITE_AVATAR_BASE_URL
 
-function Nav_Bar() {
+function Nav_Bar(props) {
 
     // ---------------- Profile ------------------
     const { profile } = useContext(User_API_Context);
@@ -255,6 +255,17 @@ function Nav_Bar() {
                         <div className="n-desktop-profile">
                             <Link to="/User/Profile/" className="nav-client-login-btn n-desktop-account-btn"> <FaUser /> <span>Account</span></Link>
                         </div>
+
+                                            {/* Triggre button to toggle the mode */}
+                    <Link onClick={props.toggleMode} className='px-10'> 
+                        <b>
+                            {props.mode.backgroundColor === '#f5f7fa' ? (
+                                <i className="bi bi-brightness-high-fill mx-3 fs-3"></i>
+                            ) : (
+                                <i className="bi bi-brightness-low-fill mx-3 fs-3"></i>
+                            )}
+                        </b>
+                    </Link>
                     </div>
                     
                 </div>
