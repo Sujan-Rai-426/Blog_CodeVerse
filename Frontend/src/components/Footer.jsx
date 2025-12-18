@@ -84,7 +84,7 @@ const Footer = () => {
                         <p className='mb-4'>&copy; {new Date().getFullYear()} Er.Sujan Rai. All rights reserved.</p>
                         <div className="footer-links mb-4">
                             <Link to="Contact">Contact</Link>
-                            <Link to="/Privacy_Policy">Term & Policy</Link>
+                            <a href="https://sujan140.vercel.app">Developer</a>
                             <Link to="/Admin">Admin</Link>
                         </div>
                     </div>
