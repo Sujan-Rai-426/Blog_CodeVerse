@@ -105,14 +105,14 @@ function Components_Right_Sidebar() {
             </div>
 
         {/* ==== Quick Actions ==== */}
-            <div className="sidebar-section quick-actions">
+            {/* <div className="sidebar-section quick-actions">
                 <h4>Quick Actions</h4>
                 <div className="actions-list">
                     <button title="Favorite"><FaHeart /> Favorite</button>
                     <button title="Premium"><FaGem /> Premium</button>
                     <button title="Recent"><FaClock /> Recent</button>
                 </div>
-            </div>
+            </div> */}
 
         {/* ==== Extra Actions ==== */}
             <div className="sidebar-section extra-actions">

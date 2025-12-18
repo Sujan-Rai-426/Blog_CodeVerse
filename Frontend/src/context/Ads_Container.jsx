@@ -10,13 +10,13 @@ export default function Ads_Container({
   adId,
   activeTab // 🔥 ADDED — tells ads to pause/resume
 }) {
-  const [timer, setTimer] = useState(6);
+  const [timer, setTimer] = useState(5);
   const intervalRef = useRef(null);
 
   // Reset timer when adId changes OR when tab becomes Preview again
   useEffect(() => {
     if (activeTab === "code") {
-      setTimer(6);
+      setTimer(5);
     }
   }, [adId, activeTab]);
 

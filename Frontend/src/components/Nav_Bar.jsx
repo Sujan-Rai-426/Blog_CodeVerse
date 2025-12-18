@@ -158,13 +158,8 @@ function Nav_Bar(props) {
                 <div className="nav-container">
 
                     {/* ====== Left / Brand Name ======= */}
-                    <Link to="/Admin/Login" className="brand">
-                        <b>Code</b>
-                        <sup>
-                            <u>
-                                <small>Vora</small>💻
-                            </u>
-                        </sup>
+                    <Link to="/" className="brand">
+                        <b>CodeVora</b>
                     </Link>
 
 
@@ -193,14 +188,11 @@ function Nav_Bar(props) {
                                     More <span className={`nb-caret ${aboutOpen ? "open" : ""}`}>▾</span>
                                 </Link>
                                 <div className={`nb-dropdown-panel ${aboutOpen ? "visible" : ""}`}>
-                                    <a className="nb-dropdown-item" href="https://escape-road-140.netlify.app/">
-                                        <i className="bi bi-controller"></i> &nbsp; Game
-                                    </a>
-                                    <a className="nb-dropdown-item" href="https://sujan140.vercel.app">
-                                        <i className="bi bi-person-fill"></i> &nbsp; Developer
-                                    </a>
                                     <Link className="nb-dropdown-item" to="/About">
-                                        <i className="bi bi-people-fill"></i> &nbsp; Our Team
+                                        <i className="bi bi-people-fill"></i> &nbsp; About Us
+                                    </Link>
+                                    <Link className="nb-dropdown-item" to="/Contact">
+                                        <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
                                     </Link>
                                     <Link className="nb-dropdown-item" to="/Privacy_Policy">
                                         <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy
@@ -320,94 +312,88 @@ function Nav_Bar(props) {
                 {/* ************ Toggle Navbar List Open *********** */}
                 <ul className="nb-sidebar-list">
 
-                {/* ==== User Profile / Login ==== */}
-                    <div className="nav-client-sidebar-section nav-user-profile">
-                        {profile ? (
-                            <>
-                                <div className="nav-client-profile-info-wrapper">
-                                    <img
-                                        src={avatarSeed ? `${AVATAR_BASE_URL}?seed=${avatarSeed}` : CodeVora_Logo}
-                                        alt="Avatar"
-                                        className="nav-client-profile-avatar"
-                                    />
-                                    <div className="profile-text-details">
-                                        <span className="nav-username">{profile.username || "User"}</span>
-                                        <span className="nav-email">{profile.email || "user@example.com"}</span>
+                    {/* ==== User Profile / Login ==== */}
+                        <div className="nav-client-sidebar-section nav-user-profile">
+                            {profile ? (
+                                <>
+                                    <div className="nav-client-profile-info-wrapper">
+                                        <img
+                                            src={avatarSeed ? `${AVATAR_BASE_URL}?seed=${avatarSeed}` : CodeVora_Logo}
+                                            alt="Avatar"
+                                            className="nav-client-profile-avatar"
+                                        />
+                                        <div className="profile-text-details">
+                                            <span className="nav-username">{profile.username || "User"}</span>
+                                            <span className="nav-email">{profile.email || "user@example.com"}</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="profile-btn-grp">
-                                    <button className="nav-client-profile-edit-btn" onClick={handleEnterProfile}><FaUser /> Profile</button>
-                                    <button className="nav-client-play-game-btn" onClick={handleEnterGame}><FaPlay /> Games</button>
+                                    <div className="profile-btn-grp">
+                                        <button className="nav-client-profile-edit-btn" onClick={handleEnterProfile}><FaUser /> Profile</button>
+                                        <button className="nav-client-play-game-btn" onClick={handleEnterGame}><FaPlay /> Games</button>
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="nav-client-auth-buttons">
+                                    <Link to="/User/Login/" className="nav-client-login-btn" onClick={() => setSidebarOpen(false)}> <FaSignInAlt /> Login</Link>
+                                    <Link to="/User/Signup/" className="nav-client-signup-btn" onClick={() => setSidebarOpen(false)}> <FaUserPlus /> Signup</Link>
                                 </div>
-                            </>
-                        ) : (
-                            <div className="nav-client-auth-buttons">
-                                <Link to="/User/Login/" className="nav-client-login-btn" onClick={() => setSidebarOpen(false)}> <FaSignInAlt /> Login</Link>
-                                <Link to="/User/Signup/" className="nav-client-signup-btn" onClick={() => setSidebarOpen(false)}> <FaUserPlus /> Signup</Link>
-                            </div>
-                        )}
-                    </div>
+                            )}
+                        </div>
+                        
+                            <li><hr className="sidebar-divider" /></li>
+
+                    {/* HOME */}
+                        <li>
+                            <Link to="/" onClick={() => setSidebarOpen(false)}>
+                                <i className="bi bi-house-fill"></i> &nbsp; Home
+                            </Link>
+                        </li>
+
+                    {/* ABOUT dropdown */}
+                        <li>
+                            <button className="nb-sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
+                                <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+                            </button>
+                            <ul className={`nb-sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
+                                <li>
+                                    <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
+                                </li>
+                                <li>
+                                    <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
+                                </li>
+                            </ul>
+                        </li>
+
+                    {/* TEMPLATES */}
+                        <li>
+                            <Link to="/Templates/Topics" onClick={() => scrollToSection('TEMPLATES')}>
+                                <i className="bi bi-columns"></i> &nbsp; Templates
+                            </Link>
+                        </li>
                     
-                        <li><hr className="sidebar-divider" /></li>
+                    {/* COMPONENTS */}
+                        <li>
+                            <Link to="/Components/Topics/1" onClick={() => setSidebarOpen(false)}>
+                                <i className="bi bi-stack"></i> &nbsp; Components
+                            </Link>
+                        </li>
+                    
+                    {/* CODE-GUIDE / PROGRAMMING */}
+                        <li>
+                            <Link to="/Code-Guide/Topic/2" onClick={() => setSidebarOpen(false)}>
+                                <i className="bi bi-journal-code"></i> &nbsp; Programming
+                            </Link>
+                        </li>
+                    
+                    {/* CONTACT US */}
+                        <li>
+                            <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
+                                <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
+                            </Link>
+                        </li>
 
-                {/* HOME */}
-                    <li>
-                        <Link to="/" onClick={() => setSidebarOpen(false)}>
-                            <i className="bi bi-house-fill"></i> &nbsp; Home
-                        </Link>
-                    </li>
-
-                {/* ABOUT dropdown */}
-                    <li>
-                        <button className="nb-sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-                            <i className="bi bi-file-earmark-person-fill"></i> &nbsp; More <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
-                        </button>
-                        <ul className={`nb-sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
-                            <li> 
-                                <a href="https://escape-road-140.netlify.app/" onClick={() => setSidebarOpen(false)}><i className="bi bi-controller"></i> &nbsp; Game</a>
-                            </li>
-                            <li> 
-                                <a href="https://sujan140.vercel.app" onClick={() => setSidebarOpen(false)}><i className="bi bi-person-fill"></i> &nbsp; Developer</a>
-                            </li>
-                            <li>
-                                <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
-                            </li>
-                            <li>
-                                <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
-                            </li>
-                        </ul>
-                    </li>
-
-                {/* TEMPLATES */}
-                    <li>
-                        <Link to="/Templates/Topics" onClick={() => scrollToSection('TEMPLATES')}>
-                            <i className="bi bi-columns"></i> &nbsp; Templates
-                        </Link>
-                    </li>
-                
-                {/* COMPONENTS */}
-                    <li>
-                        <Link to="/Components/Topics/1" onClick={() => setSidebarOpen(false)}>
-                            <i className="bi bi-stack"></i> &nbsp; Components
-                        </Link>
-                    </li>
-                
-                {/* CODE-GUIDE / PROGRAMMING */}
-                    <li>
-                        <Link to="/Code-Guide/Topic/2" onClick={() => setSidebarOpen(false)}>
-                            <i className="bi bi-journal-code"></i> &nbsp; Programming
-                        </Link>
-                    </li>
-                
-                {/* CONTACT US */}
-                    <li>
-                        <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
-                            <i className="bi bi-chat-text-fill"></i> &nbsp; Contact Us
-                        </Link>
-                    </li>
-
-                        <li><hr className="sidebar-divider" /></li>
+                            <li><hr className="sidebar-divider" /></li>
 
                 </ul>
                 

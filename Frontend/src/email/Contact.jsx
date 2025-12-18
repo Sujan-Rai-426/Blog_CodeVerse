@@ -55,7 +55,7 @@ function Contact() {
                     <div className="email-detail">
                         <i className="fa-solid fa-envelope"></i>
                         <h1>Email</h1>
-                        <p>rsujan140.in@gmail.com</p>
+                        <p>codevora140@gmail.com</p>
                         <p>sujanrai20070140@gmail.com</p>
                     </div>
                 </div>

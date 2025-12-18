@@ -41,9 +41,9 @@ const Footer = () => {
                         <div className="footer-links">
                             <h5>Quick Links</h5>
                             <ul>
-                                <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Frontend Tutorials</Link></li>
-                                <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>Coding Guides</Link></li>
-                                <li><Link to="/">Projects & Services</Link></li>
+                                <li><Link to="/" onClick={() => scrollToSection('FRONTEND_TUTORIALS')}>Components</Link></li>
+                                <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>Programming</Link></li>
+                                {/* <li><Link to="/">Projects & Services</Link></li> */}
                                 <li><Link to="/Contact">Contact US</Link></li>
                             </ul>
                         </div>
@@ -53,7 +53,7 @@ const Footer = () => {
                             <h5>Resources</h5>
                             <ul>
                                 <li><a href="https://sujan140.vercel.app">Blog</a></li>
-                                <li><Link to="/Contact">FAQ</Link></li>
+                                {/* <li><Link to="/Contact">FAQ</Link></li> */}
                                 <li><Link to="/Contact">Support</Link></li>
                                 <li><Link to="/Privacy_Policy">Terms & Privacy</Link></li>
                             </ul>
@@ -85,7 +85,7 @@ const Footer = () => {
                         <div className="footer-links mb-4">
                             <Link to="Contact">Contact</Link>
                             <Link to="/Privacy_Policy">Term & Policy</Link>
-                            <a href="https://dev.to/sujanrai426">Dev.to</a>
+                            <Link to="/Admin">Admin</Link>
                         </div>
                     </div>
                 </footer>
