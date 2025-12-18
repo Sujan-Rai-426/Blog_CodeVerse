@@ -185,7 +185,7 @@ function Nav_Bar(props) {
                                 onMouseLeave={handleAboutMouseLeave}
                             >
                                 <Link to="#about" className="nb-nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
-                                    About 
+                                    More 
                                     <span className={`nb-caret ${aboutOpen ? "open" : ""}`}> 
                                         <i className="bi bi-caret-down-fill"></i> 
                                     </span>
@@ -356,7 +356,7 @@ function Nav_Bar(props) {
                     {/* ABOUT dropdown */}
                         <li>
                             <button className="nb-sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-                                <i className="bi bi-file-earmark-person-fill"></i> &nbsp;About <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+                                <i className="bi bi-file-earmark-person-fill"></i> &nbsp;More <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
                             </button>
                             <ul className={`nb-sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
                                 <li>
