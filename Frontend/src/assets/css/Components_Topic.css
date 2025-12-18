@@ -8,6 +8,7 @@
     --text-primary: #f8fafc;
     --text-secondary: #94a3b8;
     --text-muted: #64748b;
+    --inset-shadow: rgba(2, 82, 255, 0.208);
 }
 
 .ct-tutorial-topic-page {
@@ -113,7 +114,8 @@
     background: rgba(255, 255, 255, 0.06);
     border-color: var(--accent-blue);
     transform: translateY(-4px);
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.889),
+        inset 0 5px 11px var(--inset-shadow);
 }
 
 /* --- Card Content & Elements --- */

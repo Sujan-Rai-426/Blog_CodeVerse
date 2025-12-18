@@ -53,8 +53,8 @@ h2.cv-section-title {
 }
 
 .cv-card:hover {
-    transform: scale(1.06);
-    box-shadow: 0 8px 25px rgba(255, 193, 7, 0.45);
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px rgba(49, 95, 155, 0.16);
 }
 
 .cv-card img {

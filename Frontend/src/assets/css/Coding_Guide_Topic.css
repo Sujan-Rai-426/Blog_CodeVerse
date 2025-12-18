@@ -18,15 +18,15 @@
 /* --- Horizontal Tab Navigation --- */
 .fs-wrapper {
   margin-bottom: 40px;
-  background: rgba(255, 255, 255, 0.03);
   padding: 8px;
   border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .fs-grid {
   display: flex;
   gap: 8px;
+  align-items: center;
+  justify-content: center;
 }
 
 .fs-card {
@@ -39,6 +39,7 @@
   display: flex;
   align-items: center;
   gap: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.173);
 }
 
 .fs-card:hover {
@@ -47,9 +48,10 @@
 }
 
 .selected-card {
-  background: rgba(79, 172, 254, 0.15) !important;
+  background: rgba(79, 172, 254, 0.029) !important;
   color: #4facfe !important;
-  box-shadow: inset 0 0 0 1px #4facfe;
+  box-shadow: inset 0 4px 11px #0c6cc066;
+  border: 1px solid blue;
 }
 
 /* --- Language Heading --- */
@@ -88,6 +90,7 @@
   text-decoration: none;
   transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
   overflow: hidden;
+  margin: 0 15px;
 }
 
 /* Glowing Border on Hover */
@@ -107,7 +110,7 @@
 }
 
 .topic-card:hover {
-  transform: translateX(10px);
+  transform: translateX(11px);
   background: rgba(255, 255, 255, 0.06);
 }
 

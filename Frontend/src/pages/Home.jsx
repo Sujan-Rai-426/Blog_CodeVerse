@@ -33,7 +33,7 @@ function Home() {
         <div className="home-container" style={{ minHeight: "100vh", padding:'0 1rem !important' }}>
             {showLoadingMessage && parentLoading && languages.length === 0 &&  (
                 <div className="loading-overlay">
-                    <div className="loading-message">
+                    <div className="loading-message text-info">
                         <h2>Good things take time</h2>
                         <p>Almost there! Hold tight! Loading the magic ✨...</p>
                     </div>
@@ -45,7 +45,7 @@ function Home() {
             <section className="hero mb-5">
                 <div className="hero-content">
                     <div className="hero-subtitle text-center">
-                        <h1><b>CodeVora UI</b></h1>
+                        <h1 className="text-info"><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>

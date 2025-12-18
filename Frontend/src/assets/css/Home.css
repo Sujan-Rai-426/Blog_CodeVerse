@@ -134,23 +134,21 @@
 
 /* ================= Hero Button ================= */
 .share-btn {
-    background: linear-gradient(145deg, #68503f80 0%, #a17b351a 50%, #ae925603 100%);
-    color: #1f1f1f;
-    border: 1px solid white;
-    padding: 0.8rem 2.5rem;
+    padding: 0.4rem 1.5rem;
     margin-top: 1.5rem;
     border-radius: 50px;
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: 300ms ease-in;
+    background: transparent;
+    border: 1px solid rgba(0, 200, 255, 0.800);
+    color: rgba(0, 200, 255, 0.800) !important;
 }
 .share-btn:hover {
-    color: white;
-    background: linear-gradient(145deg, #68503f33 0%, #a17b3586 50%, #ae925652 100%);
-    border: 2px solid #f0a71e;
-    transform: translateY(-0.5px);
-    box-shadow: 0 8px 20px rgba(198, 162, 93, 0.3);
+    border: 2px solid #12dde8;
+    transition: 100ms ease-in-out;
+    box-shadow: 0 4px 10px rgba(31, 158, 178, 0.695) inset;
 }
 
 
@@ -285,8 +283,7 @@
     justify-items: center;
 }
 .grid-card {
-    background: #1f1f1f;
-    border-radius: 14px;
+    border-radius: 20px;
     text-align: center;
     width: 100%;
     max-width: 130px;
@@ -299,7 +296,7 @@
 .grid-card:hover {
     transform: translateY(-6px);
     border-color: #e1ab44;
-    box-shadow: 0 8px 20px rgba(225, 171, 68, 0.3);
+    box-shadow: 0 4px 10px rgba(225, 171, 68, 0.3) inset;
 }
 .card-icon {
     font-size: 2.2rem;
