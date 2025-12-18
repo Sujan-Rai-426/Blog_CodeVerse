@@ -91,7 +91,7 @@ const Privacy_Policy = () => {
                     If you have any questions, suggestions, or concerns about this Privacy Policy, please feel free to reach out
                     to us at:<br />
                     📧{" "}
-                    <a href="mailto:rsujan140.in@gmail.com" className="text-info">
+                    <a href="mailto:codevora140@gmail.com" className="text-info">
                         rsujan140.in@gmail.com
                     </a>
                 </p>

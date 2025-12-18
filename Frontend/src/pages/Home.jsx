@@ -39,8 +39,9 @@ function Home() {
                     </div>
                 </div>
             )}
-            {/* Hero Section */}
+
 <Interactive_Grid_Background>
+            {/* Hero Section */}
             <section className="hero mb-5">
                 <div className="hero-content">
                     <div className="hero-subtitle text-center">
@@ -100,7 +101,7 @@ function Home() {
                             className="share-btn text-light"
                             onClick={() => navigate("/PlayGround")}
                         >
-                            <i className="bi bi-joystick fs-5"></i> PlayGround
+                            <i className="bi bi-joystick fs-5"></i> &nbsp; PlayGround
                         </button>
 
                         <button
@@ -115,8 +116,7 @@ function Home() {
                     </div>
                 </div>
             </section>
-
-                                </Interactive_Grid_Background>
+</Interactive_Grid_Background>
             
             {/* Services Section */}
             <section className="service mt-2 mb-5">

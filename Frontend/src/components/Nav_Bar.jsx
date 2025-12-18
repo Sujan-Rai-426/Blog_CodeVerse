@@ -185,7 +185,10 @@ function Nav_Bar(props) {
                                 onMouseLeave={handleAboutMouseLeave}
                             >
                                 <Link to="#about" className="nb-nav-link dropdown-toggle" onClick={handleAboutClick} aria-expanded={aboutOpen}>
-                                    More <span className={`nb-caret ${aboutOpen ? "open" : ""}`}>▾</span>
+                                    About 
+                                    <span className={`nb-caret ${aboutOpen ? "open" : ""}`}> 
+                                        <i className="bi bi-caret-down-fill"></i> 
+                                    </span>
                                 </Link>
                                 <div className={`nb-dropdown-panel ${aboutOpen ? "visible" : ""}`}>
                                     <Link className="nb-dropdown-item" to="/About">
@@ -353,11 +356,16 @@ function Nav_Bar(props) {
                     {/* ABOUT dropdown */}
                         <li>
                             <button className="nb-sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
-                                <i className="bi bi-file-earmark-person-fill"></i> &nbsp; About <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
+                                <i className="bi bi-file-earmark-person-fill"></i> &nbsp;About <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
                             </button>
                             <ul className={`nb-sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
                                 <li>
-                                    <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; Our Team</Link>
+                                    <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; About Us</Link>
+                                </li>
+                                <li>
+                                    <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
+                                        <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
+                                    </Link>
                                 </li>
                                 <li>
                                     <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
@@ -383,13 +391,6 @@ function Nav_Bar(props) {
                         <li>
                             <Link to="/Code-Guide/Topic/2" onClick={() => setSidebarOpen(false)}>
                                 <i className="bi bi-journal-code"></i> &nbsp; Programming
-                            </Link>
-                        </li>
-                    
-                    {/* CONTACT US */}
-                        <li>
-                            <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
-                                <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
                             </Link>
                         </li>
 
