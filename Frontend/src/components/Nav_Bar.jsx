@@ -257,7 +257,7 @@ function Nav_Bar(props) {
                         </div>
 
                                             {/* Triggre button to toggle the mode */}
-                    <Link onClick={props.toggleMode} className='px-10'> 
+                    {/* <Link onClick={props.toggleMode} className='px-10'> 
                         <b>
                             {props.mode.backgroundColor === '#f5f7fa' ? (
                                 <i className="bi bi-brightness-high-fill mx-3 fs-3"></i>
@@ -265,7 +265,7 @@ function Nav_Bar(props) {
                                 <i className="bi bi-brightness-low-fill mx-3 fs-3"></i>
                             )}
                         </b>
-                    </Link>
+                    </Link> */}
                     </div>
                     
                 </div>
