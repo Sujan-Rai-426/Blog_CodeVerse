@@ -1,11 +1,8 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import UserAPIContext from "./User_API_Context";
-import apiClient from "../config/apiClient";
 import { fetchUserProfile, fetchFavorites } from "./User_API";
 
 const User_API_Provider = ({ children }) => {
-
-  // ---------------- CACHE INIT ----------------
   const [profile, setProfile] = useState(() => {
     const cached = localStorage.getItem("user_profile");
     return cached ? JSON.parse(cached) : null;
@@ -13,19 +10,22 @@ const User_API_Provider = ({ children }) => {
 
   const [favorites, setFavorites] = useState(() => {
     const cached = localStorage.getItem("user_favorites");
-    return cached ? JSON.parse(cached) : null; // null = not loaded yet
+    return cached ? JSON.parse(cached) : null;
   });
 
-  // ---------------- LOADING STATES ----------------
   const [profileLoading, setProfileLoading] = useState(!profile);
   const [favoritesLoading, setFavoritesLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // ---------------- PROFILE (CRITICAL) ----------------
-  const loadProfile = useCallback(async () => {
-    try {
-      await apiClient.get("/api/user-profile/"); // session check
+  // ---------------- SINGLETON GUARD ----------------
+  const isFetchingProfile = useRef(false);
 
+  const loadProfile = useCallback(async () => {
+    if (profile || isFetchingProfile.current) return; // ✅ skip if already fetched
+    isFetchingProfile.current = true;
+
+    setProfileLoading(true);
+    try {
       const data = await fetchUserProfile();
       setProfile(data);
       localStorage.setItem("user_profile", JSON.stringify(data));
@@ -35,13 +35,12 @@ const User_API_Provider = ({ children }) => {
       }
     } finally {
       setProfileLoading(false);
+      isFetchingProfile.current = false;
     }
-  }, []);
+  }, [profile]);
 
-  // ---------------- FAVORITES (LAZY) ----------------
   const loadFavorites = useCallback(async () => {
     if (favorites !== null) return; // already loaded
-
     setFavoritesLoading(true);
     try {
       const data = await fetchFavorites();
@@ -54,9 +53,8 @@ const User_API_Provider = ({ children }) => {
     }
   }, [favorites]);
 
-  // ---------------- INIT ----------------
   useEffect(() => {
-    loadProfile(); // critical only
+    loadProfile();
   }, [loadProfile]);
 
   return (
@@ -67,7 +65,7 @@ const User_API_Provider = ({ children }) => {
         profileLoading,
         favoritesLoading,
         error,
-        loadFavorites, // 👈 lazy trigger
+        loadFavorites,
       }}
     >
       {children}

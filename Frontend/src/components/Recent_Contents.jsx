@@ -5,6 +5,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css";
 import api from "../config/api";
 import { FaGem } from "react-icons/fa";
+import { useParentAPI } from "../context/Parent_API_Provider";
 
 const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspectHeight = 850) => {
     const safeJs = (js || "").trim().replace(/<\/script>/gi, "<\\/script>");
@@ -48,21 +49,12 @@ function Recent_Contents() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    const { fetchRecentComponents, recentComponents } = useParentAPI();
+
     useEffect(() => {
-        const fetchComponents = async () => {
-            try {
-                const res = await api.get("/api/frontend-source-codes/");
-                const latest6 = [...res.data].sort((a,b)=>b.id - a.id).slice(0,6);
-                setComponents(latest6);
-            } catch (err) {
-                console.error("Failed to fetch components:", err);
-                setError(err);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchComponents();
+        fetchRecentComponents().then(setComponents).finally(() => setLoading(false));
     }, []);
+
 
     if (loading) {
         return (

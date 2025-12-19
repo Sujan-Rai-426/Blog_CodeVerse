@@ -42,19 +42,28 @@ function App() {
     <User_API_Provider>
       <Payment_Provider>
         <Parent_Api_Provider>
-          <Templates_API_Provider>
             <Router>
       {/* <div className={isDark ? 'dark-mode' : 'light-mode'}>
               </div> */}
               <Nav_Bar mode={isDark ? 'dark' : 'light'} toggleMode={toggleMode} />
 
                 <Routes>
-                  <Route exact path='/Admin/*' element={<Admin_Routes mode={isDark ? 'dark' : 'light'} />} />
-                  <Route exact path='/User/*' element={<User_Routes mode={isDark ? 'dark' : 'light'} />} />
-                  <Route exact path="/*" element={<Routes_List mode={isDark ? 'dark' : 'light'} />} />
-                  <Route exact path="/Templates/*" element={<Template_Routes mode={isDark ? 'dark' : 'light'} />} />
-                  <Route exact path="/Components/*" element={<Components_Route mode={isDark ? 'dark' : 'light'} />} />
-                  <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path='/Admin/*' element={<Admin_Routes mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path='/User/*' element={<User_Routes mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path="/*" element={<Routes_List mode={isDark ? 'dark' : 'light'} />} />
+
+
+                    <Route exact path="/Templates/*" 
+                          element={
+                            <Templates_API_Provider>
+                                <Template_Routes mode={isDark ? 'dark' : 'light'} />
+                            </Templates_API_Provider>
+                          } 
+                    />
+
+
+                    <Route exact path="/Components/*" element={<Components_Route mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route mode={isDark ? 'dark' : 'light'} />} />
                 </Routes>
 
               <Footer />
@@ -62,7 +71,6 @@ function App() {
               {/* <Floating_Go_Back_Btn /> */}
               <Scroll_To_Top />
             </Router>
-          </Templates_API_Provider>
         </Parent_Api_Provider>
       </Payment_Provider>
     </User_API_Provider>

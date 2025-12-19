@@ -15,10 +15,11 @@ export default function Ads_Container({
 
   // Reset timer when adId changes OR when tab becomes Preview again
   useEffect(() => {
-    if (activeTab === "code") {
+    if (activeTab === "code" && adId) {
       setTimer(5);
     }
-  }, [adId, activeTab]);
+  }, [adId]);
+
 
   // Ads timer pause when not in code and switch to preview
   useEffect(() => {

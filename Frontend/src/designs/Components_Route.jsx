@@ -69,7 +69,7 @@ function Components_Route() {
                 <Components_Right_Sidebar />
             </aside>
 
-        </div>
+            </div>
     );
 }
 
