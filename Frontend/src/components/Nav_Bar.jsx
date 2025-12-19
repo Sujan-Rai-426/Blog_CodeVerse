@@ -159,7 +159,7 @@ function Nav_Bar(props) {
 
                     {/* ====== Left / Brand Name ======= */}
                     <Link to="/" className="brand">
-                        <b>CodeVora</b>
+                        <div className="cv-logo"><i className="ri-code-s-slash-fill"></i> Code<span>Vora</span> UI</div>
                     </Link>
 
 

@@ -152,6 +152,25 @@
 }
 
 
+/* select navbar button  */
+.nav-select-wrapper {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+.nav-select:hover {
+    background: #160f9c;
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
+}
+.nav-option {
+    background: #111827;
+    color: white;
+    padding: 10px;
+}
+
+
+
+
 /* ================= Home Section Titles ================= */
 .home-section-title {
     display: block;

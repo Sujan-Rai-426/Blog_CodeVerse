@@ -29,6 +29,21 @@ function Home() {
     }, [parentLoading]);
 
 
+    const [selectValue, setSelectValue] = useState(""); // Initialize state
+
+    const handleSelectPlayground = (e) => {
+        const path = e.target.value;
+        
+        if (path) {
+            navigate(path);
+            
+            // This is the magic part: 
+            // Reset the dropdown so "Choose Mode" shows up again
+            setSelectValue(""); 
+        }
+    };
+
+
     return (
         <div className="home-container" style={{ minHeight: "100vh", padding:'0 1rem !important' }}>
             {showLoadingMessage && parentLoading && languages.length === 0 &&  (
@@ -97,12 +112,21 @@ function Home() {
 
                     {/* Hero Buttons */}
                     <div style={{ display: 'flex', flexDirection:'row', justifyContent:'space-between' }}>
-                        <button
-                            className="share-btn text-light"
-                            onClick={() => navigate("/PlayGround")}
+
+                        {/* ******* PLAYGROUND SELECT BAR *********** */}
+                        <select 
+                            className="share-btn text-light" 
+                            onChange={handleSelectPlayground}
+                            value={selectValue}
                         >
-                            <i className="bi bi-joystick fs-5"></i> &nbsp; PlayGround
-                        </button>
+                            <option value="" disabled> Select PlayGround</option>
+                            <option value="/Code-to-Preview" className="nav-option">
+                                Code to Preview
+                            </option>
+                            <option value="/Preview-to-Code" className="nav-option">
+                                Preview to Code
+                            </option>
+                        </select>
 
                         <button
                             className="share-btn text-light"

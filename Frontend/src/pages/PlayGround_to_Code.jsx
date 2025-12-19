@@ -3,7 +3,7 @@ import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-css";
 import "prismjs/components/prism-markup";
-import "../assets/css/PlayGround.css";
+import "../assets/css/PlayGround_to_Code.css";
 
 
 // <------------------ Function of BOX logic -------------------->
@@ -349,8 +349,10 @@ function Box({ box, index, selectedBoxId, setSelectedBoxId, boxes, setBoxes, can
   );
 }
 
-// <----------------------- PlayGround component ----------------------->
-export default function PlayGround() {
+// <----------------------- PlayGround_to_Code
+//  component ----------------------->
+export default function PlayGround_to_Code
+() {
   const [boxes, setBoxes] = useState([
     { id: 1, w: 0.2, h: 0.2, x: 0.4, y: 0.4, z: 1, color: "#2563eb", radius: 12 },
   ]);
@@ -440,7 +442,8 @@ const generatedCode = (() => {
   const deleteBox = () => { setBoxes(prev => prev.filter(b => b.id !== selectedBoxId)); setSelectedBoxId(null); };
 
   return (
-    <div className="main-PlayGround-body container" style={{ minHeight: "100vh" }}>
+    <div className="main-PlayGround_to_Code
+    -body container" style={{ minHeight: "100vh" }}>
       <h4 className="text-center py-0 mt-3 mb-0">Generate live code using canvas</h4>
       <div className="cv-wrapper cv-codevora">
 

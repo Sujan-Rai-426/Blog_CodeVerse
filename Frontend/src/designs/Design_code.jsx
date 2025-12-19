@@ -60,7 +60,22 @@ export default function Design_Code({
         const commentEnd = activeTab === "html" ? " -->" : activeTab === "css" ? " */" : "";
         const promo = `${commentStart}Code by CodeVora — https://codevora140.vercel.app ${commentEnd}\n`;
 
-        navigator.clipboard.writeText(`${promo}${code}\n${promo}`);
+        const defaultCSS =
+            activeTab === "css"
+                ? `html,
+body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}\n\n`
+                : "";
+
+        navigator.clipboard.writeText(`${promo}${defaultCSS}${code}\n${promo}`);
         setCopied(true);
         setTimeout(() => setCopied(false), 2000);
     };
