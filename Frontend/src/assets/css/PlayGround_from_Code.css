@@ -8,6 +8,7 @@
     --success: #10b981;
 }
 
+/* 1. Global Reset for fixed height */
 .codevora-container {
     height: 100vh;
     display: flex;
@@ -15,71 +16,133 @@
     background: var(--bg);
     color: var(--text);
     font-family: 'Plus Jakarta Sans', sans-serif;
+    overflow: hidden; /* Prevent body scroll */
 }
 
-/* Header */
+/* 2. Header Improvements */
 .cv-header {
-    padding: 0.8rem 1.5rem;
+    padding: 0.8rem 1rem;
     background: rgba(17, 24, 39, 0.8);
     backdrop-filter: blur(10px);
     border-bottom: 1px solid var(--border);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on very small screens */
+    gap: 10px;
 }
 
-.url-bar{ color: var(--border); padding-left: 10px; }
-.cv-logo { font-weight: 800; font-size: 1.4rem; display: flex; align-items: center; gap: 8px; font-family: 'Plus Jakarta Sans', sans-serif;}
+.cv-logo { 
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-weight: 800; 
+    font-size: 1.2rem; 
+    display: flex; 
+    align-items: center; 
+    gap: 8px; 
+}
 .cv-logo span { color: var(--primary); }
 
-.cv-actions { display: flex; align-items: center; gap: 15px; }
+.cv-actions { display: flex; align-items: center; gap: 10px; }
 
-.live-badge {
-    font-size: 0.7rem; font-weight: 700; color: var(--success);
-    display: flex; align-items: center; gap: 6px;
-    background: rgba(16, 185, 129, 0.1); padding: 5px 12px; border-radius: 20px;
+/* 3. Main Layout (Default Desktop) */
+.cv-main { 
+    display: grid; 
+    grid-template-columns: 500px 1fr; 
+    flex: 1; 
+    overflow: hidden; 
 }
 
-.dot-blink { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
-@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+/* 4. Editor Section */
+.editor-section { 
+    background: var(--side-bg); 
+    border-right: 1px solid var(--border); 
+    display: flex; 
+    flex-direction: column;
+    min-height: 0; /* Important for flex/grid children */
+}
 
-/* Main Content */
-.cv-main { display: grid; grid-template-columns: 500px 1fr; flex: 1; overflow: hidden; }
+.cv-tabs { 
+    display: flex; 
+    background: #060910; 
+    overflow-x: auto; /* Scroll tabs on small mobile */
+    scrollbar-width: none; 
+}
+.cv-tabs::-webkit-scrollbar { display: none; }
 
-/* Editor */
-.editor-section { background: var(--side-bg); border-right: 1px solid var(--border); display: flex; flex-direction: column; }
-
-.cv-tabs { display: flex; background: #060910; padding: 0 10px; border-bottom: 1px solid var(--border); }
 .cv-tab {
     background: none; border: none; border-bottom: 2px solid transparent;
-    color: var(--text-dim); padding: 12px 18px; cursor: pointer; font-size: 0.75rem;
-    font-weight: 600; transition: 0.3s; display: flex; align-items: center; gap: 8px;
+    color: var(--text-dim); padding: 12px 15px; cursor: pointer; font-size: 0.75rem;
+    font-weight: 600; white-space: nowrap; transition: 0.3s; 
+    display: flex; align-items: center; gap: 6px;
 }
 .cv-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
 
-.editor-area { flex: 1; background: #0d1117; }
+.editor-area { flex: 1; background: #0d1117; overflow: hidden; }
 textarea {
     width: 100%; height: 100%; background: transparent; color: #e6edf3;
-    border: none; padding: 25px; font-family: 'Fira Code', monospace;
-    font-size: 14px; resize: none; outline: none; line-height: 1.7;
+    border: none; padding: 15px; font-family: 'Fira Code', monospace;
+    font-size: 13px; resize: none; outline: none; line-height: 1.6;
 }
 
-/* Preview */
-.preview-section { background: #070b14; padding: 30px; display: flex; flex-direction: column; }
+/* 5. Preview Section */
+.preview-section { 
+    background: #070b14; 
+    padding: 20px; 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 0;
+}
 .browser-mock { 
-    flex: 1; background: white; border-radius: 16px; overflow: hidden; 
-    display: flex; flex-direction: column; box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+    flex: 1; background: white; border-radius: 12px; overflow: hidden; 
+    display: flex; flex-direction: column; box-shadow: 0 10px 30px rgba(0,0,0,0.5);
 }
 .browser-head { 
-    background: #f8fafc; padding: 12px 20px; display: flex; align-items: center; gap: 20px; border-bottom: 1px solid #e2e8f0; 
+    background: #f8fafc; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #e2e8f0; 
 }
-.circles { display: flex; gap: 6px; }
-.circles span { width: 10px; height: 10px; border-radius: 50%; background: #cbd5e1; }
-.url-bar { flex: 1; background: white; height: 28px; border-radius: 6px; border: 1px solid #e2e8f0; }
+.circles { display: flex; gap: 5px; }
+.circles span { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; }
+.url-bar { 
+    flex: 1; background: white; height: 22px; border-radius: 4px; 
+    border: 1px solid #e2e8f0; font-size: 10px; display: flex; align-items: center; padding-left: 8px;
+    color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
 
 iframe { width: 100%; flex: 1; border: none; background: white; }
 
+/* 6. Buttons & Animation */
 .cv-btn {
     background: var(--primary); color: white; border: none; 
-    padding: 8px 18px; border-radius: 8px; cursor: pointer; font-weight: 600;
+    padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
+}
+.dot-blink { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+/* =============================================
+    MOBILE & TABLET RESPONSIVENESS
+   ============================================= */
+
+@media (max-width: 992px) {
+    .cv-main {
+        grid-template-columns: 1fr; /* Stack into one column */
+        grid-template-rows: 1fr 1fr; /* Half screen editor, half preview */
+    }
+
+    .editor-section {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+    }
+
+    .preview-section {
+        order: -1;
+        padding: 10px; /* Less padding on small screens */
+    }
+
+    .cv-logo { font-size: 1.1rem; }
+    
+    /* Hide live badge on very small screens to save space */
+    @media (max-width: 480px) {
+        .live-badge { display: none; }
+        .cv-header { padding: 0.5rem; }
+        .cv-tab { padding: 10px; font-size: 0.7rem; }
+    }
 }

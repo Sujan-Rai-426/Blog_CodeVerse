@@ -80,9 +80,9 @@ const PlayGround_from_Code = () => {
             <main className="cv-main">
                 <section className="editor-section">
                     <div className="cv-tabs">
-                        <button className={`cv-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}><i className="ri-html5-fill" style={{color: '#e34c26'}}></i> index.html</button>
-                        <button className={`cv-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}><i className="ri-css3-fill" style={{color: '#264de4'}}></i> style.css</button>
-                        <button className={`cv-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}><i className="ri-javascript-fill" style={{color: '#f7df1e'}}></i> script.js</button>
+                        <button className={`cv-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}><i className="devicon-html5-plain colored" style={{color: '#e34c26'}}></i> index.html</button>
+                        <button className={`cv-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}><i className="devicon-css3-plain colored" style={{color: '#264de4'}}></i> style.css</button>
+                        <button className={`cv-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}><i className="devicon-javascript-plain colored" style={{color: '#f7df1e'}}></i> script.js</button>
                     </div>
                     <div className="editor-area">
                         {activeTab === 'html' && <textarea value={html} onChange={(e) => setHtml(e.target.value)} onKeyDown={handleTabKeyDown} spellCheck="false" />}

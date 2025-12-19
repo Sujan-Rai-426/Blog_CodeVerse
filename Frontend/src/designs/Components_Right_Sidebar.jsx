@@ -14,6 +14,7 @@ import {
     FaGithub, 
     FaPlay, 
     FaUser,
+    FaCode,
 } from "react-icons/fa";
 
 import User_API_Context from "../clients/User_API_Context.jsx";
@@ -149,6 +150,14 @@ function Components_Right_Sidebar() {
                     >
                         <FaCoffee /> Buy me Coffee
                     </button> */}
+
+
+                    {/* Test Your Code */}
+                    <button>
+                        <Link to="/Code-to-Preview" style={{textDecoration:'none'}}>
+                            <span className="text-info"><FaCode /></span> Test Code
+                        </Link>
+                    </button>
 
 
                     {/* Report Bug */}
