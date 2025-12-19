@@ -11,34 +11,61 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspect
     return `
     <!doctype html>
     <html lang="en">
-      <head>
-        <meta charset="utf-8"/>
-        <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <style>
-          html, body { margin:0; padding:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
-          .scaleWrapper { width:${aspectWidth}px; position:relative; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
-          .scaleInner { width:${aspectWidth}px; height:${aspectHeight}px; position:absolute; display:flex; justify-content:center; align-items:center; transform-origin:center center; }
-          ${css || ""}
-        </style>
-      </head>
-      <body>
-        <div class="scaleWrapper">
-          <div class="scaleInner" id="scaleInner">
-            ${html || "<p style='color:#aaa'>No Preview</p>"}
-          </div>
-        </div>
-        <script>
-          try { ${safeJs} } catch(err) { console.error("Preview JS error:", err); }
-          function resizeScale() {
-            const inner = document.getElementById("scaleInner");
-            if (!inner) return;
-            const scale = Math.min(window.innerWidth/inner.offsetWidth, window.innerHeight/inner.offsetHeight);
-            inner.style.transform = 'scale(' + scale + ')';
-          }
-          window.addEventListener('load', resizeScale);
-          window.addEventListener('resize', resizeScale);
-        </script>
-      </body>
+        <head>
+            <meta charset="utf-8"/>
+            <meta name="viewport" content="width=device-width, initial-scale=1"/>
+            <style>
+                html, body { 
+                    margin:0; 
+                    padding:0; 
+                    width:100%; 
+                    height:100%; 
+                    display:flex; 
+                    flex-direction:column; 
+                    justify-content:center; 
+                    align-items:center; 
+                    background:transparent; 
+                    overflow:hidden; 
+                }
+                .scaleWrapper { 
+                    width:${aspectWidth}px; 
+                    position:relative; 
+                    height:100%; 
+                    display:flex; 
+                    justify-content:center; 
+                    align-items:center; 
+                    overflow:hidden; 
+                }
+                .scaleInner { 
+                    width:${aspectWidth}px; 
+                    height:${aspectHeight}px; 
+                    position:absolute; 
+                    display:flex; 
+                    justify-content:center; 
+                    align-items:center; 
+                    transform-origin:center center; 
+                }
+                ${css || ""}
+            </style>
+        </head>
+        <body>
+            <div class="scaleWrapper">
+                <div class="scaleInner" id="scaleInner">
+                    ${html || "<p style='color:#aaa'>No Preview</p>"}
+                </div>
+            </div>
+            <script>
+                try { ${safeJs} } catch(err) { console.error("Preview JS error:", err); }
+                function resizeScale() {
+                    const inner = document.getElementById("scaleInner");
+                    if (!inner) return;
+                    const scale = Math.min(window.innerWidth/inner.offsetWidth, window.innerHeight/inner.offsetHeight);
+                    inner.style.transform = 'scale(' + scale + ')';
+                }
+                window.addEventListener('load', resizeScale);
+                window.addEventListener('resize', resizeScale);
+            </script>
+        </body>
     </html>`;
 };
 

@@ -51,7 +51,6 @@ class BackendStepSerializer(serializers.ModelSerializer):
             "step_description",
             "step_source_code",
         ]
-
     def validate(self, data):
         topic = data.get("topic")
         step_number = data.get("step_number")
@@ -143,7 +142,6 @@ class LanguageSerializer(serializers.ModelSerializer):
 
 class SectionSerializer(serializers.ModelSerializer):
     languages = LanguageSerializer(many=True, read_only=True)
-
     class Meta:
         model = Section
         fields = ["id", "name", "languages"]
@@ -151,7 +149,6 @@ class SectionSerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     sections = SectionSerializer(many=True, read_only=True)
-
     class Meta:
         model = Category
         fields = ["id", "name", "description", "sections"]

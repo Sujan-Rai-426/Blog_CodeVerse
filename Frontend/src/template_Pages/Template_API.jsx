@@ -1,62 +1,80 @@
-import React, { createContext, useContext, useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from "react";
 import api from "../config/api";
 
 export const Templates_API_Context = createContext();
 
-const demoTemplates = [
-  { id: 1, access_type: "Free", price: 0, title: "Portfolio website demo", iframe_url: "https://sujan140.vercel.app" },
-  { id: 2, access_type: "Free", price: 0, title: "Portfolio using React TS", iframe_url: "https://lwportfolio01.muhilanorg.in/" },
-];
+const CACHE_KEY = "templates_api_data";
 
 export const Templates_API_Provider = ({ children }) => {
+  // 🔥 Load cache first
   const [templates, setTemplates] = useState(() => {
-    const cached = localStorage.getItem("templates_api_data");
-    return cached ? JSON.parse(cached) : demoTemplates;
+    const cached = localStorage.getItem(CACHE_KEY);
+    return cached ? JSON.parse(cached) : [];
   });
 
-  const [loading, setLoading] = useState(!templates?.length);
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
   const isFetching = useRef(false);
+  const hasCache = useRef(templates.length > 0);
 
-  // Fetch templates if not already loaded
-  const fetchTemplates = useCallback(async () => {
-    if (isFetching.current || (templates && templates.length > 0)) return;
+  // ✅ CACHE-AWARE FETCH
+  const fetchTemplates = useCallback(async (force = false) => {
+    // ⛔ prevent duplicate or unnecessary fetch
+    if (isFetching.current) return;
+    if (!force && hasCache.current) return;
+
     isFetching.current = true;
     setLoading(true);
+
     try {
       const response = await api.get("/api/templates/");
-      if (Array.isArray(response.data) && response.data.length > 0) {
+      if (Array.isArray(response.data)) {
         setTemplates(response.data);
-        localStorage.setItem("templates_api_data", JSON.stringify(response.data));
+        localStorage.setItem(CACHE_KEY, JSON.stringify(response.data));
+        hasCache.current = true;
       }
     } catch (err) {
-      console.error("Templates API error → using fallback demo templates.", err);
+      console.error("Templates API error:", err);
       setError(err);
     } finally {
       setLoading(false);
       isFetching.current = false;
     }
-  }, [templates]);
+  }, []);
 
-  // Expose helper to get template by ID
+  // ✅ Auto-fetch ONLY if cache empty
+  useEffect(() => {
+    if (!hasCache.current) {
+      fetchTemplates();
+    }
+  }, [fetchTemplates]);
+
   const getTemplateById = useCallback(
-    (id) => {
-      return templates?.find((t) => t.id === Number(id)) || null;
-    },
+    (id) => templates.find((t) => t.id === Number(id)) || null,
     [templates]
   );
 
-  useEffect(() => {
-    fetchTemplates();
-  }, [fetchTemplates]);
-
   return (
-    <Templates_API_Context.Provider value={{ templates, loading, error, fetchTemplates, getTemplateById }}>
+    <Templates_API_Context.Provider
+      value={{
+        templates,
+        loading,
+        error,
+        fetchTemplates,
+        getTemplateById,
+      }}
+    >
       {children}
     </Templates_API_Context.Provider>
   );
 };
 
-// Hook for easy usage
 export const useTemplates = () => useContext(Templates_API_Context);
