@@ -18,46 +18,43 @@ const Components_Topic = () => {
     const { languageID } = useParams();
     const {
         languages,
-        loading: parentLoading,
-        fetchTopicsForLanguage
+        loadingBase,
+        topicLoading,
+        fetchTopicsForLanguage,
     } = useContext(Parent_API_Provider_Context);
 
     const [frontendLangs, setFrontendLangs] = useState([]);
     const [activeLangID, setActiveLangID] = useState(() => {
         return localStorage.getItem("lastSelectedLang") || languageID;
     });
-    const [loadingTopics, setLoadingTopics] = useState(false);
 
     const scrollRef = useRef(null);
 
-    // Load frontend languages
+  // Load frontend languages
     useEffect(() => {
-        if (!parentLoading && languages) {
-            setFrontendLangs(languages.filter(l => l.section === 1));
+        if (!loadingBase && languages) {
+            setFrontendLangs(languages.filter((l) => l.section === 1));
         }
-    }, [parentLoading, languages]);
+    }, [loadingBase, languages]);
 
-    // Lazy-load topics for active language
+
+  // Lazy-load topics for active language
     useEffect(() => {
         const loadTopics = async () => {
             if (!frontendLangs.length) return;
-            const activeLang = frontendLangs.find(lang => String(lang.id) === String(activeLangID));
+            const activeLang = frontendLangs.find(
+                (lang) => String(lang.id) === String(activeLangID)
+            );
             if (!activeLang) return;
-
             if (!activeLang.topics || activeLang.topics.length === 0) {
-                setLoadingTopics(true);
-                const topics = await fetchTopicsForLanguage(activeLangID);
-                setFrontendLangs(prev =>
-                    prev.map(lang => lang.id === activeLangID ? { ...lang, topics } : lang)
-                );
-                setLoadingTopics(false);
+                await fetchTopicsForLanguage(activeLangID);
             }
         };
-
         loadTopics();
     }, [activeLangID, frontendLangs, fetchTopicsForLanguage]);
 
-    // Auto-scroll logic for horizontal language bar
+
+  // Auto-scroll logic for horizontal language bar
     useEffect(() => {
         if (!frontendLangs.length) return;
         const container = scrollRef.current;
@@ -67,31 +64,38 @@ const Components_Topic = () => {
         if (selectedCard) {
             const containerRect = container.getBoundingClientRect();
             const cardRect = selectedCard.getBoundingClientRect();
-            const cardLeftWithinContainer = cardRect.left - containerRect.left + container.scrollLeft;
+            const cardLeftWithinContainer =
+                cardRect.left - containerRect.left + container.scrollLeft;
             const targetScrollLeft = Math.round(
-                cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
+                cardLeftWithinContainer -
+                    container.clientWidth / 2 +
+                    cardRect.width / 2
             );
             container.scrollTo({
                 left: Math.max(0, Math.min(targetScrollLeft, container.scrollWidth - container.clientWidth)),
-                behavior: "smooth"
+                behavior: "smooth",
             });
         }
     }, [activeLangID, frontendLangs]);
 
-    // Calculate global total components
+  // Calculate global total components
     const globalTotalComponents = frontendLangs.reduce((total, lang) => {
-        const langCount = lang.topics?.reduce((sum, topic) => {
-            return sum + (topic.source_codes?.length || 0);
-        }, 0) || 0;
+        const langCount =
+            lang.topics?.reduce((sum, topic) => sum + (topic.source_codes?.length || 0), 0) ||
+            0;
         return total + langCount;
     }, 0);
 
     return (
         <Interactive_Grid_Background>
-            <div className="ct-tutorial-topic-page container" style={{ minHeight: "100vh"}}>
-                
+            <div className="ct-tutorial-topic-page container" style={{ minHeight: "100vh" }}>
+                {/* Page Title */}
                 <h1 className="ct-page-title">
-                    {!parentLoading && <span className="ct-total-count"><b>{globalTotalComponents}</b></span>}
+                    {!loadingBase ? (
+                        <span className="ct-total-count"><b>{globalTotalComponents} &nbsp;</b></span>
+                    ) : (
+                        <Skeleton width={50} />
+                    )}
                     Components Design by CodeVora UI
                 </h1>
 
@@ -99,53 +103,64 @@ const Components_Topic = () => {
                 <div className="ct-fs-wrapper">
                     <div className="ct-fs-scroll" ref={scrollRef}>
                         <div className="ct-fs-grid">
-                            {parentLoading
-                                ? Array.from({ length: 5 }).map((_, idx) => (
-                                    <div key={idx} className="ct-fs-card skeleton">
+                            {loadingBase
+                                ? Array.from({ length: 3 }).map((_, idx) => (
+                                    <div key={idx} className="ct-skeleton-lang-card">
                                         <Skeleton circle height={35} width={35} />
                                         <Skeleton width={50} height={12} />
                                     </div>
                                 ))
-                                : frontendLangs.map(lang => (
+                                : frontendLangs.map((lang) => (
                                     <Link
                                         key={lang.id}
                                         to={`/Components/Topics/${lang.id}`}
-                                        className={`ct-fs-card ${String(lang.id) === String(activeLangID) ? "ct-selected-card" : ""}`}
+                                        className={`ct-fs-card ${
+                                            String(lang.id) === String(activeLangID) ? "ct-selected-card" : ""
+                                        }`}
                                         onClick={() => {
                                             setActiveLangID(lang.id);
                                             localStorage.setItem("lastSelectedLang", lang.id);
                                         }}
                                     >
-                                        {lang.icon_class && <i className={`${lang.icon_class} ct-fs-card-icon`}></i>}
-                                        <span className="ct-fs-card-text">{lang.name}</span>
+                                        {lang.icon_class ? (
+                                            <i className={`${lang.icon_class} ct-fs-card-icon`}></i>
+                                        ) : (
+                                            <Skeleton circle height={20} width={20} />
+                                        )}
+                                        <span className="ct-fs-card-text">
+                                            {lang.name || <Skeleton width={50} />}
+                                        </span>
                                     </Link>
-                                ))}
+                            ))}
                         </div>
                     </div>
                 </div>
 
                 {/* Topic Grid Section */}
-                {(parentLoading || loadingTopics) ? (
+                {loadingBase || topicLoading ? (
                     <div className="ct-topic-grid">
-                        {[...Array(8)].map((_, i) => (
-                            <div key={i} className="ct-topic-card skeleton">
-                                <Skeleton height={20} width="80%" />
-                                <Skeleton height={14} width="40%" style={{marginTop: '10px'}} />
+                        {Array.from({ length: 8 }).map((_, i) => (
+                            <div class="ct-topic-grid">
+                                <div class="ct-skeleton-topic-card">
+                                    <div class="ct-skeleton-title"></div>
+                                    <div class="ct-skeleton-footer"></div>
+                                </div>
                             </div>
                         ))}
                     </div>
                 ) : (
                     frontendLangs
-                        .filter(lang => String(lang.id) === String(activeLangID))
-                        .map(lang => (
+                        .filter((lang) => String(lang.id) === String(activeLangID))
+                        .map((lang) => (
                             <div key={lang.id} className="ct-language-section">
                                 <h2 className="ct-language-title">{lang.name} Collections</h2>
                                 <div className="ct-topic-grid">
                                     {lang.topics?.length > 0 ? (
-                                        lang.topics.map(topic => {
+                                        lang.topics.map((topic) => {
                                             const componentCount = topic.source_codes?.length || 0;
                                             const latestComponentDate = topic.source_codes?.[0]?.created_at;
-                                            const showNewBadge = isNewItem(topic.created_at) || isNewItem(latestComponentDate);
+                                            const showNewBadge =
+                                                isNewItem(topic.created_at) || isNewItem(latestComponentDate);
                                             const firstSourceId = topic.source_codes?.[0]?.id;
                                             const toPath = firstSourceId
                                                 ? `/Components/${topic.id}/${firstSourceId}`

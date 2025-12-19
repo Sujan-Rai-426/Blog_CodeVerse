@@ -11,6 +11,68 @@
     --inset-shadow: rgba(2, 82, 255, 0.208);
 }
 
+/* *********** Skeleton Loader **************** */
+.ct-skeleton-lang-card {
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 50px;
+    padding: 5px 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+/* The Animation Keyframes */
+@keyframes ct-shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+.ct-skeleton-lang-card,
+.ct-skeleton-topic-card {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid var(--glass-stroke);
+    background: linear-gradient(
+        90deg, 
+        rgba(255, 255, 255, 0.03) 25%, 
+        rgba(255, 255, 255, 0.08) 50%, 
+        rgba(255, 255, 255, 0.03) 75%
+    );
+    background-size: 200% 100%;
+    animation: ct-shimmer 1.5s infinite linear;
+}
+.ct-skeleton-lang-card {
+    width: 120px;
+    height: 42px;
+    border-radius: 100px; 
+    display: inline-flex;
+}
+.ct-skeleton-topic-card {
+    min-height: 120px;
+    border-radius: 14px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.ct-skeleton-title {
+    width: 70%;
+    height: 14px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+.ct-skeleton-footer {
+    width: 40%;
+    height: 10px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+
+
+
+/* *************** *********** ******************** */
+/* =============== MAIN CONTAINER ================ */
+
+
 .ct-tutorial-topic-page {
     padding: 40px;
     max-width: 1600px; /* Increased for very large grids */
