@@ -1,42 +1,23 @@
-import React, {
-    createContext,
-    useEffect,
-    useState,
-    useCallback,
-    useContext,
-    useRef,
-} from "react";
-import api from "../config/api"; // your axios instance
+import React, { createContext, useEffect, useState, useCallback, useContext, useRef } from "react";
+import api from "../config/api";
 
 export const Parent_API_Provider_Context = createContext();
 
 export const Parent_Api_Provider = ({ children }) => {
-    // --------------------------------------------------------------------
-    // STATE
-    // --------------------------------------------------------------------
-    const [baseData, setBaseData] = useState(null);
+    const [baseData, setBaseData] = useState({ categories: [], sections: [], languages: [] });
     const [loadingBase, setLoadingBase] = useState(true);
     const [errorBase, setErrorBase] = useState(null);
     const [refreshingBase, setRefreshingBase] = useState(false);
-
-    // Recent components
     const [recentComponents, setRecentComponents] = useState([]);
-    
-    // --------------------------------------------------------------------
-    // CACHE CONFIG
-    // --------------------------------------------------------------------
+
     const CACHE_KEY = "parent_api_base_data";
     const CACHE_TIME_KEY = "parent_api_base_cache_time";
     const MAX_AGE = 1000 * 60 * 60 * 48; // 48 hours
 
-    // Singleton guards
     const hasInitialized = useRef(false);
     const isFetchingBase = useRef(false);
     const recentFetchedRef = useRef(false);
 
-    // --------------------------------------------------------------------
-    // CACHE HELPERS
-    // --------------------------------------------------------------------
     const loadFromCache = useCallback(() => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
@@ -54,44 +35,63 @@ export const Parent_Api_Provider = ({ children }) => {
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     }, []);
 
-    // --------------------------------------------------------------------
-    // FETCH BASE DATA (Categories + Sections + Languages)
-    // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // FETCH BASE DATA (categories, sections, languages + topics)
+  // --------------------------------------------------------------------
     const fetchBaseData = useCallback(async (isBackground = false) => {
         if (isFetchingBase.current) return;
         isFetchingBase.current = true;
-
         if (!isBackground) setLoadingBase(true);
         setErrorBase(null);
-
         try {
             const [categoriesRes, sectionsRes, languagesRes] = await Promise.all([
                 api.get("/api/categories/"),
                 api.get("/api/sections/"),
                 api.get("/api/languages/"),
             ]);
+            const shallowCategories = categoriesRes.data.map(c => ({ id: c.id, name: c.name }));
+            const shallowSections = sectionsRes.data.map(s => ({ id: s.id, name: s.name, category: s.category }));
 
+            // FETCH TOPICS PER LANGUAGE
+            const languagesWithTopics = await Promise.all(
+                languagesRes.data.map(async (lang) => {
+                    try {
+                        const topicsRes = await api.get("/api/topics/", { params: { language_id: lang.id } });
+                        const topics = topicsRes.data.map(t => ({
+                            id: t.id,
+                            name: t.name,
+                            created_at: t.created_at,
+                            source_codes: t.source_codes?.map(sc => ({
+                                id: sc.id,
+                                created_at: sc.created_at
+                            })) || []
+                        }));
+                        return { ...lang, topics };
+                    } catch {
+                        return { ...lang, topics: [] };
+                    }
+                })
+            );
             const combined = {
-                categories: categoriesRes.data,
-                sections: sectionsRes.data,
-                languages: languagesRes.data,
+                categories: shallowCategories,
+                sections: shallowSections,
+                languages: languagesWithTopics
             };
-
             setBaseData(combined);
             saveToCache(combined);
         } catch (err) {
-            if (!baseData) setErrorBase(err);
             console.error("Base data fetch error:", err);
+            setErrorBase(err);
         } finally {
             if (!isBackground) setLoadingBase(false);
             if (isBackground) setRefreshingBase(false);
             isFetchingBase.current = false;
         }
-    }, [baseData, saveToCache]);
+    }, [saveToCache]);
 
-    // --------------------------------------------------------------------
-    // INITIAL LOAD (cache first → background refresh if expired)
-    // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // INITIAL LOAD
+  // --------------------------------------------------------------------
     useEffect(() => {
         if (hasInitialized.current) return;
         hasInitialized.current = true;
@@ -101,7 +101,6 @@ export const Parent_Api_Provider = ({ children }) => {
             setBaseData(cachedData);
             setLoadingBase(false);
 
-            // Refresh only if expired
             const time = localStorage.getItem(CACHE_TIME_KEY);
             const expired = !time || Date.now() - Number(time) > MAX_AGE;
             if (expired) {
@@ -109,24 +108,15 @@ export const Parent_Api_Provider = ({ children }) => {
                 fetchBaseData(true);
             }
         } else {
-            fetchBaseData(false); // no cache → full fetch
+            fetchBaseData(false);
         }
     }, [fetchBaseData, loadFromCache]);
 
-    // --------------------------------------------------------------------
-    // LAZY ON-DEMAND API FUNCTIONS
-    // --------------------------------------------------------------------
-    const fetchTopics = async (filters = {}) => {
-        try {
-            const res = await api.get("/api/topics/", { params: filters });
-            return res.data;
-        } catch (err) {
-            console.error("Topics fetch error:", err);
-            return [];
-        }
-    };
-
+  // --------------------------------------------------------------------
+  // LAZY FETCH FUNCTIONS
+  // --------------------------------------------------------------------
     const fetchTopicDetail = async (topicId) => {
+        if (!topicId) return null;
         try {
             const res = await api.get(`/api/topics/${topicId}/`);
             return res.data;
@@ -137,6 +127,7 @@ export const Parent_Api_Provider = ({ children }) => {
     };
 
     const fetchFrontendSourceCode = async (topicId) => {
+        if (!topicId) return [];
         try {
             const res = await api.get("/api/frontend-source-codes/", { params: { topic_id: topicId } });
             return res.data;
@@ -146,38 +137,49 @@ export const Parent_Api_Provider = ({ children }) => {
         }
     };
 
-// Inside Parent_Api_Provider
+  // ----------------------- BACKEND STEPS CACHING -----------------------
+    const backendStepsCache = useRef({});
+    const backendStepsInProgress = useRef({});
+    const BACKEND_STEPS_PREFIX = "backend_steps_";
+    const BACKEND_STEPS_TIME_PREFIX = "backend_steps_time_";
 
-// -------------------------- Backend Steps Cache --------------------------
-const backendStepsCache = useRef({});
-const backendStepsInProgress = useRef({});
+    const fetchBackendSteps = async (topicId) => {
+        if (!topicId) return [];
 
-const fetchBackendSteps = async (topicId) => {
-  if (!topicId) return [];
+        // Check in-memory cache
+        if (backendStepsCache.current[topicId]) return backendStepsCache.current[topicId];
+        if (backendStepsInProgress.current[topicId]) return backendStepsInProgress.current[topicId];
 
-  // ✅ Return cached result if exists
-  if (backendStepsCache.current[topicId]) return backendStepsCache.current[topicId];
+        // Check localStorage cache
+        try {
+            const cached = localStorage.getItem(BACKEND_STEPS_PREFIX + topicId);
+            const time = localStorage.getItem(BACKEND_STEPS_TIME_PREFIX + topicId);
+            if (cached && time && Date.now() - Number(time) <= MAX_AGE) {
+                const data = JSON.parse(cached);
+                backendStepsCache.current[topicId] = data;
+                return data;
+            }
+        } catch {}
 
-  // ✅ Return ongoing request promise if already fetching
-  if (backendStepsInProgress.current[topicId]) return backendStepsInProgress.current[topicId];
-
-  // Start new fetch
-  const promise = api
-    .get("/api/backend-steps/", { params: { topic_id: topicId } })
-    .then((res) => {
-      backendStepsCache.current[topicId] = res.data; // Cache the result
-      return res.data;
-    })
-    .finally(() => {
-      delete backendStepsInProgress.current[topicId];
-    });
-
-  backendStepsInProgress.current[topicId] = promise;
-  return promise;
-};
+        // Fetch from API
+        const promise = api.get("/api/backend-steps/", { params: { topic_id: topicId } })
+            .then(res => {
+                backendStepsCache.current[topicId] = res.data;
+                try {
+                    localStorage.setItem(BACKEND_STEPS_PREFIX + topicId, JSON.stringify(res.data));
+                    localStorage.setItem(BACKEND_STEPS_TIME_PREFIX + topicId, Date.now().toString());
+                } catch {}
+                return res.data;
+            })
+            .finally(() => delete backendStepsInProgress.current[topicId]);
+        backendStepsInProgress.current[topicId] = promise;
+        return promise;
+    };
 
 
+// ------------ FETCH BACKEND IMAGES -----------------------
     const fetchBackendImages = async (topicId) => {
+        if (!topicId) return [];
         try {
             const res = await api.get("/api/backend-images/", { params: { topic_id: topicId } });
             return res.data;
@@ -187,6 +189,8 @@ const fetchBackendSteps = async (topicId) => {
         }
     };
 
+
+// ------------ FETCH TEMPLATE TYPES -----------------------
     const fetchTemplateTypes = async () => {
         try {
             const res = await api.get("/api/template-types/");
@@ -197,6 +201,8 @@ const fetchBackendSteps = async (topicId) => {
         }
     };
 
+
+// ------------ FETCH TEMPLATES -----------------------
     const fetchTemplates = async (typeId) => {
         try {
             const res = await api.get("/api/templates/", { params: { type_id: typeId } });
@@ -207,6 +213,8 @@ const fetchBackendSteps = async (topicId) => {
         }
     };
 
+
+//------------ RECENT COMPONENTS FETCH ------------
     const fetchRecentComponents = async () => {
         if (recentFetchedRef.current) return recentComponents;
         recentFetchedRef.current = true;
@@ -221,13 +229,12 @@ const fetchBackendSteps = async (topicId) => {
         }
     };
 
-    // --------------------------------------------------------------------
-    // PROVIDER EXPORT
-    // --------------------------------------------------------------------
+  // --------------------------------------------------------------------
+  // PROVIDER EXPORT
+  // --------------------------------------------------------------------
     return (
         <Parent_API_Provider_Context.Provider
             value={{
-                // Base cached data
                 baseData,
                 loadingBase,
                 errorBase,
@@ -238,8 +245,6 @@ const fetchBackendSteps = async (topicId) => {
                 sections: baseData?.sections || [],
                 languages: baseData?.languages || [],
 
-                // Lazy endpoints
-                fetchTopics,
                 fetchTopicDetail,
                 fetchFrontendSourceCode,
                 fetchBackendSteps,
@@ -249,10 +254,10 @@ const fetchBackendSteps = async (topicId) => {
                 fetchRecentComponents,
             }}
         >
-            {children}
+                {children}
         </Parent_API_Provider_Context.Provider>
     );
 };
 
-// Easy custom hook
+// Hook
 export const useParentAPI = () => useContext(Parent_API_Provider_Context);

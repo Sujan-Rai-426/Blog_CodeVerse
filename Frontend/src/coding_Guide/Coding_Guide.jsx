@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
 import Prism from "prismjs";
 import "prismjs/themes/prism-okaidia.css";
@@ -11,40 +11,98 @@ import "../assets/css/Coding_Guide.css";
 import { useParentAPI } from "../context/Parent_API_Provider";
 import Linkify from "react-linkify";
 
+const CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dusqlukhy/";
+
 const Coding_Guide = () => {
   const { topicID } = useParams();
-  const { baseData, loadingBase, fetchTopicDetail } = useParentAPI();
+  const { baseData, loadingBase, fetchTopicDetail, fetchBackendSteps, fetchBackendImages } = useParentAPI();
 
   const [topic, setTopic] = useState(null);
+  const [loadingTopic, setLoadingTopic] = useState(true);
   const [copiedStep, setCopiedStep] = useState(null);
   const [zoomedImage, setZoomedImage] = useState(null);
-  const [loadingTopic, setLoadingTopic] = useState(true);
 
-  const CLOUDINARY_BASE_URL = "https://res.cloudinary.com/dusqlukhy/";
+  // -------------------- Singleton guard for fetch per topic --------------------
+  const fetchingTopics = useRef({});
 
-  // Flatten all topics
-  const getAllTopics = () => {
+  // -------------------- Persistent cache helpers --------------------
+  const getCachedItem = (key) => {
+    try {
+      const item = localStorage.getItem(key);
+      return item ? JSON.parse(item) : null;
+    } catch {
+      return null;
+    }
+  };
+
+  const setCachedItem = (key, data) => {
+    try {
+      localStorage.setItem(key, JSON.stringify(data));
+    } catch {}
+  };
+
+  // -------------------- Flatten topics from baseData --------------------
+  const getAllTopics = useCallback(() => {
     return baseData?.categories?.flatMap(cat => cat.sections || [])
       ?.flatMap(sec => sec.languages || [])
       ?.flatMap(lang => lang.topics || []) || [];
-  };
+  }, [baseData]);
 
-  // Fetch topic either from cached data or lazy-load
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoadingTopic(true);
-      let foundTopic = getAllTopics().find(t => String(t.id) === String(topicID));
-      if (!foundTopic) {
-        // Lazy load from API if not found in cached data
-        foundTopic = await fetchTopicDetail(topicID);
-      }
-      setTopic(foundTopic || null);
+  // -------------------- Load topic, steps, images --------------------
+  const loadTopicData = useCallback(async () => {
+    if (fetchingTopics.current[topicID]) return; // already fetching
+    fetchingTopics.current[topicID] = true;
+
+    setLoadingTopic(true);
+
+    const cacheTopicKey = `topicDetail_${topicID}`;
+    const cacheStepsKey = `backendSteps_${topicID}`;
+    const cacheImagesKey = `backendImages_${topicID}`;
+
+    // 1️⃣ Try baseData first
+    let foundTopic = getAllTopics().find(t => String(t.id) === String(topicID));
+
+    // 2️⃣ Then persistent cache
+    if (!foundTopic) foundTopic = getCachedItem(cacheTopicKey);
+
+    // 3️⃣ If still not found, fetch from API
+    if (!foundTopic) {
+      foundTopic = await fetchTopicDetail(topicID);
+      if (foundTopic) setCachedItem(cacheTopicKey, foundTopic);
+    }
+
+    if (!foundTopic) {
+      setTopic(null);
       setLoadingTopic(false);
-    };
-    if (!loadingBase) fetchData();
-  }, [topicID, loadingBase, baseData, fetchTopicDetail]);
+      fetchingTopics.current[topicID] = false;
+      return;
+    }
 
-  // Highlight code
+    // -------------------- Backend steps --------------------
+    let steps = getCachedItem(cacheStepsKey);
+    if (!steps) {
+      steps = await fetchBackendSteps(foundTopic.id);
+      setCachedItem(cacheStepsKey, steps);
+    }
+
+    // -------------------- Backend images --------------------
+    let images = getCachedItem(cacheImagesKey);
+    if (!images) {
+      images = await fetchBackendImages(foundTopic.id);
+      setCachedItem(cacheImagesKey, images);
+    }
+
+    setTopic({ ...foundTopic, steps, images });
+    setLoadingTopic(false);
+    fetchingTopics.current[topicID] = false;
+  }, [topicID, getAllTopics, fetchTopicDetail, fetchBackendSteps, fetchBackendImages]);
+
+  // -------------------- Load topic when baseData or topicID changes --------------------
+  useEffect(() => {
+    if (!loadingBase) loadTopicData();
+  }, [loadingBase, topicID, loadTopicData]);
+
+  // -------------------- Highlight code --------------------
   useEffect(() => {
     if (topic?.steps?.length) {
       const timer = setTimeout(() => Prism.highlightAll(), 50);
@@ -64,8 +122,8 @@ const Coding_Guide = () => {
     setTimeout(() => setCopiedStep(null), 2000);
   };
 
-  // ------------------- RENDER -------------------
-  if (loadingBase || loadingTopic)
+  // -------------------- Render skeleton --------------------
+  if (loadingBase || loadingTopic) {
     return (
       <div className="container py-5">
         {[...Array(3)].map((_, idx) => (
@@ -78,8 +136,9 @@ const Coding_Guide = () => {
         ))}
       </div>
     );
+  }
 
-  if (!topic)
+  if (!topic) {
     return (
       <div className="text-center py-5">
         ❌ Topic not found or not loaded yet.
@@ -89,14 +148,16 @@ const Coding_Guide = () => {
         </Link>
       </div>
     );
+  }
 
+  // -------------------- Render --------------------
   return (
     <div className="container py-3" style={{ minHeight: "100vh" }}>
       <h2 className="my-3 fw-bold text-center pb-4 text-info">{topic.name}</h2>
       <div className="row">
         {/* Steps */}
         <div className="col-lg-7 mb-4 mb-lg-0 code-steps px-0">
-          <h4 className="mb-2 mt-4 fw-semibold text-center"><small>-Steps-</small></h4>
+          <h4 className="mb-2 mt-4 fw-semibold text-center"><small>- Steps -</small></h4>
           {topic.steps?.length ? (
             topic.steps.map((step) => {
               const prismLang = getPrismLang(step.step_language);
@@ -147,7 +208,7 @@ const Coding_Guide = () => {
         {/* Images */}
         {topic.images?.length ? (
           <div className="col-lg-5 px-4">
-            <h4 className="mb-2 mt-3 fw-semibold text-center"><small>-File Format-</small></h4>
+            <h4 className="mb-2 mt-3 fw-semibold text-center"><small>- File Format -</small></h4>
             {topic.images.map((img) => (
               <div key={img.id} className="card shadow-sm mb-3 rounded-4 overflow-hidden">
                 <img
@@ -170,10 +231,6 @@ const Coding_Guide = () => {
             <p className="text-center text-muted mt-4">No images uploaded yet...</p>
           </div>
         )}
-      </div>
-
-      <div className="text-center mt-3">
-        <Link to="/" className="btn btn-outline-danger btn-lg">← Back to Home</Link>
       </div>
     </div>
   );

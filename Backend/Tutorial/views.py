@@ -58,90 +58,91 @@ class LanguageViewSet(viewsets.ModelViewSet):
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
 
-    @action(detail=True, methods=['get'], url_path='topics')
-    def get_topics(self, request, pk=None):
-        """Lazy-load topics for a language."""
+    @action(detail=True, methods=["get"])
+    def topics(self, request, pk=None):
         language = self.get_object()
+
         topics = language.topics.annotate(
-            source_codes_count=Count('source_codes', distinct=True),
-            images_count=Count('images', distinct=True),
-            steps_count=Count('steps', distinct=True)
+            source_codes_count=Count("source_codes", distinct=True),
+            steps_count=Count("steps", distinct=True),
+            images_count=Count("images", distinct=True),
         )
-        serializer = TopicSerializer(topics, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
+        serializer = TopicSerializer(topics, many=True)
+        return Response(serializer.data)
+
 
 
 # ---------------------------- TOPIC ----------------------------
 class TopicViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = TopicSerializer
-    queryset = Topic.objects.annotate(
-        source_codes_count=Count('source_codes', distinct=True),
-        images_count=Count('images', distinct=True),
-        steps_count=Count('steps', distinct=True)
-    )
 
-    def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
-        try:
-            self.perform_create(serializer)
-        except IntegrityError:
-            return Response(
-                {"error": "A topic with this name already exists for the selected language."},
-                status=status.HTTP_400_BAD_REQUEST
-            )
-        return Response(serializer.data, status=201)
+    def get_queryset(self):
+        queryset = Topic.objects.annotate(
+            source_codes_count=Count("source_codes", distinct=True),
+            steps_count=Count("steps", distinct=True),
+            images_count=Count("images", distinct=True),
+        )
 
-    @action(detail=True, methods=['get'], url_path='source-codes')
-    def get_source_codes(self, request, pk=None):
-        topic = self.get_object()
-        codes = topic.source_codes.all()
-        serializer = FrontendSourceCodeSerializer(codes, many=True, context={'request': request})
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        language_id = self.request.query_params.get("language_id")
+        if language_id:
+            queryset = queryset.filter(language_id=language_id)
 
-    @action(detail=True, methods=['get'], url_path='backend-steps')
-    def get_backend_steps(self, request, pk=None):
-        topic = self.get_object()
-        steps = topic.steps.all()
-        serializer = BackendStepSerializer(steps, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return queryset
 
-    @action(detail=True, methods=['get'], url_path='backend-images')
-    def get_backend_images(self, request, pk=None):
-        topic = self.get_object()
-        images = topic.images.all()
-        serializer = BackendImageSerializer(images, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 # ---------------------------- FRONTEND SOURCE CODES ----------------------------
 class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = FrontendSourceCodeSerializer
-    queryset = FrontendSourceCode.objects.all()
+
+    def get_queryset(self):
+        queryset = FrontendSourceCode.objects.all()
+        topic_id = self.request.query_params.get("topic_id")
+
+        if topic_id:
+            queryset = queryset.filter(topic_id=topic_id)
+
+        return queryset
 
     def get_serializer_context(self):
-        return {'request': self.request}  # Needed for hasBought field
+        return {"request": self.request}
+
 
 
 # ---------------------------- BACKEND ----------------------------
 class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BackendStepSerializer
-    queryset = BackendStep.objects.all()
 
-    # CODE to give Occupied step
-    def occupied_steps(self, request, topic_id=None):
-        steps = BackendStep.objects.filter(topic_id=topic_id).values_list("step_number", flat=True)
-        return Response({"occupied_steps": list(steps)}, status=200)
+    def get_queryset(self):
+        queryset = BackendStep.objects.all()
+        topic_id = self.request.query_params.get("topic_id")
+
+        if topic_id:
+            queryset = queryset.filter(topic_id=topic_id)
+
+        return queryset
+
 
 
 
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BackendImageSerializer
-    queryset = BackendImage.objects.all()
+
+    def get_queryset(self):
+        queryset = BackendImage.objects.all()
+        topic_id = self.request.query_params.get("topic_id")
+
+        if topic_id:
+            queryset = queryset.filter(topic_id=topic_id)
+
+        return queryset
+
 
 
 # ---------------------------- TEMPLATE ----------------------------

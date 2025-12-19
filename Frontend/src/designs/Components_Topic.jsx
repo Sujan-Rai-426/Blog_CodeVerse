@@ -16,22 +16,48 @@ const isNewItem = (date) => {
 
 const Components_Topic = () => {
     const { languageID } = useParams();
-    const { languages, loading: parentLoading } = useContext(Parent_API_Provider_Context);
+    const {
+        languages,
+        loading: parentLoading,
+        fetchTopicsForLanguage
+    } = useContext(Parent_API_Provider_Context);
+
     const [frontendLangs, setFrontendLangs] = useState([]);
-    
     const [activeLangID, setActiveLangID] = useState(() => {
         return localStorage.getItem("lastSelectedLang") || languageID;
     });
+    const [loadingTopics, setLoadingTopics] = useState(false);
 
     const scrollRef = useRef(null);
 
+    // Load frontend languages
     useEffect(() => {
         if (!parentLoading && languages) {
             setFrontendLangs(languages.filter(l => l.section === 1));
         }
     }, [parentLoading, languages]);
 
-    // Auto-scroll logic for the horizontal bar
+    // Lazy-load topics for active language
+    useEffect(() => {
+        const loadTopics = async () => {
+            if (!frontendLangs.length) return;
+            const activeLang = frontendLangs.find(lang => String(lang.id) === String(activeLangID));
+            if (!activeLang) return;
+
+            if (!activeLang.topics || activeLang.topics.length === 0) {
+                setLoadingTopics(true);
+                const topics = await fetchTopicsForLanguage(activeLangID);
+                setFrontendLangs(prev =>
+                    prev.map(lang => lang.id === activeLangID ? { ...lang, topics } : lang)
+                );
+                setLoadingTopics(false);
+            }
+        };
+
+        loadTopics();
+    }, [activeLangID, frontendLangs, fetchTopicsForLanguage]);
+
+    // Auto-scroll logic for horizontal language bar
     useEffect(() => {
         if (!frontendLangs.length) return;
         const container = scrollRef.current;
@@ -45,14 +71,14 @@ const Components_Topic = () => {
             const targetScrollLeft = Math.round(
                 cardLeftWithinContainer - (container.clientWidth / 2) + (cardRect.width / 2)
             );
-            container.scrollTo({ 
-                left: Math.max(0, Math.min(targetScrollLeft, container.scrollWidth - container.clientWidth)), 
-                behavior: "smooth" 
+            container.scrollTo({
+                left: Math.max(0, Math.min(targetScrollLeft, container.scrollWidth - container.clientWidth)),
+                behavior: "smooth"
             });
         }
     }, [activeLangID, frontendLangs]);
 
-    // 🔥 CALCULATE GLOBAL TOTAL COMPONENTS (Across all frontend languages)
+    // Calculate global total components
     const globalTotalComponents = frontendLangs.reduce((total, lang) => {
         const langCount = lang.topics?.reduce((sum, topic) => {
             return sum + (topic.source_codes?.length || 0);
@@ -64,9 +90,8 @@ const Components_Topic = () => {
         <Interactive_Grid_Background>
             <div className="ct-tutorial-topic-page container" style={{ minHeight: "100vh"}}>
                 
-                {/* Heading with Global Total Count */}
                 <h1 className="ct-page-title">
-                    {!parentLoading && <span className="ct-total-count"> <b>{globalTotalComponents}</b> </span>}
+                    {!parentLoading && <span className="ct-total-count"><b>{globalTotalComponents}</b></span>}
                     Components Design by CodeVora UI
                 </h1>
 
@@ -100,7 +125,7 @@ const Components_Topic = () => {
                 </div>
 
                 {/* Topic Grid Section */}
-                {parentLoading ? (
+                {(parentLoading || loadingTopics) ? (
                     <div className="ct-topic-grid">
                         {[...Array(8)].map((_, i) => (
                             <div key={i} className="ct-topic-card skeleton">
@@ -122,8 +147,8 @@ const Components_Topic = () => {
                                             const latestComponentDate = topic.source_codes?.[0]?.created_at;
                                             const showNewBadge = isNewItem(topic.created_at) || isNewItem(latestComponentDate);
                                             const firstSourceId = topic.source_codes?.[0]?.id;
-                                            const toPath = firstSourceId 
-                                                ? `/Components/${topic.id}/${firstSourceId}` 
+                                            const toPath = firstSourceId
+                                                ? `/Components/${topic.id}/${firstSourceId}`
                                                 : `/Components/${topic.id}`;
 
                                             return (

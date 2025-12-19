@@ -19,33 +19,26 @@ const deviceSizes = {
 
 const Template_Preview = () => {
   const { id } = useParams();
-  const { getTemplateById, fetchTemplates } = useTemplates();
 
   const [template, setTemplate] = useState(null);
   const [device, setDevice] = useState("desktop");
 
-  // 🔥 Load template from CONTEXT / CACHE
+  const { getTemplateById, fetchTemplates } = useTemplates();
+
   useEffect(() => {
     let mounted = true;
-
     const loadTemplate = async () => {
       let data = getTemplateById(id);
-
-      // Direct URL visit → templates not loaded yet
       if (!data) {
-        await fetchTemplates();
+        await fetchTemplates(); // only fetch if templates not loaded
         data = getTemplateById(id);
       }
-
       if (mounted) setTemplate(data);
     };
-
     loadTemplate();
+    return () => (mounted = false);
+  }, [id, getTemplateById, fetchTemplates]);
 
-    return () => {
-      mounted = false;
-    };
-  }, [id]);
 
   if (!template) return <div>Loading template...</div>;
 

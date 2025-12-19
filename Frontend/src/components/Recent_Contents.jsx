@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import "../assets/css/Recent_Contents.css";
-import api from "../config/api";
 import { FaGem } from "react-icons/fa";
 import { useParentAPI } from "../context/Parent_API_Provider";
 
@@ -16,8 +15,8 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspect
         <meta charset="utf-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <style>
-          html, body { margin:0; padding:0; width:100%; height:100%; display:flex; flex-direction:xccolumn; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
-          .scaleWrapper { width:1338px; position:relative; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
+          html, body { margin:0; padding:0; width:100%; height:100%; display:flex; flex-direction:column; justify-content:center; align-items:center; background:transparent; overflow:hidden; }
+          .scaleWrapper { width:${aspectWidth}px; position:relative; height:100%; display:flex; justify-content:center; align-items:center; overflow:hidden; }
           .scaleInner { width:${aspectWidth}px; height:${aspectHeight}px; position:absolute; display:flex; justify-content:center; align-items:center; transform-origin:center center; }
           ${css || ""}
         </style>
@@ -45,16 +44,14 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspect
 
 function Recent_Contents() {
     const navigate = useNavigate();
+    const { fetchRecentComponents } = useParentAPI();
+
     const [components, setComponents] = useState([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-
-    const { fetchRecentComponents, recentComponents } = useParentAPI();
 
     useEffect(() => {
         fetchRecentComponents().then(setComponents).finally(() => setLoading(false));
     }, []);
-
 
     if (loading) {
         return (
@@ -77,8 +74,6 @@ function Recent_Contents() {
         );
     }
 
-    if (error) return <p className="text-center text-danger py-5">Failed to load components.</p>;
-
     const handleNavigate = (topicId, sourceId) => {
         navigate(`/Components/${topicId}/${sourceId}`);
         window.scrollTo({top:0, behavior:'smooth'});
@@ -99,7 +94,7 @@ function Recent_Contents() {
                             onClick={()=>handleNavigate(c.topic, c.id)}
                             style={{cursor:'pointer'}}
                         >
-                            <div className=" rc-iframe-container position-relative">
+                            <div className="rc-iframe-container position-relative">
                                 <iframe
                                     title={`preview-${c.id}`}
                                     srcDoc={iframeDoc}
@@ -109,18 +104,9 @@ function Recent_Contents() {
                                 />
                                 {isPremium && (
                                     <div style={{
-                                        position:'absolute',
-                                        top:8,
-                                        right:8,
-                                        background:'gold',
-                                        color:'#000',
-                                        padding:'4px 8px',
-                                        borderRadius:4,
-                                        fontSize:12,
-                                        fontWeight:'bold',
-                                        display:'flex',
-                                        alignItems:'center',
-                                        gap:4,
+                                        position:'absolute', top:8, right:8,
+                                        background:'gold', color:'#000', padding:'4px 8px', borderRadius:4,
+                                        fontSize:12, fontWeight:'bold', display:'flex', alignItems:'center', gap:4,
                                         zIndex:10
                                     }}>
                                         <FaGem/> &nbsp; ${c.price || 0}
