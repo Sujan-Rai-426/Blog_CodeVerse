@@ -46,7 +46,6 @@ export default function Design_Preview({ srcDoc, device, changeDevice }) {
                         minWidth: currentStyle.width === "100%" ? "100%" : currentStyle.width,
                         height: currentStyle.height,
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", 
-                        border: "none",
                         backgroundColor: "transparent",
                         border: "1px solid gray",
                         boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
