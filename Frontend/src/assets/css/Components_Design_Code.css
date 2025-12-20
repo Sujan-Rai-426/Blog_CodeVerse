@@ -1,0 +1,211 @@
+/* ============================================================
+   DESIGN CODE SECTION - MAIN CONTAINER
+   ============================================================ */
+.design-code-section {
+    width: 100%;
+    margin-top: 1.5rem;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ============================================================
+   TABS & ACTIONS HEADER
+   ============================================================ */
+.code-tabs-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.tabs-group {
+    display: flex;
+    background: #2a2a2a;
+    padding: 4px;
+    border-radius: 10px;
+    gap: 4px;
+}
+
+.tab-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: #a0a0a0;
+    font-weight: 600;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tab-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.tab-item.active {
+    background: #2575fc;
+    color: white;
+    box-shadow: 0 4px 12px rgba(37, 117, 252, 0.3);
+}
+
+.tab-lock {
+    font-size: 0.75rem;
+    color: #f7971e;
+}
+
+/* ============================================================
+   COPY BUTTON
+   ============================================================ */
+.copy-btn-new {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    border: none;
+    background: #f7971e;
+    color: #000;
+    font-weight: 700;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.2s;
+    margin-left: auto;
+}
+
+.copy-btn-new:hover:not(.disabled) {
+    background: #ffaa33;
+    transform: translateY(-1px);
+}
+
+.copy-btn-new:active:not(.disabled) {
+    transform: translateY(0);
+}
+
+.copy-btn-new.disabled {
+    background: #444;
+    color: #777;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* ============================================================
+   CODE BODY & RENDERER
+   ============================================================ */
+.dc-code-body {
+    border-radius: 15px;
+    overflow: hidden;
+    background: #1e1e1e;
+    border: 1px solid #333;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.code-render-box {
+    position: relative;
+    width: 100%;
+}
+
+.scrollable-code {
+    margin: 0 !important;
+    padding: 1.5rem !important;
+    max-height: 550px;
+    min-height: 450px;
+    overflow: auto;
+    font-family: 'Fira Code', 'Cascadia Code', monospace !important;
+    line-height: 1.6;
+    background: transparent !important;
+    transition: filter 0.3s ease;
+}
+
+/* Custom Scrollbar for Code */
+.scrollable-code::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+.scrollable-code::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.scrollable-code::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 10px;
+    border: 2px solid #1e1e1e;
+}
+
+.scrollable-code::-webkit-scrollbar-thumb:hover {
+    background: #444;
+}
+
+/* ============================================================
+   PREMIUM LOCK OVERLAY
+   ============================================================ */
+.premium-lock-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.premium-lock-overlay button {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #000;
+    background: #f7971e;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(247, 151, 30, 0.3);
+    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.premium-lock-overlay button:hover {
+    background: #ffaa33;
+    transform: scale(1.05);
+    box-shadow: 0 15px 25px rgba(247, 151, 30, 0.4);
+}
+
+/* ============================================================
+   RESPONSIVE ADJUSTMENTS
+   ============================================================ */
+@media (max-width: 600px) {
+    .code-tabs-container {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .tabs-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+    
+    .tab-item {
+        flex: 1;
+        justify-content: center;
+        padding: 0.6rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .copy-btn-new {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .scrollable-code {
+        min-height: 350px;
+        font-size: 0.75rem !important;
+    }
+}

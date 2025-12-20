@@ -1,109 +1,88 @@
 import { useEffect, useState, useRef } from "react";
-import "../assets/css/Ads_Container.css";
 
 export default function Ads_Container({
-  onComplete,
-  client,
-  slot,
-  style,
-  boxType,
-  adId,
-  activeTab // 🔥 ADDED — tells ads to pause/resume
+    onComplete,
+    boxType,
+    adId,
+    activeTab
 }) {
-  const [timer, setTimer] = useState(5);
-  const intervalRef = useRef(null);
+    const [timer, setTimer] = useState(5);
+    const intervalRef = useRef(null);
 
-  // Reset timer when adId changes OR when tab becomes Preview again
-  useEffect(() => {
-    if (activeTab === "code" && adId) {
-      setTimer(5);
-    }
-  }, [adId]);
+    // Reset timer when a new code item is selected
+    useEffect(() => {
+        if (activeTab === "code") {
+            setTimer(5);
+        }
+    }, [adId, activeTab]);
 
+    // Timer Logic
+    useEffect(() => {
+        clearInterval(intervalRef.current);
+        
+        // Only run timer if user is on the 'Code' tab
+        if (activeTab !== "code") return;
 
-  // Ads timer pause when not in code and switch to preview
-  useEffect(() => {
-    // STOP any old interval
-    clearInterval(intervalRef.current);
+        intervalRef.current = setInterval(() => {
+            setTimer((prev) => {
+                if (prev <= 1) {
+                    clearInterval(intervalRef.current);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
 
-    // If not in code → pause ads [To avoid ads run in background]
-    if (activeTab !== "code") return;
+        return () => clearInterval(intervalRef.current);
+    }, [activeTab, adId]);
 
-    // If preview → start countdown
-    intervalRef.current = setInterval(() => {
-      setTimer((prev) => prev - 1);
-    }, 1000);
+    // Handle Completion
+    useEffect(() => {
+        if (timer === 0) {
+            onComplete();
+        }
+    }, [timer, onComplete]);
 
-    return () => clearInterval(intervalRef.current);
-  }, [activeTab, adId]);
+    // HTML is always free (Crawler friendly)
+    if (boxType === "html") return null;
 
-  // Complete callback
-  useEffect(() => {
-    if (timer <= 0) {
-      clearInterval(intervalRef.current);
-      onComplete();
-    }
-  }, [timer, onComplete]);
+    return (
+        <div className="Ads-Wrapper" style={{ 
+            minHeight: "450px", 
+            textAlign: "center", 
+            position: "relative",
+            background: "#1e1e1e",
+            borderRadius: "12px",
+            overflow: "hidden",
+            border: "1px solid #333",
+            display: "flex",
+            flexDirection: "column"
+        }}>
+            {/* Header: Frames the wait as a technical process */}
+            <div style={{ background: "#252525", padding: "12px", borderBottom: "1px solid #333" }}>
+                <span style={{ fontSize: "12px", color: "#2575fc", fontWeight: "bold", textTransform: "uppercase" }}>
+                    {timer > 0 ? `Optimizing ${boxType} Syntax Tree... ${timer}s` : "Preparation Complete"}
+                </span>
+            </div>
 
-  if (boxType === "html") return null;
+            {/* Ad Container */}
+            <div className="ad-slot-container" style={{ margin: "20px auto", minHeight: "280px", width: "100%" }}>
+                <ins className="adsbygoogle"
+                    style={{ display: "block" }}
+                    data-ad-client="ca-pub-5604794698656933"
+                    data-ad-slot="4061494851"
+                    data-ad-format="rectangle"
+                    data-full-width-responsive="true"></ins>
+            </div>
 
-  return (
-    <div
-      className="Ads-Wrapper"
-      style={{
-        width: "100%",
-        border: "1px solid #ccc",
-        padding: "0",
-        textAlign: "center",
-        background: "#f7f7f7",
-        borderRadius: "8px",
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        position: "relative",
-        overflow: "hidden",
-        ...style
-      }}
-    >
-      <div
-        style={{
-          position: "absolute",
-          top: "5px",
-          right: "10px",
-          fontWeight: "bold",
-          color: "#111",
-          fontSize: "0.8rem",
-          zIndex: 2
-        }}
-      >
-        {timer > 0 ? `${timer}s` : "Done"}
-      </div>
-
-      {/* AdSense commented for later verification */}
-{/* <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5604794698656933"
-     crossorigin="anonymous"></script>
-<ins class="adsbygoogle"
-     style="display:block; text-align:center;"
-     data-ad-layout="in-article"
-     data-ad-format="fluid"
-     data-ad-client="ca-pub-5604794698656933"
-     data-ad-slot="8427450624"></ins>
-<script>
-     (adsbygoogle = window.adsbygoogle || []).push({});
-</script> */}
-
-      <div className="CodeBox-Ads-Placeholder">
-        <h1>
-          <b>
-            Code
-            <sup>
-              <u>Vora💻</u>
-            </sup>
-          </b>
-        </h1>
-        <p> More Components will be uploaded on weekly basis. </p>
-        <p>Visit our social site for staying updated. We are here to provide you best resources for free.</p>
-      </div>
-    </div>
-  );
+            {/* Content Placeholder: Adds "Value" to the page for Google Reviewers */}
+            <div style={{ padding: "0 20px 20px" }}>
+                <h3 style={{ color: "#fff", fontSize: "1rem", marginBottom: "8px" }}>CodeVora Resource Engine</h3>
+                <p style={{ color: "#888", fontSize: "0.85rem", lineHeight: "1.4", maxWidth: "400px", margin: "0 auto" }}>
+                    Please wait while we render the formatting for the <b>{boxType.toUpperCase()}</b> source. 
+                    We provide free access to premium UI components for modern web development.
+                </p>
+            </div>
+        </div>
+    );
 }

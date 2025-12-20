@@ -6,8 +6,9 @@ import Design_Code from "./Design_code.jsx";
 import Design_Preview from "./Design_Preview";
 import "../assets/css/Components_Design.css";
 import { FaArrowRight, FaFacebook, FaFacebookMessenger, FaGem, FaTelegram, FaWhatsapp } from "react-icons/fa";
-import { addFavorite, removeFavorite } from "../clients/User_API.jsx";
+import { addFavorite } from "../clients/User_API.jsx";
 import User_API_Context from "../clients/User_API_Context.jsx"
+import Ads_Square_Display from "../context/Ads_Square_Display.jsx";
 
 
 // === Main frame iframe doc ===
@@ -32,6 +33,7 @@ const buildMainIframeDoc = (html = "", css = "", js = "") => {
             flex-direction:column;
             justify-content:center;
             align-items:center;
+            background: black;
         } 
         ${css || ""}
     </style>
@@ -67,7 +69,7 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth=133
         flex-direction: column;
         justify-content: center;
         align-items: center;
-        background: transparent;
+        background: black;
         overflow: hidden;
       }
       .scaleWrapper {
@@ -413,7 +415,7 @@ export default function Components_Design() {
       <div className="cd-preview-container">
 
 
-              {/* ==== Page Header [title + description + share + favorite  ] ==== */}
+              {/* ==== Page Header [title + description + share + favorite    ] ==== */}
                 <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
                   {/* <------ [ Title + Descripton ] -----> */}
                     <div className="cd-header">
@@ -589,7 +591,7 @@ export default function Components_Design() {
           {/* === Filtered / Searched Items And IFRAME === */}
               <div className="related-videos-grid">
                   {filteredRelatedItems.length > 0 ? (
-                      filteredRelatedItems.map((s) => {
+                      filteredRelatedItems.map((s, index) => { 
                         const smallSrcDoc = buildRecommendedIframeDoc(
                             s.html_code || s.html || "",
                             s.css_code || s.css || "",
@@ -597,48 +599,56 @@ export default function Components_Design() {
                         );
 
                         return (
-                          <div
-                              key={s.id}
-                              className="related-video-item"
-                              onClick={() => handleRelatedClick(s)}
-                              role="button"
-                              tabIndex={0}
-                              onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
-                              style={{ position: 'relative' }}
-                          >
-                            {s.access_type === "Premium" && (
-                              <div 
-                                  style={{ 
-                                      position: 'absolute', 
-                                      top: 8, 
-                                      right: 8, 
-                                      background: 'gold', 
-                                      color: '#000', 
-                                      padding: '2px 6px', 
-                                      borderRadius: '4px', 
-                                      fontSize: 12, 
-                                      fontWeight: 'bold', 
-                                      display: 'flex', 
-                                      alignItems: 'center', 
-                                      gap: 4,
-                                      zIndex: 10
-                                  }}
-                              >
-                                  <FaGem /> &nbsp; ${s.price || 0}
-                              </div>
-                            )}
+                            <React.Fragment key={s.id}> 
+                              
+                                {/* Your Original Item */}
+                                <div
+                                  className="related-video-item"
+                                  onClick={() => handleRelatedClick(s)}
+                                  role="button"
+                                  tabIndex={0}
+                                  onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
+                                  style={{ position: 'relative' }}
+                                >
+                                    {s.access_type === "Premium" && (
+                                        <div style={{ 
+                                          position: 'absolute',
+                                          top: '10px',
+                                          right: '10px',
+                                          background: 'rgba(29, 29, 28, 0.9)', // Using your orange theme color
+                                          color: 'gold',
+                                          padding: '4px 8px',
+                                          borderRadius: '6px',
+                                          fontSize: '12px',
+                                          fontWeight: 'bold',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          zIndex: 2
+                                         }}>
+                                            <FaGem style={{ fontSize: '10px' }} /> &nbsp; ${s.price || 0}
+                                        </div>
+                                    )}
 
-                            <iframe
-                                srcDoc={smallSrcDoc}
-                                sandbox="allow-scripts allow-forms allow-modals"
-                                title={s.title || `related-${s.id}`}
-                                style={{ width: "100%", height: 180, border: "none", borderRadius: 8 }}
-                            />
+                                    <iframe
+                                        srcDoc={smallSrcDoc}
+                                        sandbox="allow-scripts allow-forms allow-modals"
+                                        title={s.title || `related-${s.id}`}
+                                        style={{ width: "100%", height: 180, border: "none", borderRadius: 8 }}
+                                    />
 
-                            <span> 
-                                <FaArrowRight /> &nbsp; {s.title || "Untitled"}
-                            </span>
-                          </div>
+                                    <span> 
+                                        <FaArrowRight /> &nbsp; {s.title || "Untitled"}
+                                    </span>
+                                </div>
+
+                                {/* Ad Logic */}
+                                {(index + 1) % 2 === 0 && (
+                                    <div className="related-video-item ad-placement">
+                                        <Ads_Square_Display />
+                                    </div>
+                                )}
+                              
+                            </React.Fragment>
                         );
                       })
                   ) : (
