@@ -88,9 +88,15 @@ const PlayGround_Code_Compiler = () => {
                 <section className="editor-section">
                     <div className="pcc-tabs-wrapper">
                         <div className="pcc-tabs">
-                            <button className={`pcc-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}><i className="ri-html5-fill" style={{color: '#e34c26'}}></i> index.html</button>
-                            <button className={`pcc-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}><i className="ri-css3-fill" style={{color: '#264de4'}}></i> style.css</button>
-                            <button className={`pcc-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}><i className="ri-javascript-fill" style={{color: '#f7df1e'}}></i> script.js</button>
+                            <button className={`pcc-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}>
+                                <i className="devicon-html5-plain colored" ></i> index.html
+                            </button>
+                            <button className={`pcc-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}>
+                                <i className="devicon-css3-plain colored" ></i> style.css
+                            </button>
+                            <button className={`pcc-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}>
+                                <i className="devicon-javascript-plain colored"></i> script.js
+                            </button>
                         </div>
                         <button className="individual-copy-btn" onClick={copyIndividual}>
                             <i className="ri-clipboard-line"></i> {copyStatus.individual}
