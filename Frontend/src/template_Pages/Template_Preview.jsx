@@ -4,17 +4,17 @@ import { useTemplates } from "./Template_API";
 import { Link, useParams } from "react-router-dom";
 import "../assets/css/Template_Preview.css";
 import {
-  FaFacebook,
-  FaFacebookMessenger,
-  FaStar,
-  FaTelegram,
-  FaWhatsapp,
+    FaFacebook,
+    FaFacebookMessenger,
+    FaStar,
+    FaTelegram,
+    FaWhatsapp,
 } from "react-icons/fa";
 
 const deviceSizes = {
-    desktop: { width: "100%", height: "575px" },
-    tablet: { width: "770px", height: "575px" },
-    mobile: { width: "400px", height: "575px" },
+    desktop: { width: "100%", height: "570px" },
+    tablet: { width: "789px", height: "650px" },  /* Total border width is 20px so we add 769+20 px for tablet view*/
+    mobile: { width: "375px", height: "650px" },
 };
 
 const Template_Preview = () => {
@@ -23,13 +23,14 @@ const Template_Preview = () => {
     const [template, setTemplate] = useState(null);
     const [device, setDevice] = useState("desktop");
 
+
     useEffect(() => {
         let mounted = true;
         const loadTemplate = async () => {
             let data = getTemplateById(id);
             if (!data) {
-              await fetchTemplates();
-              data = getTemplateById(id);
+                await fetchTemplates();
+                data = getTemplateById(id);
             }
             if (mounted) setTemplate(data);
         };
@@ -37,18 +38,29 @@ const Template_Preview = () => {
         return () => (mounted = false);
     }, [id, getTemplateById, fetchTemplates]);
 
-    if (!template) return <div>Loading template...</div>;
 
-    const changeDevice = (type) => {
-        setDevice(type);
+    // Helper for scrolling
+    const scrollToSection = (elementId) => {
+        const element = document.getElementById(elementId);
+        if (element) {
+            const offset = -80;
+            const elementPosition = element.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({ top: elementPosition + offset, behavior: "smooth" });
+        }
     };
+
+    if (!template) return <div className="loading">Loading template...</div>;
+
+
+
     const devices = [
         { label: "desktop", icon: <i className="bi bi-pc-display-horizontal" /> },
         { label: "tablet", icon: <i className="bi bi-tablet-fill" /> },
         { label: "mobile", icon: <i className="bi bi-phone-fill" /> },
     ];
 
-    // ===== SHARE HANDLER (UNCHANGED) =====
+
+
     const handleShareClick = (platform) => {
         const realUrl = window.location.href;
         const encodedUrl = encodeURIComponent(realUrl);
@@ -56,15 +68,9 @@ const Template_Preview = () => {
         const isMobile = () => /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
         let shareUrl = "";
         switch (platform) {
-            case "Facebook":
-                shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${pageTitle}`;
-                break;
-            case "WhatsApp":
-                shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedUrl}`;
-                break;
-            case "Telegram":
-                shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${pageTitle}`;
-                break;
+            case "Facebook": shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${pageTitle}`; break;
+            case "WhatsApp": shareUrl = `https://wa.me/?text=${pageTitle}%20${encodedUrl}`; break;
+            case "Telegram": shareUrl = `https://t.me/share/url?url=${encodedUrl}&text=${pageTitle}`; break;
             case "Messenger":
                 shareUrl = !realUrl.includes("localhost") && isMobile()
                     ? `fb-messenger://share?link=${encodedUrl}`
@@ -77,153 +83,109 @@ const Template_Preview = () => {
         }
         window.open(shareUrl, "_blank", "width=600,height=500");
     };
-return(
-      <div className="template-preview-container">
-          <div className="template-preview">
-              <div className="template-preview-header">
-                  <h2>{template.title}</h2>
-                  <p>{template.project_info}</p>
 
-                  {/* price tag Badge and Project setup guide*/}
-                  <div style={{display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "0 0.5rem",}}>
-                      {/* Price Tag Badge */}
-                        <div className="access-info">
-                            <span className={`badge ${template.access_type.toLowerCase()}`}>
-                                {template.access_type}
-                                {template.access_type === "Premium" && template.price
-                                  ? ` • $${template.price}`
-                                  : ""}
-                            </span>
-                        </div>
 
-                      {/* SHARE + Project Setup guide */}
-                        <div style={{display: "flex", flexDirection: "row", gap:'1rem', margin: "0.8rem 0"}}>
-                            {/* Share Dropdown */}
-                            <div className="tmp-share-dropdown">
-                                <button className="tmp-share-btn" title="Share">
-                                  <i className="fa fa-share-alt" />
-                                </button>
-                                <div className="tmp-share-options">
-                                  <span onClick={() => handleShareClick("WhatsApp")}>
-                                      <FaWhatsapp className="share-icon" /> WhatsApp
-                                  </span>
-                                  <span onClick={() => handleShareClick("Messenger")}>
-                                      <FaFacebookMessenger className="share-icon" /> Messenger
-                                  </span>
-                                  <span onClick={() => handleShareClick("Facebook")}>
-                                      <FaFacebook className="share-icon" /> Facebook
-                                  </span>
-                                  <span onClick={() => handleShareClick("Telegram")}>
-                                      <FaTelegram className="share-icon" /> Telegram
-                                  </span>
-                                </div>
+
+    const currentSize = deviceSizes[device] || deviceSizes.desktop;
+
+
+
+    return (
+        <div className="template-preview-container">
+            <div className="template-preview">
+                <div className="template-preview-header">
+                    <h2>{template.title}</h2>
+                    <p>{template.project_info}</p>
+
+                    <div style={{ display: "flex", justifyContent: "space-between", padding: "0 0.5rem", alignItems: "center" }}>
+                        {/* *************** Free PREMIUM BADGE ****************** */}
+                            <div className="access-info">
+                                <span className={`badge ${template.access_type.toLowerCase()}`}>
+                                    {template.access_type}
+                                    {template.access_type === "Premium" && template.price ? ` • $${template.price}` : ""}
+                                </span>
                             </div>
 
-                            {/* Project SetUp Guide */}
-                            <button 
-                              className="download-guide bg-info"
-                              onClick={() => {
-                                const element = document.getElementById("PROJECT-SetUP-GUIDE");
-                                if (element) {
-                                    const offset = -80; // optional offset for sticky headers
-                                    const elementPosition = element.getBoundingClientRect().top + window.scrollY;
-                                    const finalPosition = elementPosition + offset;
-                                    window.scrollTo({
-                                        top: finalPosition,
-                                        behavior: "smooth",
-                                    });
-                                }
-                              }}
-                            >
-                                Project Setup Guide
-                            </button>
+
+                        {/* *****************  SHARE + PROJECT setup Guide BUTTON ******************** */}
+                            <div style={{ display: "flex", gap: '1rem', margin: "0.8rem 0" }}>
+
+                                {/* -----------------  SHARE BUTTON ------------------- */}
+                                <div className="tmp-share-dropdown">
+                                    <button className="tmp-share-btn" title="Share"><i className="fa fa-share-alt" /></button>
+                                    <div className="tmp-share-options">
+                                        <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
+                                        <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
+                                        <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
+                                        <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
+                                    </div>
+                                </div>
+
+
+                                {/* --------- Project Setup Guide BUTTON ------------- */}
+                                <button className="download-guide bg-info" onClick={() => scrollToSection("PROJECT-SetUP-GUIDE")}>
+                                    Project Setup Guide
+                                </button>
                         </div>
-                  </div>
+                    </div>
 
-                    {/* Device + Template+ Donwload + documentation + Fullscreen icons */}
+                    {/* *************** DEVICE + DOWNLOAD + DOCS  ****************** */}
                     <div className="device-download-documentation">
-                      {/* === Device btn + Price Tag + Template ==== */}
+                        {/* ----------CHANGE DEVICE SIZE ----------- */}
                         <div className="device-buttons">
-
-                          {/* devices type */}
                             <div className="devices">
                                 {devices.map((d) => (
                                     <button
-                                      key={d.label}
-                                      className={device === d.label ? "active" : ""}
-                                      onClick={() => changeDevice(d.label)}
+                                        key={d.label}
+                                        className={device === d.label ? "active" : ""}
+                                        onClick={() => setDevice(d.label)}
                                     >
                                         {d.icon}
                                     </button>
                                 ))}
                             </div>
-
-                          {/* Template Box icon */}
-                            <Link to="/Templates/Topics" className="temp" onClick={() => scrollToSection('TEMPLATE')}> 
-                                <i className="bi bi-columns"></i> 
+                            <Link to="/Templates/Topics" className="temp">
+                                <i className="bi bi-columns"></i>
                             </Link>
-
-                          {/* Github Star Icon */}
-                            <a
-                              href={template.github_repo_url}
-                              target="_black"
-                              rel="noopener noreferrer"
-                              className="tp-github-star-a"
-                            > 
-                                <span className="tp-github-star-icon"> <FaStar /> </span> 
+                            <a href={template.github_repo_url} target="_blank" rel="noopener noreferrer" className="tp-github-star-a">
+                                <span className="tp-github-star-icon"> <FaStar /> </span>
                             </a>
                         </div>
 
-                      {/* ======== Download + Docmentation + Screen Size ====== */}
+                        {/* ----------DOWNLOAD + DOCUMENTATION ----------- */}
                         <div className="download-documentation">
-                            <a
-                              href={template.iframe_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="docs-btn"
-                            >
-                                <i className="bi bi-arrows-fullscreen"></i>
-                                <span className="btn-text"> FullScreen</span>
+                            <a href={template.iframe_url} target="_blank" rel="noopener noreferrer" className="docs-btn">
+                                <i className="bi bi-arrows-fullscreen"></i> <span className="btn-text"> FullScreen</span>
                             </a>
-                            <a
-                              href={template.download_repo_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="download-btn"
-                            >
-                                <i className="bi bi-download"></i>
-                                <span className="btn-text"> Download</span>
+                            <a href={template.download_repo_url} target="_blank" rel="noopener noreferrer" className="download-btn">
+                                <i className="bi bi-download"></i> <span className="btn-text"> Download</span>
                             </a>
-                            <a
-                              href={template.documentation_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="docs-btn"
-                            >
-                                <i className="bi bi-file-earmark-code-fill"></i>
-                                <span className="btn-text"> Docs </span>
+                            <a href={template.documentation_url} target="_blank" rel="noopener noreferrer" className="docs-btn">
+                                <i className="bi bi-file-earmark-code-fill"></i> <span className="btn-text"> Docs </span>
                             </a>
                         </div>
                     </div>
-              </div>
+                </div>
 
-              {/* Preview iframe */}
-              <div className="iframe-container">
-                <iframe
-                  key={template.id}
-                  src={template.iframe_url}
-                  title={template.title}
-                  style={{
-                    width: deviceSizes[device].width,
-                    height: deviceSizes[device].height,
-                    border: "1px solid #ccc",
-                  }}
-                />
-              </div>
+            {/* Preview iframe Section */}
+                <div className="tp-iframe-container">
+                    {/* The wrapper gets the class: 'tp-iframe-wrapper desktop', 'tp-iframe-wrapper tablet', etc. */}
+                    <div className={`tp-iframe-wrapper ${device}`}>
+                        <iframe
+                            src={template.iframe_url}
+                            title={template.title}
+                            style={{
+                                width: "100%",
+                                height: currentSize.height,
+                            }}
+                        />
+                    </div>
+                </div>
 
 
-              {/* ===== Section to show Coding Guide ======= */}
-              <div id="PROJECT-SetUP-GUIDE" className="run-instructions">
+
+                {/* ===== Section to show Coding Guide ======= */}
+                <div id="PROJECT-SetUP-GUIDE" className="run-instructions">
                     <h3>How to Run This Project Locally</h3>
                     <p>Follow the steps below depending on your setup:</p>
 
@@ -240,12 +202,12 @@ return(
                         </ol>
                     </div>
 
-                  {/* Case 2: Frontend + Backend */}
+                {/* Case 2: Frontend + Backend */}
                     <div className="case">
                         <h4>Case 2: Frontend + Backend (React + Django REST Framework)</h4>
                         <ol>
                             <li>
-                              <strong>Download the project</strong> from GitHub and extract it.
+                                <strong>Download the project</strong> from GitHub and extract it.
                             </li>
                             <li>
                                 <strong>Backend setup (Django REST Framework):</strong>
@@ -276,10 +238,10 @@ return(
                             <li>Follow the project documentation for additional setup if needed.</li>
                         </ol>
                     </div>
-              </div>
-      </div>
-      </div>
-)
+                </div>
+            </div>
+        </div>
+    );
 };
 
 export default Template_Preview;

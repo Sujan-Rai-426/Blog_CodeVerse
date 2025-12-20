@@ -194,18 +194,14 @@
 .actions-list button {
     padding: 8px 18px;
     border-radius: var(--radius);
-
     background: rgba(255, 255, 255, 0.08);
     border: 1px solid var(--glass-border);
     color: var(--text-main);
-
     font-size: 14px;
     cursor: pointer;
-
     display: flex;
     align-items: center;
     gap: 10px;
-
     transition: var(--transition);
 }
 
@@ -247,6 +243,15 @@
     filter: drop-shadow(0 0 6px rgba(255, 251, 0, 0.8));
 }
 
+/* --------- Test Code Icon ----------- */
+.crs-test-code{
+    text-decoration: none;
+}
+.crs-test-code:hover{
+    color: white;
+}
+
+
 /* --------- BuyMe Coffee Icon ----------- */
 .actions-list button:hover .crs-BuyMeCoffee-icon{
     color: #fff;
@@ -279,6 +284,9 @@
     color: rgb(23, 233, 51);
     filter: drop-shadow(0 0 6px rgba(22, 247, 63, 0.8));
 }
+
+
+
 
 /*********************************************************
 ==================== FOOTER  =============================

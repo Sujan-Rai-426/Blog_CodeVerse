@@ -6,8 +6,8 @@ import Home from "../pages/Home";
 import Contact from "../email/Contact";
 import About from "../pages/About";
 import Privacy_Policy from "../pages/Privacy_Policy";
-import PlayGround_to_Code from "../pages/PlayGround_to_Code";
-import PlayGround_from_Code from "../pages/PlayGround_from_Code";
+import PlayGround_to_Code from "../pages/PlayGround_Code_Generator";
+import PlayGround_from_Code from "../pages/PlayGround_Code_Compiler";
 
 // Payment Pages imports
 import Payment_Success from "../payment/payment_status/Payment_Success";
@@ -28,8 +28,8 @@ function Routes_List() {
                             <Route exact path="/About" element={<About />} />
                             <Route exact path="/Contact" element={<Contact />} />
                             <Route exact path="/Privacy_Policy" element={<Privacy_Policy />} />
-                            <Route exact path="/Preview-to-Code" element={<PlayGround_to_Code />} />
-                            <Route exact path="/Code-to-Preview" element={<PlayGround_from_Code />} />
+                            <Route exact path="/Code-Generator" element={<PlayGround_to_Code />} />
+                            <Route exact path="/Code-Compiler" element={<PlayGround_from_Code />} />
 
                             {/* Payment Routes */}
                             <Route exact path="/Payment_Success" element={<Payment_Success />} />

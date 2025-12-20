@@ -145,3 +145,45 @@ iframe { width: 100%; flex: 1; border: none; background: white; }
         .cv-tab { padding: 10px; font-size: 0.7rem; }
     }
 }
+
+
+/* Update the tabs area to hold the copy button */
+.cv-tabs-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: #060910;
+    border-bottom: 1px solid var(--border);
+    padding-right: 10px;
+}
+
+.cv-tabs {
+    flex: 1;
+    display: flex;
+    border-bottom: none; /* Removed to avoid double borders */
+}
+
+.individual-copy-btn {
+    background: rgba(255, 255, 255, 0.05);
+    color: var(--text-dim);
+    border: 1px solid var(--border);
+    padding: 4px 10px;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.individual-copy-btn:hover {
+    background: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
+
+/* Ensure textarea fills space properly */
+.editor-area {
+    position: relative;
+}

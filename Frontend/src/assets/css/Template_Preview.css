@@ -104,6 +104,11 @@
 .device-buttons button:hover:not(.active) {
     background: #d1d5db83;
 }
+.devices button.active {
+    color: #007bff; /* Or your theme color */
+    border-bottom: 2px solid #007bff;
+    background: rgba(0, 123, 255, 0.1);
+}
 
 
 /* Share btn options */
@@ -199,34 +204,52 @@
 
 
 /* iframe container */
-.iframe-container {
+
+.tp-iframe-container {
     width: 100%;
-    margin: 0 !important;
     display: flex;
-    justify-content: center;
-    overflow: hidden;
-    border: 0.1px solid rgba(128, 128, 128, 0.484) !important;
-    transition: all 0.3s ease;
-
-        /* Background with dots */
-    background-color: black; /* dark base color */
-    background-image: radial-gradient(#ffffff20 1.1px, transparent 1.1px);
-    background-size: 20px 20px; /* space between dots */
-
-    border-radius: 12px;
-
-    /* Inside shadow effect */
-    box-shadow: inset 0 4px 8px rgba(189, 162, 150, 0.5),
-                            inset 0 -4px 6px rgba(255, 255, 255, 0.05);
+    justify-content: center; 
+    align-items: flex-start;
+    background-color: transparent; 
+    padding: 0.5rem 0;
+    min-height: auto;
+    border: 1px solid gray;
+    border-radius: 10px;
 }
 
-/* iframe */
-.iframe-container iframe {
+.tp-iframe-wrapper {
+    background: white;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    
+    /* DEFAULT/DESKTOP STYLE */
+    width: 95%; /* Use 95% to leave a small nice gap on the sides */
+    max-width: 1400px; /* Prevents it from being TOO wide on ultra-wide monitors */
+}
+
+/* TABLET OVERRIDE */
+.tp-iframe-wrapper.tablet {
+    width: 789px;  /* Total border width is 20px so we add 769+20 px for tablet view*/
+    border: 10px solid #333;
+    border-radius: 20px;
+}
+
+/* MOBILE OVERRIDE */
+.tp-iframe-wrapper.mobile {
+    width: 375px;
+    border: 10px solid #333;
+    border-radius: 36px;
+}
+
+/* Ensure iframe fills the wrapper entirely */
+.tp-iframe-wrapper iframe {
+    width: 100% !important; 
+    height: 100%;
     border: none;
-    border-radius: 12px;
-    width: 100%;
-    height: 600px;
-    transition: all 0.3s ease;
+    display: block;
 }
 
 

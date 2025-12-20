@@ -15,10 +15,10 @@ const isNewItem = (date) => {
 function Components_Left_Sidebar() {
     const { languageID, topicID, languages, loadingBase } = useContext(Parent_API_Provider_Context);
     const [searchTerm, setSearchTerm] = useState("");
-    
     const [activeTopic, setActiveTopic] = useState(() => {
         return topicID || localStorage.getItem(ACTIVE_TOPIC_KEY);
     });
+
 
     useEffect(() => {
         if (topicID) {
@@ -27,20 +27,20 @@ function Components_Left_Sidebar() {
         }
     }, [topicID]);
 
+
     const frontendLangs = languages.filter((l) => l.section === 1);
 
     const filteredLangs = frontendLangs.map(lang => {
         const matchingTopics = lang.topics?.filter(topic => 
             topic.name.toLowerCase().includes(searchTerm.toLowerCase())
         ) || [];
-        
         const langMatches = lang.name.toLowerCase().includes(searchTerm.toLowerCase());
-        
         if (langMatches || matchingTopics.length > 0) {
             return { ...lang, topics: matchingTopics };
         }
         return null;
     }).filter(Boolean);
+
 
     if (loadingBase) {
         return (

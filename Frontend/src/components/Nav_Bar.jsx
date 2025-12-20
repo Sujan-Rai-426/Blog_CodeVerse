@@ -394,6 +394,13 @@ function Nav_Bar(props) {
                             </Link>
                         </li>
 
+                    {/* CODE-Compiler / Test your code */}
+                        <li>
+                            <Link to="/Code-to-Preview" onClick={() => setSidebarOpen(false)}>
+                                <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
+                            </Link>
+                        </li>
+
                             <li><hr className="sidebar-divider" /></li>
 
                 </ul>

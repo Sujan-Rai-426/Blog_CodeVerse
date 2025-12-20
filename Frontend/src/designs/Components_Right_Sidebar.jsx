@@ -154,8 +154,8 @@ function Components_Right_Sidebar() {
 
                     {/* Test Your Code */}
                     <button>
-                        <Link to="/Code-to-Preview" style={{textDecoration:'none'}}>
-                            <span className="text-info"><FaCode /></span> Test Code
+                        <Link to="/Code-to-Preview" className="crs-test-code">
+                            <span className="text-info crs-requestFeature-icon"><FaCode /></span> &nbsp; Test Code
                         </Link>
                     </button>
 

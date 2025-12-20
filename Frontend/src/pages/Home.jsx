@@ -8,7 +8,6 @@ import Recent_Contents from "../components/Recent_Contents";
 import Services from "../components/Services";
 
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
-import { FaPersonBooth } from "react-icons/fa";
 import Interactive_Grid_Background from "../context/Interactive_Grid_Background.jsx";
 
 function Home() {
@@ -60,7 +59,7 @@ function Home() {
             <section className="hero mb-5">
                 <div className="hero-content">
                     <div className="hero-subtitle text-center">
-                        <h1 className="text-info"><b>CodeVora UI</b></h1>
+                        <h1 className="text-light-50% fs-1"><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>
@@ -120,11 +119,11 @@ function Home() {
                             value={selectValue}
                         >
                             <option value="" disabled> Select PlayGround</option>
-                            <option value="/Code-to-Preview" className="nav-option">
-                                Code to Preview
+                            <option value="/Code-Compiler" className="nav-option">
+                                Code Compiler
                             </option>
-                            <option value="/Preview-to-Code" className="nav-option">
-                                Preview to Code
+                            <option value="/Code-Generator" className="nav-option">
+                                Code Generator
                             </option>
                         </select>
 

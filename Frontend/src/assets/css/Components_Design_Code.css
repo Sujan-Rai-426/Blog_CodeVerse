@@ -66,19 +66,20 @@
     align-items: center;
     gap: 8px;
     padding: 0.6rem 1.2rem;
-    border-radius: 8px;
-    border: none;
-    background: #f7971e;
-    color: #000;
     font-weight: 700;
     font-size: 0.85rem;
     cursor: pointer;
     transition: transform 0.2s, background 0.2s;
     margin-left: auto;
+    border-radius: 12px;
+    color: #f7971e;
+    border: 1px solid #f7971e;
+    background: transparent;
 }
 
 .copy-btn-new:hover:not(.disabled) {
-    background: #ffaa33;
+    background: #f7971e;
+    color: black;
     transform: translateY(-1px);
 }
 
@@ -88,6 +89,7 @@
 
 .copy-btn-new.disabled {
     background: #444;
+    border: 1px solid #777;
     color: #777;
     cursor: not-allowed;
     opacity: 0.7;
@@ -107,6 +109,9 @@
 .code-render-box {
     position: relative;
     width: 100%;
+}
+.code-render-box pre{
+    font-size: 0.85rem !important;
 }
 
 .scrollable-code {
@@ -142,7 +147,7 @@
 }
 
 /* ============================================================
-   PREMIUM LOCK OVERLAY
+    PREMIUM LOCK OVERLAY
    ============================================================ */
 .premium-lock-overlay {
     position: absolute;
@@ -178,34 +183,39 @@
     box-shadow: 0 15px 25px rgba(247, 151, 30, 0.4);
 }
 
+
 /* ============================================================
-   RESPONSIVE ADJUSTMENTS
+    RESPONSIVE ADJUSTMENTS
    ============================================================ */
 @media (max-width: 600px) {
-    .code-tabs-container {
-        flex-direction: column;
-        align-items: stretch;
-    }
-    
-    .tabs-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-    
-    .tab-item {
-        flex: 1;
-        justify-content: center;
-        padding: 0.6rem 0.5rem;
-        font-size: 0.75rem;
-    }
-    
-    .copy-btn-new {
-        width: 100%;
-        justify-content: center;
-    }
+    .code-tabs-container { flex-direction: column; align-items: stretch; }
+    .tabs-group { width: 100%; justify-content: space-between; }
+    .tab-item { flex: 1; justify-content: center; padding: 0.6rem 0.5rem; font-size: 0.75rem; }
+    .copy-btn-new { width: 100%; justify-content: center; }
+    .scrollable-code { min-height: 350px; font-size: 0.75rem !important; }
+}
 
-    .scrollable-code {
-        min-height: 350px;
-        font-size: 0.75rem !important;
-    }
+/* ************************* DESIGN PREVIEW CSS ******************* */
+/* Check for this in your CSS file! */
+
+.dp-iframe-container{
+    width: 100%; 
+    background: transparent;
+    background-Color: black;
+    background-Image: radial-gradient(#ffffff38 1.1px, transparent 1.1px);
+    background-Size: 20px 20px; 
+    padding: 4px;
+    display: flex; 
+    justify-Content: center;
+    align-Items: center; 
+    overflow: hidden; 
+    box-shadow: inset 0 8px 12px rgba(174, 174, 167, 0.279);
+    border-radius: 15px;
+}
+.dp-iframe-container iframe {
+    max-width: 100%; 
+    background-color: black;
+    background-image: radial-gradient(#ffffff38 1.1px, transparent 1.1px);
+    background-size: 20px 20px;
+    border-radius: 15px;
 }
