@@ -88,13 +88,13 @@ const PlayGround_Code_Compiler = () => {
                 <section className="editor-section">
                     <div className="pcc-tabs-wrapper">
                         <div className="pcc-tabs">
-                            <button className={`pcc-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')}>
+                            <button className={`pcc-tab ${activeTab === 'html' ? 'active' : ''}`} onClick={() => setActiveTab('html')} style={{color: 'rgb(196 108 72)'}}>
                                 <i className="devicon-html5-plain colored" ></i> index.html
                             </button>
-                            <button className={`pcc-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')}>
+                            <button className={`pcc-tab ${activeTab === 'css' ? 'active' : ''}`} onClick={() => setActiveTab('css')} style={{color: 'rgb(81 81 164)'}}>
                                 <i className="devicon-css3-plain colored" ></i> style.css
                             </button>
-                            <button className={`pcc-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')}>
+                            <button className={`pcc-tab ${activeTab === 'js' ? 'active' : ''}`} onClick={() => setActiveTab('js')} style={{color: '#949454'}}>
                                 <i className="devicon-javascript-plain colored"></i> script.js
                             </button>
                         </div>
