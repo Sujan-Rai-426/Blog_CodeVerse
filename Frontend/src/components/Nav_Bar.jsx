@@ -396,7 +396,7 @@ function Nav_Bar(props) {
 
                     {/* CODE-Compiler / Test your code */}
                         <li>
-                            <Link to="/Code-to-Preview" onClick={() => setSidebarOpen(false)}>
+                            <Link to="/Code-Compiler" onClick={() => setSidebarOpen(false)}>
                                 <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
                             </Link>
                         </li>
