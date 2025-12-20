@@ -20,7 +20,7 @@
 }
 
 /* 2. Header Improvements */
-.cv-header {
+.pcc-header {
     padding: 0.8rem 1rem;
     background: rgba(17, 24, 39, 0.8);
     backdrop-filter: blur(10px);
@@ -32,19 +32,19 @@
     gap: 10px;
 }
 
-.cv-logo { 
+.pcc-logo { 
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-weight: 800; 
     font-size: 1.2rem; 
     display: flex; 
     align-items: center; 
 }
-.cv-logo span { color: var(--primary); }
+.pcc-logo span { color: var(--primary); }
 
-.cv-actions { display: flex; align-items: center; gap: 10px; }
+.pcc-actions { display: flex; align-items: center; gap: 10px; }
 
 /* 3. Main Layout (Default Desktop) */
-.cv-main { 
+.pcc-main { 
     display: grid; 
     grid-template-columns: 500px 1fr; 
     flex: 1; 
@@ -60,21 +60,21 @@
     min-height: 0; /* Important for flex/grid children */
 }
 
-.cv-tabs { 
+.pcc-tabs { 
     display: flex; 
     background: #060910; 
     overflow-x: auto; /* Scroll tabs on small mobile */
     scrollbar-width: none; 
 }
-.cv-tabs::-webkit-scrollbar { display: none; }
+.pcc-tabs::-webkit-scrollbar { display: none; }
 
-.cv-tab {
+.pcc-tab {
     background: none; border: none; border-bottom: 2px solid transparent;
     color: var(--text-dim); padding: 12px 15px; cursor: pointer; font-size: 0.75rem;
     font-weight: 600; white-space: nowrap; transition: 0.3s; 
     display: flex; align-items: center; gap: 6px;
 }
-.cv-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
+.pcc-tab.active { color: var(--primary); border-bottom-color: var(--primary); background: rgba(99, 102, 241, 0.05); }
 
 .editor-area { flex: 1; background: #0d1117; overflow: hidden; }
 textarea {
@@ -98,9 +98,14 @@ textarea {
 .browser-head { 
     background: #f8fafc; padding: 8px 15px; display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #e2e8f0; 
 }
-.circles { display: flex; gap: 5px; }
-.circles span { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; }
-.url-bar { 
+
+/* ---------- 3 circular dot and URL bar -------------- */
+.pcc-circles { display: flex; gap: 5px; }
+.pcc-circles span { width: 8px; height: 8px; border-radius: 50%; background: #cbd5e1; }
+.pcc-circle-1{ background: red !important;}
+.pcc-circle-2{ background: green !important;}
+.pcc-circle-3{ background: blue !important;}
+.pcc-url-bar { 
     flex: 1; background: white; height: 22px; border-radius: 4px; 
     border: 1px solid #e2e8f0; font-size: 10px; display: flex; align-items: center; padding-left: 8px;
     color: #94a3b8; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
@@ -109,11 +114,19 @@ textarea {
 iframe { width: 100%; flex: 1; border: none; background: white; }
 
 /* 6. Buttons & Animation */
-.cv-btn {
+.pcc-btn {
     background: var(--primary); color: white; border: none; 
     padding: 6px 12px; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.8rem;
 }
-.dot-blink { width: 6px; height: 6px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
+
+/* *********** LIVE PREVIEW *********** */
+.pcc-live-badge {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+.dot-blink { width: 10px; height: 10px; background: var(--success); border-radius: 50%; animation: blink 1.5s infinite; }
 @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 
 /* =============================================
@@ -121,7 +134,7 @@ iframe { width: 100%; flex: 1; border: none; background: white; }
    ============================================= */
 
 @media (max-width: 992px) {
-    .cv-main {
+    .pcc-main {
         grid-template-columns: 1fr; /* Stack into one column */
         grid-template-rows: 1fr 1fr; /* Half screen editor, half preview */
     }
@@ -136,19 +149,19 @@ iframe { width: 100%; flex: 1; border: none; background: white; }
         padding: 10px; /* Less padding on small screens */
     }
 
-    .cv-logo { font-size: 1.1rem; }
+    .pcc-logo { font-size: 1.1rem; }
     
     /* Hide live badge on very small screens to save space */
     @media (max-width: 480px) {
         .live-badge { display: none; }
-        .cv-header { padding: 0.5rem; }
-        .cv-tab { padding: 10px; font-size: 0.7rem; }
+        .pcc-header { padding: 0.5rem; }
+        .pcc-tab { padding: 10px; font-size: 0.7rem; }
     }
 }
 
 
 /* Update the tabs area to hold the copy button */
-.cv-tabs-wrapper {
+.pcc-tabs-wrapper {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -157,7 +170,7 @@ iframe { width: 100%; flex: 1; border: none; background: white; }
     padding-right: 10px;
 }
 
-.cv-tabs {
+.pcc-tabs {
     flex: 1;
     display: flex;
     border-bottom: none; /* Removed to avoid double borders */
@@ -186,4 +199,73 @@ iframe { width: 100%; flex: 1; border: none; background: white; }
 /* Ensure textarea fills space properly */
 .editor-area {
     position: relative;
+}
+
+
+
+
+/* ------------------------------------------------------------------ */
+/* ++++++++++++++++++  PRISM UPDATED  HIGHLIGHT +++++++++++++++++++++ */
+
+
+/* Container must be relative and match the parent size */
+.code-editor-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: #1e1e1e; /* Match Prism's theme background */
+}
+
+/* Ensure font, size, line-height, and padding are IDENTICAL for both layers */
+.pcc-textarea, 
+.pcc-highlight-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 20px !important;
+    margin: 0 !important;
+    font-family: 'Fira Code', 'Courier New', monospace !important;
+    font-size: 14px !important;
+    line-height: 1.6 !important;
+    tab-size: 2;
+    white-space: pre !important; /* Prevents text wrap mismatches */
+    word-wrap: normal !important;
+    overflow: auto !important;
+    box-sizing: border-box;
+}
+
+/* The textarea is invisible but handles all input/editing */
+.pcc-textarea {
+    z-index: 2;
+    background: transparent !important;
+    color: transparent !important; /* Hide the raw text */
+    caret-color: #007bff; /* Make the typing cursor visible (Blue) */
+    resize: none;
+    border: none;
+    outline: none;
+}
+
+/* The Prism layer is behind the textarea */
+.pcc-highlight-layer {
+    z-index: 1;
+    background: transparent !important;
+    pointer-events: none; /* Ignore clicks so they hit the textarea */
+    border: none !important;
+}
+
+.pcc-highlight-layer code {
+    background: transparent !important;
+    font-family: inherit !important;
+    padding: 0 !important;
+}
+
+/* Scrollbar styling to keep it clean */
+.pcc-textarea::-webkit-scrollbar {
+    width: 8px;
+}
+.pcc-textarea::-webkit-scrollbar-thumb {
+    background: #444;
+    border-radius: 10px;
 }
