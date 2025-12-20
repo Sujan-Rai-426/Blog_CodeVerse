@@ -200,6 +200,9 @@ function Nav_Bar(props) {
                                     <Link className="nb-dropdown-item" to="/Privacy_Policy">
                                         <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy
                                     </Link>
+                                    <Link className="nb-dropdown-item" to="/Code-Compiler">
+                                        <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
+                                    </Link>
                                 </div>
                             </li>
 
