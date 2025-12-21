@@ -32,12 +32,8 @@ function Home() {
 
     const handleSelectPlayground = (e) => {
         const path = e.target.value;
-        
         if (path) {
             navigate(path);
-            
-            // This is the magic part: 
-            // Reset the dropdown so "Choose Mode" shows up again
             setSelectValue(""); 
         }
     };
@@ -59,7 +55,7 @@ function Home() {
             <section className="hero mb-5">
                 <div className="hero-content">
                     <div className="hero-subtitle text-center">
-                        <h1 className="text-light-50% fs-1"><b>CodeVora UI</b></h1>
+                        <h1 className="tt-header-stats mb-3 mt-0"><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
                             Where Ideas Turn Into Code and Where Coding Meets Creativity.
                         </h2>

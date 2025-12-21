@@ -91,6 +91,7 @@
     font-family: 'Plus Jakarta Sans', sans-serif;
     background: linear-gradient(90deg, var(--accent-blue), #ffffff);
     -webkit-background-clip: text;
+    background-clip: text;
     -webkit-text-fill-color: transparent;
     margin-top: 20px;
     margin-bottom: 40px;
