@@ -75,7 +75,7 @@ const Template_Topics = () => {
             <div id="TEMPLATES" className="template-page" style={{ minHeight: "100vh" }}>
                 
                 {/* 1. Showing Total Templates Count */}
-                <div className="tt-header-stats">
+                <div className="ct-page-title">
                     <span>{filteredTemplates.length}</span>&nbsp; Templates Available
                 </div>
 
