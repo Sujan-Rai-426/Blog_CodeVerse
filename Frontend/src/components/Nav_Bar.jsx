@@ -200,7 +200,7 @@ function Nav_Bar(props) {
                                     <Link className="nb-dropdown-item" to="/Privacy_Policy">
                                         <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy
                                     </Link>
-                                    <Link className="nb-dropdown-item" to="/Code-Compiler">
+                                    <Link className="nb-dropdown-item" to="PlayGround/Code-Compiler">
                                         <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
                                     </Link>
                                 </div>
@@ -399,7 +399,7 @@ function Nav_Bar(props) {
 
                     {/* CODE-Compiler / Test your code */}
                         <li>
-                            <Link to="/Code-Compiler" onClick={() => setSidebarOpen(false)}>
+                            <Link to="PlayGround/Code-Compiler" onClick={() => setSidebarOpen(false)}>
                                 <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
                             </Link>
                         </li>

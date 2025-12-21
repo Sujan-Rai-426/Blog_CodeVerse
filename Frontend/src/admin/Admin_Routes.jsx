@@ -1,11 +1,14 @@
 // src/components/Admin_Routes.jsx
 import React from "react";
 import { Routes, Route } from "react-router-dom";
-import Admin_Login from "./Admin_Login";
-import Admin_Home from "./Admin_Home";
-
-import AdminProtected from "./Admin_Protected_Route";
 import { AdminProvider } from "./Admin_API_Provider";
+
+import {
+    Admin_Login,
+    Admin_Home,
+    AdminProtected,
+} from "./Admin_Imports"
+
 
 export default function Admin_Routes() {
   return (

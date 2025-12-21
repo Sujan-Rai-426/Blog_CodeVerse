@@ -5,8 +5,8 @@ import React, {
   useRef,
   useMemo,
 } from "react";
-import AdminAPI from "./Admin_API";
 import apiAdmin from "../config/apiAdmin";
+import { AdminAPI } from "./Admin_Imports";
 import { AdminContext } from "./Admin_API_Context";
 
 const DEFAULT_STALE_TIME = 1000 * 60 * 2; // 2 minutes stale time by default

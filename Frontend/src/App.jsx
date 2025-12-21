@@ -1,24 +1,31 @@
 import { Route, BrowserRouter as Router, Routes } from 'react-router-dom';
-import Scroll_To_Top from './context/Scroll_To_Top.jsx';
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from 'react';
 
-import Nav_Bar from './components/Nav_Bar.jsx';
-import Footer from './components/Footer.jsx';
-import Floating_Go_Back_Btn from './components/Floating_Go_Back_Btn.jsx';
 
+
+import { PlayGround_Routes } from './playground/PlayGround_Imports.jsx';
+import { Coding_Guide_Route } from './coding_Guide/Coding_Guide_Import.jsx';
+import { Components_Route } from './designs/Components_Imports.jsx';
+import { User_Routes } from './clients/User_Imports.jsx';
+import { Admin_Routes } from './admin/Admin_Imports.jsx';
+import { Template_Routes } from './template_Pages/Template_Imports.jsx';
 import Routes_List from './routes/Routes_List.jsx';
-import Admin_Routes from './admin/Admin_Routes.jsx';
-import User_Routes from './clients/User_Routes.jsx';
-import Template_Routes from './template_Pages/Template_Routes.jsx';
+
+
 
 import { adminPersistentLogin } from "./config/apiAdmin";
-import Components_Route from './designs/Components_Route.jsx';
-import Coding_Guide_Route from './coding_Guide/Coding_Guide_Route.jsx';
 import User_API_Provider from './clients/User_API_Provider.jsx';
 import { Parent_Api_Provider } from './context/Parent_API_Provider.jsx';
 import { Payment_Provider } from './payment/payment_status/Payment_Context.jsx';
 import { Templates_API_Provider } from './template_Pages/Template_API.jsx';
+import {
+  Nav_Bar, 
+  Footer,
+  Floating_Go_Back_Btn,
+  Scroll_To_Top,
+} from './context/Import_Files.jsx'
+
 
 import './App.css'; // Make sure your dark-mode/light-mode classes are here
 
@@ -64,6 +71,7 @@ function App() {
 
                     <Route exact path="/Components/*" element={<Components_Route mode={isDark ? 'dark' : 'light'} />} />
                     <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path="/PlayGround/*" element={<PlayGround_Routes mode={isDark ? 'dark' : 'light'} />} />
                 </Routes>
 
               <Footer />

@@ -1,7 +1,11 @@
 import React from 'react'
-import Template_Preview from './Template_Preview'
-import Template_Left_Sidebar from './Template_Left_Sidebar'
-import Template_Right_Sidebar from './Template_Right_Sidebar'
+
+import{
+    Template_Preview,
+    Template_Left_Sidebar,
+    Template_Right_Sidebar,
+} from "./Template_Imports"
+
 import "../assets/css/Template.css"
 
 

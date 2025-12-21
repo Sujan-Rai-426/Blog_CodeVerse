@@ -155,7 +155,7 @@ function Components_Right_Sidebar() {
                     {/* Test Your Code */}
                     <button 
                         title='Test Code'
-                        onClick={() => navigate("/Code-Compiler")} 
+                        onClick={() => navigate("PlayGround/Code-Compiler")} 
                     >
                         <span className="text-info crs-requestFeature-icon"><FaCode /></span> &nbsp; Test Code
                     </button>

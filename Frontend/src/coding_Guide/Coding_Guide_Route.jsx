@@ -1,8 +1,8 @@
 import React from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Coding_Guide from './Coding_Guide'
-import Coding_Guide_Topic from './Coding_Guide_Topic'
-import Components_Right_Sidebar from "../designs/Components_Right_Sidebar"
+import { Components_Right_Sidebar } from "../designs/Components_Imports/"
+import { Coding_Guide_Topic, Coding_Guide } from './Coding_Guide_Import'
+
 import "../assets/css/Coding_Guide_Route.css"
 
 function Coding_Guide_Route() {

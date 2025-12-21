@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 import { Route, Routes, useLocation } from "react-router-dom";
 
-import Components from "./Components";
-import Components_Topic from "./Components_Topic";
+import {
+    Components,
+    Components_Topic,
+    Components_Right_Sidebar,
+    Components_Left_Sidebar
+} from "./Components_Imports"
 
-
-import Components_Right_Sidebar from "./Components_Right_Sidebar";
-import Components_Left_Sidebar from "./Components_Left_Sidebar";
 
 import "../assets/css/Components_Route.css";
 
@@ -16,15 +17,14 @@ function Components_Route() {
 
   /* ================= PAGE TYPE DETECTION (ROBUST) for conditional sidebar showing ================= */
     useEffect(() => {
-        const body = document.body;
-        body.classList.remove("cr-components-page", "cr-topics-page");
+        document.body.classList.remove("cr-components-page", "cr-topics-page");
         if (location.pathname.includes("/Components/Topics")) {
-            body.classList.add("cr-topics-page");
+            document.body.classList.add("cr-topics-page");
         } else if (location.pathname.startsWith("/Components")) {
-            body.classList.add("cr-components-page");
+            document.body.classList.add("cr-components-page");
         }
         return () => {
-            body.classList.remove("cr-components-page", "cr-topics-page");
+            document.body.classList.remove("cr-components-page", "cr-topics-page");
         };
     }, [location.pathname]);
 

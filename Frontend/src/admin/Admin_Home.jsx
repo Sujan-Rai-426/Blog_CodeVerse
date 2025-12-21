@@ -2,15 +2,18 @@ import React, { useState, useEffect } from "react";
 import "../assets/css/Admin_Home.css";
 import { FaBars } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-
-import Admin_Sidebar from "./Admin_sidebar";
-import Admin_Dashboard from "./Admin_Dashboard";
-import Admin_Add_Data from "./Admin_Add_Data";
-import Admin_Update_Data from "./Admin_Update_Data";
-import Admin_Settings from "./Admin_Settings";
-
 import { useAdmin } from "./Admin_API_Context";
-import Admin_Update_User from "./Admin_Update_User";
+
+import {
+    Admin_Sidebar,
+    Admin_Dashboard,
+    Admin_Add_Data,
+    Admin_Update_Data,
+    Admin_Settings,
+    Admin_Update_User,
+} from "./Admin_Imports"
+
+
 
 export default function Admin_Home() {
   const navigate = useNavigate();

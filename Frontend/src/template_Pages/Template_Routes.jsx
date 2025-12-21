@@ -1,9 +1,13 @@
 import React, { useEffect, useRef } from 'react'
 import { Route, Routes } from 'react-router-dom'
-import Template_Preview from './Template_Preview'
-import Template_Topics from './Template_Topics'
-import Template from './Template'
-import Template_Left_Sidebar from './Template_Left_Sidebar'
+
+import {
+    Template_Topics,
+    Template,
+    Template_Preview,
+    Template_Left_Sidebar
+} from "./Template_Imports"
+
 import "../assets/css/Template_Routes.css"
 
 function Template_Routes() {

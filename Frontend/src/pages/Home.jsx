@@ -112,10 +112,10 @@ function Home() {
                             value={selectValue}
                         >
                             <option value="" disabled> Select PlayGround</option>
-                            <option value="/Code-Compiler" className="nav-option">
+                            <option value="PlayGround/Code-Compiler" className="nav-option">
                                 Code Compiler
                             </option>
-                            <option value="/Code-Generator" className="nav-option">
+                            <option value="PlayGround/Code-Generator" className="nav-option">
                                 Code Generator
                             </option>
                         </select>
