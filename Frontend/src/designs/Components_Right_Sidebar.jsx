@@ -153,10 +153,11 @@ function Components_Right_Sidebar() {
 
 
                     {/* Test Your Code */}
-                    <button>
-                        <Link to="/Code-to-Preview" className="crs-test-code">
-                            <span className="text-info crs-requestFeature-icon"><FaCode /></span> &nbsp; Test Code
-                        </Link>
+                    <button 
+                        title='Test Code'
+                        onClick={() => navigate("/Code-Compiler")} 
+                    >
+                        <span className="text-info crs-requestFeature-icon"><FaCode /></span> &nbsp; Test Code
                     </button>
 
 
