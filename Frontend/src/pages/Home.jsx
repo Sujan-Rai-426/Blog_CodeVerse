@@ -57,13 +57,10 @@ function Home() {
                     <div className="hero-subtitle text-center">
                         <h1 className="tt-header-stats mb-3 mt-0"><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
-                            Where Ideas Turn Into Code and Where Coding Meets Creativity.
+                            We offers ready-to-use templates, <br /> 
+                            UI components, Programming snippets & Guide in one place.
                         </h2>
-                        <p className="hero-note my-0 py-0">
-                            📢<small> - Follow our social media to stay updated - </small>
-                        </p>
                         <p className="hero-note text-light m-0">
-                            <small>More tutorials, projects, and coding guides will be added to help you level up your skills.</small>
                         </p>
                     </div>
 
