@@ -28,6 +28,7 @@ import {
 
 
 import './App.css'; // Make sure your dark-mode/light-mode classes are here
+import { Utility_Route } from './utility/Utiltiy_Imports.jsx';
 
 function App() {
   const [isDark, setIsDark] = useState(true); // Track dark/light mode
@@ -72,6 +73,7 @@ function App() {
                     <Route exact path="/Components/*" element={<Components_Route mode={isDark ? 'dark' : 'light'} />} />
                     <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route mode={isDark ? 'dark' : 'light'} />} />
                     <Route exact path="/PlayGround/*" element={<PlayGround_Routes mode={isDark ? 'dark' : 'light'} />} />
+                    <Route exact path="/React-Utility/*" element={<Utility_Route mode={isDark ? 'dark' : 'light'} />} />
                 </Routes>
 
               <Footer />

@@ -148,10 +148,10 @@ function Template_Right_Sidebar() {
                     </button> */}
 
 
-                    {/* Report Bug */}
+                    {/* PlayGround Code Compiler */}
                     <button 
                         title="Test Code" 
-                        onClick={() => navigate("/Code-compiler")
+                        onClick={() => navigate("/PlayGround/Code-compiler")
                         }
                     >
                         <span className="text-info crs-reportBug-icon"><FaBug /></span> Report Bug

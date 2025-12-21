@@ -1,8 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
-import { FaCopy, FaLock, FaKey } from "react-icons/fa";
-import Ads_Container from "../context/Ads_Container";
+import { FaCopy, FaLock } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import "../assets/css/Components_Design_Code.css";
 
@@ -14,93 +13,56 @@ export default function Design_Code({
     access_type = "Free",
     price = 100,
     hasBought = false,
-    pageTab, 
 }) {
     if (!codeId) throw new Error("codeId prop is required for Design_Code");
 
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState("html");
     const [copied, setCopied] = useState(false);
-
-    // Initial state: HTML is always true for SEO/Google Crawler approval
-    const [adCompleted, setAdCompleted] = useState({
-        html: true,
-        css: false,
-        js: false,
-    });
-
     const codeRef = useRef(null);
+
+    // Derived Logic
+    const isFree = access_type === "Free";
+    const isPremium = access_type === "Premium";
+    // Code is viewable if it's Free OR if it's Premium and already purchased
+    const canViewCode = isFree || (isPremium && hasBought);
 
     // Trigger Prism Highlighting
     useEffect(() => {
-        if (codeRef.current && ( (access_type === "Free" && adCompleted[activeTab]) || (access_type === "Premium" && hasBought) )) {
+        if (codeRef.current && canViewCode) {
             Prism.highlightElement(codeRef.current);
         }
-    }, [activeTab, adCompleted, codeId, access_type, hasBought]);
+    }, [activeTab, codeId, canViewCode]);
 
-    // Reset ads logic whenever the component loads a new code ID
-    useEffect(() => {
-        setAdCompleted({ html: true, css: false, js: false });
-    }, [codeId]);
-
-    // Core Logic
     const getCode = () => (activeTab === "html" ? html : activeTab === "css" ? css : js);
-    const isFree = access_type === "Free";
-    const isPremium = access_type === "Premium";
-    const canViewCode = (isFree && adCompleted[activeTab]) || (isPremium && hasBought);
 
-    // --- BULLETPROOF HANDLE COPY LOGIC ---
+    // --- COPY LOGIC ---
     const handleCopy = () => {
         if (!canViewCode) return;
         const rawCode = getCode();
-        // Define Start and End comments for branding
+        
         let cStart = "// ";
         let cEnd = "";
         if (activeTab === "html") {
-            cStart = "<!--";
-            cEnd = " -->";
+            cStart = "";
         } else if (activeTab === "css") {
             cStart = "/* ";
             cEnd = " */";
         }
 
         const promoLine = `${cStart}Code by CodeVora — https://codevora140.vercel.app ${cEnd}\n`;
-
-        // Add default centering CSS if user copies CSS tab
         const defaultCSS = (activeTab === "css") 
             ? `/* Base Layout Provided by CodeVora */\nhtml, body { margin: 0; padding: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; background: #1f1f20ff; }\n\n` 
             : "";
 
         const finalContent = `${promoLine}${defaultCSS}${rawCode}\n${promoLine}`;
 
-        // Using standard clipboard API
-        if (navigator.clipboard && navigator.clipboard.writeText) {
-            navigator.clipboard.writeText(finalContent)
-                .then(() => {
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 2000);
-                })
-                .catch(err => {
-                    console.error("Clipboard API failed", err);
-                });
-        } else {
-            // Fallback for older browsers
-            const textArea = document.createElement("textarea");
-            textArea.value = finalContent;
-            document.body.appendChild(textArea);
-            textArea.select();
-            try {
-                document.execCommand('copy');
-                setCopied(true);
-                setTimeout(() => setCopied(false), 2000);
-            } catch (err) {
-                console.error("Fallback copy failed", err);
-            }
-            document.body.removeChild(textArea);
-        }
+        navigator.clipboard.writeText(finalContent).then(() => {
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        }).catch(err => console.error("Copy failed", err));
     };
 
-    // --- LINE NUMBER LOGIC ---
     const getNumberedCode = (code) =>
         code.split("\n").map((line, i) => `${i + 1}   ${line}`).join("\n");
 
@@ -115,17 +77,9 @@ export default function Design_Code({
                             className={`tab-item ${activeTab === tab ? "active" : ""}`}
                             onClick={() => setActiveTab(tab)}
                         >
-                            {/* Tab Text */}
                             {tab.toUpperCase()} 
-
-                            {/* Premium Icon ($) */}
                             {isPremium && !hasBought && (
                                 <span style={{ marginLeft: '5px', color: '#f7971e', fontSize: '13px', fontWeight: 'bold' }}>$</span>
-                            )}
-
-                            {/* Ad-Locked Icon (Key) */}
-                            {isFree && !adCompleted[tab] && tab !== "html" && (
-                                <FaKey style={{ fontSize: '11px', marginLeft: '6px', color: '#f7971e' }} />
                             )}
                         </button>
                     ))}
@@ -140,61 +94,51 @@ export default function Design_Code({
                 </button>
             </div>
 
-            {/* CODE BODY / ADS CONTAINER */}
+            {/* CODE BODY */}
             <div className="dc-code-body" style={{ position: "relative", minHeight: "450px" }}>
-                {isFree && !adCompleted[activeTab] ? (
-                    <Ads_Container
-                        boxType={activeTab}
-                        adId={`${codeId}-${activeTab}`}
-                        activeTab={pageTab}
-                        onComplete={() => setAdCompleted(p => ({ ...p, [activeTab]: true }))}
-                    />
-                ) : (
-                    <div className="code-render-box" style={{ position: "relative" }}>
-                        {/* PREMIUM OVERLAY */}
-                        {isPremium && !hasBought && (
-                            <div className="premium-lock-overlay" style={{
-                                position: "absolute", inset: 0, zIndex: 10,
-                                display: "flex", alignItems: "center", justifyContent: "center",
-                                background: "rgba(0,0,0,0.7)", borderRadius: "12px",
-                                backdropFilter: "blur(4px)"
-                            }}>
-                                <button 
-                                    className="unlock-btn"
-                                    onClick={() => navigate("/Payment_Page", { state: { amount: price } })}
-                                    style={{
-                                        padding: "12px 24px",
-                                        background: "#f7971e",
-                                        border: "none",
-                                        borderRadius: "8px",
-                                        color: "#000",
-                                        fontWeight: "bold",
-                                        cursor: "pointer",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        gap: "8px"
-                                    }}
-                                >
-                                    <FaLock /> Unlock {activeTab.toUpperCase()} — ${price}
-                                </button>
-                            </div>
-                        )}
-
-                        {/* CODE VIEW */}
-                        <pre className="scrollable-code" style={{ 
-                            filter: canViewCode ? "none" : "blur(12px)",
-                            pointerEvents: canViewCode ? "auto" : "none" 
+                <div className="code-render-box" style={{ position: "relative" }}>
+                    {/* PREMIUM LOCK OVERLAY */}
+                    {isPremium && !hasBought && (
+                        <div className="premium-lock-overlay" style={{
+                            position: "absolute", inset: 0, zIndex: 10,
+                            display: "flex", alignItems: "center", justifyContent: "center",
+                            background: "rgba(0,0,0,0.7)", borderRadius: "12px",
+                            backdropFilter: "blur(4px)"
                         }}>
-                            <code ref={codeRef} className={`language-${activeTab}`}>
-                                {getNumberedCode(getCode())}
-                            </code>
-                        </pre>
-                    </div>
-                )}
+                            <button 
+                                className="unlock-btn"
+                                onClick={() => navigate("/Payment_Page", { state: { amount: price } })}
+                                style={{
+                                    padding: "12px 24px",
+                                    background: "#f7971e",
+                                    border: "none",
+                                    borderRadius: "8px",
+                                    color: "#000",
+                                    fontWeight: "bold",
+                                    cursor: "pointer",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    gap: "8px"
+                                }}
+                            >
+                                <FaLock /> Unlock {activeTab.toUpperCase()} — ${price}
+                            </button>
+                        </div>
+                    )}
+
+                    {/* CODE VIEW */}
+                    <pre className="scrollable-code" style={{ 
+                        filter: canViewCode ? "none" : "blur(12px)",
+                        pointerEvents: canViewCode ? "auto" : "none" 
+                    }}>
+                        <code ref={codeRef} className={`language-${activeTab}`}>
+                            {getNumberedCode(getCode())}
+                        </code>
+                    </pre>
+                </div>
             </div>
         </div>
     );
 }
-
 
 

@@ -129,7 +129,7 @@
     align-items: center;
     gap: 10px;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    color: var(--text-secondary);
+    color: var(--text-primary);
 }
 
 .ct-fs-card:hover {
@@ -224,6 +224,11 @@
     margin-top: auto;
 }
 
+
+.ct-comp-count i {
+    color: var(--accent-blue);
+    font-size: 0.9rem;
+}
 .ct-comp-count {
     font-size: 0.75rem;
     color: var(--text-muted);
@@ -233,10 +238,6 @@
     font-weight: 500;
 }
 
-.ct-comp-count i {
-    color: var(--accent-blue);
-    font-size: 0.9rem;
-}
 
 .ct-topic-card:hover .ct-comp-count {
     color: var(--text-secondary);
@@ -248,7 +249,7 @@
     position: absolute;
     right: 20px;
     bottom: 16px;
-    color: var(--accent-blue);
+    color: var(--accent-gold);
     opacity: 0;
     transform: translateX(-10px);
     transition: all 0.25s ease;

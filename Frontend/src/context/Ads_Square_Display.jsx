@@ -25,13 +25,14 @@ const Ads_Square_Display = () => {
             ></ins>
             <span style={{ 
                 display: 'block', 
-                fontSize: '10px', 
-                color: '#64748b', 
+                fontSize: '12px', 
+                color: '#2d2a2aff', 
                 marginBottom: '5px',
+                marginTop:'5px',
                 textTransform: 'uppercase',
                 letterSpacing: '1px'
             }}>
-                Sponsored
+                <b>Sponsored</b>
             </span>
         </div>
     );
