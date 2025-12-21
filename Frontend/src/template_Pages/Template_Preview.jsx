@@ -11,6 +11,7 @@ import {
     FaWhatsapp,
 } from "react-icons/fa";
 
+
 const deviceSizes = {
     desktop: { width: "100%", height: "570px" },
     tablet: { width: "789px", height: "650px" },  /* Total border width is 20px so we add 769+20 px for tablet view*/

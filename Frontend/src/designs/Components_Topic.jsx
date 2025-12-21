@@ -91,10 +91,10 @@ const Components_Topic = () => {
             <div className="ct-tutorial-topic-page container" style={{ minHeight: "100vh" }}>
                 {/* Page Title */}
                 <h1 className="ct-page-title">
-                    {!loadingBase ? (
-                        <span className="ct-total-count"><b>{globalTotalComponents} &nbsp;</b></span>
-                    ) : (
+                    {loadingBase ? (
                         <Skeleton width={50} />
+                    ) : (
+                        <span className="ct-total-count"><b>{globalTotalComponents} &nbsp;</b></span>
                     )}
                     Components Design by CodeVora UI
                 </h1>

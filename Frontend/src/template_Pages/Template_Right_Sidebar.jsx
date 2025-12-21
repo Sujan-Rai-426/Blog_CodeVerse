@@ -153,6 +153,16 @@ function Template_Right_Sidebar() {
 
                     {/* Report Bug */}
                     <button 
+                        title="Test Code" 
+                        onClick={() => navigate("/Code-compiler")
+                        }
+                    >
+                        <span className="text-info crs-reportBug-icon"><FaBug /></span> Report Bug
+                    </button>
+
+
+                    {/* Report Bug */}
+                    <button 
                         title="Report Bug" 
                         onClick={() => window.open(
                             "https://github.com/Sujan-Rai-426/CodeVora/issues/new?labels=bug&template=bug_report.md",

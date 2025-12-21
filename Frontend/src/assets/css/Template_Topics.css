@@ -11,34 +11,106 @@
   font-family: "Poppins", sans-serif;
 }
 
+.tt-header-stats { 
+    text-align: center;
+    font-size: 2.6rem;
+    font-weight: 800;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: linear-gradient(90deg, var(--accent-blue), #ffffff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+.tt-header-stats span { 
+    color: var(--primary); 
+    font-size: 2.8rem;     
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+
+
+/* ++++++++++++   Filter Buttons ++++++++++++++ */
 .tt-template-filters {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 20px;
-  flex-wrap: wrap;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px border rgba(255, 255, 255, 0.1);
+    border-radius: 16px;
+    margin: 0 auto 40px auto;
+    max-width: 1200px;
 }
-
-.tt-template-filters select,
-.tt-template-filters input {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  margin: 0.5rem  0 0 0.5rem;
+@media (min-width: 992px) {
+    .tt-template-filters {
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+    }
 }
-
 .tt-template-filters input[type="text"] {
-  padding: 8px 12px;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 14px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
+    flex: 1;
+    padding: 12px 20px;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    color: white;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    outline: none;
+}
+.tt-template-filters input[type="text"]:focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+    background: rgba(15, 23, 42, 0.8);
+}
+.tt-select-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.tt-select-filters select,
+.tt-select-filters input[type="number"] {
+    padding: 10px 15px;
+    background: rgba(30, 41, 59, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    color: #e2e8f0;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    outline: none;
+    min-width: 130px;
+}
+.tt-select-filters select:hover,
+.tt-select-filters input[type="number"]:hover {
+    background: rgba(51, 65, 85, 0.9);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+.tt-select-filters select:focus {
+    border-color: #3b82f6;
+}
+.tt-select-filters input[type="number"] {
+    max-width: 110px;
+}
+.ad-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px dashed rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+    padding: 10px;
+    min-height: 250px;
 }
 
 
 
+
+/* ++++++++++++   Template Grid ++++++++++++++ */
 .templates-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
