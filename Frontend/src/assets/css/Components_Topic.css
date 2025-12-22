@@ -138,9 +138,10 @@
 }
 
 .ct-selected-card {
-    background: white !important;
-    color: black !important;
-    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+    background: transparent !important;
+    color: white !important;
+    box-shadow: inset 0 4px 6px 2px #3882b78c;
+    border: 2px solid blue;
 }
 
 .ct-fs-card-icon { font-size: 1.1rem; }

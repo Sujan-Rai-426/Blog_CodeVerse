@@ -47,7 +47,7 @@ export default function Design_Preview({ srcDoc, device, changeDevice }) {
                         height: currentStyle.height,
                         transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)", 
                         backgroundColor: "transparent",
-                        border: "1px solid gray",
+                        border: "2px dashed gray",
                         boxShadow: "0 10px 30px rgba(0,0,0,0.5)",
                         borderRadius: device === "desktop" ? "0px" : "12px", // Look like a device
                         display: "block",

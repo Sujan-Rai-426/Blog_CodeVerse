@@ -5,7 +5,7 @@ import { Parent_API_Provider_Context } from "../context/Parent_API_Provider";
 import Design_Code from "./Design_code.jsx";
 import Design_Preview from "./Design_Preview";
 import "../assets/css/Components_Design.css";
-import { FaArrowRight, FaFacebook, FaFacebookMessenger, FaGem, FaTelegram, FaWhatsapp } from "react-icons/fa";
+import { FaFacebook, FaFacebookMessenger, FaGem, FaPlay, FaTelegram, FaWhatsapp } from "react-icons/fa";
 import { addFavorite } from "../clients/User_API.jsx";
 import User_API_Context from "../clients/User_API_Context.jsx"
 import Ads_Square_Display from "../context/Ads_Square_Display.jsx";
@@ -586,9 +586,9 @@ export default function Components_Design() {
                     <button className={`cd-filter-btns ${activeFilter === "oldest" ? "active" : ""}`} onClick={() => setActiveFilter("oldest")}>
                         <i className="fa fa-history" /> Oldest
                     </button>
-                    <button className={`cd-filter-btns ${activeFilter === "unwatched" ? "active" : ""}`} onClick={() => setActiveFilter("unwatched")}>
+                    {/* <button className={`cd-filter-btns ${activeFilter === "unwatched" ? "active" : ""}`} onClick={() => setActiveFilter("unwatched")}>
                         <i className="fa fa-eye-slash" /> Unwatched
-                    </button>
+                    </button> */}
                     <button  className={`cd-filter-btns ${activeFilter === "favorite" ? "active" : ""}`} onClick={() => setActiveFilter("favorite")} >
                         <i className="fa fa-heart" /> Favorite
                     </button>
@@ -634,7 +634,7 @@ export default function Components_Design() {
                                             alignItems: 'center',
                                             zIndex: 2
                                           }}>
-                                              <FaGem style={{ fontSize: '10px' }} /> &nbsp; ${s.price || 0}
+                                              <FaGem style={{ fontSize: '10px' }} /> ${s.price || 0}
                                           </div>
                                       )}
 
@@ -646,7 +646,7 @@ export default function Components_Design() {
                                       />
 
                                       <span> 
-                                          <FaArrowRight /> &nbsp; {s.title || "Untitled"}
+                                          <FaPlay /> &nbsp; {s.title || "Untitled"}
                                       </span>
                                   </div>
 
