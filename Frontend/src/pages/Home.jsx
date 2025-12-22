@@ -57,8 +57,9 @@ function Home() {
                     <div className="hero-subtitle text-center">
                         <h1 className="tt-header-stats mb-3 mt-0"><b>CodeVora UI</b></h1>
                         <h2 className="hero-title">
-                            We offers ready-to-use templates, <br /> 
-                            UI components, Programming snippets & Guide in one place.
+                            Free Open-Source UI Components, <br /> 
+                            Templates, Programming snippets & Guides <br />
+                            All in one place.
                         </h2>
                         <p className="hero-note text-light m-0">
                         </p>
