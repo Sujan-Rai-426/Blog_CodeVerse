@@ -542,25 +542,29 @@ export default function Components_Design() {
                                     onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
                                     style={{ position: 'relative' }}
                                   >
-                                      {/* --- NEW BADGE --- */}
+                                    {/* --- NEW BADGE --- */}
                                       {showNewBadge && (
-                                          <div style={{ 
-                                            position: 'absolute',
-                                            top: '10px',
-                                            left: '10px',
-                                            background: '#ff4757',
-                                            color: 'white',
-                                            padding: '2px 8px',
-                                            borderRadius: '4px',
-                                            fontSize: '10px',
-                                            fontWeight: 'bold',
-                                            zIndex: 2,
-                                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
-                                          }}>
-                                            NEW
-                                          </div>
+                                        <div style={{ 
+                                          position: 'absolute',
+                                          top: '0',
+                                          left: '0',
+                                          background: '#379e81ff', // Dark contrast
+                                          color: 'white',
+                                          padding: '6px 14px',
+                                          fontSize: '10px',
+                                          fontWeight: '600',
+                                          zIndex: 2,
+                                          textTransform: 'uppercase',
+                                          letterSpacing: '2px',
+                                          borderRadius: '0 0 8px 0',
+                                          borderRight: '1px solid',
+                                          borderBottom: '1px solid',
+                                        }}>
+                                          New Arrival
+                                        </div>
                                       )}
 
+                                  {/* ----- PREMIUM BADGE ------- */}
                                       {s.access_type === "Premium" && (
                                           <div style={{ 
                                             position: 'absolute',
@@ -584,7 +588,12 @@ export default function Components_Design() {
                                           srcDoc={smallSrcDoc}
                                           sandbox="allow-scripts allow-forms allow-modals"
                                           title={s.title || `related-${s.id}`}
-                                          style={{ width: "100%", height: 180, border: "none", borderRadius: 8 }}
+                                          style={{ 
+                                            width: "100%", 
+                                            height: 'auto', 
+                                            border: "none", 
+                                            borderBottom: "1px solid" ,
+                                          }}
                                       />
 
                                       <span> 
