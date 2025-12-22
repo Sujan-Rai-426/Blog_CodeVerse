@@ -133,20 +133,19 @@ function Home() {
                     </div>
                 </div>
             </section>
-</Interactive_Grid_Background>
             
             {/* Services Section */}
-            <section className="service mt-2 mb-5">
+            {/* <section className="service mt-2 mb-5">
                 <h2 className="home-section-title">Our Top Services</h2>
                 <p className="section-subtext">
                     Explore our essential services designed to help developers build faster and smarter.
                 </p>
                 <Services />
-            </section>
+            </section> */}
 
             {/* Frontend Languages Section */}
             <section id="FRONTEND_TUTORIALS" className="tutorial-section">
-                <h2 className="home-section-title">Frontend Components Design</h2>
+                <h2 className="home-section-title">UI Components </h2>
                 <p className="section-subtext">
                     Discover modern, reusable UI components to enhance your frontend development workflow.
                 </p>
@@ -170,7 +169,7 @@ function Home() {
 
             {/* Backend Languages Section */}
             <section id="CODING_GUIDE" className="tutorial-section">
-                <h2 className="home-section-title">Coding Guide</h2>
+                <h2 className="home-section-title">Programming Guide and Snippets</h2>
                 <p className="section-subtext">
                     Improve your development workflow with hands-on guides for Frontend, backend coding, and API development.
                 </p>
@@ -193,7 +192,7 @@ function Home() {
             </section>
 
             {/* Templates Section */}
-            <section className="templates-section mt-3">
+            <section className="tutorial-section ">
                 <div className="templates-header">
                     <h2 className="home-section-title">Explore Our Templates</h2>
                     <p className="section-subtext">
@@ -247,6 +246,9 @@ function Home() {
                     </p>
                 </div>
             </section>
+
+</Interactive_Grid_Background>
+
         </div>
     );
 }
