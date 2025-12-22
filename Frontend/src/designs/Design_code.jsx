@@ -44,7 +44,8 @@ export default function Design_Code({
         let cStart = "// ";
         let cEnd = "";
         if (activeTab === "html") {
-            cStart = "";
+            cStart = "<!--";
+            cEnd = " -->";
         } else if (activeTab === "css") {
             cStart = "/* ";
             cEnd = " */";
