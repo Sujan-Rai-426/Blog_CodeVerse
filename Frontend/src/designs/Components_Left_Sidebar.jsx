@@ -103,7 +103,10 @@ function Components_Left_Sidebar() {
                                             ? `/Components/${topic.id}/${firstSource.id}`
                                             : `/Components/${topic.id}`;
 
-                                        const showNewBadge = isNewItem(topic.created_at) || isNewItem(firstSource?.created_at);
+                                        // UPDATED LOGIC: Check if ANY source code inside this topic is new
+                                        const hasNewComponent = topic.source_codes?.some(code => isNewItem(code.created_at));
+                                        const showNewBadge = isNewItem(topic.created_at) || hasNewComponent;
+                                        
                                         const isActiveTopic = String(topic.id) === String(activeTopic);
 
                                         return (
