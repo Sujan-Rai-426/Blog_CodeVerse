@@ -138,7 +138,11 @@ const Components_Topic = () => {
                                         {lang.topics?.length > 0 ? (
                                             lang.topics.map((topic) => {
                                                 const componentCount = topic.source_codes?.length || 0;
-                                                const showNewBadge = isNewItem(topic.created_at) || isNewItem(topic.source_codes?.[0]?.created_at);
+                                                
+                                                // UPDATED LOGIC: Check if any internal component is new
+                                                const hasNewComponent = topic.source_codes?.some(code => isNewItem(code.created_at));
+                                                const showNewBadge = isNewItem(topic.created_at) || hasNewComponent;
+
                                                 const firstSourceId = topic.source_codes?.[0]?.id;
                                                 const toPath = firstSourceId ? `/Components/${topic.id}/${firstSourceId}` : `/Components/${topic.id}`;
 
