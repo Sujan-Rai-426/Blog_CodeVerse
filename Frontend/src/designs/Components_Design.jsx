@@ -10,6 +10,13 @@ import { addFavorite } from "../clients/User_API.jsx";
 import User_API_Context from "../clients/User_API_Context.jsx"
 import Ads_Square_Display from "../context/Ads_Square_Display.jsx";
 
+// --- NEW Badge Helper ---
+const NEW_DURATION_DAYS = 7;
+const isNewItem = (date) => {
+    if (!date) return false;
+    const diffDays = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
+    return diffDays <= NEW_DURATION_DAYS;
+};
 
 // === Main frame iframe doc ===
 const buildMainIframeDoc = (html = "", css = "", js = "") => {
@@ -38,10 +45,8 @@ const buildMainIframeDoc = (html = "", css = "", js = "") => {
           ${css || ""}
       </style>
     </head>
-
     <body>
         ${html || ""}
-
         <scripts>
             ${scriptTag}
         </scripts>
@@ -123,7 +128,6 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth=133
     </html>`;
 };
 
-
 const deviceSizes = {
     desktop: { width: "100%", height: "600px" },
     tablet: { width: "771px", height: "600px" },
@@ -180,14 +184,12 @@ export default function Components_Design() {
                 id: chosenSource.id,
                 topicId: topicID,
                 description: chosenSource.description || "",
+                created_at: chosenSource.created_at, // Ensure we have the date
             });
         };
         loadCodes();
     }, [topicID, codeId, fetchFrontendSourceCode]);
 
-
-
-  // ------------------- Set srcDoc for iframe (progressive loading) -------------------
     useEffect(() => {
         if (!currentCodes) return;
         setSrcDoc("");
@@ -197,30 +199,19 @@ export default function Components_Design() {
         return () => clearTimeout(timer);
     }, [currentCodes]);
 
-
-
-  // ------------- Change Device Handlers------------------
     const [device, setDevice] = useState("desktop");
-
     const changeDevice = (label) => {
         if (deviceSizes[label]) {
             setDevice(label);
         }
     };
 
-
-
-
-  // ------------------- Favorites and Count-------------------
     const { profile, favorites } = useContext(User_API_Context);
-    const [favoriteIds, setFavoriteIds] = useState([]); // IDs of codes user favorited
-    const [favoriteCountMap, setFavoriteCountMap] = useState({}); // { codeId: count }
+    const [favoriteIds, setFavoriteIds] = useState([]); 
+    const [favoriteCountMap, setFavoriteCountMap] = useState({}); 
 
-  // Helper: Check if a code is favorite
     const isFavorite = (id) => favoriteIds.includes(id);
 
-
-  // Initialize favorite IDs from context
     useEffect(() => {
         if (favorites && favorites.length) {
             const ids = favorites.map(f => f.code_detail.id);
@@ -230,8 +221,6 @@ export default function Components_Design() {
         }
     }, [favorites]);
 
-
-  // Fetch favorite counts for all displayed codes (on mount or relatedItems change)
     useEffect(() => {
         const fetchCounts = async () => {
             const allCodes = [currentCodes, ...relatedItems].filter(Boolean);
@@ -243,7 +232,7 @@ export default function Components_Design() {
                     const res = await fetch(`/api/favorite-count/${item.id}/`);
                     if (!res.ok) throw new Error("Failed to fetch");
                     const data = await res.json();
-                    newCounts[item.id] = data.favorite_count ?? 0; // ensure number
+                    newCounts[item.id] = data.favorite_count ?? 0;
                 } catch (err) {
                     newCounts[item.id] = 0;
                 }
@@ -253,9 +242,6 @@ export default function Components_Design() {
         if (currentCodes) fetchCounts();
     }, [currentCodes, relatedItems]);
 
-
-
-// Handle favorite toggle with optimistic UI
     const handleFavorite = async (id) => {
         if (!profile) return alert("Login to add favorites!");
         const isFav = favoriteIds.includes(id);
@@ -265,9 +251,8 @@ export default function Components_Design() {
             [id]: isFav ? Math.max((prev[id] || 1) - 1, 0) : (prev[id] || 0) + 1
         }));
         try {
-            const res = await addFavorite(id); // POST {code: id} toggles backend
+            const res = await addFavorite(id);
             if (!res.ok) {
-                // Revert UI if backend fails
                 setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
                 setFavoriteCountMap(prev => ({
                     ...prev,
@@ -276,7 +261,6 @@ export default function Components_Design() {
             }
         } catch (err) {
             console.error(err);
-            // Revert UI if error occurs
             setFavoriteIds(prev => isFav ? [...prev, id] : prev.filter(x => x !== id));
             setFavoriteCountMap(prev => ({
                 ...prev,
@@ -285,9 +269,6 @@ export default function Components_Design() {
         }
     };
 
-
-
-  // ------------------- Share -------------------
     const handleShareClick = (platform) => {
         const realUrl = window.location.href;
         const encodedRealUrl = encodeURIComponent(realUrl);
@@ -314,13 +295,12 @@ export default function Components_Design() {
         window.open(shareUrl, "_blank", "width=600,height=500");
     };
 
-
-  // ------------------- Other handlers -------------------
     const scrollToSection = (tab) => {
         setActiveTab(tab);
         if (tab === "preview") previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         else codeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
+
     const openFullscreen = () => {
         const newWindow = window.open("", "_blank");
         if (!newWindow) return;
@@ -328,19 +308,16 @@ export default function Components_Design() {
         newWindow.document.write(srcDoc);
         newWindow.document.close();
     };
+
     const handleRelatedClick = (code) => {
         navigate(`/Components/${topicID}/${code.id}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
-
-  // ------------------- Skeleton loader -------------------
     if (!currentCodes) {
       return (
           <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
               <div className="template-preview">
-
-                {/* ==== Page Header Skeleton ==== */}
                   <div className="preview-header">
                       <div className="cd-header">
                           <div className="cd-skeleton cd-skeleton-title" />
@@ -352,8 +329,6 @@ export default function Components_Design() {
                           <div className="cd-skeleton cd-skeleton-btn" />
                       </div>
                   </div>
-
-                {/* ==== Navigator Buttons Skeleton ==== */}
                   <div className="navigator-btns">
                       <div className="code-preview-open">
                           <div className="cd-skeleton cd-skeleton-nav-btn" />
@@ -364,11 +339,7 @@ export default function Components_Design() {
                           <div className="cd-skeleton cd-skeleton-nav-btn" />
                       </div>
                   </div>
-
-                {/* ==== Iframe / Preview Section Skeleton ==== */}
                   <div className="cd-skeleton cd-skeleton-iframe" />
-
-                {/* ==== Related Section Skeleton ==== */}
                   <div className="related-topic-container">
                       <div className="cd-skeleton cd-skeleton-section-title" />
                       <div className="cd-search-bar-wrapper">
@@ -393,8 +364,6 @@ export default function Components_Design() {
       );
     }
 
-
-  // Logic to filter the related items
     const filteredRelatedItems = relatedItems
         .filter((s) => s.id !== currentCodes.id)
         .filter((s) => s.topic === Number(topicID))
@@ -415,14 +384,10 @@ export default function Components_Design() {
             return 0;
         });
 
-  // ------------------- MAIN RENDER -------------------
   return (
     <div className="cd-template-preview-container container" style={{ minHeight: "100vh" }}>
         <div className="cd-preview-container">
-
-                {/* ==== Page Header [title + description + share + favorite    ] ==== */}
                   <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                        {/* <------ [ Title + Descripton ] -----> */}
                       <div className="cd-header">
                           <h3 className="text-infro">{currentCodes.title}</h3>
                           <p>{currentCodes.description}</p>
@@ -434,19 +399,11 @@ export default function Components_Design() {
                           </div>
                       </div>
 
-                        {/* <------ [ Favorite + Share ] -----> */}
                       <div className="header-actions">
-                        {/* Favorite Button */}
                             <button
                                 className={`cd-fav-btn ${isFavorite(currentCodes.id) ? "active" : ""}`}
                                 onClick={() => handleFavorite(currentCodes.id)}
-                                title={
-                                  !profile
-                                    ? "Login to add favorites"
-                                    : isFavorite(currentCodes.id)
-                                    ? "Remove from favorites"
-                                    : "Add to favorites"
-                                }
+                                title={!profile ? "Login to add favorites" : isFavorite(currentCodes.id) ? "Remove from favorites" : "Add to favorites"}
                                 style={{
                                   fontSize: 22,
                                   cursor: profile ? "pointer" : "not-allowed",
@@ -458,38 +415,24 @@ export default function Components_Design() {
                               >
                                   <span className="cd-fav-box">
                                       <i className="bi bi-heart-fill mx-3"></i>
-                                      {/* <small>{favoriteCountMap[currentCodes?.id] ?? 0}</small> */}
                                   </span>
-                              </button>
+                            </button>
 
-                        {/* Share Dropdown */}
                         <div className="share-dropdown">
                           <button className="action-btn share-btn" title="Share">
                             <i className="fa fa-share-alt" />
                           </button>
                           <div className="share-options">
-                            <span onClick={() => handleShareClick("WhatsApp")}>
-                              <FaWhatsapp className="share-icon" /> WhatsApp
-                            </span>
-                            <span onClick={() => handleShareClick("Messenger")}>
-                              <FaFacebookMessenger className="share-icon" /> Messenger
-                            </span>
-                            <span onClick={() => handleShareClick("Facebook")}>
-                              <FaFacebook className="share-icon" /> Facebook
-                            </span>
-                            <span onClick={() => handleShareClick("Telegram")}>
-                              <FaTelegram className="share-icon" /> Telegram
-                            </span>
+                            <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
+                            <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
+                            <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
+                            <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
                           </div>
                         </div>
-
                       </div>
                   </div>
 
-
-                {/* ==== Navigation Buttons [preview + code + fullscreen + viewMore] ==== */}
                   <div className="navigator-btns" style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    {/* <------ [ Preview + Code ] -----> */}
                       <div className="code-preview-open">
                           <button className={`action-btn preview-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => scrollToSection("preview")}>
                             <i className="bi bi-eye-fill" /> Preview
@@ -499,12 +442,10 @@ export default function Components_Design() {
                           </button>
                       </div>
 
-                    {/* <------ [ FullScreen + ViewMore ] -----> */}
                       <div style={{ display: "flex", gap: 8 }}>
                           <button className="action-btn fullscreen-btn" onClick={openFullscreen}>
                             <i className="bi bi-arrows-fullscreen" /> <span className="fullscreen-text"> Fullscreen </span>
                           </button>
-
                           <button
                             className="action-btn view-more-btn"
                             onClick={() => {
@@ -521,11 +462,9 @@ export default function Components_Design() {
                       </div>
                   </div>
 
-
-                {/* ==== Code Section [ Design_Code.jsx ] ==== */}
                   <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
                       <Design_Code
-                        codeId={currentCodes.id}      // 🔹 ADD THIS
+                        codeId={currentCodes.id}
                         html={currentCodes.html}
                         css={currentCodes.css}
                         js={currentCodes.js}
@@ -536,8 +475,6 @@ export default function Components_Design() {
                       />
                   </div>
 
-
-                {/* === Preview Section [ Design_Preview.jsx ]=== */}
                   <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
                       <Design_Preview 
                           srcDoc={srcDoc} 
@@ -547,17 +484,9 @@ export default function Components_Design() {
                   </div>
         </div>
 
-
-
-{/* ========================================================== */}
-      {/* ========= Related / Recommended ============ */}
-{/* ========================================================== */}
         <div className="related-topic-container">
           <h1 className="home-section-title">- Recommended -</h1>
 
-
-
-            {/* === Search Bar === */}
                 <div className="cd-search-bar-wrapper" style={{ marginBottom: 12 }}>
                     <i className="fa fa-search" />
                     <input
@@ -569,7 +498,6 @@ export default function Components_Design() {
                     />
                 </div>
 
-            {/* === Filter Buttons [ALL, Free, Premium, Latest, Oldest, Unwatched, Favorite, Clicked] === */}
                 <div style={{ marginBottom: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <button className={`cd-filter-btns ${activeFilter === "all" ? "active" : ""}`} onClick={() => setActiveFilter("all")}>
                         <i className="fa fa-list" /> All
@@ -586,18 +514,12 @@ export default function Components_Design() {
                     <button className={`cd-filter-btns ${activeFilter === "oldest" ? "active" : ""}`} onClick={() => setActiveFilter("oldest")}>
                         <i className="fa fa-history" /> Oldest
                     </button>
-                    {/* <button className={`cd-filter-btns ${activeFilter === "unwatched" ? "active" : ""}`} onClick={() => setActiveFilter("unwatched")}>
-                        <i className="fa fa-eye-slash" /> Unwatched
-                    </button> */}
                     <button  className={`cd-filter-btns ${activeFilter === "favorite" ? "active" : ""}`} onClick={() => setActiveFilter("favorite")} >
                         <i className="fa fa-heart" /> Favorite
                     </button>
-
                     <button className="cd-filter-btns" disabled><i className="fa fa-chart-bar" /> Clicked</button>
                 </div>
 
-
-            {/* === Filtered / Searched Items And IFRAME === */}
                 <div className="related-videos-grid">
                     {filteredRelatedItems.length > 0 ? (
                         filteredRelatedItems.map((s, index) => { 
@@ -607,10 +529,11 @@ export default function Components_Design() {
                               s.js_code || s.js || "",
                           );
 
+                          // NEW Badge Check
+                          const showNewBadge = isNewItem(s.created_at);
+
                           return (
                               <React.Fragment key={s.id}> 
-                                
-                                  {/* Your Original Item */}
                                   <div
                                     className="related-video-item"
                                     onClick={() => handleRelatedClick(s)}
@@ -619,12 +542,31 @@ export default function Components_Design() {
                                     onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
                                     style={{ position: 'relative' }}
                                   >
+                                      {/* --- NEW BADGE --- */}
+                                      {showNewBadge && (
+                                          <div style={{ 
+                                            position: 'absolute',
+                                            top: '10px',
+                                            left: '10px',
+                                            background: '#ff4757',
+                                            color: 'white',
+                                            padding: '2px 8px',
+                                            borderRadius: '4px',
+                                            fontSize: '10px',
+                                            fontWeight: 'bold',
+                                            zIndex: 2,
+                                            boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+                                          }}>
+                                            NEW
+                                          </div>
+                                      )}
+
                                       {s.access_type === "Premium" && (
                                           <div style={{ 
                                             position: 'absolute',
                                             top: '10px',
                                             right: '10px',
-                                            background: 'rgba(29, 29, 28, 0.9)', // Using your orange theme color
+                                            background: 'rgba(29, 29, 28, 0.9)',
                                             color: 'gold',
                                             padding: '4px 8px',
                                             borderRadius: '6px',
@@ -650,31 +592,20 @@ export default function Components_Design() {
                                       </span>
                                   </div>
 
-                              {/*************  Advertisement Logic **************/}
                                   {(index + 1) % 3 === 0 && (
                                       <div className="related-video-item ad-placement">
                                           <Ads_Square_Display />
                                       </div>
                                   )}
-                                
                               </React.Fragment>
                           );
                         })
                     ) : (
                         <div className="no-components-message" style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#888" }}>
-                          <h4> 
-                            😖 Oops!!! 😖
-                              <br />
-                              <br />
-                            For this category
-                              <br />
-                            No More Components Available right now but will be uploaded soon
-                          </h4>
+                          <h4>😖 Oops!!! 😖<br /><br />For this category<br />No More Components Available right now but will be uploaded soon</h4>
                         </div>
                     )}
                 </div>
-
-
         </div>
     </div>
   );
