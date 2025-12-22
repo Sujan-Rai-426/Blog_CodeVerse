@@ -145,7 +145,7 @@ function Nav_Bar(props) {
             }
         };
         fetchStars();
-    }, []);
+    }, [stars]);
 
 
   // ------------------- JSX RENDER -------------------

@@ -26,7 +26,7 @@ const Ads_Square_Display = () => {
             <span style={{ 
                 display: 'block', 
                 fontSize: '12px', 
-                color: '#2d2a2aff', 
+                color: '#4d4141ff', 
                 marginBottom: '5px',
                 marginTop:'5px',
                 textTransform: 'uppercase',

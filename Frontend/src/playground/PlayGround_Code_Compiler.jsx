@@ -136,7 +136,7 @@ const PlayGround_Code_Compiler = () => {
                                 <span className='pcc-circle-2'></span>
                                 <span className='pcc-circle-3'></span>
                             </div>
-                            <div className="pcc-url-bar">https://codevora140.vercel.app/Code-Compiler</div>
+                            <div className="pcc-url-bar">https://codevora140.vercel.app/PlayGround/Code-Compiler</div>
                         </div>
                         <iframe ref={iframeRef} title="preview" />
                     </div>

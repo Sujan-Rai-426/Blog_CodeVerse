@@ -72,7 +72,8 @@ export default function Ads_Container({
                     data-ad-client="ca-pub-5604794698656933"
                     data-ad-slot="4061494851"
                     data-ad-format="rectangle"
-                    data-full-width-responsive="true"></ins>
+                    data-full-width-responsive="true">
+                </ins>
             </div>
 
             {/* Content Placeholder: Adds "Value" to the page for Google Reviewers */}
