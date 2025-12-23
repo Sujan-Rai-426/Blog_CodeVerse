@@ -121,11 +121,18 @@ class BackendStepViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         queryset = BackendStep.objects.all()
         topic_id = self.request.query_params.get("topic_id")
-
         if topic_id:
             queryset = queryset.filter(topic_id=topic_id)
-
         return queryset
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="occupied-steps/(?P<topic_id>[^/.]+)"
+    )
+    def occupied_steps(self, request, topic_id=None):
+        steps = BackendStep.objects.filter(topic_id=topic_id)
+        serializer = self.get_serializer(steps, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
 
 

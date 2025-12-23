@@ -73,9 +73,6 @@ urlpatterns = [
     # Contact Form
     path('contact/', tutorial_view.contact_form_view, name='contact_form'),
     
-    # Backend Occupied Steps
-    path('backend-steps/occupied-steps/<int:topic_id>/', occupied_steps, name='occupied-steps'),
-    
     # Total favorite count
     path('favorite-count/<int:code_id>/', favourite_count, name='favorite-count'),
     
