@@ -241,7 +241,7 @@
 
 
 .ct-topic-card:hover .ct-comp-count {
-    color: var(--text-secondary);
+    color: var(--accent-blue);
 }
 
 /* Arrow Decoration */

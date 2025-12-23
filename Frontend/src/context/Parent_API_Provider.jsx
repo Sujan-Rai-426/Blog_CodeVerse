@@ -4,12 +4,14 @@ import api from "../config/api";
 export const Parent_API_Provider_Context = createContext();
 
 export const Parent_Api_Provider = ({ children }) => {
+    // --- State Management ---
     const [baseData, setBaseData] = useState({ categories: [], sections: [], languages: [] });
     const [loadingBase, setLoadingBase] = useState(true);
     const [errorBase, setErrorBase] = useState(null);
     const [refreshingBase, setRefreshingBase] = useState(false);
     const [recentComponents, setRecentComponents] = useState([]);
 
+    // --- Cache Configuration ---
     const CACHE_KEY = "parent_api_base_data";
     const CACHE_TIME_KEY = "parent_api_base_cache_time";
     const MAX_AGE = 1000 * 60 * 60 * 48; // 48 hours
@@ -18,6 +20,7 @@ export const Parent_Api_Provider = ({ children }) => {
     const isFetchingBase = useRef(false);
     const recentFetchedRef = useRef(false);
 
+    // --- Internal Cache Helpers ---
     const loadFromCache = useCallback(() => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
@@ -35,24 +38,26 @@ export const Parent_Api_Provider = ({ children }) => {
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     }, []);
 
-  // --------------------------------------------------------------------
-  // FETCH BASE DATA (categories, sections, languages + topics)
-  // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
+    // 1. FETCH BASE DATA (Initial load of the entire structure)
+    // --------------------------------------------------------------------
     const fetchBaseData = useCallback(async (isBackground = false) => {
         if (isFetchingBase.current) return;
         isFetchingBase.current = true;
         if (!isBackground) setLoadingBase(true);
         setErrorBase(null);
+
         try {
             const [categoriesRes, sectionsRes, languagesRes] = await Promise.all([
                 api.get("/api/categories/"),
                 api.get("/api/sections/"),
                 api.get("/api/languages/"),
             ]);
+
             const shallowCategories = categoriesRes.data.map(c => ({ id: c.id, name: c.name }));
             const shallowSections = sectionsRes.data.map(s => ({ id: s.id, name: s.name, category: s.category }));
 
-            // FETCH TOPICS PER LANGUAGE
+            // Fetch nested topics for each language
             const languagesWithTopics = await Promise.all(
                 languagesRes.data.map(async (lang) => {
                     try {
@@ -72,11 +77,13 @@ export const Parent_Api_Provider = ({ children }) => {
                     }
                 })
             );
+
             const combined = {
                 categories: shallowCategories,
                 sections: shallowSections,
                 languages: languagesWithTopics
             };
+
             setBaseData(combined);
             saveToCache(combined);
         } catch (err) {
@@ -89,9 +96,35 @@ export const Parent_Api_Provider = ({ children }) => {
         }
     }, [saveToCache]);
 
-  // --------------------------------------------------------------------
-  // INITIAL LOAD
-  // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
+    // 2. INCREMENTAL UPDATE (The "Magic" function to avoid refetching)
+    // --------------------------------------------------------------------
+    /**
+     * Call this after a successful POST request to add a topic.
+     * It updates the local state and localStorage cache without an API call.
+     */
+    const addNewTopicLocally = useCallback((languageId, newTopic) => {
+        setBaseData((prev) => {
+            const updatedLanguages = prev.languages.map((lang) => {
+                if (lang.id === languageId) {
+                    // Prepend the new topic to the specific language's topic list
+                    return {
+                        ...lang,
+                        topics: [newTopic, ...lang.topics],
+                    };
+                }
+                return lang;
+            });
+
+            const newData = { ...prev, languages: updatedLanguages };
+            saveToCache(newData); // Sync with localStorage
+            return newData;
+        });
+    }, [saveToCache]);
+
+    // --------------------------------------------------------------------
+    // 3. INITIALIZATION LOGIC
+    // --------------------------------------------------------------------
     useEffect(() => {
         if (hasInitialized.current) return;
         hasInitialized.current = true;
@@ -112,9 +145,9 @@ export const Parent_Api_Provider = ({ children }) => {
         }
     }, [fetchBaseData, loadFromCache]);
 
-  // --------------------------------------------------------------------
-  // LAZY FETCH FUNCTIONS
-  // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
+    // 4. LAZY FETCH FUNCTIONS (Detail/Secondary views)
+    // --------------------------------------------------------------------
     const fetchTopicDetail = async (topicId) => {
         if (!topicId) return null;
         try {
@@ -137,7 +170,7 @@ export const Parent_Api_Provider = ({ children }) => {
         }
     };
 
-  // ----------------------- BACKEND STEPS CACHING -----------------------
+    // --- Backend Steps Caching Logic ---
     const backendStepsCache = useRef({});
     const backendStepsInProgress = useRef({});
     const BACKEND_STEPS_PREFIX = "backend_steps_";
@@ -145,12 +178,9 @@ export const Parent_Api_Provider = ({ children }) => {
 
     const fetchBackendSteps = async (topicId) => {
         if (!topicId) return [];
-
-        // Check in-memory cache
         if (backendStepsCache.current[topicId]) return backendStepsCache.current[topicId];
         if (backendStepsInProgress.current[topicId]) return backendStepsInProgress.current[topicId];
 
-        // Check localStorage cache
         try {
             const cached = localStorage.getItem(BACKEND_STEPS_PREFIX + topicId);
             const time = localStorage.getItem(BACKEND_STEPS_TIME_PREFIX + topicId);
@@ -161,7 +191,6 @@ export const Parent_Api_Provider = ({ children }) => {
             }
         } catch {}
 
-        // Fetch from API
         const promise = api.get("/api/backend-steps/", { params: { topic_id: topicId } })
             .then(res => {
                 backendStepsCache.current[topicId] = res.data;
@@ -176,45 +205,34 @@ export const Parent_Api_Provider = ({ children }) => {
         return promise;
     };
 
-
-// ------------ FETCH BACKEND IMAGES -----------------------
     const fetchBackendImages = async (topicId) => {
         if (!topicId) return [];
         try {
             const res = await api.get("/api/backend-images/", { params: { topic_id: topicId } });
             return res.data;
         } catch (err) {
-            console.error("Backend images error:", err);
             return [];
         }
     };
 
-
-// ------------ FETCH TEMPLATE TYPES -----------------------
     const fetchTemplateTypes = async () => {
         try {
             const res = await api.get("/api/template-types/");
             return res.data;
         } catch (err) {
-            console.error("Template types error:", err);
             return [];
         }
     };
 
-
-// ------------ FETCH TEMPLATES -----------------------
     const fetchTemplates = async (typeId) => {
         try {
             const res = await api.get("/api/templates/", { params: { type_id: typeId } });
             return res.data;
         } catch (err) {
-            console.error("Templates error:", err);
             return [];
         }
     };
 
-
-//------------ RECENT COMPONENTS FETCH ------------
     const fetchRecentComponents = async () => {
         if (recentFetchedRef.current) return recentComponents;
         recentFetchedRef.current = true;
@@ -224,27 +242,29 @@ export const Parent_Api_Provider = ({ children }) => {
             setRecentComponents(latest6);
             return latest6;
         } catch (err) {
-            console.error("Recent components fetch error:", err);
             return [];
         }
     };
 
-  // --------------------------------------------------------------------
-  // PROVIDER EXPORT
-  // --------------------------------------------------------------------
+    // --------------------------------------------------------------------
+    // 5. PROVIDER EXPORT
+    // --------------------------------------------------------------------
     return (
         <Parent_API_Provider_Context.Provider
             value={{
+                // States
                 baseData,
                 loadingBase,
                 errorBase,
                 refreshingBase,
                 recentComponents,
 
+                // Computed Lists (for easy access)
                 categories: baseData?.categories || [],
                 sections: baseData?.sections || [],
                 languages: baseData?.languages || [],
 
+                // Actions
                 fetchTopicDetail,
                 fetchFrontendSourceCode,
                 fetchBackendSteps,
@@ -252,12 +272,14 @@ export const Parent_Api_Provider = ({ children }) => {
                 fetchTemplateTypes,
                 fetchTemplates,
                 fetchRecentComponents,
+                
+                // Manual Cache Updates
+                addNewTopicLocally, 
             }}
         >
-                {children}
+            {children}
         </Parent_API_Provider_Context.Provider>
     );
 };
 
-// Hook
 export const useParentAPI = () => useContext(Parent_API_Provider_Context);

@@ -11,7 +11,7 @@ import User_API_Context from "../clients/User_API_Context.jsx"
 import Ads_Square_Display from "../context/Ads_Square_Display.jsx";
 
 // --- NEW Badge Helper ---
-const NEW_DURATION_DAYS = 7;
+const NEW_DURATION_DAYS = 7; //NEW badge is shown for 7 days from uploaded
 const isNewItem = (date) => {
     if (!date) return false;
     const diffDays = (new Date() - new Date(date)) / (1000 * 60 * 60 * 24);
@@ -138,7 +138,6 @@ export default function Components_Design() {
     const { topicID, codeId } = useParams();
     const navigate = useNavigate();
     const { fetchFrontendSourceCode } = useContext(Parent_API_Provider_Context);
-    
     const [currentCodes, setCurrentCodes] = useState(null);
     const [srcDoc, setSrcDoc] = useState("");
     const [relatedItems, setRelatedItems] = useState([]);
@@ -147,7 +146,7 @@ export default function Components_Design() {
     const codeRef = useRef(null);
     const [searchTerm, setSearchTerm] = useState("");
     const [activeFilter, setActiveFilter] = useState("all");
-
+    
     // ------------------- Fetch codes with caching -------------------
     useEffect(() => {
         if (!topicID) return;
@@ -189,7 +188,7 @@ export default function Components_Design() {
         };
         loadCodes();
     }, [topicID, codeId, fetchFrontendSourceCode]);
-
+    
     useEffect(() => {
         if (!currentCodes) return;
         setSrcDoc("");
@@ -209,9 +208,8 @@ export default function Components_Design() {
     const { profile, favorites } = useContext(User_API_Context);
     const [favoriteIds, setFavoriteIds] = useState([]); 
     const [favoriteCountMap, setFavoriteCountMap] = useState({}); 
-
     const isFavorite = (id) => favoriteIds.includes(id);
-
+    
     useEffect(() => {
         if (favorites && favorites.length) {
             const ids = favorites.map(f => f.code_detail.id);
@@ -220,12 +218,11 @@ export default function Components_Design() {
             setFavoriteIds([]);
         }
     }, [favorites]);
-
+    
     useEffect(() => {
         const fetchCounts = async () => {
             const allCodes = [currentCodes, ...relatedItems].filter(Boolean);
             const newCounts = {};
-
             await Promise.all(allCodes.map(async (item) => {
                 if (!item?.id) return;
                 try {
@@ -242,6 +239,7 @@ export default function Components_Design() {
         if (currentCodes) fetchCounts();
     }, [currentCodes, relatedItems]);
 
+    // handle Favourite LOGIC
     const handleFavorite = async (id) => {
         if (!profile) return alert("Login to add favorites!");
         const isFav = favoriteIds.includes(id);
@@ -269,6 +267,7 @@ export default function Components_Design() {
         }
     };
 
+    // handle Share Click LOGIC
     const handleShareClick = (platform) => {
         const realUrl = window.location.href;
         const encodedRealUrl = encodeURIComponent(realUrl);
@@ -295,12 +294,14 @@ export default function Components_Design() {
         window.open(shareUrl, "_blank", "width=600,height=500");
     };
 
+    // scrollToSection logic
     const scrollToSection = (tab) => {
         setActiveTab(tab);
         if (tab === "preview") previewRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
         else codeRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
     };
 
+    // openFullscreen logic handle
     const openFullscreen = () => {
         const newWindow = window.open("", "_blank");
         if (!newWindow) return;
@@ -309,61 +310,64 @@ export default function Components_Design() {
         newWindow.document.close();
     };
 
+    // handle Related / Recommended Click button
     const handleRelatedClick = (code) => {
         navigate(`/Components/${topicID}/${code.id}`);
         window.scrollTo({ top: 0, behavior: "smooth" });
     };
 
+    // Skeleton LOADER
     if (!currentCodes) {
-      return (
-          <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
-              <div className="template-preview">
-                  <div className="preview-header">
-                      <div className="cd-header">
-                          <div className="cd-skeleton cd-skeleton-title" />
-                          <div className="cd-skeleton cd-skeleton-desc" />
-                          <div className="cd-skeleton cd-skeleton-badge" />
-                      </div>
-                      <div className="header-actions">
-                          <div className="cd-skeleton cd-skeleton-btn" />
-                          <div className="cd-skeleton cd-skeleton-btn" />
-                      </div>
-                  </div>
-                  <div className="navigator-btns">
-                      <div className="code-preview-open">
-                          <div className="cd-skeleton cd-skeleton-nav-btn" />
-                          <div className="cd-skeleton cd-skeleton-nav-btn" />
-                      </div>
-                      <div style={{ display: 'flex', gap: 8 }}>
-                          <div className="cd-skeleton cd-skeleton-nav-btn" />
-                          <div className="cd-skeleton cd-skeleton-nav-btn" />
-                      </div>
-                  </div>
-                  <div className="cd-skeleton cd-skeleton-iframe" />
-                  <div className="related-topic-container">
-                      <div className="cd-skeleton cd-skeleton-section-title" />
-                      <div className="cd-search-bar-wrapper">
-                          <div className="cd-skeleton cd-skeleton-search" />
-                      </div>
-                      <div className="cd-filter-btns-wrapper">
-                          {[...Array(6)].map((_, i) => (
-                              <div key={i} className="cd-skeleton cd-skeleton-filter-btn" />
-                          ))}
-                      </div>
-                      <div className="related-videos-grid">
-                          {[...Array(3)].map((_, i) => (
-                              <div key={i} className="related-video-item">
-                                  <div className="cd-skeleton cd-skeleton-iframe" style={{ height: 180 }} />
-                                  <div className="cd-skeleton cd-skeleton-video-title" />
-                              </div>
-                          ))}
-                      </div>
-                  </div>
-              </div>
-          </div>
-      );
+        return (
+            <div className="template-preview-container container mx-1" style={{ minHeight: "100vh" }}>
+                <div className="template-preview">
+                    <div className="preview-header">
+                        <div className="cd-header">
+                            <div className="cd-skeleton cd-skeleton-title" />
+                            <div className="cd-skeleton cd-skeleton-desc" />
+                            <div className="cd-skeleton cd-skeleton-badge" />
+                        </div>
+                        <div className="header-actions">
+                            <div className="cd-skeleton cd-skeleton-btn" />
+                            <div className="cd-skeleton cd-skeleton-btn" />
+                        </div>
+                    </div>
+                    <div className="navigator-btns">
+                        <div className="code-preview-open">
+                            <div className="cd-skeleton cd-skeleton-nav-btn" />
+                            <div className="cd-skeleton cd-skeleton-nav-btn" />
+                        </div>
+                        <div style={{ display: 'flex', gap: 8 }}>
+                            <div className="cd-skeleton cd-skeleton-nav-btn" />
+                            <div className="cd-skeleton cd-skeleton-nav-btn" />
+                        </div>
+                    </div>
+                    <div className="cd-skeleton cd-skeleton-iframe" />
+                    <div className="related-topic-container">
+                        <div className="cd-skeleton cd-skeleton-section-title" />
+                        <div className="cd-search-bar-wrapper">
+                            <div className="cd-skeleton cd-skeleton-search" />
+                        </div>
+                        <div className="cd-filter-btns-wrapper">
+                            {[...Array(6)].map((_, i) => (
+                                <div key={i} className="cd-skeleton cd-skeleton-filter-btn" />
+                            ))}
+                        </div>
+                        <div className="related-videos-grid">
+                            {[...Array(3)].map((_, i) => (
+                                <div key={i} className="related-video-item">
+                                    <div className="cd-skeleton cd-skeleton-iframe" style={{ height: 180 }} />
+                                    <div className="cd-skeleton cd-skeleton-video-title" />
+                                </div>
+                            ))}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        );
     }
 
+    // Filtering Logic
     const filteredRelatedItems = relatedItems
         .filter((s) => s.id !== currentCodes.id)
         .filter((s) => s.topic === Number(topicID))
@@ -384,86 +388,101 @@ export default function Components_Design() {
             return 0;
         });
 
-  return (
-    <div className="cd-template-preview-container container" style={{ minHeight: "100vh" }}>
-        <div className="cd-preview-container">
-                  <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
-                      <div className="cd-header">
-                          <h3 className="text-infro">{currentCodes.title}</h3>
-                          <p>{currentCodes.description}</p>
-                          <div className="access-info" style={{ marginTop: 6 }}>
-                              <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
-                                  {currentCodes.access_type}
-                                  {currentCodes.access_type === "Premium" && currentCodes.price ? ` • $${currentCodes.price}` : ""}
-                              </span>
-                          </div>
-                      </div>
+    return (
+        <div className="cd-template-preview-container container" style={{ minHeight: "100vh" }}>
 
-                      <div className="header-actions">
+
+        {/* ***************************************************************** */}
+            {/*                  MAIN CONTENE SECTION                     */}
+        {/* ***************************************************************** */}
+            <div className="cd-preview-container">
+
+                {/* -------- header Fields [ TITLE, DESCRIPTION, ACCESS TYPE, PRICE, FAVOURITE, SHARE ------- ] */}
+                <div className="preview-header" style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}>
+                    
+                    {/* ------- TOP LEFT FIELDS ---> [ Title, Description, Access Type, Price ] --------- */}
+                    <div className="cd-header">
+                        <h3 className="text-infro">{currentCodes.title}</h3>
+                        <p>{currentCodes.description}</p>
+                        <div className="access-info" style={{ marginTop: 6 }}>
+                            <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
+                                {currentCodes.access_type}
+                                {currentCodes.access_type === "Premium" && currentCodes.price ? ` • $${currentCodes.price}` : ""}
+                            </span>
+                        </div>
+                    </div>
+
+
+                    {/*-------- TOP RIGHT BUTTONS ---> [ Favourite, Share ] ---------*/}
+                    <div className="header-actions">
                             <button
                                 className={`cd-fav-btn ${isFavorite(currentCodes.id) ? "active" : ""}`}
                                 onClick={() => handleFavorite(currentCodes.id)}
                                 title={!profile ? "Login to add favorites" : isFavorite(currentCodes.id) ? "Remove from favorites" : "Add to favorites"}
                                 style={{
-                                  fontSize: 22,
-                                  cursor: profile ? "pointer" : "not-allowed",
-                                  border: "none",
-                                  background: "transparent",
-                                  color: isFavorite(currentCodes.id) ? "red" : "#aaa",
-                                  transition: "color 0.2s",
+                                fontSize: 22,
+                                cursor: profile ? "pointer" : "not-allowed",
+                                border: "none",
+                                background: "transparent",
+                                color: isFavorite(currentCodes.id) ? "red" : "#aaa",
+                                transition: "color 0.2s",
                                 }}
-                              >
-                                  <span className="cd-fav-box">
-                                      <i className="bi bi-heart-fill mx-3"></i>
-                                  </span>
+                            >
+                                <span className="cd-fav-box">
+                                    <i className="bi bi-heart-fill mx-3"></i>
+                                </span>
                             </button>
 
                         <div className="share-dropdown">
-                          <button className="action-btn share-btn" title="Share">
-                            <i className="fa fa-share-alt" />
-                          </button>
-                          <div className="share-options">
-                            <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
-                            <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
-                            <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
-                            <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
-                          </div>
+                            <button className="action-btn share-btn" title="Share">
+                                <i className="fa fa-share-alt" />
+                            </button>
+                            <div className="share-options">
+                                <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
+                                <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
+                                <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
+                                <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
+                            </div>
                         </div>
-                      </div>
-                  </div>
+                    </div>
+                </div>
 
-                  <div className="navigator-btns" style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <div className="code-preview-open">
-                          <button className={`action-btn preview-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => scrollToSection("preview")}>
+
+                {/* -------- header Buttons [ PREVIEW , CODE, FULL SCREEN, RECOMMENDED ----------- ] */}
+                <div className="navigator-btns" style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div className="code-preview-open">
+                        <button className={`action-btn preview-btn ${activeTab === "preview" ? "active" : ""}`} onClick={() => scrollToSection("preview")}>
                             <i className="bi bi-eye-fill" /> Preview
-                          </button>
-                          <button className={`action-btn code-btn ${activeTab === "code" ? "active" : ""}`} onClick={() => scrollToSection("code")}>
+                        </button>
+                        <button className={`action-btn code-btn ${activeTab === "code" ? "active" : ""}`} onClick={() => scrollToSection("code")}>
                             <i className="bi bi-code-slash" /> Code
-                          </button>
-                      </div>
+                        </button>
+                    </div>
 
-                      <div style={{ display: "flex", gap: 8 }}>
-                          <button className="action-btn fullscreen-btn" onClick={openFullscreen}>
+                    <div style={{ display: "flex", gap: 8 }}>
+                        <button className="action-btn fullscreen-btn" onClick={openFullscreen}>
                             <i className="bi bi-arrows-fullscreen" /> <span className="fullscreen-text"> Fullscreen </span>
-                          </button>
-                          <button
+                        </button>
+                        <button
                             className="action-btn view-more-btn"
                             onClick={() => {
-                              const section = document.querySelector(".related-topic-container");
-                              const navbarHeight = document.querySelector(".navbar")?.offsetHeight || 80;
-                              if (section) {
+                            const section = document.querySelector(".related-topic-container");
+                            const navbarHeight = document.querySelector(".navbar")?.offsetHeight || 80;
+                            if (section) {
                                 const topPos = section.getBoundingClientRect().top + window.scrollY - navbarHeight;
                                 window.scrollTo({ top: topPos, behavior: "smooth" });
-                              }
+                            }
                             }}
-                          >
+                        >
                             <i className="bi bi-stack" /> Recommended
-                          </button>
-                      </div>
-                  </div>
+                        </button>
+                    </div>
+                </div>
 
-                  <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
-                      <Design_Code
+
+                {/* ------- CODE ------- */}
+                <div ref={codeRef} style={{ display: activeTab === "code" ? "block" : "none", marginTop: 16 }}>
+                    <Design_Code
                         codeId={currentCodes.id}
                         html={currentCodes.html}
                         css={currentCodes.css}
@@ -472,32 +491,42 @@ export default function Components_Design() {
                         price={currentCodes.price}
                         hasBought={currentCodes.hasBought}
                         pageTab={activeTab}
-                      />
-                  </div>
-
-                  <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
-                      <Design_Preview 
-                          srcDoc={srcDoc} 
-                          device={device} 
-                          changeDevice={changeDevice} 
-                      />
-                  </div>
-        </div>
-
-        <div className="related-topic-container">
-          <h1 className="home-section-title">- Recommended -</h1>
-
-                <div className="cd-search-bar-wrapper" style={{ marginBottom: 12 }}>
-                    <i className="fa fa-search" />
-                    <input
-                      type="text"
-                      className="cd-search-bar"
-                      placeholder=" Search by title..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
                     />
                 </div>
 
+                {/* ------- PREVIEW --------- */}
+                <div ref={previewRef} style={{ display: activeTab === "preview" ? "block" : "none", marginTop: 12 }}>
+                    <Design_Preview 
+                        srcDoc={srcDoc} 
+                        device={device} 
+                        changeDevice={changeDevice} 
+                    />
+                </div>
+            </div>
+
+
+
+
+        {/* ***************************************************************** */}
+            {/*                  RECOMMENDED SECTION                     */}
+        {/* ***************************************************************** */}
+            <div className="related-topic-container">
+                <h1 className="home-section-title">- Recommended -</h1>
+
+                {/* ******* SEARCH BAR ****** */}
+                <div className="cd-search-bar-wrapper" style={{ marginBottom: 12 }}>
+                    <i className="fa fa-search" />
+                    <input
+                        type="text"
+                        className="cd-search-bar"
+                        placeholder=" Search by title..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                </div>
+
+
+                {/* ******** OTHER FILTER ******** */}
                 <div style={{ marginBottom: 12, display: "flex", gap: 8, flexWrap: "wrap" }}>
                     <button className={`cd-filter-btns ${activeFilter === "all" ? "active" : ""}`} onClick={() => setActiveFilter("all")}>
                         <i className="fa fa-list" /> All
@@ -520,53 +549,54 @@ export default function Components_Design() {
                     <button className="cd-filter-btns" disabled><i className="fa fa-chart-bar" /> Clicked</button>
                 </div>
 
+                {/* ******* IFRAME GRID ******** */}
                 <div className="related-videos-grid">
                     {filteredRelatedItems.length > 0 ? (
                         filteredRelatedItems.map((s, index) => { 
-                          const smallSrcDoc = buildRecommendedIframeDoc(
-                              s.html_code || s.html || "",
-                              s.css_code || s.css || "",
-                              s.js_code || s.js || "",
-                          );
+                            const smallSrcDoc = buildRecommendedIframeDoc(
+                                s.html_code || s.html || "",
+                                s.css_code || s.css || "",
+                                s.js_code || s.js || "",
+                            );
 
-                          // NEW Badge Check
-                          const showNewBadge = isNewItem(s.created_at);
+                            // NEW Badge Check
+                            const showNewBadge = isNewItem(s.created_at);
 
-                          return (
-                              <React.Fragment key={s.id}> 
-                                  <div
-                                    className="related-video-item"
-                                    onClick={() => handleRelatedClick(s)}
-                                    role="button"
-                                    tabIndex={0}
-                                    onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
-                                    style={{ position: 'relative' }}
-                                  >
-                                    {/* --- NEW BADGE --- */}
-                                      {showNewBadge && (
+                            return (
+                                <React.Fragment key={s.id}> 
+                                    <div
+                                        className="related-video-item"
+                                        onClick={() => handleRelatedClick(s)}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(e) => { if (e.key === "Enter") handleRelatedClick(s); }}
+                                        style={{ position: 'relative' }}
+                                    >
+                                        {/* --- NEW BADGE --- */}
+                                        {showNewBadge && (
                                         <div style={{ 
-                                          position: 'absolute',
-                                          top: '0',
-                                          left: '0',
-                                          background: '#379e81ff', // Dark contrast
-                                          color: 'white',
-                                          padding: '6px 14px',
-                                          fontSize: '10px',
-                                          fontWeight: '600',
-                                          zIndex: 2,
-                                          textTransform: 'uppercase',
-                                          letterSpacing: '2px',
-                                          borderRadius: '0 0 8px 0',
-                                          borderRight: '1px solid',
-                                          borderBottom: '1px solid',
+                                            position: 'absolute',
+                                            top: '0',
+                                            left: '0',
+                                            background: '#379e81ff', // Dark contrast
+                                            color: 'white',
+                                            padding: '6px 14px',
+                                            fontSize: '10px',
+                                            fontWeight: '600',
+                                            zIndex: 2,
+                                            textTransform: 'uppercase',
+                                            letterSpacing: '2px',
+                                            borderRadius: '0 0 8px 0',
+                                            borderRight: '1px solid',
+                                            borderBottom: '1px solid',
                                         }}>
-                                          New Arrival
+                                            New Arrival
                                         </div>
-                                      )}
+                                        )}
 
-                                  {/* ----- PREMIUM BADGE ------- */}
-                                      {s.access_type === "Premium" && (
-                                          <div style={{ 
+                                    {/* ----- PREMIUM BADGE ------- */}
+                                        {s.access_type === "Premium" && (
+                                            <div style={{ 
                                             position: 'absolute',
                                             top: '10px',
                                             right: '10px',
@@ -579,43 +609,50 @@ export default function Components_Design() {
                                             display: 'flex',
                                             alignItems: 'center',
                                             zIndex: 2
-                                          }}>
-                                              <FaGem style={{ fontSize: '10px' }} /> ${s.price || 0}
-                                          </div>
-                                      )}
+                                            }}>
+                                                <FaGem style={{ fontSize: '10px' }} /> ${s.price || 0}
+                                            </div>
+                                        )}
 
-                                      <iframe
-                                          srcDoc={smallSrcDoc}
-                                          sandbox="allow-scripts allow-forms allow-modals"
-                                          title={s.title || `related-${s.id}`}
-                                          style={{ 
+                                        <iframe
+                                            srcDoc={smallSrcDoc}
+                                            sandbox="allow-scripts allow-forms allow-modals"
+                                            title={s.title || `related-${s.id}`}
+                                            style={{ 
                                             width: "100%", 
                                             height: 'auto', 
                                             border: "none", 
                                             borderBottom: "1px solid" ,
-                                          }}
-                                      />
+                                            }}
+                                        />
 
-                                      <span> 
-                                          <FaPlay /> &nbsp; {s.title || "Untitled"}
-                                      </span>
-                                  </div>
+                                        <span> 
+                                            <FaPlay /> &nbsp; {s.title || "Untitled"}
+                                        </span>
+                                    </div>
 
-                                  {(index + 1) % 3 === 0 && (
-                                      <div className="related-video-item ad-placement">
-                                          <Ads_Square_Display />
-                                      </div>
-                                  )}
-                              </React.Fragment>
-                          );
+                                    {(index + 1) % 3 === 0 && (
+                                        <div className="related-video-item ad-placement">
+                                            <Ads_Square_Display />
+                                        </div>
+                                    )}
+                                </React.Fragment>
+                            );
                         })
                     ) : (
                         <div className="no-components-message" style={{ gridColumn: "1 / -1", textAlign: "center", padding: "40px", color: "#888" }}>
-                          <h4>😖 Oops!!! 😖<br /><br />For this category<br />No More Components Available right now but will be uploaded soon</h4>
+                            <h4>
+                                😖 Oops!!! 😖
+                                    <br />
+                                    <br />
+                                For this category
+                                    <br />
+                                No More Components Available right now but will be uploaded soon
+                            </h4>
                         </div>
                     )}
                 </div>
+            </div>
         </div>
-    </div>
-  );
+    );
 }
