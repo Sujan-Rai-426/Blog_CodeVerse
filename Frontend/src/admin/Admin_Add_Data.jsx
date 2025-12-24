@@ -138,27 +138,26 @@ const Admin_Add_Data = () => {
       setOccupiedSteps([]);
       return;
     }
-
     let mounted = true;
     const fetchSteps = async () => {
       try {
-        // endpoint to get occupied steps of Backend steps
         const res = await rawGet(
           `/api/backend-steps/occupied-steps/${backendTopic}/`
         );
-        if (mounted) setOccupiedSteps(res?.occupied_steps || []);
+        if (mounted) {
+          setOccupiedSteps(
+            (res?.occupied_steps || []).map(Number)
+          );
+        }
       } catch (err) {
         console.error("Error fetching occupied steps:", err);
         if (mounted) setOccupiedSteps([]);
       }
     };
     fetchSteps();
+    return () => (mounted = false);
+  }, [backendTopic, rawGet]);
 
-    return () => {
-      mounted = false;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [backendTopic, rawGet]); // rawGet is stable
 
 
   // ================================================================

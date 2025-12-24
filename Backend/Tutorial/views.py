@@ -27,7 +27,6 @@ class CategoryViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-
     @action(detail=True, methods=['get'], url_path='sections')
     def get_sections(self, request, pk=None):
         """Lazy-load sections for a category."""
@@ -42,7 +41,6 @@ class SectionViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Section.objects.all()
     serializer_class = SectionSerializer
-
     @action(detail=True, methods=['get'], url_path='languages')
     def get_languages(self, request, pk=None):
         """Lazy-load languages for a section."""
@@ -57,17 +55,14 @@ class LanguageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     queryset = Language.objects.all()
     serializer_class = LanguageSerializer
-
     @action(detail=True, methods=["get"])
     def topics(self, request, pk=None):
         language = self.get_object()
-
         topics = language.topics.annotate(
             source_codes_count=Count("source_codes", distinct=True),
             steps_count=Count("steps", distinct=True),
             images_count=Count("images", distinct=True),
         )
-
         serializer = TopicSerializer(topics, many=True)
         return Response(serializer.data)
 
@@ -77,18 +72,14 @@ class LanguageViewSet(viewsets.ModelViewSet):
 class TopicViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = TopicSerializer
-
     def get_queryset(self):
         queryset = Topic.objects.annotate(
             source_codes_count=Count("source_codes", distinct=True),
             steps_count=Count("steps", distinct=True),
             images_count=Count("images", distinct=True),
         )
-
-        language_id = self.request.query_params.get("language_id")
-        if language_id:
+        if language_id:= self.request.query_params.get("language_id"):
             queryset = queryset.filter(language_id=language_id)
-
         return queryset
 
 
@@ -98,16 +89,11 @@ class TopicViewSet(viewsets.ModelViewSet):
 class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = FrontendSourceCodeSerializer
-
     def get_queryset(self):
         queryset = FrontendSourceCode.objects.all()
-        topic_id = self.request.query_params.get("topic_id")
-
-        if topic_id:
+        if topic_id:= self.request.query_params.get("topic_id"):
             queryset = queryset.filter(topic_id=topic_id)
-
         return queryset
-
     def get_serializer_context(self):
         return {"request": self.request}
 
@@ -117,11 +103,9 @@ class FrontendSourceCodeViewSet(viewsets.ModelViewSet):
 class BackendStepViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BackendStepSerializer
-
     def get_queryset(self):
         queryset = BackendStep.objects.all()
-        topic_id = self.request.query_params.get("topic_id")
-        if topic_id:
+        if topic_id := self.request.query_params.get("topic_id"):
             queryset = queryset.filter(topic_id=topic_id)
         return queryset
     @action(
@@ -131,8 +115,12 @@ class BackendStepViewSet(viewsets.ModelViewSet):
     )
     def occupied_steps(self, request, topic_id=None):
         steps = BackendStep.objects.filter(topic_id=topic_id)
-        serializer = self.get_serializer(steps, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        occupied = list(steps.values_list("step_number", flat=True))
+        return Response(
+            {"occupied_steps": occupied},
+            status=status.HTTP_200_OK
+        )
+
 
 
 
@@ -140,14 +128,10 @@ class BackendStepViewSet(viewsets.ModelViewSet):
 class BackendImageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsAdminOrReadOnly]
     serializer_class = BackendImageSerializer
-
     def get_queryset(self):
         queryset = BackendImage.objects.all()
-        topic_id = self.request.query_params.get("topic_id")
-
-        if topic_id:
+        if topic_id:= self.request.query_params.get("topic_id"):
             queryset = queryset.filter(topic_id=topic_id)
-
         return queryset
 
 
