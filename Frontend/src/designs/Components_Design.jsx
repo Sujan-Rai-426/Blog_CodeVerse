@@ -406,6 +406,7 @@ export default function Components_Design() {
                         <p>{currentCodes.description}</p>
                         <div className="access-info" style={{ marginTop: 6 }}>
                             <span className={`badge ${currentCodes.access_type?.toLowerCase() || "free"}`}>
+                                <i className="bi bi-tags-fill me-1"></i> {/* <----------  Price Tag Badge */}
                                 {currentCodes.access_type}
                                 {currentCodes.access_type === "Premium" && currentCodes.price ? ` • $${currentCodes.price}` : ""}
                             </span>
