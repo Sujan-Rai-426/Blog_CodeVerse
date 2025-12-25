@@ -135,17 +135,20 @@ function Nav_Bar(props) {
         }
         const fetchStars = async () => {
             try {
-                const response = await fetch("https://api.github.com/repos/Sujan-Rai-426/CodeVora");
+                const response = await fetch(
+                    "https://api.github.com/repos/Sujan-Rai-426/CodeVora"
+                );
                 const data = await response.json();
-                const count = data.stargazers_count || 0;
+                const count = data?.stargazers_count ?? 0;
                 setStars(count);
                 sessionStorage.setItem("repo_stars", JSON.stringify(count));
             } catch (error) {
-                console.error(error);
+                console.error("Failed to fetch GitHub stars:", error);
             }
         };
         fetchStars();
-    }, [stars]);
+    }, []);
+
 
 
   // ------------------- JSX RENDER -------------------
