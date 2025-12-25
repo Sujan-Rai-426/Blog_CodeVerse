@@ -28,22 +28,22 @@ const buildMainIframeDoc = (html = "", css = "", js = "") => {
     return `<!doctype html>
     <html lang="en">
     <head>
-      <meta charset="utf-8"/>
-      <meta name="viewport" content="width=device-width,initial-scale=1"/>
-      <style>
-          html,body{
-              margin:0;
-              padding:0;
-              width:100%;
-              min-height:100%;
-              display:flex;
-              flex-direction:column;
-              justify-content:center;
-              align-items:center;
-              background: transparent;
-          } 
-          ${css || ""}
-      </style>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width,initial-scale=1"/>
+        <style>
+            html,body{
+                margin:0;
+                padding:0;
+                width:100%;
+                min-height:100%;
+                display:flex;
+                flex-direction:column;
+                justify-content:center;
+                align-items:center;
+                background: transparent;
+            } 
+            ${css || ""}
+        </style>
     </head>
     <body>
         ${html || ""}

@@ -24,7 +24,7 @@ const buildIframeDoc = (html = "", css = "", js = "", aspectWidth = 1333, aspect
                     flex-direction:column; 
                     justify-content:center; 
                     align-items:center; 
-                    background:transparent; 
+                    background:black; 
                     overflow:hidden; 
                 }
                 .scaleWrapper { 
