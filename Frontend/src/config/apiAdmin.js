@@ -19,8 +19,7 @@ const apiAdmin = axios.create({
 export async function fetchAdminCsrfToken() {
     try {
         await apiAdmin.get(CSRF_PATH);
-        const token = document.cookie.match(/csrftoken=([^;]+)/)?.[1];
-        return token;
+        return document.cookie.match(/csrftoken=([^;]+)/)?.[1];
     } catch (err) {
         console.error("fetchAdminCsrfToken failed:", err);
         throw err;

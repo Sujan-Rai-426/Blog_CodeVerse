@@ -9,6 +9,7 @@ import Services from "../components/Services";
 
 import { Parent_API_Provider_Context } from "../context/Parent_API_Provider.jsx";
 import Interactive_Grid_Background from "../context/Interactive_Grid_Background.jsx";
+import Typing_Effect from "../context/Typing_Effect.jsx";
 
 function Home() {
     const { languages, loadingBase: parentLoading } = useContext(Parent_API_Provider_Context);
@@ -59,10 +60,19 @@ function Home() {
                         <h2 className="hero-title">
                             Free to use UI Components, <br /> 
                             Templates, Programming snippets & Guides <br />
-                            All in one place.
+                            <small>
+                                <Typing_Effect 
+                                    words={[
+                                        "All in one place...",
+                                        "Premium Animated UI Components...",
+                                        "Modern Web Animations...",
+                                        "Built for Developers..."
+                                    ]}
+                                    speed={90}
+                                    eraseSpeed={40}
+                                />
+                            </small>
                         </h2>
-                        <p className="hero-note text-light m-0">
-                        </p>
                     </div>
 
                     {/* Hero Social Media Links */}
