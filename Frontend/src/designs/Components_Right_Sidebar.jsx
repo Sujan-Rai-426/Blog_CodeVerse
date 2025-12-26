@@ -1,10 +1,7 @@
 import React, { useContext, useState } from "react";
 import "../assets/css/Components_Right_Sidebar.css";
 import { 
-    FaHeart, 
     FaStar, 
-    FaGem, 
-    FaClock, 
     FaBug, 
     FaLightbulb, 
     FaComment, 

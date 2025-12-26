@@ -31,7 +31,7 @@ const Footer = () => {
                     <div className="semi-footer-alt-container container">
                         {/* About / Brand */}
                         <div className="footer-brand">
-                            <h3 className="brand-title"><b> Code<sup><u>Vora💻</u></sup> </b></h3>
+                            <h3 className="brand-title"><b> CodeVora UI </b></h3>
                             <p className="brand-text text-white">
                                 Turning ideas into reality with high-quality tutorials, resources, and creative projects for developers.
                             </p>
@@ -54,6 +54,7 @@ const Footer = () => {
                             <ul>
                                 <li><a href="https://sujan140.vercel.app">Blog</a></li>
                                 {/* <li><Link to="/Contact">FAQ</Link></li> */}
+                                <li><Link to="/About">About Us</Link></li>
                                 <li><Link to="/Contact">Support</Link></li>
                                 <li><Link to="/Privacy_Policy">Terms & Privacy</Link></li>
                             </ul>

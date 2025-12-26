@@ -2,7 +2,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import "../assets/css/Nav_Bar.css";
-import { FaPlay, FaSignInAlt, FaUser, FaUserPlus } from "react-icons/fa";
+import { FaPaypal, FaPlay, FaSignInAlt, FaUser, FaUserPlus } from "react-icons/fa";
 import User_API_Context from "../clients/User_API_Context";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png"
 
@@ -34,6 +34,19 @@ function Nav_Bar(props) {
         } catch {
             return
         }
+    };
+
+    // ************** handle Buy Me Coffee ***************
+    const handleBuyMeCoffee = () => {
+        const amount = prompt("Enter amount (USD):");
+        if (!amount || isNaN(amount) || Number(amount) <= 0) {
+            alert("Please enter a valid amount");
+            return;
+        }
+        window.open(
+            `https://www.paypal.me/SujanRai140/${amount}`,
+            "_blank"
+        );
     };
 
 
@@ -194,17 +207,14 @@ function Nav_Bar(props) {
                                     </span>
                                 </Link>
                                 <div className={`nb-dropdown-panel ${aboutOpen ? "visible" : ""}`}>
-                                    <Link className="nb-dropdown-item" to="/About">
-                                        <i className="bi bi-people-fill"></i> &nbsp; About Us
-                                    </Link>
-                                    <Link className="nb-dropdown-item" to="/Contact">
-                                        <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
-                                    </Link>
-                                    <Link className="nb-dropdown-item" to="/Privacy_Policy">
-                                        <i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy
+                                    <Link title="Support via PayPal" onClick={handleBuyMeCoffee} className="nb-dropdown-item">
+                                        <FaPaypal /> &nbsp; Donate
                                     </Link>
                                     <Link className="nb-dropdown-item" to="PlayGround/Code-Compiler">
                                         <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
+                                    </Link>
+                                    <Link className="nb-dropdown-item" to="PlayGround/Code-Generator">
+                                        <i className="bi bi-code-square"></i> &nbsp; Code Generator
                                     </Link>
                                 </div>
                             </li>
@@ -369,12 +379,17 @@ function Nav_Bar(props) {
                                     <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; About Us</Link>
                                 </li>
                                 <li>
+                                    <Link title="Support via PayPal" onClick={handleBuyMeCoffee}>
+                                        <FaPaypal /> &nbsp; Donate
+                                    </Link>
+                                </li>
+                                <li>
                                     <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
                                         <i className="bi bi-telephone-fill"></i> &nbsp; Contact Us
                                     </Link>
                                 </li>
                                 <li>
-                                    <Link to="/Privacy_Policy" onClick={() => setSidebarOpen(false)}><i className="bi bi-shield-lock-fill"></i> &nbsp; Privacy Policy</Link>
+                                    <Link to="PlayGround/Code-Generator" onClick={() => setSidebarOpen(false)}><i className="bi bi-code-square"></i> &nbsp; Code Generator</Link>
                                 </li>
                             </ul>
                         </li>

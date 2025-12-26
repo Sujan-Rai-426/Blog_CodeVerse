@@ -138,6 +138,15 @@ function Components_Left_Sidebar() {
                         <p>No components found for "{searchTerm}"</p>
                     </div>
                 )}
+                    <hr />
+                    <br />
+            {/* ==== Footer ==== */}
+                <div className="crs-sidebar-footer">
+                    <small>&copy; {new Date().getFullYear()} Er.Sujan Rai. All rights reserved.</small>
+                </div>
+                    <br />
+                    <br />
+
             </div>
         </aside>
     );
