@@ -193,7 +193,7 @@ function Nav_Bar(props) {
                                 <Link to="/" className="nb-nav-link">Home</Link>
                             </li>
 
-                            {/* About dropdown */}
+                            {/* More dropdown */}
                             <li
                                 className={`nb-nav-item nb-nav-dropdown ${aboutOpen ? "open" : ""}`}
                                 ref={aboutRef}
@@ -369,15 +369,12 @@ function Nav_Bar(props) {
                             </Link>
                         </li>
 
-                    {/* ABOUT dropdown */}
+                    {/* MORE dropdown */}
                         <li>
                             <button className="nb-sidebar-dropdown-btn" onClick={toggleAboutMobile} aria-expanded={aboutMobileOpen}>
                                 <i className="bi bi-file-earmark-person-fill"></i> &nbsp;More <span className={`fs-4 nb-caret ${aboutMobileOpen ? "open" : ""}`}>▾</span>
                             </button>
                             <ul className={`nb-sidebar-sublist ${aboutMobileOpen ? "open" : ""}`}>
-                                <li>
-                                    <Link to="/About" onClick={() => setSidebarOpen(false)}><i className="bi bi-people-fill"></i> &nbsp; About Us</Link>
-                                </li>
                                 <li>
                                     <Link title="Support via PayPal" onClick={handleBuyMeCoffee}>
                                         <FaPaypal /> &nbsp; Donate
