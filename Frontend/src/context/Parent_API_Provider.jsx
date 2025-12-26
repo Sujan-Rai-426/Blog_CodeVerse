@@ -14,7 +14,7 @@ export const Parent_Api_Provider = ({ children }) => {
     // --- Cache Configuration ---
     const CACHE_KEY = "parent_api_base_data";
     const CACHE_TIME_KEY = "parent_api_base_cache_time";
-    const MAX_AGE = 1000 * 60 * 60 * 48; // 48 hours
+    const MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
 
     const hasInitialized = useRef(false);
     const isFetchingBase = useRef(false);

@@ -8,6 +8,7 @@ import { FaEdit, FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import apiAdmin from "../config/apiAdmin.js"; 
 
 const Admin_Update_Data = () => {
+
   // =================== Local State ===================
   const [loading, setLoading] = useState(true);
   const [savingId, setSavingId] = useState(null);
@@ -17,7 +18,7 @@ const Admin_Update_Data = () => {
   const [activeTab, setActiveTab] = useState("category");
 
   // =================== AdminProvider Data ===================
-  const { cache, fetchResource, updateResource, updateCacheList } = useAdmin();
+  const { cache, fetchResource, updateResource, deleteResource, updateCacheList } = useAdmin();
   const [categories, setCategories] = useState([]);
   const [sections, setSections] = useState([]);
   const [languages, setLanguages] = useState([]);
@@ -91,24 +92,24 @@ const Admin_Update_Data = () => {
   const toggleSub = (id) => setExpandedSub((prev) => ({ ...prev, [id]: !prev[id] }));
 
 
-  // ================ Handle Edit ====================
-    const handleEdit = (item, fields) => {
-        setEditingId(item.id);
-        const initialData = {};
-        fields.forEach((f) => {
-            if (f === "topic") {
-                // Use topic ID for backend, will show name in dropdown
-                initialData[f] = item.topic;
-            } else if (f === "step_title") {
-                initialData[f] = item.step_file_name ?? "";
-            } else if (f === "template_type_id") {
-                initialData[f] = item.template_type?.id ?? "";
-            } else {
-                initialData[f] = item[f] ?? "";
-            }
-        });
-        setFormData(initialData);
-    }
+  // =================== Handle Edit ===================
+  const handleEdit = (item, fields) => {
+    setEditingId(item.id);
+    const initialData = {};
+    fields.forEach((f) => {
+      if (f === "topic") {
+        initialData[f] = item.topic;
+      } else if (f === "step_title") {
+        initialData[f] = item.step_file_name ?? "";
+      } else if (f === "template_type_id") {
+        initialData[f] = item.template_type?.id ?? "";
+      } else {
+        initialData[f] = item[f] ?? "";
+      }
+    });
+    setFormData(initialData);
+  };
+
 
 
   // =================== Handle Cancle ===================
@@ -118,73 +119,78 @@ const Admin_Update_Data = () => {
     };
 
   // =================== Handle Update ===================
-    const handleUpdate = async (endpoint, id, setStateFn) => {
-        try {
-            setSavingId(id);
-              // Prepare payload: only include fields with values
-            const payload = { ...formData };
-            Object.keys(payload).forEach((key) => {
-                if (payload[key] === "" || payload[key] == null) delete payload[key];
-            });
+  const handleUpdate = async (endpoint, id, setStateFn) => {
+    try {
+      setSavingId(id);
+      // ---- Prepare payload ----
+      const payload = { ...formData };
+      Object.keys(payload).forEach((key) => {
+        if (payload[key] === "" || payload[key] == null) delete payload[key];
+      });
 
-            // Convert number fields
-            ["language", "price"].forEach((field) => {
-                if (payload[field] != null) payload[field] = Number(payload[field]);
-            });
+      // ---- Convert number fields ----
+      ["language", "price"].forEach((field) => {
+        if (payload[field] != null) payload[field] = Number(payload[field]);
+      });
 
-            // Normalize access_type
-            if (payload.access_type) {
-                const type = payload.access_type.toLowerCase();
-                if (type === "free") payload.access_type = "Free";
-                else if (type === "premium") payload.access_type = "Premium";
-                else {
-                    alert("Access type must be Free or Premium");
-                    setSavingId(null);
-                    return;
-                }
-            }
-
-            // Use AdminProvider's updateResource to PATCH + update cache
-            await updateResource(endpoint, id, payload, {
-              onSuccess: (updated) => {
-                // Sync local state with updated item
-                setStateFn((prev) =>
-                  prev.map((item) => (item.id === updated.id ? updated : item))
-                );
-                handleCancel();
-                alert("✅ Updated successfully!");
-              },
-              onError: (err) => {
-                console.error("Update failed:", err);
-                alert("❗❗❗ Update failed! Check console.");
-              },
-            });
-        } catch (err) {
-            console.error(err);
-            alert("❗❗❗ Unexpected error during update.");
-        } finally {
-            setSavingId(null);
+      // ---- Normalize access_type ----
+      if (payload.access_type) {
+        const type = payload.access_type.toLowerCase();
+        if (type === "free") payload.access_type = "Free";
+        else if (type === "premium") payload.access_type = "Premium";
+        else {
+          alert("Access type must be Free or Premium");
+          return;
         }
-    };
+      }
+
+      // ---- PATCH via AdminProvider (handles cache internally) ----
+      await updateResource(endpoint, id, payload, {
+        onSuccess: (updated) => {
+          // Sync local UI state (optional but recommended)
+          setStateFn((prev) =>
+            prev.map((item) => (item.id === updated.id ? updated : item))
+          );
+          handleCancel();
+          alert("✅ Updated successfully!");
+        },
+        onError: (err) => {
+          console.error("Update failed:", err);
+          alert("❌ Update failed! Check console.");
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      alert("❗ Unexpected error during update.");
+    } finally {
+      setSavingId(null);
+    }
+  };
 
 
 
   // =================== Handle Delete ===================
-    const handleDelete = async (endpoint, id, setStateFn) => {
-      if (!window.confirm("Delete this item?")) return;
-      try {
-        // DELETE request using apiAdmin
-        await apiAdmin.delete(`/api/${endpoint}/${id}/`);
+  const handleDelete = async (endpoint, id, setStateFn) => {
+    if (!window.confirm("Delete this item?")) return;
+    try {
+      await deleteResource(endpoint, id, {
+        onSuccess: () => {
+          // Sync local UI
+          setStateFn((prev) => prev.filter((i) => i.id !== id));
+          if (editingId === id) handleCancel();
+          alert("🗑 Deleted successfully!");
+        },
+        onError: (err) => {
+          console.error("Delete failed:", err);
+          alert("❌ Delete failed!");
+        },
+      });
+    } catch (err) {
+      console.error(err);
+      alert("❗ Unexpected error during delete.");
+    }
+  };
 
-        setStateFn((prev) => prev.filter((i) => i.id !== id));
-        updateCacheList(endpoint, { id }, "delete");
-        if (editingId === id) handleCancel();
-        alert("Deleted successfully");
-      } catch (err) {
-        console.error(err);
-        alert("Delete failed");
-      }
-    };
 
 
   // =================== Render Form Fields ===================
