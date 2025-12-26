@@ -8,11 +8,14 @@ import React, {
 import "../assets/css/Admin_Add_Data.css";
 // NOTE: Make sure the path is correct for your useAdmin hook
 import { useAdmin } from "./Admin_API_Context"; 
+// IMPORT the Parent API hook to access the manual cache update function
+import { useParentAPI } from "../context/Parent_API_Provider"; 
 
 /*
   Admin_Add_Data.jsx
   - Uses scalable fetchResource/fetchNested/createResource pattern from Admin Provider.
   - Avoids single monolithic data fetch.
+  - Integrated with Parent_API_Provider cache for instant updates.
 */
 
 const Admin_Add_Data = () => {
@@ -20,25 +23,27 @@ const Admin_Add_Data = () => {
   const [activeTab, setActiveTab] = useState("category");
   const [isUploading, setIsUploading] = useState(false);
 
-  // Destructure scalable functions from the provider
+  // Destructure scalable functions from the admin provider
   const { 
-    rawGet, // Used for the non-standard occupied steps endpoint
+    rawGet, 
     fetchResource, 
-    getCached, // Quick access to sync cache data
+    getCached, 
     createResource, 
   } = useAdmin();
 
+  // Get the manual cache updater from the Parent Provider
+  const { addNewTopicLocally } = useParentAPI();
+
   // =================== COMPONENT LOCAL STATE FOR RESOURCE DATA ===================
-  // These states will hold the comprehensive lists fetched from the API
   const [allCategories, setAllCategories] = useState([]);
   const [allTemplateTypes, setAllTemplateTypes] = useState([]);
   const [allLanguages, setAllLanguages] = useState([]);
   const [allTopics, setAllTopics] = useState([]);
-  const [allSections, setAllSections] = useState([]); // CRITICAL: This was missing data/wasn't used correctly
+  const [allSections, setAllSections] = useState([]); 
 
   // =================== FORM STATES (KEPT AS IS) ===================
   const [categoryName, setCategoryName] = useState("");
-  const [sectionType, setSectionType] = useState("Frontend"); // Default to Frontend
+  const [sectionType, setSectionType] = useState("Frontend"); 
   const [categoryId, setCategoryId] = useState("");
   const [languageName, setLanguageName] = useState("");
   const [icon, setIcon] = useState("");
@@ -80,51 +85,38 @@ const Admin_Add_Data = () => {
     borderRadius: "6px",
   };
 
-
   // =================== INITIAL DATA FETCHING ===================
   useEffect(() => {
-    // Fetch all necessary resources on mount
     const fetchInitialData = async () => {
-      // Note: fetchResource returns cached data if available, otherwise fetches.
-      // This is efficient and keeps the data fresh on component load.
       setAllCategories(await fetchResource("categories"));
       setAllTemplateTypes(await fetchResource("template-types"));
       setAllLanguages(await fetchResource("languages"));
       setAllTopics(await fetchResource("topics"));
-      setAllSections(await fetchResource("sections")); // Ensure sections are fetched
+      setAllSections(await fetchResource("sections")); 
     };
     fetchInitialData();
   }, [fetchResource]);
 
 
   // =================== DERIVED STATE / MEMOIZED FILTERS ===================
-  
-
-  // 1. Filter Frontend Languages
   const frontendDesignLanguages = useMemo(() => {
     const frontendSection = allSections.find(s => s.name === "Frontend");
     if (!frontendSection) return [];
     return allLanguages.filter(l => l.section === frontendSection.id);
   }, [allLanguages, allSections]);
 
-
-  // 2. Filter Backend Languages
   const codeGuideLanguages = useMemo(() => {
     const backendSection = allSections.find(s => s.name === "Backend");
     if (!backendSection) return [];
     return allLanguages.filter(l => l.section === backendSection.id);
   }, [allLanguages, allSections]);
 
-
-  // 3. Filter Frontend Designs (Topics)
   const frontendDesigns = useMemo(() => {
     return allTopics.filter(t => 
       t.language === parseInt(frontendDesignLanguage, 10)
     );
   }, [allTopics, frontendDesignLanguage]);
 
-
-  // 4. Filter Backend Guides (Topics)
   const codingGuides = useMemo(() => {
     return allTopics.filter(t => 
       t.language === parseInt(codeGuideLanguage, 10)
@@ -132,7 +124,7 @@ const Admin_Add_Data = () => {
   }, [allTopics, codeGuideLanguage]);
 
 
-// =================== FETCH OCCUPIED STEPS (Dependent on backendTopic) ===================
+// =================== FETCH OCCUPIED STEPS ===================
   useEffect(() => {
     if (!backendTopic) {
       setOccupiedSteps([]);
@@ -164,19 +156,15 @@ const Admin_Add_Data = () => {
   // ===================== API HANDLERS (Scalable) ==================
   // ================================================================
 
-  // Helper wrapper to set uploading state around async handlers.
   const withUploading = useCallback(async (fn) => {
     setIsUploading(true);
     try {
       await fn();
-      // After any successful creation, refresh the relevant top-level data 
-      // to ensure dropdowns are current (force refresh with background: true)
-      // NOTE: This could be optimized to only refresh the resource that was just created.
+      // Background refresh to keep Admin state in sync
       fetchResource("categories", { force: true, background: true });
       fetchResource("template-types", { force: true, background: true });
-      fetchResource("languages", { force: true, background: true }); // Important for topic/language dependencies
-      fetchResource("topics", { force: true, background: true }); // Important for topic/language dependencies
-      
+      fetchResource("languages", { force: true, background: true });
+      fetchResource("topics", { force: true, background: true });
     } finally {
       setIsUploading(false);
     }
@@ -196,10 +184,7 @@ const Admin_Add_Data = () => {
           });
           setCategoryName("");
           alert(`Category added: ${created.name}!`);
-          
-          // Manually update local state with server response 
           setAllCategories(prev => [...prev, created]);
-          
         } catch (err) {
           console.error("Add category error:", err);
           alert("Error adding category!");
@@ -218,9 +203,8 @@ const Admin_Add_Data = () => {
 
       await withUploading(async () => {
         try {
-          // FIX: Use allSections state instead of undefined 'sections'
           const sec = allSections.find((s) => s.name === sectionType); 
-          if (!sec) return alert("Invalid section type selected or sections not loaded.");
+          if (!sec) return alert("Invalid section type selected.");
 
           const payload = {
             section: sec.id,
@@ -230,27 +214,22 @@ const Admin_Add_Data = () => {
           };
 
           const created = await createResource("languages", payload);
-          
           setLanguageName("");
           setIcon("");
           setCategoryId("");
           alert(`Language added: ${created.name}!`);
-          
-          // Manually update local state 
           setAllLanguages(prev => [...prev, created]);
-
         } catch (err) {
           console.error("Add language error:", err);
           alert("Error adding language!");
         }
       });
     },
-    // FIX: Updated dependency array
     [allSections, sectionType, languageName, icon, categoryId, createResource, withUploading]
   );
 
 
-  // -------------------- Add Topic --------------------
+  // -------------------- Add Topic (CACHE UPDATED HERE) --------------------
   const handleAddTopic = useCallback(
     async (e) => {
       e.preventDefault();
@@ -262,11 +241,20 @@ const Admin_Add_Data = () => {
             language: parseInt(topicLanguage, 10),
             name: topicName,
           });
+
+          // --- UPDATE PARENT CACHE LOGIC ---
+          // This calls the "Magic" function in Parent_API_Provider
+          // which updates localStorage and the main app state instantly.
+          addNewTopicLocally(parseInt(topicLanguage, 10), {
+            id: created.id,
+            name: created.name,
+            created_at: created.created_at,
+            source_codes: [] // New topic starts with no source codes
+          });
+
           setTopicName("");
           setTopicLanguage("");
           alert(`Topic added: ${created.name}!`);
-          
-          // Manually update local state 
           setAllTopics(prev => [...prev, created]);
 
         } catch (err) {
@@ -275,7 +263,7 @@ const Admin_Add_Data = () => {
         }
       });
     },
-    [topicLanguage, topicName, createResource, withUploading]
+    [topicLanguage, topicName, createResource, withUploading, addNewTopicLocally]
   );
 
 
@@ -291,9 +279,7 @@ const Admin_Add_Data = () => {
         try {
           const payload = {
             topic: parseInt(frontendTopic, 10),
-            title:
-              frontendTitle ||
-              (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
+            title: frontendTitle || (frontendDesc ? frontendDesc.slice(0, 100) : "Untitled"),
             description: frontendDesc || "",
             html_code: htmlCode || "",
             css_code: cssCode || "",
@@ -304,7 +290,6 @@ const Admin_Add_Data = () => {
 
           await createResource("frontend-source-codes", payload);
 
-          // Reset fields
           setfrontendDesignLanguage("");
           setFrontendTopic("");
           setHtmlCode("");
@@ -322,19 +307,7 @@ const Admin_Add_Data = () => {
         }
       });
     },
-    [
-      frontendDesignLanguage,
-      frontendTopic,
-      frontendTitle,
-      frontendDesc,
-      htmlCode,
-      cssCode,
-      jsCode,
-      sourceAccessType,
-      sourcePrice,
-      createResource,
-      withUploading,
-    ]
+    [frontendDesignLanguage, frontendTopic, frontendTitle, frontendDesc, htmlCode, cssCode, jsCode, sourceAccessType, sourcePrice, createResource, withUploading]
   );
 
 
@@ -347,7 +320,6 @@ const Admin_Add_Data = () => {
 
       await withUploading(async () => {
         try {
-          // 1. Create the Step (standard resource path)
           const stepPayload = {
             topic: parseInt(backendTopic, 10),
             step_number: parseInt(stepNumber, 10),
@@ -358,26 +330,22 @@ const Admin_Add_Data = () => {
 
           await createResource("backend-steps", stepPayload);
 
-          // 2. If there's image, upload separately 
           if (imageFile) {
             const formData = new FormData();
             formData.append("topic", backendTopic);
             formData.append("image", imageFile);
-            
             await createResource("backend-images", formData);
           }
           
-          // Reset
           setStepNumber(1);
           setStepFileName("");
           setStepDescription("");
           setStepCode("");
           setcodeGuideLanguage("");
           setBackendTopic("");
-          setImageFile(null); // Reset file input
+          setImageFile(null);
 
           alert("Backend step added!");
-          // Force refresh occupied steps after successful addition
           setOccupiedSteps([]); 
         } catch (err) {
           console.error("Add backend error:", err);
@@ -385,17 +353,7 @@ const Admin_Add_Data = () => {
         }
       });
     },
-    [
-      backendTopic,
-      stepNumber,
-      stepFileName,
-      stepDescription,
-      stepCode,
-      imageFile,
-      codeGuideLanguage,
-      createResource,
-      withUploading,
-    ]
+    [backendTopic, stepNumber, stepFileName, stepDescription, stepCode, imageFile, codeGuideLanguage, createResource, withUploading]
   );
 
 
@@ -421,7 +379,6 @@ const Admin_Add_Data = () => {
 
           const created = await createResource("templates", payload);
           
-          // Reset
           setTemplateTitle("");
           setTemplateInfo("");
           setIframeUrl("");
@@ -439,26 +396,13 @@ const Admin_Add_Data = () => {
         }
       });
     },
-    [
-      templateType,
-      templateTitle,
-      templateInfo,
-      iframeUrl,
-      downloadRepoUrl,
-      documentationUrl,
-      githubRepoUrl,
-      accessType,
-      price,
-      createResource,
-      withUploading,
-    ]
+    [templateType, templateTitle, templateInfo, iframeUrl, downloadRepoUrl, documentationUrl, githubRepoUrl, accessType, price, createResource, withUploading]
   );
 
 
   // =================== RENDER JSX ===================
   return (
     <div className="admin-dashboard p-3">
-      {/* ============ TAB CONTROLS ============ */}
       <div className="btn-group mb-3" role="group" aria-label="Admin Tabs">
         {[
           "category",
@@ -481,15 +425,12 @@ const Admin_Add_Data = () => {
         ))}
       </div>
 
-      {/* ============ UPLOADING OVERLAY ============ */}
       {isUploading && (
         <div className="upload-overlay" role="status" aria-live="polite">
           <div className="spinner" />
           <div className="upload-text">Uploading…</div>
         </div>
       )}
-
-      {/* ================== FORMS ================== */}
 
       {/* ADD CATEGORY */}
       {activeTab === "category" && (
@@ -513,7 +454,6 @@ const Admin_Add_Data = () => {
       {activeTab === "language" && (
         <form onSubmit={handleAddLanguage}>
           <h4>Add Language</h4>
-
           <label>Section</label>
           <select
             value={sectionType}
@@ -522,12 +462,9 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             required
           >
-            {/* These options rely on the hardcoded values "Frontend" and "Backend"
-                If they are dynamic, you should map over allSections. */}
             <option value="Frontend">Frontend</option>
             <option value="Backend">Backend</option>
           </select>
-
           <label>Category</label>
           <select
             value={categoryId}
@@ -537,14 +474,12 @@ const Admin_Add_Data = () => {
             required
           >
             <option value="">Select Category</option>
-            {/* FIX: Use allCategories state */}
             {allCategories.map((c) => (
               <option key={c.id} value={c.id}>
                 {c.name}
               </option>
             ))}
           </select>
-
           <label>Language Name</label>
           <input
             value={languageName}
@@ -553,7 +488,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             required
           />
-
           <label>Icon Class</label>
           <input
             value={icon}
@@ -561,7 +495,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <button className="btn btn-success" disabled={isUploading}>
             Add Language
           </button>
@@ -572,7 +505,6 @@ const Admin_Add_Data = () => {
       {activeTab === "topic" && (
         <form onSubmit={handleAddTopic}>
           <h4>Add Topic</h4>
-
           <label>Language</label>
           <select
             value={topicLanguage}
@@ -582,14 +514,12 @@ const Admin_Add_Data = () => {
             required
           >
             <option value="">Select Language</option>
-            {/* FIX: Use allLanguages state */}
             {allLanguages.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.name}
               </option>
             ))}
           </select>
-
           <label>Topic Name</label>
           <input
             value={topicName}
@@ -598,7 +528,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             required
           />
-
           <button className="btn btn-success" disabled={isUploading}>
             Add Topic
           </button>
@@ -609,7 +538,6 @@ const Admin_Add_Data = () => {
       {activeTab === "designs" && (
         <form onSubmit={handleAddFrontend}>
           <h4>Add Frontend Design</h4>
-
           <label>Language</label>
           <select
             value={frontendDesignLanguage}
@@ -622,14 +550,12 @@ const Admin_Add_Data = () => {
             required
           >
             <option value="">Select Frontend Language</option>
-            {/* FIX: Use derived state frontendDesignLanguages */}
             {frontendDesignLanguages.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.name}
               </option>
             ))}
           </select>
-
           <label>Topic</label>
           <select
             value={frontendTopic}
@@ -640,15 +566,12 @@ const Admin_Add_Data = () => {
             disabled={!frontendDesignLanguage}
           >
             <option value="">Select Topic</option>
-            {/* FIX: Use derived state frontendDesigns */}
             {frontendDesigns.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
               </option>
             ))}
           </select>
-
-          {/* ... other frontend fields ... */}
           <label>Access Type</label>
           <select
             value={sourceAccessType}
@@ -661,7 +584,6 @@ const Admin_Add_Data = () => {
             <option value="Free">Free</option>
             <option value="Premium">Premium</option>
           </select>
-
           <label>Price (if Premium)</label>
           <input
             type="number"
@@ -671,7 +593,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>Title</label>
           <input
             placeholder="Optional title"
@@ -680,7 +601,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>Description</label>
           <textarea
             value={frontendDesc}
@@ -688,7 +608,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>HTML</label>
           <textarea
             value={htmlCode}
@@ -696,7 +615,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>CSS</label>
           <textarea
             value={cssCode}
@@ -704,7 +622,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>JS</label>
           <textarea
             value={jsCode}
@@ -712,7 +629,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <button className="btn btn-success" disabled={isUploading}>
             {isUploading ? "Uploading..." : "Add Frontend Code"}
           </button>
@@ -723,7 +639,6 @@ const Admin_Add_Data = () => {
       {activeTab === "code-guides" && (
         <form onSubmit={handleAddBackend}>
           <h4>Add Backend Step</h4>
-
           <label>Language</label>
           <select
             value={codeGuideLanguage}
@@ -736,14 +651,12 @@ const Admin_Add_Data = () => {
             required
           >
             <option value="">Select Backend Language</option>
-            {/* FIX: Use derived state codeGuideLanguages */}
             {codeGuideLanguages.map((l) => (
               <option key={l.id} value={l.id}>
                 {l.name}
               </option>
             ))}
           </select>
-
           <label>Topic</label>
           <select
             value={backendTopic}
@@ -754,14 +667,12 @@ const Admin_Add_Data = () => {
             disabled={!codeGuideLanguage}
           >
             <option value="">Select Topic</option>
-            {/* FIX: Use derived state codingGuides */}
             {codingGuides.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
               </option>
             ))}
           </select>
-
           <label>Step Number</label>
           <select
             value={stepNumber}
@@ -778,7 +689,6 @@ const Admin_Add_Data = () => {
               </option>
             ))}
           </select>
-
           <label>Step File Name</label>
           <input
             value={stepFileName}
@@ -787,7 +697,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             required
           />
-
           <label>Step Description</label>
           <textarea
             value={stepDescription}
@@ -795,7 +704,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>Source Code</label>
           <textarea
             value={stepCode}
@@ -803,7 +711,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <label>Step Image (optional)</label>
           <input
             type="file"
@@ -811,7 +718,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <button className="btn btn-success" disabled={isUploading}>
             {isUploading ? "Uploading..." : "Add Backend Step"}
           </button>
@@ -822,7 +728,6 @@ const Admin_Add_Data = () => {
       {activeTab === "template" && (
         <form onSubmit={handleAddTemplate}>
           <h4>Add Template</h4>
-
           <label>Template Type</label>
           <select
             value={templateType}
@@ -832,14 +737,12 @@ const Admin_Add_Data = () => {
             required
           >
             <option value="">Select Template Type</option>
-            {/* FIX: Use allTemplateTypes state */}
             {allTemplateTypes.map((t) => (
               <option key={t.id} value={t.id}>
                 {t.name}
               </option>
             ))}
           </select>
-
           <label>Title</label>
           <input
             value={templateTitle}
@@ -849,7 +752,6 @@ const Admin_Add_Data = () => {
             placeholder="Template Title"
             required
           />
-          {/* ... other template fields ... */}
           <label>Project Info</label>
           <textarea
             value={templateInfo}
@@ -858,7 +760,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="Brief info about the project"
           />
-
           <label>Iframe URL</label>
           <input
             value={iframeUrl}
@@ -867,7 +768,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="Iframe preview URL"
           />
-
           <label>Download Repository URL</label>
           <input
             value={downloadRepoUrl}
@@ -876,7 +776,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="GitHub or Repo URL"
           />
-
           <label>Documentation URL</label>
           <input
             value={documentationUrl}
@@ -885,7 +784,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="Documentation URL"
           />
-
           <label>Github Repo URL [ Star⭐] </label>
           <input
             value={githubRepoUrl}
@@ -894,7 +792,6 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="Github Repo URL [ Star⭐]"
           />
-
           <label>Access Type</label>
           <select
             value={accessType}
@@ -907,7 +804,6 @@ const Admin_Add_Data = () => {
             <option value="Free">Free</option>
             <option value="Premium">Premium</option>
           </select>
-
           <label>Price (if Premium)</label>
           <input
             type="number"
@@ -917,7 +813,6 @@ const Admin_Add_Data = () => {
             className="form-control mb-2"
             style={formInputStyle}
           />
-
           <button className="btn btn-success" disabled={isUploading}>
             {isUploading ? "Uploading..." : "Add Template"}
           </button>
