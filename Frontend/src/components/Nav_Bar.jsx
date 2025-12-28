@@ -210,6 +210,9 @@ function Nav_Bar(props) {
                                     <Link title="Support via PayPal" onClick={handleBuyMeCoffee} className="nb-dropdown-item">
                                         <FaPaypal /> &nbsp; Donate
                                     </Link>
+                                    <a className="nb-dropdown-item" href="https://er-sujan.vercel.app">
+                                        <FaUser /> &nbsp; Developer Site
+                                    </a>
                                     <Link className="nb-dropdown-item" to="PlayGround/Code-Compiler">
                                         <i className="bi bi-code-slash"></i> &nbsp; Code Compiler
                                     </Link>
@@ -379,6 +382,11 @@ function Nav_Bar(props) {
                                     <Link title="Support via PayPal" onClick={handleBuyMeCoffee}>
                                         <FaPaypal /> &nbsp; Donate
                                     </Link>
+                                </li>
+                                <li>
+                                    <a href="https://er-sujan.vercel.app">
+                                        <FaUser /> &nbsp; Developer Site
+                                    </a>
                                 </li>
                                 <li>
                                     <Link to="/Contact" onClick={() => setSidebarOpen(false)}>
