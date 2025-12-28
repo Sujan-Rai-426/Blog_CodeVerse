@@ -203,13 +203,16 @@ def debug_test(request):
 from Tutorial.models import CacheSettings
 from django.utils.timezone import now
 from django.http import JsonResponse
-
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
 def get_cache_version(request):
     # Get the latest timestamp or create one if it doesn't exist
     obj, _ = CacheSettings.objects.get_or_create(id=1)
     return JsonResponse({"version": obj.last_updated.timestamp()})
 
+@csrf_exempt
+@require_POST
 def bump_cache_version(request):
     # This is called by Admin after an update
     obj, _ = CacheSettings.objects.get_or_create(id=1)

@@ -76,7 +76,7 @@ export const AdminProvider = ({ children }) => {
      */
     const bumpServerVersion = useCallback(async () => {
         try {
-            await ensureCsrf();
+            // await ensureCsrf();---> dependencies[ensureCsrf]
             await apiAdmin.post("/api/bump-cache/");
         } catch (e) {
             console.warn("Sync: Failed to update global cache version on server.");
