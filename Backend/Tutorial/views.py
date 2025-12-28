@@ -191,3 +191,27 @@ def get_csrf(request):
 
 def debug_test(request):
     return Response({"status": "ok", "message": "API working"}, status=200)
+
+
+
+
+
+
+# =========================================
+#           CACHE UPDATION SETTINGS
+# =========================================
+from Tutorial.models import CacheSettings
+from django.utils.timezone import now
+from django.http import JsonResponse
+
+
+def get_cache_version(request):
+    # Get the latest timestamp or create one if it doesn't exist
+    obj, _ = CacheSettings.objects.get_or_create(id=1)
+    return JsonResponse({"version": obj.last_updated.timestamp()})
+
+def bump_cache_version(request):
+    # This is called by Admin after an update
+    obj, _ = CacheSettings.objects.get_or_create(id=1)
+    obj.save() # save() triggers auto_now update
+    return JsonResponse({"status": "bumped"})

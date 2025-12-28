@@ -287,6 +287,43 @@
     border-radius: 0 0 8px 8px;
 }
 
+
+/* =========================
+    Square ADS Container Responsive
+==========================*/
+/* Ad container specific styling */
+.related-video-item.ad-placement {
+    background: rgba(255, 255, 255, 0.03); /* Subtle background for ad slot */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 220px; /* Match height roughly with your video items */
+}
+
+/* Ensure the AdSense ins tag fills the container */
+.ct-ad-wrapper ins {
+    margin: 0 auto;
+}
+
+/* Tablet adjustments for the grid */
+@media (max-width: 1024px) {
+    .related-videos-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1rem;
+    }
+}
+
+/* Mobile adjustments */
+/* @media (max-width: 480px) {
+    .related-videos-grid.ad-placement {
+        grid-template-columns: 1fr !important;
+    }
+} */
+
+
+
+
 /* Code Preview Buttons */
 .navigator-btns, .code-preview-open {
     display: flex;

@@ -2,6 +2,8 @@
 from django.db import models
 from django.core.exceptions import ValidationError
 from cloudinary.models import CloudinaryField
+from django.utils import timezone
+import pytz
 
 
 
@@ -165,3 +167,21 @@ class Template(models.Model):
     def __str__(self):
         return self.title
 
+
+
+
+
+# =========================================
+#           CACHE UPDATION SETTINGS
+# =========================================
+class CacheSettings(models.Model):
+    last_updated = models.DateTimeField(auto_now=True)
+    class Meta:
+        verbose_name_plural = "Cache Settings"
+    def __str__(self):
+        # Convert the UTC time to Kathmandu Time
+        kathmandu_tz = pytz.timezone('Asia/Kathmandu')
+        local_time = self.last_updated.astimezone(kathmandu_tz)
+        
+        # Format with 12-hour clock and AM/PM
+        return f"Data Updated Date -> {local_time.strftime('%Y-%m-%d %I:%M:%S %p')}"

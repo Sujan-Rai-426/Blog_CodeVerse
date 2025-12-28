@@ -78,6 +78,11 @@ urlpatterns = [
     
     # Router Endpoints
     path('', include(router.urls)),
+    
+    
+    # ----------------- Tutorials [Cach Updation] -------------------------
+    path('cache-version/', tutorial_view.get_cache_version, name='get_cache_version'),
+    path('bump-cache/', tutorial_view.bump_cache_version, name='bump_cache_version'),
 
     # ----------------- Custom User Auth  [ CustomUser app ]-----------------
     # Admin

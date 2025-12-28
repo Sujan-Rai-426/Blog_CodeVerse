@@ -768,7 +768,7 @@ const Admin_Add_Data = () => {
             style={formInputStyle}
             placeholder="Iframe preview URL"
           />
-          <label>Download Repository URL</label>
+          <label>Download Repository URLs <small> -- /archive/refs/heads/dev.zip </small></label>
           <input
             value={downloadRepoUrl}
             onChange={(e) => setDownloadRepoUrl(e.target.value)}

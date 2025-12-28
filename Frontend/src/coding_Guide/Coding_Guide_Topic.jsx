@@ -111,9 +111,16 @@ const Coding_Guide_Topic = () => {
         </div>
 
         {/* 2. PLACEMENT OF X-AXIS BANNER AD */}
-        <footer style={{ flexShrink: 0, width: "100%", marginTop: "60px", paddingBottom: "20px" }}>
-            <Ads_Banner_Horizontal />
-        </footer>
+          <footer style={{ 
+              flexShrink: 0, 
+              width: "100%", 
+              maxWidth: "1200px", // Prevents the banner from becoming insanely wide on Ultrawide monitors
+              margin: "60px auto 0 auto", 
+              padding: "0 1rem 20px 1rem", // Added side padding for mobile/tablet
+              boxSizing: "border-box" 
+          }}>
+              <Ads_Banner_Horizontal />
+          </footer>
       </div>
     </Interactive_Grid_Background>
   );

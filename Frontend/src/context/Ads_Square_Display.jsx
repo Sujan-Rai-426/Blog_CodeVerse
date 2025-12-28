@@ -3,7 +3,6 @@ import React, { useEffect } from 'react';
 const Ads_Square_Display = () => {
     useEffect(() => {
         try {
-        // Small delay ensures the DOM element is fully rendered before AdSense looks for it
             const timer = setTimeout(() => {
                 (window.adsbygoogle = window.adsbygoogle || []).push({});
             }, 100);
@@ -14,25 +13,32 @@ const Ads_Square_Display = () => {
     }, []);
 
     return (
-        <div className="ct-ad-wrapper" style={{ width: '100%', textAlign: 'center' }}>
+        <div className="ct-ad-wrapper" style={{ width: '100%', overflow: 'hidden' }}>
+
+            {/* ========== ADS CONTAINER ========== */}
             <ins 
                 className="adsbygoogle"
-                style={{ display: 'block', height: '120px' }} 
+                style={{ 
+                    display: 'block', 
+                    minWidth: '250px',
+                    height: '200px' // Changed from fixed 120px to better fit "Square" items
+                }} 
                 data-ad-client="ca-pub-5604794698656933"
                 data-ad-slot="4061494851"
-                data-ad-format="auto"
+                data-ad-format="fluid" // "fluid" or "auto" is better for responsive grids
                 data-full-width-responsive="true"
             ></ins>
+
+            {/* ==== SPONSERED TAG ====== */}
             <span style={{ 
                 display: 'block', 
-                fontSize: '12px', 
-                color: '#4d4141ff', 
-                marginBottom: '5px',
-                marginTop:'5px',
+                fontSize: '10px', 
+                color: '#888', 
+                textAlign: 'center',
                 textTransform: 'uppercase',
-                letterSpacing: '1px'
+                marginBottom: '5px' 
             }}>
-                <b>Sponsored</b>
+                Sponsored
             </span>
         </div>
     );

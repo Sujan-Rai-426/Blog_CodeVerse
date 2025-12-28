@@ -91,3 +91,36 @@
   .CodeBox-Ads-Placeholder h1 { font-size: clamp(0.9rem, 6vw, 1.2rem); }
   .CodeBox-Ads-Placeholder p { font-size: clamp(0.7rem, 4vw, 0.9rem); }
 }
+
+
+/* ======================
+      Banner Ads Container Horizontal Banner
+========================= */
+.ct-ad-banner-wrapper {
+    display: block;
+    clear: both;
+    width: 100%;
+    margin: 30px auto;
+    aspect-ratio: 8 / 1; 
+}
+@media (max-width: 1024px) {
+    /* Tablet */
+    .ct-ad-banner-wrapper {
+        margin: 20px 0;
+        aspect-ratio: 4 / 1; 
+    }
+}
+@media (max-width: 768px) {
+    /* Mobile */
+    .ct-ad-banner-wrapper {
+        margin: 15px 0;
+    }
+    
+    .ct-ad-banner-wrapper ins {
+        min-height: 50px !important; 
+    }
+}
+
+.template-preview-container {
+    overflow-x: hidden;
+}

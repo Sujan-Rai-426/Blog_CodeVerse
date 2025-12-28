@@ -2,13 +2,14 @@
 
 from django.contrib import admin
 from Tutorial.models import (
-    Category, Section, Language, Topic,
+    CacheSettings, Category, Section, Language, Topic,
     FrontendSourceCode,
     BackendImage, BackendStep, Contact, TemplateType, Template
 )
 
 # contact
 admin.site.register(Contact)
+admin.site.register(CacheSettings)
 
 @admin.register(TemplateType)
 class TemplateTypeAdmin(admin.ModelAdmin):
@@ -85,9 +86,7 @@ class BackendTopicFilter(admin.SimpleListFilter):
         return [(t.id, t.name) for t in backend_topics]
 
     def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(topic_id=self.value())
-        return queryset
+        return queryset.filter(topic_id=self.value()) if self.value() else queryset
 
 
 class BackendLanguageFilter(admin.SimpleListFilter):
@@ -113,9 +112,7 @@ class FrontendTopicFilter(admin.SimpleListFilter):
         return [(t.id, t.name) for t in frontend_topics]
 
     def queryset(self, request, queryset):
-        if self.value():
-            return queryset.filter(topic_id=self.value())
-        return queryset
+        return queryset.filter(topic_id=self.value()) if self.value() else queryset
 
 
 

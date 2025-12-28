@@ -3,7 +3,7 @@ from django.db.models import Count
 from rest_framework import serializers
 
 from Tutorial.models import (
-    Category, Contact, Section, Language, Topic,
+    CacheSettings, Category, Contact, Section, Language, Topic,
     FrontendSourceCode, BackendImage, BackendStep,
     TemplateType, Template
 )
@@ -199,3 +199,14 @@ class TemplateSerializer(serializers.ModelSerializer):
             "created_at",
             "updated_at",
         ]
+
+
+
+
+# =============================================
+#       Cache Settings
+# =============================================
+class CacheSettingsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CacheSettings
+        fields = "__all__"

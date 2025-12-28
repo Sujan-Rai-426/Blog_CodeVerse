@@ -1,10 +1,10 @@
 import React, { useEffect } from 'react';
+import "../assets/css/Ads_Container.css"
 
 const Ads_Banner_Horizontal = () => {
     useEffect(() => {
         try {
             const timer = setTimeout(() => {
-                // Check if adsbygoogle is available and hasn't been pushed already
                 if (window.adsbygoogle) {
                     (window.adsbygoogle = window.adsbygoogle || []).push({});
                 }
@@ -18,14 +18,15 @@ const Ads_Banner_Horizontal = () => {
     return (
         <div className="ct-ad-banner-wrapper" style={{ 
             width: '100%', 
-            margin: '30px 0 10px 0', 
-            textAlign: 'center' 
+            margin: '20px auto', 
+            textAlign: 'center',
+            overflow: 'hidden' // Prevents layout shifting
         }}>
             <span style={{ 
                 display: 'block', 
                 fontSize: '10px', 
                 color: '#888', 
-                marginBottom: '5px',
+                marginBottom: '8px',
                 textTransform: 'uppercase',
                 letterSpacing: '2px'
             }}>
@@ -35,13 +36,15 @@ const Ads_Banner_Horizontal = () => {
             <ins 
                 className="adsbygoogle"
                 style={{ 
-                    display: 'inline-block', 
+                    display: 'block', // Changed from inline-block to block
                     width: '100%', 
-                    height: '90px' // Standard X-axis banner height
+                    aspectRatio: 8 / 1,
+                    minHeight: '50px', // Minimum height for mobile
+                    maxHeight: '280px' // Maximum height for large tablets/desktop
                 }} 
                 data-ad-client="ca-pub-5604794698656933"
                 data-ad-slot="4061494851"
-                data-ad-format="horizontal" 
+                data-ad-format="banner"
                 data-full-width-responsive="true"
             ></ins>
         </div>

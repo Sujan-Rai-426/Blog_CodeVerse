@@ -575,24 +575,24 @@ export default function Components_Design() {
                                     >
                                         {/* --- NEW BADGE --- */}
                                         {showNewBadge && (
-                                        <div style={{ 
-                                            position: 'absolute',
-                                            top: '0',
-                                            left: '0',
-                                            background: '#379e81ff', // Dark contrast
-                                            color: 'white',
-                                            padding: '6px 14px',
-                                            fontSize: '10px',
-                                            fontWeight: '600',
-                                            zIndex: 2,
-                                            textTransform: 'uppercase',
-                                            letterSpacing: '2px',
-                                            borderRadius: '0 0 8px 0',
-                                            borderRight: '1px solid',
-                                            borderBottom: '1px solid',
-                                        }}>
-                                            New Arrival
-                                        </div>
+                                            <div style={{ 
+                                                position: 'absolute',
+                                                top: '0',
+                                                left: '0',
+                                                background: '#379e81ff', // Dark contrast
+                                                color: 'white',
+                                                padding: '6px 14px',
+                                                fontSize: '10px',
+                                                fontWeight: '600',
+                                                zIndex: 2,
+                                                textTransform: 'uppercase',
+                                                letterSpacing: '2px',
+                                                borderRadius: '0 0 8px 0',
+                                                borderRight: '1px solid',
+                                                borderBottom: '1px solid',
+                                            }}>
+                                                New Arrival
+                                            </div>
                                         )}
 
                                     {/* ----- PREMIUM BADGE ------- */}

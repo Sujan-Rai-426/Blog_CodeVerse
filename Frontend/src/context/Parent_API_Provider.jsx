@@ -14,13 +14,17 @@ export const Parent_Api_Provider = ({ children }) => {
     // --- Cache Configuration ---
     const CACHE_KEY = "parent_api_base_data";
     const CACHE_TIME_KEY = "parent_api_base_cache_time";
-    const MAX_AGE = 1000 * 60 * 60 * 24; // 24 hours
+    const MAX_AGE = 1000 * 60 * 60 * 24 * 3; // 3 days
 
     const hasInitialized = useRef(false);
     const isFetchingBase = useRef(false);
     const recentFetchedRef = useRef(false);
 
-    // --- Internal Cache Helpers ---
+
+
+        // ======================================================
+    //      --- Internal Cache Helpers ---
+    // ======================================================
     const loadFromCache = useCallback(() => {
         try {
             const cached = localStorage.getItem(CACHE_KEY);
@@ -37,6 +41,8 @@ export const Parent_Api_Provider = ({ children }) => {
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
     }, []);
+
+
 
     // --------------------------------------------------------------------
     // 1. FETCH BASE DATA (Initial load of the entire structure)
@@ -95,6 +101,13 @@ export const Parent_Api_Provider = ({ children }) => {
             isFetchingBase.current = false;
         }
     }, [saveToCache]);
+
+
+
+
+
+
+
 
     // --------------------------------------------------------------------
     // 2. INCREMENTAL UPDATE (The "Magic" function to avoid refetching)
@@ -245,6 +258,78 @@ export const Parent_Api_Provider = ({ children }) => {
             return [];
         }
     };
+
+
+
+
+
+    // ============================================================
+    //   INSTANTLY UPDATE GLOBAL CACHE ----------->       For Cache Update on Data Add, Update or Delete
+    // ============================================================
+        const SYNC_VERSION_KEY = "global_sync_version";
+
+        const checkGlobalSync = useCallback(async () => {
+            try {
+                const res = await api.get("/api/cache-version/");
+                const serverVersion = Number(res.data.version); 
+                const localVersion = Number(localStorage.getItem(SYNC_VERSION_KEY)) || 0;
+
+                if (serverVersion > localVersion) {
+                    console.log("New data detected from backend. Refreshing caches...");
+
+                    // 1. Update version
+                    localStorage.setItem(SYNC_VERSION_KEY, serverVersion.toString());
+
+                    // 2. Clear all topic-related caches
+                    Object.keys(localStorage).forEach(key => {
+                        if (
+                            key.startsWith("backend_steps_") ||
+                            key.startsWith("backend_steps_time_") ||
+                            key.startsWith("frontend_source_") ||
+                            key.startsWith("topicCodes_") ||
+                            key.startsWith("topicDetail_") ||
+                            key.startsWith("backendSteps_") ||
+                            key.startsWith("backendImages_") ||
+                            key.startsWith("templates_api_data") 
+                        ) {
+                            localStorage.removeItem(key);
+                        }
+                    });
+
+                    // 3. Clear in-memory caches
+                    backendStepsCache.current = {};
+                    backendStepsInProgress.current = {};
+                    recentFetchedRef.current = false;
+
+                    // 4. Clear base data cache
+                    localStorage.removeItem(CACHE_KEY);
+                    localStorage.removeItem(CACHE_TIME_KEY);
+
+                    // 5. Fetch fresh data
+                    setRefreshingBase(true);
+                    await fetchBaseData(true);
+                    await fetchRecentComponents();
+                    setRefreshingBase(false);
+                }
+
+            } catch (err) {
+                console.warn("Global sync check failed:", err);
+            }
+        }, [fetchBaseData, fetchRecentComponents]);
+
+
+            // Run this check periodically
+        useEffect(() => {
+            checkGlobalSync(); // on mount
+            const interval = setInterval(checkGlobalSync, 60*1000*60); // every 1minute
+            return () => clearInterval(interval);
+        }, [checkGlobalSync]);
+
+
+
+
+
+
 
     // --------------------------------------------------------------------
     // 5. PROVIDER EXPORT
