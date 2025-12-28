@@ -1,3 +1,4 @@
+
 import React, {
                 useState,
                 useCallback,
@@ -29,19 +30,6 @@ export const AdminProvider = ({ children }) => {
     const [csrfReady, setCsrfReady] = useState(false);
     const [csrfFetching, setCsrfFetching] = useState(false);
 
-  // ---------------------- NEW: Cache Sync Trigger ----------------------
-    /**
-     * Notifies the backend that data has changed.
-     * This updates the global timestamp so Parent users know to clear LocalStorage.
-     */
-    const bumpServerVersion = useCallback(async () => {
-        try {
-        // Ensure your Django urls.py has this path registered
-            await apiAdmin.post("/api/bump-cache/");
-        } catch (e) {
-            console.warn("Sync: Failed to update global cache version on server.");
-        }
-    }, []);
 
   // ---------------------- CSRF ----------------------
     useEffect(() => {
@@ -78,6 +66,23 @@ export const AdminProvider = ({ children }) => {
             setCsrfFetching(false);
         }
     }, [csrfReady, csrfFetching]);
+
+
+
+      // ---------------------- Cache Sync Trigger ----------------------
+    /**
+     * Notifies the backend that data has changed.
+     * This updates the global timestamp so Parent users know to clear LocalStorage.
+     */
+    const bumpServerVersion = useCallback(async () => {
+        try {
+            await ensureCsrf();
+            await apiAdmin.post("/api/bump-cache/");
+        } catch (e) {
+            console.warn("Sync: Failed to update global cache version on server.");
+        }
+    }, []);
+
 
 
   // ---------------------- Cache helpers ----------------------
