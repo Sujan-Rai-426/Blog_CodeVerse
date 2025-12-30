@@ -7,9 +7,9 @@
   </a>
 </p>
 <h1 align="center">
-  <strong >CodeVora UI</strong><br />
-  <samp> <small> Free Animated and Professional UI Components Library for Developer. </small> </samp>
+  <strong ><b> CodeVora UI </b></strong><br />
 </h1>
+<p align="center"> Free Animated and Professional UI Components Library for Developer. </p>
 <br />
 
 # CodeVora UI 💎
