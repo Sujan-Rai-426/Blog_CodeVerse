@@ -2,12 +2,12 @@
   <a href="https://codevora.com">
     <img src="./assets/logo/CodeVora_SVG_Logo.svg" 
          alt="CodeVora UI Logo" 
-         width="120" 
+         width="200" 
          style="background-color: #ffffff; border-radius: 24%; padding: 10px; border: 1px solid #e1e4e8; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
   </a>
 </p>
 <p align="center">
-  <strong style="font-size: 24px;">CodeVora UI</strong><br />
+  <strong style="font-size: 2rem;">CodeVora UI</strong><br />
   <samp>Premium Code Snippets for Modern Web</samp>
 </p>
 <br />
