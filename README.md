@@ -8,13 +8,12 @@
 </p>
 <p align="center">
   <strong style="font-size: 2rem;">CodeVora UI</strong><br />
-  <samp>Premium Code Snippets for Modern Web</samp>
+  <samp>Free Animated and Professional UI Components Library for Developer.</samp>
 </p>
 <br />
-<p align="center"><b>Free Animated and Professional UI Components Library for Developer.</b></p>
 
 # CodeVora UI 💎
-**The Modern Copy-Paste UI Library for Web Developers.**
+**The Modern Animated UI Components Library for Web Developers.**
 
 CodeVora UI is a curated gallery of high-performance, reusable UI components. We eliminate the bloat of traditional libraries by providing clean, modular code that you can preview in real-time and drop directly into your project.
 
