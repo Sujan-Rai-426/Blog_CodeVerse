@@ -13,9 +13,9 @@
 </p>
 
 <p align="center">
-    <a href="./LICENSE">
-        <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License" />
-    </a> &nbsp;
+  <a href="./LICENSE">
+      <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License" />
+  </a> &nbsp;
     
   <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" alt="React JS" />   &nbsp;
   <img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white" alt="Django" />   &nbsp;
