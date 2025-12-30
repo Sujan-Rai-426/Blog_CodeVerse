@@ -2,14 +2,28 @@
   <a href="https://codevora.com">
     <img src="./assets/logo/CodeVora_SVG_Logo.svg" 
          alt="CodeVora UI Logo" 
-         width="200" 
-         style="background-color: #ffffff; border-radius: 24%; padding: 10px; border: 1px solid #e1e4e8; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+         width="180" />
   </a>
 </p>
-<h1 align="center">
-  <strong ><b> CodeVora UI </b></strong><br />
-</h1>
-<p align="center"> Free Animated and Professional UI Components Library for Developer. </p>
+
+<h1 align="center"> <b> CodeVora UI </b> </h1>
+
+<p align="center"> 
+  Free Animated and Professional UI Components Library for Developers. 
+</p>
+
+<p align="center">
+  <a href="./LICENSE">
+    <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License" />
+  </a>
+  
+  <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" alt="React JS" />
+  <img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white" alt="Django" />
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+</p>
+
+<br />
+
 <br />
 
 # CodeVora UI 💎
