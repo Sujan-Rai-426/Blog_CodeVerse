@@ -82,7 +82,7 @@ const Footer = () => {
             {/* =============== MAIN FOOTER =============== */}
                 <footer className="footer">
                     <div className="footer-container">
-                        <p className='mb-4'>&copy; {new Date().getFullYear()} Er.Sujan Rai. All rights reserved.</p>
+                        <p className='mb-4'>&copy; {new Date().getFullYear()} Sujan Rai. All rights reserved.</p>
                         <div className="footer-links mb-4">
                             <Link to="Contact">Contact</Link>
                             <a href="https://er-sujan.vercel.app">Developer</a>
