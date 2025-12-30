@@ -6,10 +6,10 @@
          style="background-color: #ffffff; border-radius: 24%; padding: 10px; border: 1px solid #e1e4e8; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
   </a>
 </p>
-<p align="center">
-  <strong style="font-size: 4rem;">CodeVora UI</strong><br />
-  <samp>Free Animated and Professional UI Components Library for Developer.</samp>
-</p>
+<h1 align="center">
+  <strong >CodeVora UI</strong><br />
+  <samp> <small> Free Animated and Professional UI Components Library for Developer. </small> </samp>
+</h1>
 <br />
 
 # CodeVora UI 💎
