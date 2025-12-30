@@ -9,22 +9,22 @@
 <h1 align="center"> <b> CodeVora UI </b> </h1>
 
 <p align="center"> 
-  Free Animated and Professional UI Components Library for Developers. 
+    Free Animated and Professional UI Components Library for Developers. 
 </p>
 
 <p align="center">
-  <a href="./LICENSE">
-    <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License" />
-  </a>
-  
-  <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" alt="React JS" />
-  <img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white" alt="Django" />
-  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />
+    <a href="./LICENSE">
+        <img src="https://img.shields.io/badge/License-MIT-green?style=flat-square" alt="MIT License" />
+    </a> &nbsp;
+    
+  <img src="https://img.shields.io/badge/React-20232A?style=flat-square&logo=react&logoColor=61DAFB" alt="React JS" />   &nbsp;
+  <img src="https://img.shields.io/badge/Django-092E20?style=flat-square&logo=django&logoColor=white" alt="Django" />   &nbsp;
+  <img src="https://img.shields.io/badge/PostgreSQL-316192?style=flat-square&logo=postgresql&logoColor=white" alt="PostgreSQL" />   &nbsp;
 </p>
 
 <br />
 
-<br />
+<hr />
 
 # CodeVora UI 💎
 **The Modern Animated UI Components Library for Web Developers.**
