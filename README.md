@@ -8,9 +8,10 @@
 </p>
 <p align="center">
   <strong style="font-size: 24px;">CodeVora UI</strong><br />
-  <samp>Free Animated and Professional UI Components Library for Developer.</samp>
+  <samp>Premium Code Snippets for Modern Web</samp>
 </p>
-<br/>
+<br />
+<p align="center"><b>Free Animated and Professional UI Components Library for Developer.</b></p>
 
 # CodeVora UI 💎
 **The Modern Copy-Paste UI Library for Web Developers.**
