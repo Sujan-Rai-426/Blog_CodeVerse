@@ -1,10 +1,16 @@
-
 <p align="center">
-  <img src="./assets/logo/CodeVora_SVG_Logo.svg" alt="CodeVora UI Logo" width="90" />
+  <a href="https://codevora.com">
+    <img src="./assets/logo/CodeVora_SVG_Logo.svg" 
+         alt="CodeVora UI Logo" 
+         width="120" 
+         style="background-color: #ffffff; border-radius: 24%; padding: 10px; border: 1px solid #e1e4e8; box-shadow: 0 4px 6px rgba(0,0,0,0.1);" />
+  </a>
 </p>
-<br />
-<h1 align="center">CodeVora UI</h1>
-<p align="center"><b>Free Animated and Professional UI Components Library for Developer.</b></p>
+<p align="center">
+  <strong style="font-size: 24px;">CodeVora UI</strong><br />
+  <samp>Free Animated and Professional UI Components Library for Developer.</samp>
+</p>
+<br/>
 
 # CodeVora UI 💎
 **The Modern Copy-Paste UI Library for Web Developers.**
