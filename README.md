@@ -7,7 +7,7 @@
   </a>
 </p>
 <p align="center">
-  <strong style="font-size: 2rem;">CodeVora UI</strong><br />
+  <strong style="font-size: 4rem;">CodeVora UI</strong><br />
   <samp>Free Animated and Professional UI Components Library for Developer.</samp>
 </p>
 <br />
