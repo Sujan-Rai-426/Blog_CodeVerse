@@ -120,26 +120,30 @@ const Library_Body = ({ componentId }) => {
     {/* ------------------------------------------------------- */}
             {/* 1. HEADER: Descriptoion Toppic */}
     {/* ------------------------------------------------------- */}
-            <section className='header-top'>
-                {/* Topic Title */}
-                <div>
-                    <span className="topic-badge">{activeComp.topic_id}</span>
-                    <h1 className="component-title">{activeComp.title}</h1>
-                </div>
-
-                {/* SHARE */}
-                <div className="share-dropdown">
-                    <button className="action-btn share-btn lib-share-btn" title="Share">
-                        <i className="fa fa-share-alt" />
-                    </button>
-                    <div className="share-options">
-                        <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
-                        <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
-                        <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
-                        <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
+            <header className='header'>
+                <section className='header-top'>
+                    {/* Topic Title */}
+                    <div>
+                        <span className="topic-badge">{activeComp.topic_id}</span>
+                        <h1 className="component-title">{activeComp.title}</h1>
                     </div>
-                </div>
-            </section>
+
+                    {/* SHARE */}
+                    <div className="share-dropdown">
+                        <button className="action-btn share-btn lib-share-btn" title="Share">
+                            <i className="fa fa-share-alt" />
+                        </button>
+                        <div className="share-options">
+                            <span onClick={() => handleShareClick("WhatsApp")}><FaWhatsapp className="share-icon" /> WhatsApp</span>
+                            <span onClick={() => handleShareClick("Messenger")}><FaFacebookMessenger className="share-icon" /> Messenger</span>
+                            <span onClick={() => handleShareClick("Facebook")}><FaFacebook className="share-icon" /> Facebook</span>
+                            <span onClick={() => handleShareClick("Telegram")}><FaTelegram className="share-icon" /> Telegram</span>
+                        </div>
+                    </div>
+                </section>
+                
+                <small><p className="description-text">{activeComp.description}</p></small>
+            </header>
 
 
 
@@ -150,10 +154,10 @@ const Library_Body = ({ componentId }) => {
                 <button className="lib-btn btn-primary" onClick={scrollToDocsSection}>
                     <i className="bi bi-book"></i> <span>Docs</span>
                 </button>
-                <a href="#" className="lib-btn btn-outline">
+                <a href="https://github.com/Sujan-Rai-426/CodeVora" className="lib-btn btn-outline">
                     <i className="bi bi-star-fill" style={{color: '#f59e0b'}}></i> GitHub <span> Star</span>
                 </a>
-                <a href="#" className="lib-btn btn-gold">
+                <a href="https://github.com/Sujan-Rai-426/CodeVora-UI-Library" className="lib-btn btn-gold">
                     <i className="bi bi-git"></i> Contribute
                 </a>
             </section>
@@ -172,9 +176,7 @@ const Library_Body = ({ componentId }) => {
     {/* ------------------------------------------------------- */}
             {/* 4. SPECS: Details & Documentation */}
     {/* ------------------------------------------------------- */}
-            <section ref={docsRef} style={{scrollMarginTop: "50px"}} className="content-specs">
-                <p className="description-text">{activeComp.description}</p>
-
+            <section ref={docsRef} style={{scrollMarginTop: "30px"}} className="content-specs">
                 <div className="specs-grid">
 
                     {/* Installation Card */}
