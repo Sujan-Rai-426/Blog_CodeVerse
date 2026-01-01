@@ -25,7 +25,7 @@ const Library_Topic = () => {
 
     const libraryTopics = [
         { id: "all", name: "All", icon: "bi bi-grid-fill" },
-        { id: "environments", name: "Environments", icon: "bi bi-cloud-haze2" },
+        { id: "backgrounds", name: "Backgrounds", icon: "bi bi-cloud-haze2" },
         { id: "cards", name: "Cards", icon: "bi bi-layers" },
         { id: "buttons", name: "Buttons", icon: "bi bi-toggle-on" },
         { id: "navigation", name: "Navigation", icon: "bi bi-list" },
