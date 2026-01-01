@@ -36,7 +36,7 @@ const Library_Topic = () => {
     const libraryComponents = [
         { 
             id: "matrix-bg", 
-            topic_id: "environments", 
+            topic_id: "backgrounds", 
             created_at: "2025-12-28",
             title: "Matrix Rain Effect",
             short_title_info: "Hacker matrix rain theme.", 

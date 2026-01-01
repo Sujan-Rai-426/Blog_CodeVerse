@@ -23,7 +23,7 @@ const Library_Body = ({ componentId }) => {
     const libraryComponents = [
         {
             id: "matrix-bg",
-            topic_id: "environments",
+            topic_id: "backgrounds",
             created_at: "2025-12-28" ,
             title: "Matrix Rain Effect",
             description: "An ultra-smooth digital rain canvas component. Optimized for background usage in landing pages and high-tech dashboards.",
