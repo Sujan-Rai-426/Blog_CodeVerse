@@ -1,0 +1,236 @@
+/* Library.css */
+:root {
+    --gold: #d4af37;
+    --gold-glow: rgba(212, 175, 55, 0.2);
+    --bg-black: #050505;
+    --card-gray: #0f0f0f;
+    --border-color: #1a1a1a;
+    --text-silver: #c0c0c0;
+    --text-gray: gray;
+}
+
+.component-page-container {
+    background-color: transparent;
+    color: #fff;
+    min-height: 100vh;
+    font-family: 'Inter', system-ui, sans-serif;
+}
+
+
+/* ---------------------------------------------
+            1.HEADER SECTION
+----------------------------------------------- */
+/* Header Section */
+.header-top{
+    text-align: left;
+    margin: 2rem 3rem !important;
+    display: flex;
+    justify-content: space-between;
+}
+.topic-badge {
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    display: block;
+}
+.component-title {
+    font-size: clamp(1.5rem, 3vw, 2.5rem);
+    font-weight: 800;
+    margin-bottom: 20px;
+    background: linear-gradient(to right, #fff, #888);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+.lib-share-btn{
+    padding: 0.4rem;
+}
+@media (max-width: 768px) {
+    .header-top{ margin: 1.5rem 1rem !important; }
+}
+
+
+
+
+/* ------------------------------------------------------- */
+/* 2. ACTIONS: Action Buttons */
+/* ------------------------------------------------------- */
+.lib-action-btns {
+    display: flex;
+    gap: 12px;
+    margin: 2rem 3rem !important;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+.lib-btn {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    white-space: nowrap;
+}
+.btn-primary { background: #3b82f6; color: white; border: 1px solid transparent; }
+.btn-primary:hover { background: #2563eb; transform: translateY(-2px); }
+.btn-outline { background: rgba(255,255,255,0.05); border: 1px solid #333; color: white; }
+.btn-outline:hover { background: rgba(255,255,255,0.1); border-color: #555; transform: translateY(-2px); }
+.btn-gold { border: 1px solid #d4af37; color: #d4af37; background: transparent; }
+.btn-gold:hover { background: #d4af37; color: #000; transform: translateY(-2px); box-shadow: 0 0 15px rgba(212, 175, 55, 0.2); }
+@media (max-width: 1024px) {
+    .lib-action-btns { margin: 1.5rem 2rem !important;  gap: 10px; }
+}
+@media (max-width: 768px) {
+    .lib-action-btns { margin: 0 1rem !important; justify-content: center; }
+    .lib-btn { padding: 5px; font-size: 0.85rem; flex: 1; min-width: 120px; }
+}
+@media (max-width: 480px) {
+    .lib-btn span { display: none;  }
+    .lib-btn { min-width: auto; padding: 5px; }
+    .lib-btn i { font-size: 1.2rem; }
+}
+
+
+
+
+/* ---------------------------------------------
+            3.VISUAL DEMO SECTION
+----------------------------------------------- */
+/* Hero Section: The Live Preview */
+.hero-visual-stage {
+    height: 70vh;
+    width: 90%;
+    position: relative;
+    background: #000;
+    border: 2px dashed;
+    border-radius: 15px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 40px auto;
+}
+
+@media (max-width: 1000px) {
+    .hero-visual-stage { height: 50vh;}
+}
+@media (max-width: 768px) {
+    .hero-visual-stage { margin: 1rem auto; }
+    .content-specs { padding: 10px !important; padding: 40px 15px !important;}
+    .code-snippet{font-size: 0.8rem !important;}
+}
+
+
+
+
+
+/* -------------------------------------------
+        4.DETAILS AND DOCUMENTATION
+--------------------------------------------- */
+
+/* Content Area */
+.content-specs {
+    margin: 0 auto;
+    padding: 60px 25px;
+}
+.description-text {
+    font-size: 1.15rem;
+    color: var(--text-silver);
+    line-height: 1.6;
+    margin-bottom: 40px;
+    max-width: 800px;
+}
+
+/* Documentation Grid */
+.code-snippet {
+    background: #000;
+    padding: 15px;
+    border-radius: 8px;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.9rem;
+    color: #88eeff;
+    overflow-x: auto;
+    border: 1px solid #111;
+}
+.specs-grid {
+    gap: 30px;
+    margin-top: 20px;
+}
+.spec-card {
+    border: none;
+    /* border-radius: 16px; */
+    padding: 15px 10px;
+    transition: border 0.3s ease;
+    margin-bottom: 25px;
+}
+.spec-card h4 {
+    color: var(--gold);
+    margin-bottom: 0;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+.spec-card p {
+    color: var(--text-gray);
+    margin: 0 0 1rem 0;
+}
+.spec-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 5px;
+}
+.lib-copy-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #888;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.lib-copy-btn:hover { background: rgba(255,255,255,0.1); color: #fff; }
+.lib-copy-btn.copied { border-color: #22c55e; color: #22c55e; }
+.usage-wide { grid-column: 1 / -1; }
+.code-snippet {
+    position: relative;
+    background: #000 !important;
+    border: 1px solid #1a1a1a !important;
+}
+@media (max-width: 768px) {
+    .spec-card { border: none; padding: 15px 0; }
+    .content-specs { padding: 10px !important; padding: 40px 15px !important;}
+    .code-snippet{font-size: 0.85rem !important;}
+}
+
+
+/* ==========PRISM HIGHLIGHT FOR CODE ================ */
+/* Force Prism to match your Dark UI */
+code[class*="language-"], pre[class*="language-"] {
+    background: #000000 !important;
+}
+:not(pre) > code[class*="language-"], pre[class*="language-"] {
+    background: #000000 !important;
+}
+pre[class*="language-"] {
+    background: #000 !important;
+    border: 1px solid #1a1a1a !important;
+    border-radius: 8px !important;
+    margin: 10px 0 0 0 !important;
+    padding: 1.2rem !important;
+    font-size: 0.85rem !important;
+}
+pre[class*="language-"]::-webkit-scrollbar {
+    height: 4px;
+}
+pre[class*="language-"]::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+}

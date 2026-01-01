@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import "../../assets/css/Payment_bank.css"; // reuse some styles
+import "../assets/css/Payment_bank.css"; // reuse some styles
 
 const Bank_Payment = ({ videoId, amount, unlockVideo }) => {
     const [formData, setFormData] = useState({

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAdmin } from "./Admin_API_Context";
 import { fetchAdminCsrfToken } from "../config/apiAdmin";
-import "../assets/css/Admin_Login.css";
+import "./assets/css/Admin_Login.css";
 
 export default function Admin_Login() {
   const navigate = useNavigate();

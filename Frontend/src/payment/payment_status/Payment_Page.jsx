@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Esewa_Payment from "../esewa/Esewa_Payment.jsx";
 import Bank_Payment from "../bank/Bank_Payment.jsx";
-import '../../assets/css/Payment_Page.css';
 
 const Payment_Page = ({ unlockVideo, videoId, amount }) => {
     const [isPaying, setIsPaying] = useState(true); 

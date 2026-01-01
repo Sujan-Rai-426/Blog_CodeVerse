@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
-import "../../assets/css/Payment_esewa.css";
+import "../assets/css/Payment_esewa.css";
 import Payment_Success from "../../assets/img/payment/Payment_Success.png";
 
 const PaymentSuccess = () => {

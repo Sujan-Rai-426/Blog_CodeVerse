@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { useUserAPI } from "./User_API_Context";
 import apiClient from "../config/apiClient";
 
-import "../assets/css/User_Profile.css";
-import "../assets/css/Components_Design.css";
+import "./assets/css/User_Profile.css";
+import "../public/designs/assets/css/Components_Design.css";
 import CodeVora_Logo from "../assets/img/About_img/CodeVora.png";
 
 import { 

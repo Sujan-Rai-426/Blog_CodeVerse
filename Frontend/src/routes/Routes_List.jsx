@@ -7,7 +7,7 @@ import {
     Contact, 
     About, 
     Privacy_Policy, 
-} from "../context/Import_Files"
+} from "../public/Home/context/Import_Files"
 
 
 // Payment Pages imports

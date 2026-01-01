@@ -1,0 +1,340 @@
+/* ---------------------------------------------
+        1. PAGE & SIDEBAR LAYOUT
+----------------------------------------------- */
+.lib-topic-page { 
+    display: flex;
+    min-height: 100vh;
+}
+
+.main-library-topic.container {
+    flex: 1;
+    max-width: calc(100vw - 250px);
+    padding: 10px 40px !important;
+    overflow-x: hidden;
+}
+
+.lib-tp-right-sidebar {
+    padding: 0; 
+    margin: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+}
+
+
+
+/* ---------------------------------------------
+        2. SLIDABLE NAVIGATION
+----------------------------------------------- */
+.ct-fs-wrapper {
+    position: relative;
+    width: 100%;
+    margin: 0 0 30px 0;
+    padding: 5px 0;
+}
+
+/* Scroll Hint Gradients */
+.ct-fs-wrapper.is-scrollable-left::before {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; left: 0; width: 80px;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(to right, #0a0a0c 20%, transparent);
+}
+
+.ct-fs-wrapper.is-scrollable-right::after {
+    content: "";
+    position: absolute;
+    top: 0; bottom: 0; right: 0; width: 80px;
+    z-index: 10;
+    pointer-events: none;
+    background: linear-gradient(to left, #0a0a0c 20%, transparent);
+}
+
+.ct-fs-scroll {
+    overflow-x: auto;
+    scrollbar-width: none; /* Firefox */
+    display: flex;
+    padding: 10px 0;
+}
+
+.ct-fs-scroll::-webkit-scrollbar { 
+    display: none; /* Chrome/Safari */
+}
+
+.ct-fs-grid {
+    display: flex;
+    gap: 12px;
+    padding: 0 10px;
+}
+
+
+
+/* ---------------------------------------------
+        3. NAVIGATION PILLS & NEW BADGE
+----------------------------------------------- */
+.ct-fs-card {
+    position: relative;
+    flex: 0 0 auto;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: #94a3b8;
+    padding: 10px 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ct-fs-card:hover { 
+    background: rgba(255, 255, 255, 0.08); 
+    color: #fff; 
+}
+
+.ct-selected-card {
+    background: rgba(59, 130, 246, 0.1) !important;
+    color: #fff !important;
+    border: 1px solid #3b82f6 !important;
+    box-shadow: 0 0 20px rgba(59, 130, 246, 0.2);
+}
+.ct-results-count{ margin: auto 0; }
+/* "Proper Buddy" NEW Badge */
+.cv-pill-new-dot {
+    font-size: 0.55rem;
+    font-weight: 900;
+    color: #000;
+    background: #5af63b; /* Neon green */
+    padding: 2px 5px;
+    border-radius: 4px;
+    line-height: 1;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 0 10px rgba(90, 246, 59, 0.4);
+    animation: micro-pulse 2s infinite ease-in-out;
+    position: absolute;
+    top: 0%;
+    left: 80%;
+}
+
+@keyframes micro-pulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.08); opacity: 0.8; }
+}
+
+
+
+/* ---------------------------------------------
+        4. FILTER & SORT UI
+----------------------------------------------- */
+.ct-section-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-bottom: 25px;
+}
+.ct-language-title {
+    margin: auto 0;
+    text-align: left;
+}
+.cv-sort-group {
+    display: flex;
+    background: rgba(255, 255, 255, 0.03);
+    padding: 4px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cv-sort-group button {
+    background: transparent;
+    border: none;
+    color: #64748b;
+    padding: 6px 16px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s;
+    border-radius: 6px;
+}
+
+.cv-sort-group button.active {
+    background: rgba(59, 130, 246, 0.1);
+    color: #3b82f6;
+}
+
+/* ---------------------------------------------
+        5. COMPONENT GRID & MODULE CARDS
+----------------------------------------------- */
+.ct-topic-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.cv-module-card {
+    position: relative;
+    background: linear-gradient(145deg, #16161a, #0d0d0f);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+    text-decoration: none !important;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+/* Animated Scan Line */
+.cv-scan-line {
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 2px;
+    background: linear-gradient(90deg, transparent, #5af63b, transparent);
+    transition: 0.5s;
+}
+
+.cv-module-card:hover .cv-scan-line { 
+    left: 100%; 
+}
+
+.cv-module-inner {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.cv-module-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.cv-id-badge {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.65rem;
+    color: #475569;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.cv-hex-dot {
+    width: 6px; height: 6px;
+    background: #3b82f6;
+    transform: rotate(45deg);
+}
+
+.cv-pulse-tag {
+    font-size: 0.7rem;
+    color: #5af63b;
+    letter-spacing: 1px;
+    font-weight: 800;
+    position: relative;
+    padding-left: 18px;
+}
+
+.cv-pulse-tag::before {
+    content: '';
+    position: absolute;
+    left: 4px; top: 50%;
+    width: 6px; height: 6px;
+    background: #5af63b;
+    border-radius: 50%;
+    transform: translateY(-50%);
+    box-shadow: 0 0 8px #5af63b;
+}
+
+.cv-module-main {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.cv-module-icon {
+    width: 45px; height: 45px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    font-size: 1.4rem; 
+    color: #f8fafc;
+}
+
+.cv-module-title { font-size: 1.1rem; color: #fff; margin: 0; font-weight: 600; }
+.cv-module-subtitle { font-size: 0.75rem; color: #64748b; margin-top: 2px; text-transform: uppercase; }
+
+.cv-module-footer { display: flex; gap: 10px; }
+
+.cv-terminal-box {
+    flex: 1;
+    background: #000;
+    padding: 10px 15px;
+    border-radius: 4px;
+    display: flex; 
+    align-items: center; 
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.cv-prompt { color: #3b82f6; font-weight: bold; font-size: 0.8rem; }
+.cv-terminal-code { font-size: 0.75rem; font-family: 'Fira Code', monospace; }
+
+.cv-explore-btn {
+    width: 40px;
+    background: #1e1e24;
+    border: 1px solid #2d2d35;
+    color: #fff;
+    border-radius: 4px;
+    transition: 0.3s;
+}
+
+.cv-module-card:hover {
+    background: #1a1a20;
+    border-color: rgba(59, 130, 246, 0.3);
+    transform: translateY(-4px);
+}
+
+.cv-module-card:hover .cv-explore-btn {
+    background: #3b82f6;
+    border-color: #3b82f6;
+}
+
+/* ---------------------------------------------
+        6. RESPONSIVE QUERIES
+----------------------------------------------- */
+@media (max-width: 767px) {
+    .main-library-topic.container { 
+        max-width: 100vw; 
+        padding: 20px !important; 
+    }
+    .lib-tp-right-sidebar { 
+        display: none; 
+    }
+    .ct-section-header { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 15px; 
+    }
+}
+
+
+
+/* ------------------------------------------
+        SKELETON LOADER
+------------------------------------------- */
+/* Ensure the skeleton container doesn't show the hover scan line */
+.cv-module-card:has(.react-loading-skeleton) {
+    cursor: default;
+    transform: none !important;
+}
+
+/* Optional: Matching the animation speed to your UI's feel */
+.react-loading-skeleton {
+    --animation-duration: 1.5s;
+}

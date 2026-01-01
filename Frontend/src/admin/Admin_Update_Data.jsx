@@ -3,7 +3,7 @@
 // src/admin/Admin_Update_Data.jsx
 import React, { useEffect, useState } from "react";
 import { useAdmin } from "./Admin_API_Context.jsx";
-import "../assets/css/Admin_Update_Data.css";
+import "./assets/css/Admin_Update_Data.css";
 import { FaEdit, FaTrash, FaChevronDown, FaChevronUp } from "react-icons/fa";
 import apiAdmin from "../config/apiAdmin.js"; 
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import apiClient, { fetchClientCsrfToken } from "../config/apiClient";
-import "../assets/css/User_Login.css";
+import "./assets/css/User_Login.css";
 
 export default function User_Login() {
   const navigate = useNavigate();

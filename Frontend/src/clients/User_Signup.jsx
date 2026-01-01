@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import apiClient from "../config/apiClient";
-import "../assets/css/User_Login.css";
-import "../assets/css/User_Signup.css"
+import "./assets/css/User_Login.css";
+import "./assets/css/User_Signup.css"
 
 export default function User_Signup() {
     const navigate = useNavigate();

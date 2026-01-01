@@ -7,7 +7,7 @@ import { useUserAPI } from "./User_API_Context";
 import apiClient from "../config/apiClient";
 import User_Avatar_Selector from "./User_Avatar_Selector";
 
-import "../assets/css/User_Edit_Profile.css";
+import "./assets/css/User_Edit_Profile.css";
 // IMPORTED FaTimes for close button
 import { FaUserEdit, FaLock, FaImage, FaChevronLeft, FaEye, FaEyeSlash, FaTimes } from 'react-icons/fa';
 

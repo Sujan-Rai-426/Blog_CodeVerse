@@ -1,5 +1,5 @@
 import React from "react";
-import "../assets/css/Admin_Home.css";
+import "./assets/css/Admin_Home.css";
 import { FaPlus, FaList, FaEdit, FaHome, FaCog, FaTimes, FaUser } from "react-icons/fa";
 
 export default function Admin_Sidebar({ sidebarOpen, setSidebarOpen, setActivePage, activePage }) {

@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import { FaEdit, FaTrash, FaSearch } from "react-icons/fa";
 import apiAdmin from "../config/apiAdmin.js";
 import { useAdmin } from "./Admin_API_Context.jsx";
-import "../assets/css/Admin_Update_User.css"
-import "../assets/css/Admin_Update_Data.css"; // table/skeleton styles
+import "./assets/css/Admin_Update_User.css"
+import "./assets/css/Admin_Update_Data.css"; // table/skeleton styles
 
 const Admin_Update_User = () => {
     const [users, setUsers] = useState([]);

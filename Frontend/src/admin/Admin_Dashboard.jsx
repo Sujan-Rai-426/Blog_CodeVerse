@@ -1,6 +1,6 @@
 
 import React from "react";
-import "../assets/css/Admin_Home.css";
+import "./assets/css/Admin_Home.css";
 
 export default function Admin_Dashboard() {
     return (

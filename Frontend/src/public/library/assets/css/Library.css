@@ -1,0 +1,17 @@
+.library-page { display: flex; }
+
+.lib-right-sidebar{margin: 0; padding: 0;}
+.component-page-container.container {
+    max-width: calc(100vw - 200px - 30px);
+}
+
+@media (max-width: 1225px) {
+    .component-page-container.container {
+        max-width: calc(100vw - 200px - 30px);
+    }
+    .lib-right-sidebar{ display: none; }
+}
+@media(max-width: 767px){
+    .component-page-container.container { max-width: 100vw;}
+    .lib-left-sidebar{ display: none; }
+}

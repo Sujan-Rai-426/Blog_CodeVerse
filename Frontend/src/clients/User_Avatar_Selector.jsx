@@ -1,8 +1,8 @@
 // src/components/User_Avatar_Selector.jsx
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import "../assets/css/User_Avatar_Selector.css"
 import { FaRandom } from "react-icons/fa";
+import "./assets/css/User_Avatar_Selector.css"
 
 
 // Dynamic Avatar URL Change

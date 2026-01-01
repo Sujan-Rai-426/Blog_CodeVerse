@@ -5,7 +5,7 @@ import React from "react";
 import { useState, useEffect } from "react";
 import { v4 as uuidv4 } from "uuid";  //install uuid package first
 import CryptoJS from "crypto-js";  //install crypto-js package first
-import "../../assets/css/Payment_esewa.css";
+import "../assets/css/Payment_esewa.css";
 
 const Esewa_Payment = () => {
     const [formData, setformData] = useState({
