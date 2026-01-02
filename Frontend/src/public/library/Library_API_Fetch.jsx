@@ -2,7 +2,12 @@
 import api from "../../config/api"
 
 
-export const fetchLibraries = async() => {
-    const res = await api.get("/api/libraries/");
+export const fetchLibraryTopics = async() => {
+    const res = await api.get(`/api/library/topics/`);
+    return res.data;
+}
+
+export const fetchLibraryComponents = async() => {
+    const res = await api.get(`/api/library/components/${id}/`);
     return res.data;
 }

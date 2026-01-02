@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     # "django.contrib.sites",
 
     # Your apps
-    "Home", "CustomUser", "Profile",
+    "Home", "CustomUser", "Profile", "Library",
     "Tutorial.apps.TutorialConfig",
 
     # DRF
@@ -272,8 +272,8 @@ else:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_SAMESITE = "None"
-    CSRF_COOKIE_DOMAIN = f".vercel.app"      #Same as we mention in login in view   -->      CSRF_COOKIE_DOMAIN = f"{BACKEND_PROD_DOMAIN}" "
-    SESSION_COOKIE_DOMAIN = f".vercel.app"   #Same as we mention in login in view  -->   SESSION_COOKIE_DOMAIN =f"{BACKEND_PROD_DOMAIN}" 
+    CSRF_COOKIE_DOMAIN = ".vercel.app"      #Same as we mention in login in view   -->      CSRF_COOKIE_DOMAIN = f"{BACKEND_PROD_DOMAIN}" "
+    SESSION_COOKIE_DOMAIN = ".vercel.app"   #Same as we mention in login in view  -->   SESSION_COOKIE_DOMAIN =f"{BACKEND_PROD_DOMAIN}" 
     CSRF_TRUSTED_ORIGINS = [
         f"https://{FRONTEND_PROD_DOMAIN}",        # codevora140.vercel.app
         f"https://{BACKEND_PROD_DOMAIN}",         # codevora-backend.vercel.app

@@ -30,6 +30,7 @@ import {
 
 import './App.css'; // Make sure your dark-mode/light-mode classes are here
 import { Utility_Route } from './utility/Utiltiy_Imports.jsx';
+import Library_API_Provider from './public/library/Library_API_Provider.jsx';
 
 function App() {
   const [isDark, setIsDark] = useState(true); // Track dark/light mode
@@ -50,40 +51,42 @@ function App() {
     <User_API_Provider>
       <Payment_Provider>
         <Parent_Api_Provider>
-            <Router>
-      {/* <div className={isDark ? 'dark-mode' : 'light-mode'}>
-              </div> */}
-              <Nav_Bar/>
+          <Library_API_Provider>
+                  <Router>
+            {/* <div className={isDark ? 'dark-mode' : 'light-mode'}>
+                    </div> */}
+                    <Nav_Bar/>
 
-                <Routes>
-                    <Route exact path='/Admin/*' element={<Admin_Routes />} />
-                    <Route exact path='/User/*' element={<User_Routes />} />
-                    <Route exact path="/*" element={<Routes_List />} />
-
-
-                    <Route exact path="/Templates/*" 
-                          element={
-                            <Templates_API_Provider>
-                                <Template_Routes />
-                            </Templates_API_Provider>
-                          } 
-                    />
+                      <Routes>
+                          <Route exact path='/Admin/*' element={<Admin_Routes />} />
+                          <Route exact path='/User/*' element={<User_Routes />} />
+                          <Route exact path="/*" element={<Routes_List />} />
 
 
-                    <Route exact path="/Components/*" element={<Components_Route />} />
-                    <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route />} />
-                    <Route exact path="/PlayGround/*" element={<PlayGround_Routes />} />
-                    <Route exact path="/React-Utility/*" element={<Utility_Route />} />
+                          <Route exact path="/Templates/*" 
+                                element={
+                                  <Templates_API_Provider>
+                                      <Template_Routes />
+                                  </Templates_API_Provider>
+                                } 
+                          />
 
-                      {/* React Libraries [CodeVora-UI-Libraries] */}
-                    <Route exact path="/react-libraries/*" element={<Library_Routes />} />
-                </Routes>
 
-              <Footer />
-              <Analytics />
-              {/* <Floating_Go_Back_Btn /> */}
-              <Scroll_To_Top />
-            </Router>
+                          <Route exact path="/Components/*" element={<Components_Route />} />
+                          <Route exact path="/Code-Guide/*" element={<Coding_Guide_Route />} />
+                          <Route exact path="/PlayGround/*" element={<PlayGround_Routes />} />
+                          <Route exact path="/React-Utility/*" element={<Utility_Route />} />
+
+                            {/* React Libraries [CodeVora-UI-Libraries] */}
+                          <Route exact path="/react-library/*" element={<Library_Routes />} />
+                      </Routes>
+
+                    <Footer />
+                    <Analytics />
+                    {/* <Floating_Go_Back_Btn /> */}
+                    <Scroll_To_Top />
+                  </Router>
+            </Library_API_Provider>
         </Parent_Api_Provider>
       </Payment_Provider>
     </User_API_Provider>

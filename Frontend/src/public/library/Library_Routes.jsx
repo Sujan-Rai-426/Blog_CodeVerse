@@ -7,7 +7,7 @@ const Library_Routes = () => {
     return (
         <Routes>
             <Route exact path="topics/" element={<Library_Topic />} />
-            <Route exact path="/:topicsID/:libraryID/" element={<Library />} />
+            <Route exact path=":topicsID/:libraryID/" element={<Library />} />
         </Routes>
     )
 }

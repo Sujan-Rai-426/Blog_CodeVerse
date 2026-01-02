@@ -124,7 +124,7 @@
     width: 90%;
     position: relative;
     background: #000;
-    border: 2px dashed;
+    border: 2px dashed #8080808c;
     border-radius: 15px;
     overflow: hidden;
     display: flex;
@@ -137,7 +137,7 @@
     .hero-visual-stage { height: 50vh;}
 }
 @media (max-width: 768px) {
-    .hero-visual-stage { margin: 1rem auto; }
+    .hero-visual-stage { margin: 1rem auto; border: 1px dashed #8080808c;}
     .content-specs { padding: 10px !important; padding: 40px 15px !important;}
     .code-snippet{font-size: 0.8rem !important;}
 }

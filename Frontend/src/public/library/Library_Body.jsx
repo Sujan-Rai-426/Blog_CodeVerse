@@ -11,29 +11,25 @@ import "prismjs/themes/prism-tomorrow.css";
 import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-bash";
 import { FaFacebook, FaFacebookMessenger, FaTelegram, FaWhatsapp } from 'react-icons/fa';
-import Interactive_Grid_Background from '../Home/context/Interactive_Grid_Background';
+import { use_Library_API } from './Library_API_Context';
+
 
 const Library_Body = ({ componentId }) => {
+    const {libraryComponents, error, loading} = use_Library_API();
     
-    // Trigger Prism highlighting on mount and when componentId changes
+    
+    // ---------> Use Prism Highlight  for code
     useEffect(() => {
         Prism.highlightAll();
     }, [componentId]);
 
-    const libraryComponents = [
-        {
-            id: "matrix-bg",
-            topic_id: "backgrounds",
-            created_at: "2025-12-28" ,
-            title: "Matrix Rain Effect",
-            description: "An ultra-smooth digital rain canvas component. Optimized for background usage in landing pages and high-tech dashboards.",
-            config: {
-                name: "MatrixBackground",
-                childrenText: "SYSTEM ACCESS GRANTED",
-            },
-            usage: `<MatrixBackground speed={1}>\n  <div style={{minHeight:'100vh'}}>\n      Here is your Body\n  </div>\n</MatrixBackground>`,
-        }
-    ];
+
+    // ----------> Handle Scroll To DOC Section
+    const docsRef = useRef(null);
+    const scrollToDocsSection = () => {
+        docsRef.current?.scrollIntoView({ behaviour:"smooth" });
+    }
+
 
     const activeComp = libraryComponents.find(c => c.id === componentId);
 
@@ -106,16 +102,9 @@ const Library_Body = ({ componentId }) => {
     };
 
 
-    // ----------> Handle Scroll To DOC Section
-    const docsRef = useRef(null);
-    const scrollToDocsSection = () => {
-        docsRef.current?.scrollIntoView({ behaviour:"smooth" });
-    }
-
-
 
     return (
-<Interactive_Grid_Background>
+
         <div className="component-page-container container">
     {/* ------------------------------------------------------- */}
             {/* 1. HEADER: Descriptoion Toppic */}
@@ -215,7 +204,7 @@ const Library_Body = ({ componentId }) => {
                 </div>
             </section>
         </div>
-</Interactive_Grid_Background>
+
     );
 };
 

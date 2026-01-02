@@ -24,6 +24,11 @@ from Tutorial.views import (
     TemplateTypeViewSet, TemplateViewSet
 )
 
+from Library.views import (
+    LibraryTopicViewSet, LibraryComponentViewSet
+)
+
+
 occupied_steps = BackendStepViewSet.as_view({'get': 'occupied_steps'})
 
 # ---------------------------- CSRF ----------------------------
@@ -58,9 +63,12 @@ router.register(r"profile/transactions", TransactionHistoryViewSet, basename="tr
 router.register(r"profile/playlists", PlaylistViewSet, basename="playlists")
 router.register(r"profile/playlist-items", PlaylistItemViewSet, basename="playlist-items")
 
+# ------------------ LIBRARY APP -----------------
+router.register(r'library/topics', LibraryTopicViewSet, basename="library-topics")
+router.register(r'library/components', LibraryComponentViewSet, basename="library-components")
 
 
-# ---------------------------- URLPATTERNS ----------------------------
+# ---------------------------- URL PATTERNS ----------------------------
 urlpatterns = [
     # CSRF & Debug
     path('csrf/', get_csrf, name='get_csrf'),

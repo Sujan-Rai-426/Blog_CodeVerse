@@ -200,7 +200,7 @@ function Nav_Bar(props) {
 
                             {/* React Libraries */}
                             <li className="nb-nav-item">
-                                <Link to={`/react-libraries/topics`} className="nb-nav-link">React UI</Link>
+                                <Link to={`/react-library/topics`} className="nb-nav-link">React UI</Link>
                             </li>
 
                             {/* Template */}
@@ -384,7 +384,7 @@ function Nav_Bar(props) {
                     
                     {/* React Libraries */}
                         <li>
-                            <Link to="/react-libraries/topics" onClick={() => setSidebarOpen(false)}>
+                            <Link to="/react-library/topics" onClick={() => setSidebarOpen(false)}>
                                 <FaReact /> &nbsp; React Library
                             </Link>
                         </li>

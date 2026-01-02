@@ -1,12 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { Library_API_Context } from './Library_API_Context'
-import { fetchLibraries } from './Library_API_Fetch';
+import { fetchLibraryTopics, fetchLibraryComponents } from './Library_API_Fetch';
 
 const Library_API_Provider = ( {children} ) => {
 
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [ data, setData ] = useState({libraries: []})
+    const [ data, setData ] = useState({libraryTopics: [], libraryComponents: []})
 
 
     const CACHE_KEY = "react-library-api-cache";
@@ -28,8 +28,8 @@ const Library_API_Provider = ( {children} ) => {
             }
 
             // 🔹 Fetch from API
-            const[libraries] = await Promise.all([fetchLibraries()]);
-            const newData = {libraries};
+            const[libraryTopics, libraryComponents] = await Promise.all([fetchLibraryTopics(), fetchLibraryComponents()]);
+            const newData = {libraryTopics, libraryComponents};
             setData(newData);
             
             
@@ -48,7 +48,7 @@ const Library_API_Provider = ( {children} ) => {
         } finally {
             setLoading(false);
         }
-    } )
+    }, [] )
 
 
     useEffect(() => {

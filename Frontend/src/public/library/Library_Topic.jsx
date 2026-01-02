@@ -6,6 +6,7 @@ import "react-loading-skeleton/dist/skeleton.css";
 import "./assets/css/Library_Topic.css";
 import Components_Right_Sidebar from "../designs/Components_Right_Sidebar";
 import { MatrixBackground } from "codevora-ui";
+import { use_Library_API } from "./Library_API_Context";
 
 const NEW_DURATION_DAYS = 15;
 const isNewItem = (date) => {
@@ -15,6 +16,8 @@ const isNewItem = (date) => {
 };
 
 const Library_Topic = () => {
+
+    const { libraryTopics, libraryComponents, loading, error } = use_Library_API();
     
     const [activeTopicId, setActiveTopicId] = useState("all");
     const [sortBy, setSortBy] = useState("latest"); 
@@ -23,32 +26,12 @@ const Library_Topic = () => {
     const [canScrollRight, setCanScrollRight] = useState(false);
     const scrollRef = useRef(null);
 
-    const libraryTopics = [
-        { id: "all", name: "All", icon: "bi bi-grid-fill" },
-        { id: "backgrounds", name: "Backgrounds", icon: "bi bi-cloud-haze2" },
-        { id: "cards", name: "Cards", icon: "bi bi-layers" },
-        { id: "buttons", name: "Buttons", icon: "bi bi-toggle-on" },
-        { id: "navigation", name: "Navigation", icon: "bi bi-list" },
-        { id: "forms", name: "Forms", icon: "bi bi-input-cursor-text" },
-        { id: "loaders", name: "Loaders", icon: "bi bi-arrow-repeat" }
-    ];
-
-    const libraryComponents = [
-        { 
-            id: "matrix-bg", 
-            topic_id: "backgrounds", 
-            created_at: "2025-12-28",
-            title: "Matrix Rain Effect",
-            short_title_info: "Hacker matrix rain theme.", 
-            description: "Ultra-smooth digital rain canvas.",
-            config: { name: "MatrixBackground" }
-        },
-    ];
 
     const hasNewInTopic = (topicId) => {
         if (topicId === "all") return libraryComponents.some(c => isNewItem(c.created_at));
         return libraryComponents.some(c => c.topic_id === topicId && isNewItem(c.created_at));
     };
+
 
     const checkForScroll = () => {
         if (scrollRef.current) {
@@ -141,7 +124,7 @@ const Library_Topic = () => {
                                         className={`ct-fs-card ${activeTopicId === cat.id ? "ct-selected-card" : ""}`}
                                         onClick={() => setActiveTopicId(cat.id)}
                                     >
-                                        <i className={`${cat.icon} ct-fs-card-icon`}></i>
+                                        <i className={`${cat.icon_class} ct-fs-card-icon`}></i>
                                         <span className="ct-fs-card-text">{cat.name}</span>
                                         {hasNewInTopic(cat.id) && (
                                             <span className="cv-pill-new-dot">NEW</span>
@@ -184,7 +167,7 @@ const Library_Topic = () => {
                                     filteredComponents.map((component) => {
                                         const topicInfo = libraryTopics.find(t => t.id === component.topic_id);
                                         return (
-                                            <Link key={component.id} to={`/react-libraries/${component.topic_id}/${component.id}`} className="cv-module-card">
+                                            <Link key={component.id} to={`/react-library/${component.topic_id}/${component.id}`} className="cv-module-card">
                                                 <div className="cv-scan-line"></div>
                                                 <div className="cv-module-inner">
                                                     <div className="cv-module-top">
@@ -195,7 +178,7 @@ const Library_Topic = () => {
                                                         {isNewItem(component.created_at) && <div className="cv-pulse-tag">NEW</div>}
                                                     </div>
                                                     <div className="cv-module-main">
-                                                        <div className="cv-module-icon"><i className={topicInfo?.icon}></i></div>
+                                                        <div className="cv-module-icon"><i className={topicInfo?.icon_class}></i></div>
                                                         <div className="cv-module-info">
                                                             <h3 className="cv-module-title">{component.title}</h3>
                                                             <p className="cv-module-subtitle">{component.short_title_info}</p>
