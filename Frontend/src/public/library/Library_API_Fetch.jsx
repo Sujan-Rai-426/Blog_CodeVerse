@@ -8,6 +8,6 @@ export const fetchLibraryTopics = async() => {
 }
 
 export const fetchLibraryComponents = async() => {
-    const res = await api.get(`/api/library/components/${id}/`);
+    const res = await api.get(`/api/library/components/`)
     return res.data;
 }

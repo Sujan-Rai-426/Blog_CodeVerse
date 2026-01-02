@@ -12,6 +12,7 @@ import "prismjs/components/prism-jsx";
 import "prismjs/components/prism-bash";
 import { FaFacebook, FaFacebookMessenger, FaTelegram, FaWhatsapp } from 'react-icons/fa';
 import { use_Library_API } from './Library_API_Context';
+import Skeleton from 'react-loading-skeleton';
 
 
 const Library_Body = ({ componentId }) => {
@@ -33,18 +34,15 @@ const Library_Body = ({ componentId }) => {
 
 
 
-    const activeComp = libraryComponents.find(c => c.id === componentId);
-
+    
     // --- Helper Component: Copy Button ---
     const CopyButton = ({ text }) => {
         const [copied, setCopied] = useState(false);
-
         const handleCopy = () => {
             navigator.clipboard.writeText(text);
             setCopied(true);
             setTimeout(() => setCopied(false), 2000);
         };
-
         return (
             <button className={`lib-copy-btn ${copied ? 'copied' : ''}`} onClick={handleCopy}>
                 {copied ? <><i className="bi bi-check2"></i> Copied</> : <><i className="bi bi-clipboard"></i> Copy</>}
@@ -52,11 +50,6 @@ const Library_Body = ({ componentId }) => {
         );
     };
 
-
-    /**
-     * Internal Dynamic Renderer
-     */
-    if (!activeComp) return <div className="error">Component Not Found</div>;
 
     const DynamicPreview = ({ config }) => {
         const Component = CodeVora[config.name] || config.name;
@@ -103,6 +96,74 @@ const Library_Body = ({ componentId }) => {
         window.open(shareUrl, "_blank", "width=600,height=500");
     };
 
+
+
+    // -----------------> handle ERROR
+    if (error){
+        return(
+            <h1 style={{color: 'red'}}>ERROR: {error}</h1>
+        )
+    }
+
+
+
+
+    // ------------------> handle LOADING [skeleton Loader]
+    if(loading){
+        return(
+            <div className="component-page-container container">
+            {/* 1. HEADER SKELETON */}
+            <header className='header'>
+                <section className='header-top'>
+                    <div>
+                        <Skeleton width={80} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" style={{ marginBottom: '10px' }} />
+                        <Skeleton width={300} height={40} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                    </div>
+                    <Skeleton circle width={40} height={40} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                </section>
+                <div style={{ marginTop: '20px' }}>
+                    <Skeleton count={2} width="80%" baseColor="#1a1a20" highlightColor="#2a2a35" />
+                </div>
+            </header>
+
+            {/* 2. ACTIONS SKELETON */}
+            <section className="lib-action-btns" style={{ opacity: 0.6 }}>
+                <Skeleton width={100} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                <Skeleton width={130} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                <Skeleton width={130} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
+            </section>
+
+            {/* 3. STAGE SKELETON */}
+            <section className="hero-visual-stage" style={{ border: 'none' }}>
+                <Skeleton height="100%" width="100%" baseColor="#0a0a0c" highlightColor="#16161e" />
+            </section>
+
+            {/* 4. SPECS SKELETON */}
+            <section className="content-specs">
+                <div className="specs-grid">
+                    {[1, 2, 3].map((i) => (
+                        <div key={i} className="spec-card">
+                            <div className="spec-header">
+                                <Skeleton width={150} height={15} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                                <Skeleton width={60} height={25} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                            </div>
+                            <Skeleton width={200} height={10} style={{ margin: '10px 0' }} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                            <Skeleton height={80} borderRadius={8} baseColor="#000" highlightColor="#1a1a20" />
+                        </div>
+                    ))}
+                </div>
+            </section>
+        </div>
+        )
+    }
+
+
+
+        const activeComp = libraryComponents.find(c => c.id === componentId);
+    /**
+     * Internal Dynamic Renderer
+     */
+    if (!activeComp) return <div className="error">Component Not Found</div>;
 
 
     return (

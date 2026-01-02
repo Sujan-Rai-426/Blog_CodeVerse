@@ -245,3 +245,32 @@ pre[class*="language-"]::-webkit-scrollbar-thumb {
     background: transparent;
     border-radius: 10px;
 }
+
+
+
+
+/* --------------------------------------------------------------
+                SKELETON LOADER
+--------------------------------------------------------------- */
+/* Ensure the skeleton container doesn't jump when content loads */
+.component-page-container {
+    transition: opacity 0.4s ease-in-out;
+}
+
+/* Specific styling for the stage skeleton to maintain height */
+.hero-visual-stage .react-loading-skeleton {
+    display: block;
+    line-height: 1;
+}
+
+/* Optional: Pulse animation for the dashed border during load */
+.hero-visual-stage:has(.react-loading-skeleton) {
+    border-color: rgba(255, 255, 255, 0.05);
+    animation: pulse-border 2s infinite;
+}
+
+@keyframes pulse-border {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
