@@ -12,7 +12,7 @@ const Library = () => {
 
     return (
         <div className="layout-wrapper library-page">
-            <Library_Left_Sidebar />
+            <Library_Left_Sidebar className="lib-left-sidebar"/>
 
             <main className="main-body container">
                 <Library_Body componentId={libraryID}/>

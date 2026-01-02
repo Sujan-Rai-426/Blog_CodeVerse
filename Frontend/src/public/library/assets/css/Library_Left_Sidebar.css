@@ -7,9 +7,9 @@
 }
 
 .lib-left-sidebar {
-    width: 250px;
+    min-width: 230px;
     height: 100vh;
-    border-right: 1px solid var(--sidebar-border);
+    border-right: 1px solid rgba(128, 128, 128, 0.588);
     position: sticky;
     top: 0;
     display: flex;
@@ -97,10 +97,6 @@
 
 /* Mobile Responsive */
 @media (max-width: 991px) {
-    .lib-left-sidebar {
-        position: fixed;
-        transform: translateX(-100%);
-    }
     .lib-left-sidebar.open {
         transform: translateX(0);
     }
@@ -112,9 +108,16 @@
         z-index: 999;
     }
 }
+@media (max-width: 767px){
+    .lib-left-sidebar {
+        position: fixed;
+        transform: translateX(-100%);
+    }
+}
 
 
 
+/* ---------------- NEW BADGE ---------------- */
 .sub-item {
     display: flex;
     align-items: center;

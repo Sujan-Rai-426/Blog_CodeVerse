@@ -18,17 +18,19 @@ const Library_Body = ({ componentId }) => {
     const {libraryComponents, error, loading} = use_Library_API();
     
     
-    // ---------> Use Prism Highlight  for code
-    useEffect(() => {
-        Prism.highlightAll();
-    }, [componentId]);
-
-
     // ----------> Handle Scroll To DOC Section
     const docsRef = useRef(null);
     const scrollToDocsSection = () => {
         docsRef.current?.scrollIntoView({ behaviour:"smooth" });
     }
+
+
+
+    // ---------> Use Prism Highlight  for code
+    useEffect(() => {
+        Prism.highlightAll();
+    }, [componentId]);
+
 
 
     const activeComp = libraryComponents.find(c => c.id === componentId);
