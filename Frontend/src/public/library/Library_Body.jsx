@@ -86,7 +86,7 @@ const Library_Body = ({ componentId }) => {
     const handleShareClick = (platform) => {
         const realUrl = window.location.href;
         const encodedRealUrl = encodeURIComponent(realUrl);
-        const pageTitle = encodeURIComponent(currentCodes.title || document.title);
+        const pageTitle = encodeURIComponent(activeComp?.title || document.title);
         let shareUrl = "";
         switch (platform) {
             case "Messenger":
@@ -251,41 +251,31 @@ const Library_Body = ({ componentId }) => {
                         </div>
                         <p><small>Properties and options for selecting and customizing this component.</small></p>
                         <div className="lib-props-table-wrapper">
-                            <table className="lib-props-table">
-                                <thead>
-                                    <tr>
-                                        <th>Prop</th>
-                                        <th>Type</th>
-                                        <th>Default</th>
-                                        <th>Description</th>
+                            <tbody>
+                                {/* 1. Dynamic Props from Database with safety check */}
+                                {activeComp.props?.map((prop, index) => (
+                                    <tr key={index}>
+                                        <td><code>{prop.name}</code></td>
+                                        <td><code>{prop.prop_type}</code></td>
+                                        <td><code>{prop.default_value}</code></td>
+                                        <td>{prop.description}</td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    {/* 1. Dynamic Props from Database */}
-                                    {activeComp.props.map((prop, index) => (
-                                        <tr key={index}>
-                                            <td><code>{prop.name}</code></td>
-                                            <td><code>{prop.prop_type}</code></td>
-                                            <td><code>{prop.default_value}</code></td>
-                                            <td>{prop.description}</td>
-                                        </tr>
-                                    ))}
+                                ))}
 
-                                    {/* 2. Static Common Props (Optional: manually add if not in DB) */}
-                                    <tr>
-                                        <td><code>children</code></td>
-                                        <td><code>ReactNode</code></td>
-                                        <td><code>null</code></td>
-                                        <td>UI elements to be rendered on top of the component.</td>
-                                    </tr>
-                                    <tr>
-                                        <td><code>className</code></td>
-                                        <td><code>string</code></td>
-                                        <td><code>""</code></td>
-                                        <td>Custom CSS classes for the container.</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                {/* 2. Static Common Props */}
+                                <tr>
+                                    <td><code>children</code></td>
+                                    <td><code>ReactNode</code></td>
+                                    <td><code>null</code></td>
+                                    <td>UI elements to be rendered on top of the component.</td>
+                                </tr>
+                                <tr>
+                                    <td><code>className</code></td>
+                                    <td><code>string</code></td>
+                                    <td><code>""</code></td>
+                                    <td>Custom CSS classes for the container.</td>
+                                </tr>
+                            </tbody>
                         </div>
                     </div>
 
