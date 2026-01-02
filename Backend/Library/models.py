@@ -11,6 +11,22 @@ class LibraryTopic(models.Model):
         return self.name
 
 
+
+
+
+# Linked Props to Component
+class LibraryComponentProp(models.Model):
+    category = models.ForeignKey(LibraryTopic, related_name="props", on_delete=models.CASCADE, default="All")
+    name = models.CharField(max_length=50, help_text="e.g., 'preset'")
+    prop_type = models.CharField(max_length=100, help_text="e.g., 'string' or 'Matrix, Waves'")
+    default_value = models.CharField(max_length=100, default="null")
+    description = models.TextField()
+    def __str__(self):
+        return f"{self.name} - {self.category}"
+
+
+
+
 class LibraryComponent(models.Model):
     id = models.CharField(max_length=100, primary_key=True, help_text="Unique URL ID for the component. Example: 'matrix-rain-effect'.")
     topic_id = models.ForeignKey(LibraryTopic, related_name='components', on_delete=models.CASCADE)
@@ -41,6 +57,7 @@ Example JSON Structure: <pre style="background: #272822; color: #f8f8f2; padding
                     )
                 )
     created_at = models.DateTimeField(auto_now_add=True)
-
+    props = models.ManyToManyField( LibraryComponentProp,  related_name='components',  blank=True, help_text="Select all props that apply to this component" )
     def __str__(self):
         return self.title
+
