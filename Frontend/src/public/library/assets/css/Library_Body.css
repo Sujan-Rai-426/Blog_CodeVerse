@@ -150,6 +150,79 @@
         4.DETAILS AND DOCUMENTATION
 --------------------------------------------- */
 
+/* Props Table */
+/* Container holding the table */
+.lib-props-table-wrapper {
+    width: 100%;
+    margin: 1.5rem 0;
+    border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(13, 13, 13, 0.5);
+    backdrop-filter: blur(8px);
+    overflow-x: auto; /* Ensures mobile responsiveness */
+}
+
+.lib-props-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Inter', system-ui, sans-serif;
+    color: #cbd5e1;
+    min-width: 700px; /* Prevents squishing on small screens */
+}
+
+/* Header Styling */
+.lib-props-table thead {
+    background: rgba(255, 255, 255, 0.03);
+}
+
+.lib-props-table th {
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: #94a3b8;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Cell Styling */
+.lib-props-table td {
+    padding: 10px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    font-size: 0.875rem;
+    line-height: 1.5;
+    vertical-align: middle;
+}
+
+.lib-props-table tr:hover {
+    background: rgba(255, 255, 255, 0.02);
+}
+
+/* Prop Name (Left Column) */
+.lib-props-table td:first-child code {
+    color: #818cf8; /* Indigo */
+    font-weight: 600;
+    background: transparent;
+}
+
+/* Type & Default Labels */
+.lib-props-table code {
+    font-family: 'Fira Code', 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    background: rgba(30, 41, 59, 0.5);
+    padding: 3px 7px;
+    border-radius: 6px;
+    color: #38bdf8; /* Sky Blue */
+    border: 1px solid rgba(56, 189, 248, 0.2);
+}
+
+/* Description text */
+.lib-props-table td:last-child {
+    color: #94a3b8;
+    max-width: 300px;
+}
+
 /* Content Area */
 .content-specs {
     margin: 0 auto;

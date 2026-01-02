@@ -51,18 +51,31 @@ const Library_Body = ({ componentId }) => {
     };
 
 
+
+    // ----> Compile and show the props passes from db
     const DynamicPreview = ({ config }) => {
-        const Component = CodeVora[config.name] || config.name;
-        const isBackground = config.name.toLowerCase().includes("background");
+        // 1. Destructure name and childrenText, 
+        // and collect EVERYTHING ELSE into a variable called 'componentProps'
+        const { name, childrenText, ...componentProps } = config;
+        // 2. Resolve the component from your library
+        const Component = CodeVora[name] || name;
+        const isBackground = name.toLowerCase().includes("background");
         return (
-            <Component {...config.props}>
+            /* 3. Spread 'componentProps' which now contains { preset: "Matrix" } */
+            <Component {...componentProps}>
                 {isBackground ? (
                     <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
-                        <h2 style={{ fontSize: '1.2rem', marginTop: '3rem', letterSpacing: '10px', color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.5)' }}>
-                            {config.childrenText}
+                        <h2 style={{ 
+                            fontSize: '1.2rem', 
+                            marginTop: '3rem', 
+                            letterSpacing: '10px', 
+                            color: '#fff', 
+                            textShadow: '0 0 20px rgba(255,255,255,0.5)' 
+                        }}>
+                            {childrenText}
                         </h2>
                     </div>
-                ) : config.childrenText}
+                ) : childrenText}
             </Component>
         );
     };
@@ -230,6 +243,52 @@ const Library_Body = ({ componentId }) => {
     {/* ------------------------------------------------------- */}
             <section ref={docsRef} style={{scrollMarginTop: "30px"}} className="content-specs">
                 <div className="specs-grid">
+
+                    {/* Props Table Card */}
+                    <div className="spec-card">
+                        <div className="spec-header">
+                            <h4>PROPS</h4>
+                        </div>
+                        <p><small>Properties and options for selecting and customizing this component.</small></p>
+                        <div className="lib-props-table-wrapper">
+                            <table className="lib-props-table">
+                                <thead>
+                                    <tr>
+                                        <th>Prop</th>
+                                        <th>Type</th>
+                                        <th>Default</th>
+                                        <th>Description</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {/* 1. Dynamic Props from Database */}
+                                    {activeComp.props.map((prop, index) => (
+                                        <tr key={index}>
+                                            <td><code>{prop.name}</code></td>
+                                            <td><code>{prop.prop_type}</code></td>
+                                            <td><code>{prop.default_value}</code></td>
+                                            <td>{prop.description}</td>
+                                        </tr>
+                                    ))}
+
+                                    {/* 2. Static Common Props (Optional: manually add if not in DB) */}
+                                    <tr>
+                                        <td><code>children</code></td>
+                                        <td><code>ReactNode</code></td>
+                                        <td><code>null</code></td>
+                                        <td>UI elements to be rendered on top of the component.</td>
+                                    </tr>
+                                    <tr>
+                                        <td><code>className</code></td>
+                                        <td><code>string</code></td>
+                                        <td><code>""</code></td>
+                                        <td>Custom CSS classes for the container.</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
 
                     {/* Installation Card */}
                     <div className="spec-card">
