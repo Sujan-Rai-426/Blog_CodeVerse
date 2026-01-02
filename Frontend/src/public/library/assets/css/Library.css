@@ -1,6 +1,6 @@
 .library-page { display: flex; }
 
-.lib-right-sidebar{margin: 0; padding: 0;}
+.lib-right-sidebar{margin: 0; padding: 0; min-width: 215px;}
 .component-page-container.container {
     max-width: calc(100vw - 230px - 30px);
 }
