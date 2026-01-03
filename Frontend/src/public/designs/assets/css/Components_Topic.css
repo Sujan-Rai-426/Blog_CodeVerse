@@ -280,7 +280,7 @@
 }
 
 @media (max-width: 640px) {
-    .ct-page-title { font-size: 1.4rem; letter-spacing: 0.1em; }
+    .ct-page-title { font-size: 1.4rem; letter-spacing: 0.1em; margin-bottom: 15px; }
     .ct-topic-grid { grid-template-columns: 1fr; }
     .ct-fs-wrapper { top: 10px; }
     .ct-fs-card { padding: 8px 16px; }

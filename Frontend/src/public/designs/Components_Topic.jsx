@@ -137,7 +137,7 @@ const Components_Topic = () => {
                                     <div className="ct-topic-grid">
                                         {lang.topics?.length > 0 ? (
                                             lang.topics.map((topic) => {
-                                                const componentCount = topic.source_codes?.length || 0;
+                                                const componentCount = topic.source_codes?.length || "";
                                                 
                                                 // UPDATED LOGIC: Check if any internal component is new
                                                 const hasNewComponent = topic.source_codes?.some(code => isNewItem(code.created_at));

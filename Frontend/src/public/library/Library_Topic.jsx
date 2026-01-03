@@ -110,8 +110,8 @@ const Library_Topic = () => {
                 <main className="main-library-topic container">
                     <header className="ct-header-section">
                         <h1 className="ct-page-title">
-                            <span className="ct-total-count"><b>{libraryComponents.length} &nbsp;</b></span>
-                            CodeVora UI Library for React
+                            <span className="ct-total-count"><b>{loading? "" : (libraryComponents.length)} &nbsp;</b></span>
+                            React Components by CodeVora UI Library
                         </h1>
                     </header>
 
@@ -148,7 +148,7 @@ const Library_Topic = () => {
                             <h2 className="ct-language-title">{activeTopicsName} Collections</h2>
                             <div style={{width:"100%" ,display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
                                 <span className="ct-results-count text-info">
-                                    <strong>{filteredComponents.length}</strong> items
+                                    <strong>{loading? "" : (filteredComponents.length)}</strong> items
                                 </span>
                                 <div className="cv-sort-group">
                                     <button className={sortBy === 'new' ? 'active' : ''} onClick={() => setSortBy('new')}>New</button>
