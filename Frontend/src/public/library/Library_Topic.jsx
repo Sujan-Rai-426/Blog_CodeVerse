@@ -107,7 +107,7 @@ const Library_Topic = () => {
                     <header className="ct-header-section">
                         <h1 className="ct-page-title">
                             <span className="ct-total-count"><b>{libraryComponents.length} &nbsp;</b></span>
-                            CodeVora UI Library
+                            CodeVora UI Library for React
                         </h1>
                     </header>
 
