@@ -21,7 +21,6 @@ const Library_Topic = () => {
     
     const [activeTopicId, setActiveTopicId] = useState("all");
     const [sortBy, setSortBy] = useState("latest"); 
-    const [isLoading, setIsLoading] = useState(true);
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
     const scrollRef = useRef(null);
@@ -43,7 +42,6 @@ const Library_Topic = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setIsLoading(false);
             setTimeout(checkForScroll, 100);
         }, 800);
         window.addEventListener("resize", checkForScroll);
@@ -68,6 +66,12 @@ const Library_Topic = () => {
     const filteredComponents = getProcessedComponents();
     const activeTopicsName = libraryTopics.find(t => t.id === activeTopicId)?.name || "Library";
 
+
+    if(error){
+        return(
+            error
+        )
+    }
 
 
     // -------------->  SKELETON LOADER FUNCTION
@@ -159,7 +163,7 @@ const Library_Topic = () => {
                         2. COMPONENT GRID  --> [SKELETON BODY + COMPONENTS]
             ---------------------------------------------------------------------------------------- */}
                         <div className="ct-topic-grid">
-                        {isLoading ? 
+                        {loading ? 
                             (
                                 // Render 6 skeletons to fill the grid during load
                                 Array(6).fill(0).map((_, i) => <CardSkeleton key={i} />)                            
