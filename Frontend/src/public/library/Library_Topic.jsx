@@ -184,7 +184,7 @@ const Library_Topic = () => {
                                                             <p className="cv-module-subtitle">{component.short_title_info}</p>
                                                         </div>
                                                     </div>
-                                                    <div className="cv-module-footer">
+                                                    {/* <div className="cv-module-footer">
                                                         <div className="cv-terminal-box">
                                                             <span className="cv-prompt">$</span>
                                                             <span style={{color:"#ff5500"}}>
@@ -193,7 +193,7 @@ const Library_Topic = () => {
                                                             </span>
                                                         </div>
                                                         <button className="cv-explore-btn"><i className="bi bi-cpu"></i></button>
-                                                    </div>
+                                                    </div> */}
                                                 </div>
                                             </Link>
                                         );
