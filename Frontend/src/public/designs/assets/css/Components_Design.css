@@ -299,7 +299,7 @@
     justify-content: center;
     align-items: center;
     min-height: 220px; /* Match height roughly with your video items */
-}
+}   .related-video-item.ad-placement:hover { transform: none; }
 
 /* Ensure the AdSense ins tag fills the container */
 .ct-ad-wrapper ins {

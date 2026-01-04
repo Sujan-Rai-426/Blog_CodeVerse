@@ -106,7 +106,7 @@
     border-radius: 12px;
     padding: 10px;
     min-height: 250px;
-}
+} .ad-container h1{ color:  silver; font-size: clamp(1rem, 1.5vh, 1.2rem)  !important;}
 
 
 
@@ -125,7 +125,7 @@
   cursor: pointer;
   border-radius: 14px;
   overflow: hidden;
-  background: linear-gradient(135deg, #494949, #bdbdbd);
+  background: black;
   box-shadow: 0 4px 15px rgba(0,0,0,0.08);
   transition: transform 0.3s, box-shadow 0.3s;
 }

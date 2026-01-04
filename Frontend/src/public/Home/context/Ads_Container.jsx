@@ -61,7 +61,7 @@ export default function Ads_Container({
             {/* Header: Frames the wait as a technical process */}
             <div style={{ background: "#252525", padding: "12px", borderBottom: "1px solid #333" }}>
                 <span style={{ fontSize: "12px", color: "#2575fc", fontWeight: "bold", textTransform: "uppercase" }}>
-                    {timer > 0 ? `Optimizing ${boxType} Syntax Tree... ${timer}s` : "Preparation Complete"}
+                    {timer > 0 ? `Loading ${boxType.toUpperCase()} Preview...` : "Content Ready"}
                 </span>
             </div>
 

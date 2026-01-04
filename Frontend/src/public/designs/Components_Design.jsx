@@ -507,6 +507,17 @@ export default function Components_Design() {
             </div>
 
 
+                <br />
+
+        {/* ***************************************************************** */}
+            {/*           ADVERTISEMENT --> SPONSORED SECTION              */}
+        {/* ***************************************************************** */}
+                <div className="related-video-item ad-placement">
+                    <Ads_Square_Display />
+                </div>
+
+
+                <br />
 
 
         {/* ***************************************************************** */}
@@ -633,11 +644,11 @@ export default function Components_Design() {
                                         </span>
                                     </div>
 
-                                    {(index + 1) % 3 === 0 && (
+                                    {/* {(index + 1) % 3 === 0 && (
                                         <div className="related-video-item ad-placement">
                                             <Ads_Square_Display />
                                         </div>
-                                    )}
+                                    )} */}
                                 </React.Fragment>
                             );
                         })

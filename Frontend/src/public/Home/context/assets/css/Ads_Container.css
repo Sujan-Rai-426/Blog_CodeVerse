@@ -92,6 +92,18 @@
   .CodeBox-Ads-Placeholder p { font-size: clamp(0.7rem, 4vw, 0.9rem); }
 }
 
+/* Update your CSS */
+.ct-ad-banner-wrapper span {
+    color: #666 !important; /* Slightly darker for better visibility */
+    font-weight: 600;
+}
+
+.Ads-Wrapper {
+    background: #1e1e1e; /* Good - keeps the ad visually distinct from your nav */
+    margin-top: 20px;    /* Critical - keeps the ad away from the navbar */
+}
+
+
 
 /* ======================
       Banner Ads Container Horizontal Banner

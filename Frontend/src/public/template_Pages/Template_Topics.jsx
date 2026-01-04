@@ -76,7 +76,7 @@ const Template_Topics = () => {
                 
                 {/* 1. Showing Total Templates Count */}
                 <div className="ct-page-title">
-                    <span>{filteredTemplates.length}</span>&nbsp; Templates Available
+                    <span>{apiLoading? "" : (filteredTemplates.length)}</span>&nbsp; Templates Available
                 </div>
 
 
@@ -153,16 +153,26 @@ const Template_Topics = () => {
                                     </div>
                                     
                                     {/* Every 5th item, show the Ad */}
-                                    {isAdPosition && (
+                                    {/* {isAdPosition && (
                                         <div className="tt-tpl-item ad-container">
-                                            <Ads_Square_Display />
+                                        <Ads_Square_Display />
                                         </div>
-                                    )}
+                                        )} */}
                                 </React.Fragment>
+
+
                             );
                         })
                     )}
                 </div>
+
+                <br />
+                <br />
+                    {/* // ------------> Ads Container */}
+                        <div className="tt-tpl-item ad-container">
+                        <h1>SPONSORED CONTENT</h1>
+                            <Ads_Square_Display />
+                        </div>
             </div>
         </Interactive_Grid_Background>
     );

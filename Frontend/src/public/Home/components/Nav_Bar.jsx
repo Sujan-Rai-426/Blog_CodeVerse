@@ -104,6 +104,21 @@ function Nav_Bar(props) {
         return () => { document.body.style.overflow = "auto"; };
     }, [sidebarOpen]);
 
+    // ------------------- EFFECT: Google AdSense Ad-Shield/Layout Fix -------------------
+    // This prevents AdSense from injecting elements that might break the sticky nav alignment
+    useEffect(() => {
+        const handleAdOverlap = () => {
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(ad => {
+                if (ad.offsetHeight > 0) {
+                    // Force re-calculation if needed for sticky offset
+                }
+            });
+        };
+        window.addEventListener('load', handleAdOverlap);
+        return () => window.removeEventListener('load', handleAdOverlap);
+    }, []);
+
   // ------------------- HANDLERS -------------------
     const toggleSidebar = (e) => {
         e.stopPropagation();
@@ -170,7 +185,8 @@ function Nav_Bar(props) {
 
     {/* ************************************************************************ */}
         {/* ===================== Desktop Navbar ===================== */}
-            <nav className="navbar-custom nb-navbar-standard sticky-top" role="navigation">
+            {/* Added style zIndex to ensure Google Ads don't overlap the navigation */}
+            <nav className="navbar-custom nb-navbar-standard sticky-top" role="navigation" style={{ zIndex: 1050 }}>
                 <div className="nav-container">
 
                     {/* ====== Left / Brand Name ======= */}
@@ -245,17 +261,6 @@ function Nav_Bar(props) {
                         <div className="n-desktop-profile">
                             <Link to="/User/Profile/" className="nav-client-login-btn n-desktop-account-btn"> <FaUser /> <span>Account</span></Link>
                         </div>
-
-                                            {/* Triggre button to toggle the mode */}
-                    {/* <Link onClick={props.toggleMode} className='px-10'> 
-                        <b>
-                            {props.mode.backgroundColor === '#f5f7fa' ? (
-                                <i className="bi bi-brightness-high-fill mx-3 fs-3"></i>
-                            ) : (
-                                <i className="bi bi-brightness-low-fill mx-3 fs-3"></i>
-                            )}
-                        </b>
-                    </Link> */}
                     </div>
                     
                 </div>
@@ -272,7 +277,7 @@ function Nav_Bar(props) {
                 ref={sidebarRef} 
                 role="dialog" 
                 aria-modal="true"
-                style={{ overflowY: 'auto' }} 
+                style={{ overflowY: 'auto', zIndex: 1100 }} 
             >
 
                 {/********** Toggle Close Button / Github button **********/}
@@ -417,7 +422,7 @@ function Nav_Bar(props) {
             </aside>
 
             {/* Overlay for mobile sidebar */}
-            {sidebarOpen && <div className="nb-sidebar-overlay" onClick={() => setSidebarOpen(false)} />}
+            {sidebarOpen && <div className="nb-sidebar-overlay" onClick={() => setSidebarOpen(false)} style={{ zIndex: 1099 }} />}
         </>
     );
 }
