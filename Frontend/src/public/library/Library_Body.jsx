@@ -52,6 +52,52 @@ const Library_Body = ({ componentId }) => {
 
 
 
+
+    //     const DynamicPreview = ({ config }) => {
+    //     if (!config) return null;
+    //     const { name, childrenText, ...componentProps } = config;
+    //     const Component = CodeVora[name] || name;
+        
+    //     // Check if the component is a background or a button
+    //     const isBackground = name.toLowerCase().includes("background");
+    //     const isButton = name.toLowerCase() === "button";
+
+    //     return (
+    //         <div style={{ 
+    //             position: 'relative', 
+    //             width: '100%', 
+    //             height: '100%', 
+    //             display: 'flex', 
+    //             alignItems: 'center', 
+    //             justifyContent: 'center',
+    //             overflow: 'hidden',
+    //             background: '#11111116',
+    //             borderRadius: '8px'
+    //         }}>
+    //             <Component 
+    //                 {...componentProps}
+    //                 // Attach onClick ONLY if the component is a Button
+    //                 onClick={isButton ? () => alert("Button Clicked") : undefined}
+    //             >
+    //                 {isBackground ? (
+    //                     <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
+    //                         <h2 style={{ 
+    //                             fontSize: '1.2rem', 
+    //                             letterSpacing: '10px', 
+    //                             color: '#fff', 
+    //                             textShadow: '0 0 20px rgba(255,255,255,0.5)' 
+    //                         }}>
+    //                             {childrenText}
+    //                         </h2>
+    //                     </div>
+    //                 ) : (
+    //                     childrenText
+    //                 )}
+    //             </Component>
+    //         </div>
+    //     );
+    // };
+
     // ----> Compile and show the props passes from db
     const DynamicPreview = ({ config }) => {
         // 1. Destructure name and childrenText, 
@@ -60,23 +106,41 @@ const Library_Body = ({ componentId }) => {
         // 2. Resolve the component from your library
         const Component = CodeVora[name] || name;
         const isBackground = name.toLowerCase().includes("background");
+        const isButton = name.toLowerCase() === "button";
+
         return (
-            /* 3. Spread 'componentProps' which now contains { preset: "Matrix" } */
-            <Component {...componentProps}>
-                {isBackground ? (
-                    <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
-                        <h2 style={{ 
-                            fontSize: '1.2rem', 
-                            marginTop: '3rem', 
-                            letterSpacing: '10px', 
-                            color: '#fff', 
-                            textShadow: '0 0 20px rgba(255,255,255,0.5)' 
-                        }}>
-                            {childrenText}
-                        </h2>
-                    </div>
-                ) : childrenText}
-            </Component>
+            <div style={{ 
+                position: 'relative', 
+                width: '100%', 
+                height: '100%', 
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'center',
+                overflow: 'hidden',
+                background: '#11111116',
+                borderRadius: '8px'
+            }}>
+                <Component 
+                    {...componentProps}
+                    // Attach onClick ONLY if the component is a Button
+                    onClick={isButton ? () => alert("Button Clicked") : undefined}
+                >
+                    {isBackground ? (
+                        <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
+                            <h2 style={{ 
+                                fontSize: '1.2rem', 
+                                letterSpacing: '10px', 
+                                color: '#fff', 
+                                textShadow: '0 0 20px rgba(255,255,255,0.5)' 
+                            }}>
+                                {childrenText}
+                            </h2>
+                        </div>
+                    ) : (
+                        childrenText
+                    )}
+                </Component>
+            </div>
         );
     };
 
@@ -172,7 +236,7 @@ const Library_Body = ({ componentId }) => {
 
 
 
-        const activeComp = libraryComponents.find(c => c.id === componentId);
+    const activeComp = libraryComponents.find(c => c.id === componentId);
     /**
      * Internal Dynamic Renderer
      */

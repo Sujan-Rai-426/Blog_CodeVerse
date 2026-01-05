@@ -37,23 +37,46 @@ class LibraryComponent(models.Model):
     # JSONField is perfect for the "config" object in React
     config = models.JSONField(
                     default=dict, 
-                    help_text=mark_safe("""
-Example JSON Structure: <pre style="background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; margin-top: 5px;">
-{
-    "name": "MatrixBackground",
-    "childrenText": "Matrix Background",
-    "props": { "speed": 1 }
-}</pre>
-                            """)
+                    help_text = mark_safe(
+                        "<strong>Preset Usage Examples:</strong><br><br>"
+                        
+                        "1. Background:"
+                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; margin-bottom: 15px; font-size: 13px;'>"
+                        "{\n"
+                        "  'name': 'Background',\n"
+                        "  'preset': 'Matrix',\n"
+                        "  'speed': 1.5,\n"
+                        "  'childrenText': 'Matrix Rain Background Effect',\n"
+                        "}\n</pre>"
+
+                        "2. Button:"
+                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
+                        "{\n"
+                        "  'name': 'Button',\n"
+                        "  'preset': 'Shine',\n"
+                        "  'color': 'red',\n"
+                        "  'padding': '10px 25px',\n"
+                        "  'childrenText': 'Click Me'\n"
+                        "}\n</pre>"
+                    )
                 )
     usage = models.TextField(        
-                help_text=format_html(
-                        "Example usage sequence:<br><pre style='background: #272822; color: #f8f8f2; padding: 10px;'>"
-                        "&lt;MatrixBackground&gt;\n"
-                        "  &lt;div style={{{{minHeight:'100vh'}}}}&gt;\n"
-                        "      Here is your Body\n"
+                    help_text = format_html(
+                        "<strong>Preset Usage Examples:</strong><br><br>"
+                        
+                        "1. Background:"
+                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; margin-bottom: 15px; font-size: 13px;'>"
+                        "&lt;Background preset='Matrix'&gt;\n"
+                        "  &lt;div style={{{{ minHeight: '100vh' }}}}&gt;\n"
+                        "    Main Content\n"
                         "  &lt;/div&gt;\n"
-                        "&lt;/MatrixBackground&gt;</pre>"
+                        "&lt;/Background&gt;</pre>"
+
+                        "2. Button:"
+                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
+                        "&lt;Button preset='Shine' color='red' padding='10px 25px'&gt;\n"
+                        "  Click Me\n"
+                        "&lt;/Button&gt;</pre>"
                     )
                 )
     created_at = models.DateTimeField(auto_now_add=True)
