@@ -16,21 +16,29 @@ const isNewItem = (date) => {
 };
 
 const Library_Topic = () => {
-
     const { libraryTopics, libraryComponents, loading, error } = use_Library_API();
     
-    const [activeTopicId, setActiveTopicId] = useState("all");
+    // 🔹 Default set to "backgrounds" instead of "all"
+    const [activeTopicId, setActiveTopicId] = useState("backgrounds");
     const [sortBy, setSortBy] = useState("latest"); 
     const [canScrollLeft, setCanScrollLeft] = useState(false);
     const [canScrollRight, setCanScrollRight] = useState(false);
     const scrollRef = useRef(null);
 
+    // Safety: If "backgrounds" doesn't exist once loaded, fallback to "all"
+    useEffect(() => {
+        if (!loading && libraryTopics.length > 0) {
+            const topicExists = libraryTopics.some(t => t.id === activeTopicId);
+            if (!topicExists && activeTopicId !== "all") {
+                setActiveTopicId("all");
+            }
+        }
+    }, [loading, libraryTopics, activeTopicId]);
 
     const hasNewInTopic = (topicId) => {
         if (topicId === "all") return libraryComponents.some(c => isNewItem(c.created_at));
         return libraryComponents.some(c => c.topic_id === topicId && isNewItem(c.created_at));
     };
-
 
     const checkForScroll = () => {
         if (scrollRef.current) {
@@ -42,7 +50,7 @@ const Library_Topic = () => {
 
     useEffect(() => {
         const timer = setTimeout(() => {
-            setTimeout(checkForScroll, 100);
+            checkForScroll();
         }, 800);
         window.addEventListener("resize", checkForScroll);
         return () => window.removeEventListener("resize", checkForScroll);
@@ -64,61 +72,46 @@ const Library_Topic = () => {
     };
 
     const filteredComponents = getProcessedComponents();
-    const activeTopicsName = libraryTopics.find(t => t.id === activeTopicId)?.name || "Library";
+    const activeTopicsName = libraryTopics.find(t => t.id === activeTopicId)?.name || "Backgrounds";
 
+    if (error) return <div className="p-5 text-center text-danger">{error}</div>;
 
-    if(error){
-        return(
-            error
-        )
-    }
-
-
-    // -------------->  SKELETON LOADER FUNCTION
-    const CardSkeleton = () => {
-        return (
-            <div className="cv-module-card" style={{ pointerEvents: 'none', border: '1px solid rgba(255,255,255,0.03)' }}>
-                <div className="cv-module-inner">
-                    <div className="cv-module-top">
-                        <Skeleton width={80} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                        <Skeleton width={40} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                    </div>
-
-                    <div className="cv-module-main">
-                        <Skeleton circle width={45} height={45} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                        <div className="cv-module-info" style={{ flex: 1 }}>
-                            <Skeleton width="70%" height={18} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                            <Skeleton width="40%" height={12} style={{ marginTop: '8px' }} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                        </div>
-                    </div>
-
-                    <div className="cv-module-footer">
-                        <div style={{ flex: 1 }}>
-                            <Skeleton height={38} borderRadius={4} baseColor="#000" highlightColor="#1a1a20" />
-                        </div>
-                        <Skeleton width={40} height={38} borderRadius={4} baseColor="#1a1a20" highlightColor="#2a2a35" />
+    const CardSkeleton = () => (
+        <div className="cv-module-card" style={{ pointerEvents: 'none', border: '1px solid rgba(255,255,255,0.03)' }}>
+            <div className="cv-module-inner">
+                <div className="cv-module-top">
+                    <Skeleton width={80} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                    <Skeleton width={40} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                </div>
+                <div className="cv-module-main">
+                    <Skeleton circle width={45} height={45} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                    <div className="cv-module-info" style={{ flex: 1 }}>
+                        <Skeleton width="70%" height={18} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                        <Skeleton width="40%" height={12} style={{ marginTop: '8px' }} baseColor="#1a1a20" highlightColor="#2a2a35" />
                     </div>
                 </div>
+                <div className="cv-module-footer">
+                    <div style={{ flex: 1 }}>
+                        <Skeleton height={38} borderRadius={4} baseColor="#000" highlightColor="#1a1a20" />
+                    </div>
+                    <Skeleton width={40} height={38} borderRadius={4} baseColor="#1a1a20" highlightColor="#2a2a35" />
+                </div>
             </div>
-        );
-    };
-
+        </div>
+    );
 
     return (
-        <MatrixBackground>
+        <>
             <div className="lib-topic-page">
                 <main className="main-library-topic container">
                     <header className="ct-header-section">
                         <h1 className="ct-page-title">
-                            <span className="ct-total-count"><b>{loading? "" : (libraryComponents.length)} &nbsp;</b></span>
+                            <span className="ct-total-count"><b>{loading ? "" : libraryComponents.length} &nbsp;</b></span>
                             React Components by CodeVora UI Library
                         </h1>
                     </header>
 
-
-            {/* ---------------------------------------------------------------------------------------
-                        1. SLIDABLE NAVIGATION  --> [TOPIC_ID + NEW]
-            ---------------------------------------------------------------------------------------- */}
+                    {/* 1. SLIDABLE NAVIGATION */}
                     <div className={`ct-fs-wrapper ${canScrollLeft ? "is-scrollable-left" : ""} ${canScrollRight ? "is-scrollable-right" : ""}`}>
                         <div className="ct-fs-scroll" ref={scrollRef} onScroll={checkForScroll}>
                             <div className="ct-fs-grid">
@@ -139,16 +132,13 @@ const Library_Topic = () => {
                         </div>
                     </div>
 
-
-            {/* ---------------------------------------------------------------------------------------
-                    1.2.  HEADER ---> [Collections + Items No. + FILTER(new, latest, oldest)] 
-            ---------------------------------------------------------------------------------------- */}
+                    {/* 1.2. HEADER */}
                     <div className="ct-language-section">
                         <div className="ct-section-header">
                             <h2 className="ct-language-title">{activeTopicsName} Collections</h2>
-                            <div style={{width:"100%" ,display: "flex", flexDirection: "row", justifyContent: "space-between"}}>
+                            <div style={{ width: "100%", display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
                                 <span className="ct-results-count text-info">
-                                    <strong>{loading? "" : (filteredComponents.length)}</strong> items
+                                    <strong>{loading ? "" : filteredComponents.length}</strong> items
                                 </span>
                                 <div className="cv-sort-group">
                                     <button className={sortBy === 'new' ? 'active' : ''} onClick={() => setSortBy('new')}>New</button>
@@ -158,69 +148,50 @@ const Library_Topic = () => {
                             </div>
                         </div>
 
-
-            {/* ---------------------------------------------------------------------------------------
-                        2. COMPONENT GRID  --> [SKELETON BODY + COMPONENTS]
-            ---------------------------------------------------------------------------------------- */}
+                        {/* 2. COMPONENT GRID */}
                         <div className="ct-topic-grid">
-                        {loading ? 
-                            (
-                                // Render 6 skeletons to fill the grid during load
-                                Array(6).fill(0).map((_, i) => <CardSkeleton key={i} />)                            
+                            {loading ? (
+                                Array(6).fill(0).map((_, i) => <CardSkeleton key={i} />)
                             ) : filteredComponents.length > 0 ? (
-                                    filteredComponents.map((component) => {
-                                        const topicInfo = libraryTopics.find(t => t.id === component.topic_id);
-                                        return (
-                                            <Link key={component.id} to={`/react-library/${component.topic_id}/${component.id}`} className="cv-module-card">
-                                                <div className="cv-scan-line"></div>
-                                                <div className="cv-module-inner">
-                                                    <div className="cv-module-top">
-                                                        <div className="cv-id-badge">
-                                                            <span className="cv-hex-dot"></span>
-                                                            {component.id.toUpperCase()}
-                                                        </div>
-                                                        {isNewItem(component.created_at) && <div className="cv-pulse-tag">NEW</div>}
+                                filteredComponents.map((component) => {
+                                    const topicInfo = libraryTopics.find(t => t.id === component.topic_id);
+                                    return (
+                                        <Link key={component.id} to={`/react-library/${component.topic_id}/${component.id}`} className="cv-module-card">
+                                            <div className="cv-scan-line"></div>
+                                            <div className="cv-module-inner">
+                                                <div className="cv-module-top">
+                                                    <div className="cv-id-badge">
+                                                        <span className="cv-hex-dot"></span>
+                                                        {component.id.toUpperCase()}
                                                     </div>
-                                                    <div className="cv-module-main">
-                                                        <div className="cv-module-icon"><i className={topicInfo?.icon_class}></i></div>
-                                                        <div className="cv-module-info">
-                                                            <h3 className="cv-module-title">{component.title}</h3>
-                                                            <p className="cv-module-subtitle">{component.short_title_info}</p>
-                                                        </div>
-                                                    </div>
-                                                    {/* <div className="cv-module-footer">
-                                                        <div className="cv-terminal-box">
-                                                            <span className="cv-prompt">$</span>
-                                                            <span style={{color:"#ff5500"}}>
-                                                                {"<"}<code style={{color:"#007bff"}}>{component.config.name}</code>
-                                                                {" />"}
-                                                            </span>
-                                                        </div>
-                                                        <button className="cv-explore-btn"><i className="bi bi-cpu"></i></button>
-                                                    </div> */}
+                                                    {isNewItem(component.created_at) && <div className="cv-pulse-tag">NEW</div>}
                                                 </div>
-                                            </Link>
-                                        );
-                                    })
-                                ) : (
-                                    <div className="ct-no-topic">
-                                        <i className="bi bi-search"></i>
-                                        <p>No results found for this filter.</p>
-                                    </div>
-                                )}
+                                                <div className="cv-module-main">
+                                                    <div className="cv-module-icon"><i className={topicInfo?.icon_class}></i></div>
+                                                    <div className="cv-module-info">
+                                                        <h3 className="cv-module-title">{component.title}</h3>
+                                                        <p className="cv-module-subtitle">{component.short_title_info}</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    );
+                                })
+                            ) : (
+                                <div className="ct-no-topic">
+                                    <i className="bi bi-search"></i>
+                                    <p>No results found for this filter.</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </main>
 
-
-                {/* ------------------------
-                        3. RIGHT SIDEBAR
-                ------------------------- */}
                 <aside className="lib-tp-right-sidebar">
                     <Components_Right_Sidebar />
                 </aside>
             </div>
-        </MatrixBackground>
+        </>
     );
 };
 

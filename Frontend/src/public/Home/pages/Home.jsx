@@ -98,21 +98,21 @@ function Home() {
 
                     {/* Hero Card Highlights */}
                     <div className="hero-card-highlights">
-                        <div className="highlight-card text-light">
-                            <i className="bi bi-lightning-fill highlight-icon text-primary"></i>
-                            <h5>Fast & Modern</h5>
-                            <small>All tutorials are easy to use and easy to modify.</small>
-                        </div>
-                        <div className="highlight-card text-light">
-                            <i className="bi bi-star-fill highlight-icon"></i>
-                            <h5>Premium Quality</h5>
-                            <small>Curated high-quality content for developers.</small>
-                        </div>
-                        <div className="highlight-card text-light">
-                            <i className="bi bi-globe highlight-icon text-success"></i>
-                            <h5>Global Access</h5>
-                            <small>Access your tutorials from anywhere, anytime.</small>
-                        </div>
+                        <Link to="/Components/Topics/1" className="highlight-card text-light" style={{textDecoration: "none"}}>
+                            <i className="bi bi-stack highlight-icon text-primary"></i>
+                            <h5>CSS & JavaScripts</h5>
+                            <small>Copy paste HTML, CSS, JS components.</small>
+                        </Link>
+                        <Link to="/react-library/topics" className="highlight-card text-light" style={{textDecoration: "none"}}>
+                            <i className="devicon-react-original colored highlight-icon"></i>
+                            <h5>React Library</h5>
+                            ~ <strong style={{color: '#e230e2'}}>npm install codevora-ui</strong>
+                        </Link>
+                        <Link to="/Templates/Topics" className="highlight-card text-light" style={{textDecoration: "none"}}>
+                            <i className="bi bi-grid-3x3-gap highlight-icon text-warning"></i>
+                            <h5>Website Templates</h5>
+                            <small>Complete readymade project.</small>
+                        </Link>
                     </div>
 
                     {/* Hero Buttons */}

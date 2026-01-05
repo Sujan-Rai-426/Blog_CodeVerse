@@ -388,11 +388,11 @@
 /* <----------------> Mobile First Adjustments <----------------> */
 @media (max-width: 480px) {
     .section-subtext { font-size: 0.9rem; margin-bottom: 1rem; }
-    .home-container { padding: 0 0.8rem; }
+    .home-container { padding: 0 1rem; }
     .home-section-title { font-size: 1.2rem; margin: 20px 0 10px 0; }
     .home-section-title::after { width: 30px; }
     .home-section-title small { font-size: 0.9rem; }
-    .hero { padding: 2rem 1rem; border-radius: 16px; }
+    .hero { padding: 1rem 0rem; border-radius: 16px; }
     .hero-title { font-size: 1rem; margin: 0 0 15px 0; }
     .hero-subtitle { font-size: 0.9rem; }
     .hero-card-highlights {font-size: .75rem;}
@@ -404,7 +404,7 @@
     .card-text { font-size: 0.8rem; }
     .social-bar { margin: 0.7rem 0 !important; }
     .social-link { width: 32px; height: 32px; font-size: 1rem; }
-    .share-btn { padding: 0.2rem 0.7rem; font-size: 0.9rem; }
+    .share-btn { padding: 0.5rem 0.9rem; font-size: 0.9rem; }
     .templates-section { padding: 30px 15px; }
     .templates-header h2 { font-size: 1.4rem; }
     .templates-header .section-subtext { font-size: 0.9rem; }
@@ -429,7 +429,7 @@
     .grid-container { grid-template-columns: repeat(3, 1fr); gap: 0.8rem; }
     .grid-card { max-width: 150px; padding: 0.8rem 0.5rem; }
     .card-icon { font-size: 1.8rem; }
-    .share-btn { padding: 0.2rem 0.7rem;}
+    .share-btn { padding: 0.7rem 1rem;}
     .templates-section { padding: 40px 20px; }
     .templates-header h2 { font-size: 1.6rem; }
     .templates-header .section-subtext { font-size: 0.95rem; }

@@ -29,7 +29,7 @@
 .right-sidebar {
     position: sticky;
     top: 0; /*Top help to stick sidebar from top to bottom on sliding main body */
-    min-height: calc(100vh);
+    min-height: 100vh;
 
     padding: 15px 15px 80px 15px;
     display: flex;

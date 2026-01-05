@@ -361,7 +361,7 @@ const Library_Body = ({ componentId }) => {
                             <CopyButton text="npm i codevora-ui" />
                         </div>
                         <p><small>Command to install the core package</small></p>
-                        <div className="code-snippet language-jsx"><code>npm i codevora-ui</code></div>
+                        <div className="code-snippet language-jsx"><code style={{color: 'rgb(218 0 255)'}}>npm i codevora-ui</code></div>
                     </div>
 
                     {/* Import Card */}
@@ -372,7 +372,7 @@ const Library_Body = ({ componentId }) => {
                         </div>
                         <p><small>Add this to top of your React file</small></p>
                         <pre className="code-snippet language-jsx">
-                            <code>{`import { ${activeComp.config.name} } from "codevora-ui"`}</code>
+                            <code style={{color: '#e230e2'}}>{`import { ${activeComp.config.name} } from "codevora-ui"`}</code>
                         </pre>
                     </div>
 
