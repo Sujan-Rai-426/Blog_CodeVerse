@@ -122,8 +122,6 @@ const Library_Body = ({ componentId }) => {
             }}>
                 <Component 
                     {...componentProps}
-                    // Attach onClick ONLY if the component is a Button
-                    onClick={isButton ? () => alert("Button Clicked") : undefined}
                 >
                     {isBackground ? (
                         <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
