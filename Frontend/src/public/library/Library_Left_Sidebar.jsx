@@ -37,7 +37,38 @@ const Library_Left_Sidebar = ({ isOpen, toggleSidebar }) => {
             .filter(topic => topic.components.length > 0);
     }, [searchTerm, libraryTopics, libraryComponents]);
 
-    if (loading) return <div className="lib-sidebar-skeleton">Loading Navigation...</div>;
+
+
+
+    // -------->  Skeleton Loader for Left sidebar
+    if (loading) {
+        return (
+            <aside className={`lib-left-sidebar ${isOpen ? 'open' : ''}`}>
+                <div className="cl-header-sticky">
+                    {/* Skeleton Title */}
+                    <div className="skeleton-item skeleton-title"></div>
+                    {/* Skeleton Search Bar */}
+                    <div className="skeleton-item skeleton-search"></div>
+                </div>
+                
+                <nav className="sidebar-nav">
+                    {[1, 2, 3, 4, 5].map((i) => (
+                        <div key={i} className="skeleton-group">
+                            {/* Skeleton Parent Topic */}
+                            <div className="skeleton-item skeleton-topic"></div>
+                            {/* Skeleton Sub-items */}
+                            <div className="skeleton-item skeleton-sub"></div>
+                            <div className="skeleton-item skeleton-sub"></div>
+                        </div>
+                    ))}
+                </nav>
+            </aside>
+        );
+    }
+
+
+
+
 
     return (
         <>

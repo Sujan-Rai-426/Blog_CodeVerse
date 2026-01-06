@@ -147,3 +147,68 @@
     text-transform: uppercase;
     flex-shrink: 0; /* Prevents badge from getting crushed */
 }
+
+
+
+
+
+/* --------------------------------------------------------------
+                SKELETON LOADER STYLES
+--------------------------------------------------------------- */
+
+.skeleton-item {
+    background: linear-gradient(
+        90deg,
+        #1a1a1a 25%,
+        #242424 50%,
+        #1a1a1a 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.5s infinite linear;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+@keyframes skeleton-shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+}
+
+/* Header Skeletons */
+.skeleton-title {
+    height: 24px;
+    width: 60%;
+    margin: 20px auto;
+}
+
+.skeleton-search {
+    height: 40px;
+    width: 90%;
+    margin: 0 auto 20px auto;
+    border-radius: 8px;
+}
+
+/* Nav Skeletons */
+.skeleton-group {
+    padding: 10px 20px;
+}
+
+.skeleton-topic {
+    height: 20px;
+    width: 80%;
+    margin-bottom: 15px;
+    opacity: 0.8;
+}
+
+.skeleton-sub {
+    height: 14px;
+    width: 70%;
+    margin-left: 20px;
+    margin-bottom: 12px;
+    opacity: 0.4;
+}
+
+/* Ensure skeleton container matches sidebar width */
+.lib-left-sidebar:has(.skeleton-item) {
+    overflow: hidden;
+}
