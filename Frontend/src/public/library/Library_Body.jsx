@@ -176,7 +176,7 @@ const Library_Body = ({ componentId }) => {
     // -----------------> handle ERROR
     if (error){
         return(
-            <h1 style={{color: 'red'}}>ERROR: {error}</h1>
+            <h3 style={{color: 'red'}}>ERROR Fetching library npm package data. <br /> Please Try again</h3>
         )
     }
 
@@ -184,53 +184,64 @@ const Library_Body = ({ componentId }) => {
 
 
     // ------------------> handle LOADING [skeleton Loader]
-    if(loading){
-        return(
+    if (loading) {
+        const skeletonProps = {
+            baseColor: "#1a1a20",
+            highlightColor: "#2a2a35",
+        };
+        return (
             <div className="component-page-container container">
-            {/* 1. HEADER SKELETON */}
-            <header className='header'>
-                <section className='header-top'>
-                    <div>
-                        <Skeleton width={80} height={12} baseColor="#1a1a20" highlightColor="#2a2a35" style={{ marginBottom: '10px' }} />
-                        <Skeleton width={300} height={40} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                    </div>
-                    <Skeleton circle width={40} height={40} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                </section>
-                <div style={{ marginTop: '20px' }}>
-                    <Skeleton count={2} width="80%" baseColor="#1a1a20" highlightColor="#2a2a35" />
-                </div>
-            </header>
-
-            {/* 2. ACTIONS SKELETON */}
-            <section className="lib-action-btns" style={{ opacity: 0.6 }}>
-                <Skeleton width={100} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                <Skeleton width={130} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                <Skeleton width={130} height={40} borderRadius={8} baseColor="#1a1a20" highlightColor="#2a2a35" />
-            </section>
-
-            {/* 3. STAGE SKELETON */}
-            <section className="hero-visual-stage" style={{ border: 'none' }}>
-                <Skeleton height="100%" width="100%" baseColor="#0a0a0c" highlightColor="#16161e" />
-            </section>
-
-            {/* 4. SPECS SKELETON */}
-            <section className="content-specs">
-                <div className="specs-grid">
-                    {[1, 2, 3].map((i) => (
-                        <div key={i} className="spec-card">
-                            <div className="spec-header">
-                                <Skeleton width={150} height={15} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                                <Skeleton width={60} height={25} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                            </div>
-                            <Skeleton width={200} height={10} style={{ margin: '10px 0' }} baseColor="#1a1a20" highlightColor="#2a2a35" />
-                            <Skeleton height={80} borderRadius={8} baseColor="#000" highlightColor="#1a1a20" />
+                {/* 1. HEADER SKELETON */}
+                <header className='header'>
+                    <section className='header-top'>
+                        <div style={{ flex: 1 }}>
+                            <Skeleton width="80px" height={12} {...skeletonProps} style={{ marginBottom: '10px' }} />
+                            <Skeleton className="skeleton-title-main" height={45} {...skeletonProps} />
                         </div>
-                    ))}
-                </div>
-            </section>
-        </div>
-        )
+                        <Skeleton circle width={40} height={40} {...skeletonProps} />
+                    </section>
+                    <div style={{ marginTop: '20px' }}>
+                        <Skeleton count={2} width="100%" {...skeletonProps} />
+                        <Skeleton width="60%" {...skeletonProps} />
+                    </div>
+                </header>
+
+                {/* 2. ACTIONS SKELETON */}
+                <section className="lib-action-btns" style={{ opacity: 0.6, border: '1px solid #1a1a1a' }}>
+                    <Skeleton width="100px" height={38} borderRadius={8} {...skeletonProps} />
+                    <Skeleton width="120px" height={38} borderRadius={8} {...skeletonProps} />
+                    <Skeleton width="120px" height={38} borderRadius={8} {...skeletonProps} />
+                </section>
+
+                {/* 3. STAGE SKELETON */}
+                <section className="hero-visual-stage" style={{ border: '2px solid #1a1a1a' }}>
+                    <Skeleton height="100%" width="100%" baseColor="#0a0a0c" highlightColor="#16161e" />
+                </section>
+
+                {/* 4. SPECS SKELETON */}
+                <section className="content-specs">
+                    <div className="specs-grid">
+                        {/* Props Table Simulation */}
+                        <div className="spec-card">
+                            <Skeleton width="100px" height={20} {...skeletonProps} style={{ marginBottom: '15px' }} />
+                            <Skeleton height={200} borderRadius={12} {...skeletonProps} />
+                        </div>
+
+                        {/* Smaller Code Cards */}
+                        <div className="spec-card">
+                            <div className="spec-header">
+                                <Skeleton width="40%" height={15} {...skeletonProps} />
+                                <Skeleton width="60px" height={25} {...skeletonProps} />
+                            </div>
+                            <Skeleton width="70%" height={10} style={{ margin: '15px 0' }} {...skeletonProps} />
+                            <Skeleton height={60} borderRadius={8} baseColor="#000" highlightColor="#1a1a20" />
+                        </div>
+                    </div>
+                </section>
+            </div>
+        );
     }
+
 
 
 

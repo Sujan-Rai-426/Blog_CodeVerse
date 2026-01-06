@@ -348,3 +348,34 @@ pre[class*="language-"]::-webkit-scrollbar-thumb {
     50% { opacity: 1; }
     100% { opacity: 0.5; }
 }
+/* Responsive widths for Skeleton components */
+.skeleton-title-main {
+    width: 300px; /* Default desktop */
+}
+
+@media (max-width: 768px) {
+    .skeleton-title-main {
+        width: 100%; /* Fill screen on mobile */
+    }
+    
+    .lib-action-btns:has(.react-loading-skeleton) {
+        justify-content: center !important;
+    }
+    .lib-action-btns span{ width: 90px !important; }
+}
+
+/* Matching the "shimmer" to your UI's gold/silver vibe */
+.react-loading-skeleton::after {
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(212, 175, 55, 0.05), /* Subtle gold shimmer */
+        transparent
+    ) !important;
+}
+
+/* Prevent the hero stage from collapsing to 0 height while loading */
+.hero-visual-stage:has(.react-loading-skeleton) {
+    display: block !important;
+    padding: 0 !important;
+}
