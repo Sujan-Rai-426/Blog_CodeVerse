@@ -168,11 +168,11 @@ const Template_Topics = () => {
 
                 <br />
                 <br />
-                    {/* // ------------> Ads Container */}
-                        <div className="tt-tpl-item ad-container">
-                        <h1>SPONSORED CONTENT</h1>
+                    {/* // ------------> Ad Container */}
+                        {/* <div className="tt-tpl-item ad-container">
+                        <h1>SP CONTENT</h1>
                             <Ads_Square_Display />
-                        </div>
+                        </div> */}
             </div>
         </Interactive_Grid_Background>
     );
