@@ -38,26 +38,28 @@ class LibraryComponent(models.Model):
     config = models.JSONField(
                     default=dict, 
                     help_text = mark_safe(
-                        "<strong>Preset Usage Examples:</strong><br><br>"
+                        '<strong>Preset Usage Examples:</strong><br><br>'
                         
-                        "1. Background:"
-                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; margin-bottom: 15px; font-size: 13px;'>"
-                        "{\n"
-                        "  'name': 'Background',\n"
-                        "  'preset': 'Matrix',\n"
-                        "  'speed': 1.5,\n"
-                        "  'childrenText': 'Matrix Rain Background Effect',\n"
-                        "}\n</pre>"
+                        '1. Background:'
+                        '<pre style="background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; margin-bottom: 15px; font-size: 13px;">'
+                        '{\n'
+                        '  "name": "Background",\n'
+                        '  "preset": "Matrix",\n'
+                        '  "speed": 1.5,\n'
+                        '  "childrenText": "Matrix Rain Background Effect"\n'
+                        '}\n</pre>'
 
-                        "2. Button:"
-                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
-                        "{\n"
-                        "  'name': 'Button',\n"
-                        "  'preset': 'Shine',\n"
-                        "  'color': 'red',\n"
-                        "  'padding': '10px 25px',\n"
-                        "  'childrenText': 'Click Me'\n"
-                        "}\n</pre>"
+                        '2. Button:'
+                        '<pre style="background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;">'
+                        '{\n'
+                        '  "name": "Button",\n'
+                        '  "preset": "Shine",\n'
+                        '  "color": "red",\n'
+                        '  "processing": {loading},\n'
+                        '  "processingText": "loading...",\n'
+                        '  "padding": "10px 25px",\n'
+                        '  "childrenText": "Click Me"\n'
+                        '}\n</pre>'
                     )
                 )
     usage = models.TextField(        
@@ -74,8 +76,8 @@ class LibraryComponent(models.Model):
 
                         "2. Button:"
                         "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
-                        "&lt;Button preset='Shine' color='red' padding='10px 25px'&gt;\n"
-                        "  Click Me\n"
+                        "&lt;Button\n  preset='Base'\n  color='red'\n  processing={{loading}}  // <-- Pass boolean value of your loading logic\n  processingText='loading...'\n  padding='10px 25px'\n&gt;\n"
+                        "    Click Me\n"
                         "&lt;/Button&gt;</pre>"
                     )
                 )

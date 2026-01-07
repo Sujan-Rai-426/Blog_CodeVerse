@@ -1,0 +1,129 @@
+/* Container Layout */
+.docs-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+    gap: 4rem;
+    color: #cbd5e1;
+}
+
+.docs-content {
+    flex: 1;
+    min-width: 0; /* Prevents code blocks from breaking layout */
+}
+
+/* Header Styling */
+.version-tag {
+    background: rgba(212, 175, 55, 0.1);
+    color: #d4af37;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+.docs-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin-top: 1rem;
+    color: #fff;
+}
+
+.docs-subtitle {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    margin-top: 0.5rem;
+}
+
+.docs-divider {
+    border: 0;
+    border-top: 1px solid #1e293b;
+    margin: 2rem 0;
+}
+
+/* Section Styling */
+.docs-section h2 {
+    font-size: 1.75rem;
+    color: #fff;
+    margin: 2.5rem 0 1rem;
+}
+
+.docs-section h3 {
+    font-size: 1.25rem;
+    color: #e2e8f0;
+    margin: 2rem 0 1rem;
+}
+
+.docs-section p {
+    line-height: 1.7;
+    margin-bottom: 1.5rem;
+}
+
+/* Code Block Enhancements */
+.code-block-wrapper {
+    position: relative;
+    margin: 1.5rem 0;
+}
+
+.copy-btn {
+    position: absolute;
+    right: 12px;
+    top: 12px;
+    background: #1e293b;
+    border: 1px solid #334155;
+    color: #94a3b8;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.copy-btn:hover {
+    background: #334155;
+    color: #fff;
+}
+
+/* Table of Contents (Right Sidebar) */
+.docs-toc {
+    width: 200px;
+    position: sticky;
+    top: 2rem;
+    height: fit-content;
+}
+
+.docs-toc h4 {
+    color: #fff;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 1rem;
+}
+
+.docs-toc ul {
+    list-style: none;
+    padding: 0;
+    border-left: 1px solid #1e293b;
+}
+
+.docs-toc li a {
+    display: block;
+    padding: 6px 16px;
+    color: #94a3b8;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: 0.2s;
+}
+
+.docs-toc li a:hover {
+    color: #d4af37;
+    border-left: 1px solid #d4af37;
+    margin-left: -1px;
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .docs-toc { display: none; }
+    .docs-container { padding: 1rem; }
+}

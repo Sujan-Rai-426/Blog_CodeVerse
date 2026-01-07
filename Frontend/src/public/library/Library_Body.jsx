@@ -100,48 +100,80 @@ const Library_Body = ({ componentId }) => {
 
     // ----> Compile and show the props passes from db
     const DynamicPreview = ({ config }) => {
-        // 1. Destructure name and childrenText, 
-        // and collect EVERYTHING ELSE into a variable called 'componentProps'
-        const { name, childrenText, ...componentProps } = config;
-        // 2. Resolve the component from your library
+        if (!config) return null;
+
+        // 1. EXTRACT CORE INFO
+        const { name, ...dbProps } = config;
         const Component = CodeVora[name] || name;
-        const isBackground = name.toLowerCase().includes("background");
-        const isButton = name.toLowerCase() === "button";
+        
+        // 2. SHARED STATE (For Button Simulation)
+        const [isLoading, setIsLoading] = useState(false);
+
+        // 3. COMPONENT TYPE IDENTIFICATION
+        const isButton = name?.toLowerCase() === "button";
+        const isBackground = name?.toLowerCase().includes("background");
+
+        // ---------------------------------------------------------
+        // BUTTON SPECIFIC LOGIC
+        // ---------------------------------------------------------
+        const handleButtonClick = (e) => {
+            if (dbProps.onClick) dbProps.onClick(e); // Run DB-level click if exists
+            
+            setIsLoading(true); // Start 2s simulation
+            setTimeout(() => setIsLoading(false), 2000);
+        };
+
+        // ---------------------------------------------------------
+        // PROPS & CONTENT RESOLUTION
+        // ---------------------------------------------------------
+        let finalProps = { ...dbProps };
+        let childrenContent = dbProps.childrenText || "Preview Content";
+
+        if (isButton) {
+            // Apply hardcoded defaults for Buttons
+            finalProps = {
+                padding: "10px 25px",         // Default padding for all buttons
+                processingText: "loading...",  // Default loader text
+                ...dbProps,                   // Allow DB to override if specific props are provided
+                processing: isLoading,        // Use local simulation state
+                onClick: handleButtonClick,   // Use local simulation handler
+            };
+            childrenContent = "Click Me";     // Hardcoded default button text
+        }
+
+        if (isBackground) {
+            // Logic specific to Background components
+            childrenContent = dbProps.childrenText || "Background View";
+        }
 
         return (
             <div style={{ 
-                position: 'relative', 
-                width: '100%', 
-                height: '100%', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center',
-                overflow: 'hidden',
-                background: '#11111116',
-                borderRadius: '8px'
+                position: 'relative', width: '100%', height: '100%', 
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                overflow: 'hidden', background: '#11111116', borderRadius: '8px'
             }}>
-                <Component 
-                    {...componentProps}
-                >
+                <Component {...finalProps}>
+                    {/* ---------------------------------------------------------
+                        RENDER BRANCHING: BACKGROUND vs BUTTON
+                    --------------------------------------------------------- */}
                     {isBackground ? (
+                        /* BACKGROUND UI: Centered text with shadow for visibility */
                         <div style={{ zIndex: 5, position: 'relative', textAlign: 'center' }}>
                             <h2 style={{ 
-                                fontSize: '1.2rem', 
-                                letterSpacing: '10px', 
-                                color: '#fff', 
-                                textShadow: '0 0 20px rgba(255,255,255,0.5)' 
+                                fontSize: '1.2rem', letterSpacing: '10px', 
+                                color: '#fff', textShadow: '0 0 20px rgba(255,255,255,0.5)' 
                             }}>
-                                {childrenText}
+                                {childrenContent}
                             </h2>
                         </div>
                     ) : (
-                        childrenText
+                        /* BUTTON/DEFAULT UI: Direct children rendering */
+                        childrenContent
                     )}
                 </Component>
             </div>
         );
     };
-
 
 
         // handle Share Click LOGIC
