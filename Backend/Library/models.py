@@ -76,7 +76,7 @@ class LibraryComponent(models.Model):
 
                         "2. Button:"
                         "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
-                        "&lt;Button\n  preset='Base'\n  color='red'\n  processing={{loading}}  // <-- Pass boolean value of your loading logic\n  processingText='loading...'\n  padding='10px 25px'\n&gt;\n"
+                        "&lt;Button\n  preset='Base'\n  color='red'\n  processing={{loading}}  // <-- Pass boolean value of your loading state variable\n  processingText='loading...'\n  padding='10px 25px'\n  className=''\n&gt;\n"
                         "    Click Me\n"
                         "&lt;/Button&gt;</pre>"
                     )
