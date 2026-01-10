@@ -274,14 +274,16 @@ else:
     CSRF_COOKIE_SAMESITE = "None"
     CSRF_COOKIE_DOMAIN = ".vercel.app"      #Same as we mention in login in view   -->      CSRF_COOKIE_DOMAIN = f"{BACKEND_PROD_DOMAIN}" "
     SESSION_COOKIE_DOMAIN = ".vercel.app"   #Same as we mention in login in view  -->   SESSION_COOKIE_DOMAIN =f"{BACKEND_PROD_DOMAIN}" 
-    CSRF_TRUSTED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}",        # codevora140.vercel.app
-        f"https://{BACKEND_PROD_DOMAIN}",         # codevora-backend.vercel.app
-    ]
-
-    CORS_ALLOWED_ORIGINS = [
-        f"https://{FRONTEND_PROD_DOMAIN}"         # codevora140.vercel.app
-    ]
+    
+    # frontend and backend domain list
+    frontend_url_list = [f"https://{d.strip()}" for d in FRONTEND_PROD_DOMAIN.split(",") if d.strip()]
+    backend_url = f"https://{BACKEND_PROD_DOMAIN}"
+    
+        # frontend_url_list --> codevora140.vercel.app, codevoraui.vercel.app
+        # backend_url ----->   codevora-backend.vercel.app
+    CSRF_TRUSTED_ORIGINS = frontend_url_list + [backend_url]       
+    
+    CORS_ALLOWED_ORIGINS = frontend_url_list         # codevora140.vercel.app
 
 
 
