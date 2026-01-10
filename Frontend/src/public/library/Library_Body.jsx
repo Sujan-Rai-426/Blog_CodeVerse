@@ -109,8 +109,9 @@ const Library_Body = ({ componentId }) => {
         // 2. SHARED STATE (For Button Simulation)
         const [isLoading, setIsLoading] = useState(false);
 
-        // 3. COMPONENT TYPE IDENTIFICATION
+        // 3. COMPONENT TYPE IDENTIFICATION ->[on basis of name used in props]
         const isButton = name?.toLowerCase() === "button";
+        const isFlipCard = name?.toLowerCase() === "flipcard";
         const isBackground = name?.toLowerCase().includes("background");
 
         // ---------------------------------------------------------
@@ -166,7 +167,10 @@ const Library_Body = ({ componentId }) => {
                                 {childrenContent}
                             </h2>
                         </div>
-                    ) : (
+                    ) : isFlipCard? [
+                        <div child="front"> This is Front side</div> ,
+                        <div child="back"> This is Back side </div>
+                    ] : (
                         /* BUTTON/DEFAULT UI: Direct children rendering */
                         childrenContent
                     )}
