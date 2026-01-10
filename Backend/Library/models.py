@@ -60,6 +60,18 @@ class LibraryComponent(models.Model):
                         '  "padding": "10px 25px",\n'
                         '  "childrenText": "Click Me"\n'
                         '}\n</pre>'
+
+                        '3. FlipCard:'
+                        '<pre style="background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;">'
+                        '{\n'
+                        '  "name": "FlipCard",\n'
+                        '  "preset": "Flash",\n'
+                        '  "width": "150px",\n'
+                        '  "height": "230px",\n'
+                        '  "padding": "20px"\n'
+                        '  "borderRadius": "20px"\n'
+                        '  "background": { front: "gray", back: "#0f0f0f" }\n'
+                        '}\n</pre>'
                     )
                 )
     usage = models.TextField(        
@@ -79,6 +91,18 @@ class LibraryComponent(models.Model):
                         "&lt;Button\n  preset='Base'\n  color='red'\n  processing={{loading}}  // <-- Pass boolean value of your loading state variable\n  processingText='loading...'\n  padding='10px 25px'\n  className=''\n&gt;\n"
                         "    Click Me\n"
                         "&lt;/Button&gt;</pre>"
+
+                        "3. FlipCard:"
+                        "<pre style='background: #272822; color: #f8f8f2; padding: 12px; border-radius: 5px; font-size: 13px;'>"
+                        "&lt;FlipCard\n  preset='Base'\n  width='150px'\n  height='230px'\n  borderRadius: '20px'\n  padding='20px'\n  background = {{ front:'gray' ,back: '#0f0f0f' }}\n  className=''\n&gt;\n"
+                        "    &lt;div child='front' &gt;\n"
+                        "        This is Front Side\n"
+                        "    &lt;/ div&gt;\n"
+                        " \n"
+                        "    &lt;div child='back' &gt;\n"
+                        "        This is Back Side\n"
+                        "    &lt;/ div&gt;\n"
+                        "&lt;/FlipCard&gt;</pre>"
                     )
                 )
     created_at = models.DateTimeField(auto_now_add=True)
