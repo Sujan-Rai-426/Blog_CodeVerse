@@ -63,68 +63,68 @@ const buildRecommendedIframeDoc = (html = "", css = "", js = "", aspectWidth=133
     <!doctype html>
     <html lang="en">
     <head>
-      <meta charset="utf-8"/>
-      <meta name="viewport" content="width=device-width, initial-scale=1"/>
-      <style>
-        html, body {
-          margin: 0;
-          padding: 0;
-          width: 100%;
-          height: 100%;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
-          align-items: center;
-          background: black;
-          overflow: hidden;
-        }
-        .scaleWrapper {
-          width: 100%;
-          height: 100%;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          overflow: hidden;
-          position: relative;
-        }
-        .scaleInner {
-          width: ${aspectWidth}px;
-          height: ${aspectHeight}px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          transform-origin: center center;
-          position: absolute;
-        }
-        ${css || ""}
-      </style>
+        <meta charset="utf-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <style>
+            html, body {
+                margin: 0;
+                padding: 0;
+                width: 100%;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                background: black;
+                overflow: hidden;
+            }
+            .scaleWrapper {
+                width: 100%;
+                height: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                overflow: hidden;
+                position: relative;
+            }
+            .scaleInner {
+                width: ${aspectWidth}px;
+                height: ${aspectHeight}px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                transform-origin: center center;
+                position: absolute;
+            }
+            ${css || ""}
+        </style>
     </head>
     <body>
-      <div class="scaleWrapper">
-        <div class="scaleInner" id="scaleInner">
-          ${html || ""}
+        <div class="scaleWrapper">
+            <div class="scaleInner" id="scaleInner">
+                ${html || ""}
+            </div>
         </div>
-      </div>
-      <script>
-        try {
-          ${safeJs}
-        } catch(err) {
-          console.error("Preview JS error:", err);
-        }
-        function resizeScale() {
-          const inner = document.getElementById("scaleInner");
-          if (!inner) return;
-          const naturalWidth = inner.offsetWidth;
-          const naturalHeight = inner.offsetHeight;
-          const scale = Math.min(
-            window.innerWidth / naturalWidth,
-            window.innerHeight / naturalHeight
-          );
-          inner.style.transform = 'scale(' + scale + ')';
-        }
-        window.addEventListener('load', resizeScale);
-        window.addEventListener('resize', resizeScale);
-      </script>
+        <script>
+            try {
+                ${safeJs}
+            } catch(err) {
+                console.error("Preview JS error:", err);
+            }
+            function resizeScale() {
+                const inner = document.getElementById("scaleInner");
+                if (!inner) return;
+                const naturalWidth = inner.offsetWidth;
+                const naturalHeight = inner.offsetHeight;
+                const scale = Math.min(
+                    window.innerWidth / naturalWidth,
+                    window.innerHeight / naturalHeight
+                );
+                inner.style.transform = 'scale(' + scale + ')';
+            }
+            window.addEventListener('load', resizeScale);
+            window.addEventListener('resize', resizeScale);
+        </script>
     </body>
     </html>`;
 };
@@ -512,12 +512,12 @@ export default function Components_Design() {
         {/* ***************************************************************** */}
             {/*           ADVERTISEMENT --> SPONSORED SECTION              */}
         {/* ***************************************************************** */}
-                <div className="related-video-item ad-placement">
+                {/* <div className="related-video-item ad-placement">
                     <Ads_Square_Display />
                 </div>
 
 
-                <br />
+                <br /> */}
 
 
         {/* ***************************************************************** */}
