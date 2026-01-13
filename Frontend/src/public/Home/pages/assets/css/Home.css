@@ -7,7 +7,7 @@
     font-family: "Inter", "Segoe UI", Tahoma, sans-serif;
     color: #1f1f1f;
     scroll-behavior: smooth;
-}
+} .home-container::-webkit-scrollbar { display: none; }
 
 
 /* ===== Text Colors ===== */
