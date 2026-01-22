@@ -86,7 +86,7 @@ const Footer = () => {
                         <div className="footer-links mb-4">
                             <Link to="Contact">Contact</Link>
                             <a href="https://er-sujan.vercel.app">Developer</a>
-                            <Link to="/Admin">Admin</Link>
+                            {/* <Link to="/Admin">Admin</Link> */}
                         </div>
                     </div>
                 </footer>
