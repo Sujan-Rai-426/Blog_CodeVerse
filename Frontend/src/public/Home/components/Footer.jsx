@@ -53,7 +53,7 @@ const Footer = () => {
                         <div className="footer-resources">
                             <h5>Resources</h5>
                             <ul>
-                                <li><a href="https://er-sujan.vercel.app">Blog</a></li>
+                                <li><a href="https://er-sujan.vercel.app">Developer</a></li>
                                 {/* <li><Link to="/Contact">FAQ</Link></li> */}
                                 <li><Link to="/About">About Us</Link></li>
                                 <li><Link to="/Contact">Support</Link></li>
