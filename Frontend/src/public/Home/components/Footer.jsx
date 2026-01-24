@@ -86,7 +86,7 @@ const Footer = () => {
                         <p className='mb-4'>&copy; {new Date().getFullYear()} Sujan Rai. All rights reserved.</p>
                         
                         <div className="footer-links mb-4">
-                            <small>Website designed & developed by <Link to='https://www.facebook.com/sujan.rai.1042/'>Sujan Rai</Link></small>
+                            <small>Website designed & developed by <Link to='https://www.facebook.com/sujan.rai.1042/' className='text-primary'>Sujan Rai</Link></small>
                         </div>
                     </div>
                 </footer>
