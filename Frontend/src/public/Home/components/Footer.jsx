@@ -45,6 +45,7 @@ const Footer = () => {
                                 <li><Link to="/" onClick={() => scrollToSection('CODING_GUIDE')}>Programming</Link></li>
                                 {/* <li><Link to="/">Projects & Services</Link></li> */}
                                 <li><Link to="/Contact">Contact US</Link></li>
+                                <Link to="/Admin">Admin</Link>
                             </ul>
                         </div>
 
@@ -83,10 +84,9 @@ const Footer = () => {
                 <footer className="footer">
                     <div className="footer-container">
                         <p className='mb-4'>&copy; {new Date().getFullYear()} Sujan Rai. All rights reserved.</p>
+                        
                         <div className="footer-links mb-4">
-                            <Link to="Contact">Contact</Link>
-                            <a href="https://er-sujan.vercel.app">Developer</a>
-                            {/* <Link to="/Admin">Admin</Link> */}
+                            <small>Website designed & developed by <Link to='https://www.facebook.com/sujan.rai.1042/'>Sujan Rai</Link></small>
                         </div>
                     </div>
                 </footer>

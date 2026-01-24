@@ -258,9 +258,9 @@ function Nav_Bar(props) {
                         </a>
 
                         {/* ****** User Profile / Login ****** */}
-                        {/* <div className="n-desktop-profile">
+                        <div className="n-desktop-profile">
                             <Link to="/User/Profile/" className="nav-client-login-btn n-desktop-account-btn"> <FaUser /> <span>Account</span></Link>
-                        </div> */}
+                        </div>
                     </div>
                     
                 </div>
@@ -316,7 +316,7 @@ function Nav_Bar(props) {
                 <ul className="nb-sidebar-list">
 
                     {/* ==== User Profile / Login ==== */}
-                        {/* <div className="nav-client-sidebar-section nav-user-profile">
+                        <div className="nav-client-sidebar-section nav-user-profile">
                             {profile ? (
                                 <>
                                     <div className="nav-client-profile-info-wrapper">
@@ -342,7 +342,7 @@ function Nav_Bar(props) {
                                     <Link to="/User/Signup/" className="nav-client-signup-btn" onClick={() => setSidebarOpen(false)}> <FaUserPlus /> Signup</Link>
                                 </div>
                             )}
-                        </div> */}
+                        </div>
                         
                             <li><hr className="sidebar-divider" /></li>
 

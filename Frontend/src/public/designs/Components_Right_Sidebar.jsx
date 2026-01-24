@@ -67,10 +67,10 @@ function Components_Right_Sidebar() {
     return (
         <div className="right-sidebar">
         {/* ==== User Profile / Login ==== */}
-            {/* <div className="crs-sidebar-section user-profile">
+            <div className="crs-sidebar-section user-profile">
                 {profile ? (
                     <div className="crs-profile-info">
-                    {*****  Profile Image / Avatar *****}
+                    {/*****  Profile Image / Avatar *****/}
                         <img
                             src={
                                 avatarSeed 
@@ -81,13 +81,13 @@ function Components_Right_Sidebar() {
                             className="crs-profile-avatar"
                         />
 
-                    {*****  Profile Name and Email *****}
+                    {/*****  Profile Name and Email *****/}
                         <div style={{display: 'flex', flexDirection:'column', padding:'1rem 0'}}>
                             <span className="crs-profile-info">{profile.username || "User"}</span>
                             <span className="crs-profile-info text-secondary"> <small>{profile.email || "User"}</small> </span>
                         </div>
 
-                    {*****  Profile Enter and Logout BTN *****}
+                    {/*****  Profile Enter and Logout BTN *****/}
                         <div className="profile-btn-grp">
                             <button className="crs-profile-edit-btn" onClick={handleEnterProfile}><FaUser /> Profile </button>
                             <button className="crs-play-game-btn" onClick={handleEnterGame}><FaPlay /> Games </button>
@@ -101,7 +101,7 @@ function Components_Right_Sidebar() {
                         <button className="crs-game-btn" onClick={handleEnterGame}> <FaPlay /> Play Games</button>
                     </div>
                 )}
-            </div> */}
+            </div>
 
         {/* ==== Quick Actions ==== */}
             {/* <div className="sidebar-section quick-actions">
