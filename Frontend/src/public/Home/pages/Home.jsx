@@ -85,8 +85,8 @@ function Home() {
                         <a href="https://www.facebook.com/profile.php?id=61583606692743" className="social-link facebook" target="_blank" rel="noopener noreferrer">
                             <i className="fab fa-facebook-f"></i>
                         </a>
-                        <a href="https://www.instagram.com/codevora140/" className="social-link instagram" target="_blank" rel="noopener noreferrer">
-                            <i className="fab fa-instagram"></i>
+                        <a href="https://www.tiktok.com/@sujanrai426" className="social-link tiktok" target="_blank" rel="noopener noreferrer">
+                            <i className="fab fa-tiktok"></i>
                         </a>
                         <a href="https://github.com/Sujan-Rai-426" className="social-link github" target="_blank" rel="noopener noreferrer">
                             <i className="fab fa-github"></i>

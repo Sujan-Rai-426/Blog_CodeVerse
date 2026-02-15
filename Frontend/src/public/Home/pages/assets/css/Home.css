@@ -125,7 +125,7 @@
     box-shadow: 5px 0  15px 8px rgba(0, 0, 0, 0.568);
 }
 .social-link.facebook:hover { background: #1877f2; }
-.social-link.instagram:hover { background: linear-gradient(45deg, #f58529, #dd2a7b, #8134af, #515bd4); }
+.social-link.tiktok:hover { background: linear-gradient(45deg, #000000, #373133, #e7fffe); }
 .social-link.github:hover { background: #24292e; }
 .social-link.linkedin:hover { background: #0077b5; }
 .social-link.globe:hover { background: #ff4b4b; }
